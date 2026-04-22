@@ -1,0 +1,14 @@
+9_patch.png
+size: 204, 204
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+panel_who
+  rotate: false
+  xy: 2, 2
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+  split: 95, 104, 108, 91
+  pad: -1, -1, -1, -1

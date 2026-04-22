@@ -1,0 +1,173 @@
+all.png
+size: 1530, 1274
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+back_def
+  rotate: false
+  xy: 1033, 2
+  size: 112, 112
+  orig: 112, 112
+  offset: 0, 0
+  index: -1
+back_press
+  rotate: false
+  xy: 1147, 2
+  size: 112, 112
+  orig: 112, 112
+  offset: 0, 0
+  index: -1
+cosmo_1
+  rotate: false
+  xy: 62, 2
+  size: 73, 77
+  orig: 73, 77
+  offset: 0, 0
+  index: -1
+cosmo_2
+  rotate: false
+  xy: 26, 2
+  size: 34, 36
+  orig: 34, 36
+  offset: 0, 0
+  index: -1
+cosmo_3
+  rotate: false
+  xy: 2, 2
+  size: 22, 23
+  orig: 22, 23
+  offset: 0, 0
+  index: -1
+cosmo_hex
+  rotate: false
+  xy: 1106, 822
+  size: 422, 450
+  orig: 422, 450
+  offset: 0, 0
+  index: -1
+cosmo_person
+  rotate: false
+  xy: 776, 822
+  size: 328, 408
+  orig: 328, 408
+  offset: 0, 0
+  index: -1
+daily_converter_item
+  rotate: false
+  xy: 2, 344
+  size: 688, 144
+  orig: 688, 144
+  offset: 0, 0
+  index: -1
+daily_free_rbx_calculator_item
+  rotate: false
+  xy: 740, 490
+  size: 688, 160
+  orig: 688, 160
+  offset: 0, 0
+  index: -1
+false_def
+  rotate: false
+  xy: 2, 652
+  size: 504, 168
+  orig: 504, 168
+  offset: 0, 0
+  index: -1
+false_press
+  rotate: false
+  xy: 508, 652
+  size: 504, 168
+  orig: 504, 168
+  offset: 0, 0
+  index: -1
+hex_check
+  rotate: false
+  xy: 508, 822
+  size: 266, 290
+  orig: 266, 290
+  offset: 0, 0
+  index: -1
+long_check
+  rotate: false
+  xy: 692, 344
+  size: 736, 144
+  orig: 736, 144
+  offset: 0, 0
+  index: -1
+long_def
+  rotate: false
+  xy: 2, 490
+  size: 736, 144
+  orig: 736, 144
+  offset: 0, 0
+  index: -1
+next_def
+  rotate: false
+  xy: 2, 116
+  size: 688, 112
+  orig: 688, 112
+  offset: 0, 0
+  index: -1
+next_press
+  rotate: false
+  xy: 692, 116
+  size: 688, 112
+  orig: 688, 112
+  offset: 0, 0
+  index: -1
+ok_def
+  rotate: false
+  xy: 2, 230
+  size: 568, 112
+  orig: 568, 112
+  offset: 0, 0
+  index: -1
+ok_press
+  rotate: false
+  xy: 572, 230
+  size: 568, 112
+  orig: 568, 112
+  offset: 0, 0
+  index: -1
+panel_level
+  rotate: false
+  xy: 459, 2
+  size: 219, 108
+  orig: 219, 108
+  offset: 0, 0
+  index: -1
+panel_question
+  rotate: false
+  xy: 680, 2
+  size: 351, 108
+  orig: 351, 108
+  offset: 0, 0
+  index: -1
+rbx_panel
+  rotate: false
+  xy: 137, 2
+  size: 210, 96
+  orig: 210, 96
+  offset: 0, 0
+  index: -1
+true_def
+  rotate: false
+  xy: 1014, 652
+  size: 504, 168
+  orig: 504, 168
+  offset: 0, 0
+  index: -1
+true_press
+  rotate: false
+  xy: 2, 822
+  size: 504, 168
+  orig: 504, 168
+  offset: 0, 0
+  index: -1
+wheel_target
+  rotate: false
+  xy: 349, 2
+  size: 108, 96
+  orig: 108, 96
+  offset: 0, 0
+  index: -1

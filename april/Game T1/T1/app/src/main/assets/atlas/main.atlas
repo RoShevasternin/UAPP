@@ -1,0 +1,110 @@
+main.png
+size: 2030, 826
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+accessories_def
+  rotate: false
+  xy: 692, 148
+  size: 336, 212
+  orig: 336, 212
+  offset: 0, 0
+  index: -1
+all_charatcers_def
+  rotate: false
+  xy: 340, 576
+  size: 688, 248
+  orig: 688, 248
+  offset: 0, 0
+  index: -1
+all_clothing_def
+  rotate: false
+  xy: 1030, 148
+  size: 336, 212
+  orig: 336, 212
+  offset: 0, 0
+  index: -1
+animations_def
+  rotate: false
+  xy: 1368, 148
+  size: 336, 212
+  orig: 336, 212
+  offset: 0, 0
+  index: -1
+daily_converter_def
+  rotate: false
+  xy: 1030, 576
+  size: 688, 248
+  orig: 688, 248
+  offset: 0, 0
+  index: -1
+daily_new_rbx_def
+  rotate: false
+  xy: 2, 362
+  size: 336, 212
+  orig: 336, 212
+  offset: 0, 0
+  index: -1
+dollar_to_rbx_def
+  rotate: false
+  xy: 340, 362
+  size: 336, 212
+  orig: 336, 212
+  offset: 0, 0
+  index: -1
+head_body_def
+  rotate: false
+  xy: 678, 362
+  size: 336, 212
+  orig: 336, 212
+  offset: 0, 0
+  index: -1
+logic_quiz_time_def
+  rotate: false
+  xy: 2, 2
+  size: 688, 144
+  orig: 688, 144
+  offset: 0, 0
+  index: -1
+meme_for_fun_def
+  rotate: false
+  xy: 1016, 362
+  size: 336, 212
+  orig: 336, 212
+  offset: 0, 0
+  index: -1
+rbx_to_dollar_def
+  rotate: false
+  xy: 1354, 362
+  size: 336, 212
+  orig: 336, 212
+  offset: 0, 0
+  index: -1
+redeem_coin_def
+  rotate: false
+  xy: 692, 2
+  size: 688, 144
+  orig: 688, 144
+  offset: 0, 0
+  index: -1
+scratch_win_def
+  rotate: false
+  xy: 1692, 362
+  size: 336, 212
+  orig: 336, 212
+  offset: 0, 0
+  index: -1
+settings_def
+  rotate: false
+  xy: 2, 148
+  size: 688, 144
+  orig: 688, 144
+  offset: 0, 0
+  index: -1
+spin_wheel_def
+  rotate: false
+  xy: 2, 576
+  size: 336, 212
+  orig: 336, 212
+  offset: 0, 0
+  index: -1
