@@ -1,0 +1,131 @@
+all.png
+size: 498, 1672
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+back_btn
+  rotate: false
+  xy: 2, 2
+  size: 39, 39
+  orig: 39, 39
+  offset: 0, 0
+  index: -1
+bag
+  rotate: false
+  xy: 222, 964
+  size: 240, 260
+  orig: 240, 260
+  offset: 0, 0
+  index: -1
+claim
+  rotate: false
+  xy: 2, 720
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+claimed
+  rotate: false
+  xy: 222, 720
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+close
+  rotate: false
+  xy: 2, 964
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+field_edit
+  rotate: false
+  xy: 2, 296
+  size: 344, 60
+  orig: 344, 60
+  offset: 0, 0
+  index: -1
+glow
+  rotate: false
+  xy: 2, 1226
+  size: 444, 444
+  orig: 444, 444
+  offset: 0, 0
+  index: -1
+gradient_box_check
+  rotate: false
+  xy: 2, 420
+  size: 344, 64
+  orig: 344, 64
+  offset: 0, 0
+  index: -1
+gradient_box_def
+  rotate: false
+  xy: 2, 486
+  size: 344, 64
+  orig: 344, 64
+  offset: 0, 0
+  index: -1
+gray_btn
+  rotate: false
+  xy: 2, 358
+  size: 344, 60
+  orig: 344, 60
+  offset: 0, 0
+  index: -1
+green_btn
+  rotate: false
+  xy: 2, 552
+  size: 346, 64
+  orig: 346, 64
+  offset: 0, 0
+  index: -1
+logo_mini
+  rotate: false
+  xy: 197, 2
+  size: 178, 98
+  orig: 178, 98
+  offset: 0, 0
+  index: -1
+r1
+  rotate: false
+  xy: 2, 102
+  size: 138, 140
+  orig: 138, 140
+  offset: 0, 0
+  index: -1
+r2
+  rotate: false
+  xy: 306, 102
+  size: 190, 192
+  orig: 190, 192
+  offset: 0, 0
+  index: -1
+r3
+  rotate: false
+  xy: 142, 102
+  size: 162, 160
+  orig: 162, 160
+  offset: 0, 0
+  index: -1
+rbux
+  rotate: false
+  xy: 43, 2
+  size: 42, 48
+  orig: 42, 48
+  offset: 0, 0
+  index: -1
+result_n_to_rbx
+  rotate: false
+  xy: 2, 618
+  size: 344, 100
+  orig: 344, 100
+  offset: 0, 0
+  index: -1
+wheel_target
+  rotate: false
+  xy: 87, 2
+  size: 108, 96
+  orig: 108, 96
+  offset: 0, 0
+  index: -1

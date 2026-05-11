@@ -1,0 +1,340 @@
+[
+  {
+    "id": "1",
+    "ImageUrl": "",
+    "Question": "What is Roblox's original name?",
+    "Answer": "DynaBlocks",
+    "correctAnswer": "2",
+    "option": [
+      "Extra Blocks",
+      "Super Blocks",
+      "DynaBlocks",
+      "None of the above"
+    ]
+  },
+  {
+    "id": "2",
+    "ImageUrl": "",
+    "Question": "Who is automatically added as your first friend when you join Roblox?",
+    "Answer": "Builderman",
+    "correctAnswer": "0",
+    "option": [
+      "Builderman",
+      "Builderguy",
+      "Builderboy",
+      "Builderdude"
+    ]
+  },
+  {
+    "id": "3",
+    "ImageUrl": "",
+    "Question": "Which of these is NOT a popular Roblox game?",
+    "Answer": "Minecraft",
+    "correctAnswer": "2",
+    "option": [
+      "Adopt Me!",
+      "Brookhaven RP",
+      "Minecraft",
+      "MeepCity"
+    ]
+  },
+  {
+    "id": "4",
+    "ImageUrl": "",
+    "Question": "What is the name of the currency used in Roblox?",
+    "Answer": "Robux",
+    "correctAnswer": "0",
+    "option": [
+      "Robux",
+      "Bux",
+      "Roblox Coins",
+      "Tickets"
+    ]
+  },
+  {
+    "id": "5",
+    "ImageUrl": "",
+    "Question": "In Roblox, what is the maximum number of places allowed in a single game universe?",
+    "Answer": "100",
+    "correctAnswer": "2",
+    "option": [
+      "200",
+      "50",
+      "100",
+      "Unlimited"
+    ]
+  },
+  {
+    "id": "6",
+    "ImageUrl": "",
+    "Question": "In which year was Roblox founded?",
+    "Answer": "2004",
+    "correctAnswer": "1",
+    "option": [
+      "2003",
+      "2004",
+      "2005",
+      "2006"
+    ]
+  },
+  {
+    "id": "7",
+    "ImageUrl": "",
+    "Question": "Who are the co-founders of Roblox?",
+    "Answer": "David Baszucki and Erik Cassel",
+    "correctAnswer": "0",
+    "option": [
+      "David Baszucki and Erik Cassel",
+      "Mark Zuckerberg and Jack Dorsey",
+      "Larry Page and Sergey Brin",
+      "Steve Jobs and Steve Wozniak"
+    ]
+  },
+  {
+    "id": "8",
+    "ImageUrl": "",
+    "Question": "What is the name of the official Roblox avatar shop?",
+    "Answer": "Avatar Marketplace",
+    "correctAnswer": "1",
+    "option": [
+      "Roblox Marketplace",
+      "Avatar Marketplace",
+      "Roblox Store",
+      "Roblox Outfitters"
+    ]
+  },
+  {
+    "id": "9",
+    "ImageUrl": "",
+    "Question": "What is the main purpose of Roblox Studio?",
+    "Answer": "To create and publish Roblox games",
+    "correctAnswer": "1",
+    "option": [
+      "To play Roblox games",
+      "To create and publish Roblox games",
+      "To buy and sell Roblox items",
+      "To chat with friends"
+    ]
+  },
+  {
+    "id": "10",
+    "ImageUrl": "",
+    "Question": "Which feature in Roblox allows players to restore their avatars to their default state?",
+    "Answer": "Reset Character",
+    "correctAnswer": "1",
+    "option": [
+      "Avatar Customizer",
+      "Reset Character",
+      "Default Mode",
+      "Restore Point"
+    ]
+  },
+  {
+    "id": "11",
+    "ImageUrl": "",
+    "Question": "Which feature allows for automatic control of in-game characters?",
+    "Answer": "Pathfinding Service",
+    "correctAnswer": "0",
+    "option": [
+      "Pathfinding Service",
+      "Animation Controller",
+      "Remote Functions",
+      "GUI Service"
+    ]
+  },
+  {
+    "id": "12",
+    "ImageUrl": "",
+    "Question": "What virtual concert in Roblox drew over 30 million visits?",
+    "Answer": "Lil Nas X",
+    "correctAnswer": "1",
+    "option": [
+      "Elton John",
+      "Lil Nas X",
+      "Zara Larsson",
+      "Twenty One Pilots"
+    ]
+  },
+  {
+    "id": "13",
+    "ImageUrl": "",
+    "Question": "Which official Roblox event celebrates its community and games?",
+    "Answer": "Bloxy Awards",
+    "correctAnswer": "2",
+    "option": [
+      "Roblox DevCon",
+      "Roblox Players Expo",
+      "Bloxy Awards",
+      "Roblox Game Fest"
+    ]
+  },
+  {
+    "id": "14",
+    "ImageUrl": "",
+    "Question": "Which building tool allows you to view and organize game objects in Roblox Studio?",
+    "Answer": "Explorer",
+    "correctAnswer": "1",
+    "option": [
+      "Terrain Editor",
+      "Explorer",
+      "Properties",
+      "Toolbox"
+    ]
+  },
+  {
+    "id": "15",
+    "ImageUrl": "",
+    "Question": "Which award is given to games that reach a billion visits on Roblox?",
+    "Answer": "Roblox Billion Visits Trophy",
+    "correctAnswer": "2",
+    "option": [
+      "Roblox Platinum Star",
+      "Roblox Gold Star",
+      "Roblox Billion Visits Trophy",
+      "Toolbox"
+    ]
+  },
+  {
+    "id": "16",
+    "ImageUrl": "",
+    "Question": "What does the name Roblox actually mean?",
+    "Answer": "a combination of the words robots and blocks",
+    "correctAnswer": "2",
+    "option": [
+      "It's short for roadblocks",
+      "It was invented by a person called Rob Lox",
+      "a combination of the words robots and blocks",
+      "Row And Blox"
+    ]
+  },
+  {
+    "id": "17",
+    "ImageUrl": "",
+    "Question": "How many hats can a character wear at once in Roblox?",
+    "Answer": "3",
+    "correctAnswer": "1",
+    "option": [
+      "4",
+      "3",
+      "2",
+      "1"
+    ]
+  },
+  {
+    "id": "18",
+    "ImageUrl": "",
+    "Question": "What tool in Roblox Studio helps users add models and images to games?",
+    "Answer": "Toolbox",
+    "correctAnswer": "0",
+    "option": [
+      "Toolbox",
+      "Properties",
+      "Explorer",
+      "Settings"
+    ]
+  },
+  {
+    "id": "18",
+    "ImageUrl": "",
+    "Question": "What feature allows players to start a game by clicking 'Run' in a dialog box?",
+    "Answer": "Click run",
+    "correctAnswer": "1",
+    "option": [
+      "Run",
+      "Click run",
+      "Click on",
+      "Go"
+    ]
+  },
+  {
+    "id": "19",
+    "ImageUrl": "",
+    "Question": "What term describes a Roblox game where players must complete a series of challenges?",
+    "Answer": "Obstacle Course",
+    "correctAnswer": "2",
+    "option": [
+      "Classic Obby",
+      "Runner",
+      "Obstacle Course",
+      "Tower obby"
+    ]
+  },
+  {
+    "id": "20",
+    "ImageUrl": "",
+    "Question": "What is the most expensive item on Roblox?",
+    "Answer": "Dominus",
+    "correctAnswer": "3",
+    "option": [
+      "Headless",
+      "Korblox",
+      "Valkyrie",
+      "Dominus"
+    ]
+  },
+  {
+    "id": "21",
+    "ImageUrl": "",
+    "Question": "On roblox, how do you receive the Veteran Badge?",
+    "Answer": "Play for 1 year.",
+    "correctAnswer": "1",
+    "option": [
+      "Play for 2 years.",
+      "Play for 1 year.",
+      "Make an account on Roblox.",
+      "Add friends on Roblox."
+    ]
+  },
+  {
+    "id": "22",
+    "ImageUrl": "",
+    "Question": "How many Friends can you have on Roblox?",
+    "Answer": "200",
+    "correctAnswer": "3",
+    "option": [
+      "300",
+      "100",
+      "Infinite",
+      "200"
+    ]
+  },
+  {
+    "id": "23",
+    "ImageUrl": "",
+    "Question": "What game has gotten 1 million+ in the fastest time?",
+    "Answer": "Bladeball",
+    "correctAnswer": "2",
+    "option": [
+      "Meepcity",
+      "Bloxburg",
+      "Bladeball",
+      "SizzleBurger"
+    ]
+  },
+  {
+    "id": "24",
+    "ImageUrl": "",
+    "Question": "How much money does 10,000 robux cost?",
+    "Answer": "Bladeball",
+    "correctAnswer": "2",
+    "option": [
+      "$1,000",
+      "$300",
+      "$10",
+      "$100"
+    ]
+  },
+  {
+    "id": "25",
+    "ImageUrl": "",
+    "Question": "How much does 400 robux cost?",
+    "Answer": "$5",
+    "correctAnswer": "3",
+    "option": [
+      "$1",
+      "6",
+      "$10",
+      "$5"
+    ]
+  }
+]

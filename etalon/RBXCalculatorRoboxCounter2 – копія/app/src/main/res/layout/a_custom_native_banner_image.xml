@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_banner_image"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_45sdp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/tv_adlabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_5sdp"
+        android:background="@drawable/gnt_curved_button"
+        android:fontFamily="@font/semi"
+        android:paddingHorizontal="@dimen/_4sdp"
+        android:paddingVertical="3dp"
+        android:paddingLeft="@dimen/_4sdp"
+        android:paddingTop="3dp"
+        android:paddingRight="@dimen/_4sdp"
+        android:paddingBottom="3dp"
+        android:text="Ad"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_8sdp" />
+</RelativeLayout>

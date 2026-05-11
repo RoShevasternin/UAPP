@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../../T1/app/src/main/assets/atlas/loader.atlas</filename>
+                <filename>../../T1 with ADS/app/src/main/assets/atlas/loader.atlas</filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -188,6 +188,36 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">panel_no_wifi.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>158,158,316,316</rect>
+                <key>scale9Paddings</key>
+                <rect>158,158,316,316</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">retry_def.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>68,23,136,46</rect>
+                <key>scale9Paddings</key>
+                <rect>68,23,136,46</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">title.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -200,6 +230,21 @@
                 <rect>57,7,114,14</rect>
                 <key>scale9Paddings</key>
                 <rect>57,7,114,14</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">wifi.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>45,45,90,90</rect>
+                <key>scale9Paddings</key>
+                <rect>45,45,90,90</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

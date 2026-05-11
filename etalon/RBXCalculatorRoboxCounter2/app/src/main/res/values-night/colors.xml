@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFFFF</color>
+    <color name="bgcolor">#000000</color>
+    <color name="appcolor">#0A9A72</color>
+    <color name="lightcolor">#111111</color>
+    <color name="hintcolor">#1F1F1F</color>
+    <color name="subFontColor">#848484</color>
+    <color name="transparent">#00000000</color>
+</resources>
