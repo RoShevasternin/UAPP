@@ -1,0 +1,110 @@
+all.png
+size: 906, 952
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+back_def
+  rotate: false
+  xy: 184, 2
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+box_check
+  rotate: false
+  xy: 2, 458
+  size: 688, 128
+  orig: 688, 128
+  offset: 0, 0
+  index: -1
+box_def
+  rotate: false
+  xy: 2, 588
+  size: 688, 128
+  orig: 688, 128
+  offset: 0, 0
+  index: -1
+count_now_def
+  rotate: false
+  xy: 198, 92
+  size: 688, 120
+  orig: 688, 120
+  offset: 0, 0
+  index: -1
+count_now_press
+  rotate: false
+  xy: 2, 214
+  size: 688, 120
+  orig: 688, 120
+  offset: 0, 0
+  index: -1
+input
+  rotate: false
+  xy: 2, 718
+  size: 688, 128
+  orig: 688, 128
+  offset: 0, 0
+  index: -1
+logo_rbs
+  rotate: false
+  xy: 2, 92
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+p1
+  rotate: false
+  xy: 270, 2
+  size: 152, 88
+  orig: 152, 88
+  offset: 0, 0
+  index: -1
+p2
+  rotate: false
+  xy: 424, 2
+  size: 152, 88
+  orig: 152, 88
+  offset: 0, 0
+  index: -1
+p3
+  rotate: false
+  xy: 578, 2
+  size: 152, 88
+  orig: 152, 88
+  offset: 0, 0
+  index: -1
+panel_question
+  rotate: false
+  xy: 2, 2
+  size: 180, 72
+  orig: 180, 72
+  offset: 0, 0
+  index: -1
+purple_btn
+  rotate: false
+  xy: 2, 336
+  size: 688, 120
+  orig: 688, 120
+  offset: 0, 0
+  index: -1
+settings_btn
+  rotate: false
+  xy: 100, 92
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+title
+  rotate: false
+  xy: 732, 2
+  size: 160, 88
+  orig: 160, 88
+  offset: 0, 0
+  index: -1
+wheel_target
+  rotate: false
+  xy: 692, 718
+  size: 212, 232
+  orig: 212, 232
+  offset: 0, 0
+  index: -1

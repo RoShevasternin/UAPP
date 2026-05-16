@@ -1,0 +1,10 @@
+<resources>
+    <style name="Base.Theme.RbuxDropCounterGames" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/background</item>
+
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.RbuxDropCounterGames" parent="Base.Theme.RbuxDropCounterGames" />
+</resources>
