@@ -1,0 +1,89 @@
+all.png
+size: 696, 986
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+back_def
+  rotate: false
+  xy: 102, 2
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+claim
+  rotate: false
+  xy: 2, 832
+  size: 692, 152
+  orig: 692, 152
+  offset: 0, 0
+  index: -1
+claimed
+  rotate: false
+  xy: 2, 426
+  size: 688, 144
+  orig: 688, 144
+  offset: 0, 0
+  index: -1
+close
+  rotate: false
+  xy: 2, 572
+  size: 688, 144
+  orig: 688, 144
+  offset: 0, 0
+  index: -1
+coin
+  rotate: false
+  xy: 2, 2
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+golden_def
+  rotate: false
+  xy: 2, 168
+  size: 516, 84
+  orig: 516, 84
+  offset: 0, 0
+  index: -1
+golden_dis
+  rotate: false
+  xy: 2, 254
+  size: 516, 84
+  orig: 516, 84
+  offset: 0, 0
+  index: -1
+gray_btn
+  rotate: false
+  xy: 2, 340
+  size: 516, 84
+  orig: 516, 84
+  offset: 0, 0
+  index: -1
+logo
+  rotate: false
+  xy: 354, 2
+  size: 266, 120
+  orig: 266, 120
+  offset: 0, 0
+  index: -1
+settings
+  rotate: false
+  xy: 52, 2
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+yellow_box
+  rotate: false
+  xy: 188, 2
+  size: 164, 164
+  orig: 164, 164
+  offset: 0, 0
+  index: -1
+yellow_long_box
+  rotate: false
+  xy: 2, 718
+  size: 688, 112
+  orig: 688, 112
+  offset: 0, 0
+  index: -1
