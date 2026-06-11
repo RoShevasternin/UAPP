@@ -3,9 +3,12 @@ package com.rbxgolden.fungamems.adsmodule
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
@@ -21,9 +24,8 @@ class AppOpenManager(
     private var currentActivity: Activity? = null
     private var isInBackground = false
 
-    // Час останнього показу — щоб не показувати одразу після повернення з Custom Tabs
     private var lastShownMs: Long = 0
-    private val COOLDOWN_MS = 3000L  // 3 секунди між показами
+    private val COOLDOWN_MS = 3000L
 
     var isShowingAd = false
         private set
@@ -43,38 +45,90 @@ class AppOpenManager(
         isInBackground = true
     }
 
-    // ── App Open логіка ───────────────────────────────────────────────────────
+    // ── App Open логіка (повернення з фону) ─────────────────────────────────────
 
     private fun onAppForeground() {
         isInBackground = false
         val activity = currentActivity ?: return
         if (isShowingAd) return
 
-        // Якщо повернулись після custom interstitial/app_open — скидаємо прапорець
-        // і не показуємо app_open цього разу
+        // Повернулись після custom interstitial/app_open — скидаємо прапорець, пропускаємо
         if (AdConfig.isFullscreenAdShowing) {
-            AdConfig.isFullscreenAdShowing = false  // ← скидаємо
-            return                                  // ← пропускаємо цей раз
+            AdConfig.isFullscreenAdShowing = false
+            return
         }
 
-        // Cooldown — не показуємо якщо тільки що показали
-        // Це запобігає нескінченному циклу при поверненні з Custom Tabs
+        // Cooldown — щоб не зациклитись при поверненні з Custom Tabs
         if (System.currentTimeMillis() - lastShownMs < COOLDOWN_MS) return
 
-        when (AdConfig.getProvider(AdType.APP_OPEN)) {
-            AdProvider.ADMOB -> {
-                if (isAdReady()) showAdmobAppOpen(activity)
-                else loadAdmobAppOpen()
+        val provider = AdConfig.getProvider(AdType.APP_OPEN)
+        when {
+            provider == AdProvider.ADMOB -> {
+                if (isAdReady()) showAdmobAppOpen(activity) else loadAdmobAppOpen()
             }
-            AdProvider.CUSTOM -> {
-                val url = AdConfig.customAppOpenUrl()
+            provider.isCustomProvider() -> {
+                val url = AdConfig.customAppOpenUrl(provider)
                 if (url.isNotEmpty()) {
                     markShown()
                     BrowserUtil.open(activity, url)
                 }
             }
-            AdProvider.NA -> { /* нічого не робимо */ }
+            else -> { /* NA — нічого */ }
         }
+    }
+
+    // ── App Open на LoaderScreen ────────────────────────────────────────────────
+    // Викликається один раз при старті гри (з LoaderScreen).
+    // Сам визначає провайдера, чекає admob до timeout, показує і викликає onDone.
+    // onDone ГАРАНТОВАНО викликається рівно один раз — можна навігувати далі.
+
+    fun showOnLoader(activity: Activity, timeoutMs: Int = 3000, onDone: () -> Unit) {
+        val provider = AdConfig.getProvider(AdType.APP_OPEN)
+        when {
+            provider == AdProvider.ADMOB -> {
+                loadAdmobAppOpen()
+                waitAdmobThenShow(activity, timeoutMs, onDone)
+            }
+            provider.isCustomProvider() -> {
+                val url = AdConfig.customAppOpenUrl(provider)
+                if (url.isNotEmpty()) {
+                    AdConfig.isFullscreenAdShowing = true
+                    markShown()
+                    BrowserUtil.open(activity, url)
+                }
+                onDone()
+            }
+            else -> onDone()
+        }
+    }
+
+    // Чекає готовності admob app_open (poll кожні 100мс) до timeout, потім показує
+    private fun waitAdmobThenShow(activity: Activity, timeoutMs: Int, onDone: () -> Unit) {
+        val handler = Handler(Looper.getMainLooper())
+        var waited = 0
+        var finished = false
+
+        // Гарантуємо що onDone викликається лише раз
+        val done = {
+            if (!finished) {
+                finished = true
+                onDone()
+            }
+        }
+
+        val poll = object : Runnable {
+            override fun run() {
+                when {
+                    isAdReady() -> showAdmobAppOpen(activity) { markShown(); done() }
+                    waited >= timeoutMs -> done()
+                    else -> {
+                        waited += 100
+                        handler.postDelayed(this, 100)
+                    }
+                }
+            }
+        }
+        handler.post(poll)
     }
 
     // ── AdMob App Open ────────────────────────────────────────────────────────
@@ -119,9 +173,7 @@ class AppOpenManager(
                 onComplete?.invoke()
                 loadAdmobAppOpen()
             }
-            override fun onAdFailedToShowFullScreenContent(
-                error: com.google.android.gms.ads.AdError
-            ) {
+            override fun onAdFailedToShowFullScreenContent(error: AdError) {
                 isShowingAd = false
                 onComplete?.invoke()
             }
@@ -131,8 +183,7 @@ class AppOpenManager(
 
     fun isAdReady(): Boolean {
         val fourHours = 4 * 60 * 60 * 1000L
-        return appOpenAd != null &&
-                (System.currentTimeMillis() - loadTimeMs) < fourHours
+        return appOpenAd != null && (System.currentTimeMillis() - loadTimeMs) < fourHours
     }
 
     fun markShown() {

@@ -3,10 +3,14 @@ package com.rbuxrds.counterds
 import android.app.Application
 import android.content.Context
 import com.google.android.gms.ads.MobileAds
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.analytics
 import com.rbuxrds.counterds.adsmodule.AdConfig
 import com.rbuxrds.counterds.adsmodule.AdPref
 import com.rbuxrds.counterds.adsmodule.AppOpenManager
 import com.rbuxrds.counterds.adsmodule.NavigationCounter
+import com.rbuxrds.counterds.util.NetworkUtils
+import com.rbuxrds.counterds.util.log
 
 lateinit var appContext: Context private set
 
@@ -20,6 +24,8 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
+
+        checkVpnAndToggleAnalytics()
 
         // ── 1. Ініціалізуємо AdPref ───────────────────────────────────────────
         // Завантажуємо збережений конфіг і тип юзера з минулого запуску
@@ -45,6 +51,18 @@ class App: Application() {
     private fun initNavigationCounter() {
         navigationCounter = NavigationCounter(adPref)
         navigationCounter.applyRestartReset()
+    }
+
+    // ------------------------------------------------------------------------
+    // Firebase | VPN
+    // ------------------------------------------------------------------------
+    private fun checkVpnAndToggleAnalytics() {
+        if (!NetworkUtils.isVpnConnected()) {
+            // VPN вимкнено -> Усе чисто, вмикаємо аналітику.
+            // Якщо це перший "чистий" запуск, Firebase сам зафіксує first_open.
+            log("VPN ------------------ false")
+            Firebase.analytics.setAnalyticsCollectionEnabled(true)
+        } else log("VPN ------------------ true")
     }
 
 }

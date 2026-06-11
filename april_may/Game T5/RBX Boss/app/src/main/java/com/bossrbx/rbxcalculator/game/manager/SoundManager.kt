@@ -19,6 +19,8 @@ class SoundManager(var assetManager: AssetManager) {
     enum class EnumSound(val data: SoundData) {
         CLICK     (SoundData("sound/click.mp3")),
         CHECK_BOX (SoundData("sound/check_box.mp3")),
+        FAIL      (SoundData("sound/fail.mp3")),
+        WIN       (SoundData("sound/win.mp3")),
     }
 
     data class SoundData(

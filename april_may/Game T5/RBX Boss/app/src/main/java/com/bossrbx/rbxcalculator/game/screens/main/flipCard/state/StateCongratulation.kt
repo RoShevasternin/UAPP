@@ -11,6 +11,7 @@ import com.bossrbx.rbxcalculator.game.utils.TIME_SCREEN_STATE
 import com.bossrbx.rbxcalculator.game.utils.actor.animHideAndDisable
 import com.bossrbx.rbxcalculator.game.utils.actor.animShowAndEnable
 import com.bossrbx.rbxcalculator.game.utils.actor.enable
+import com.bossrbx.rbxcalculator.game.utils.gdxGame
 import com.bossrbx.rbxcalculator.game.utils.screenState.ScreenContext
 import com.bossrbx.rbxcalculator.game.utils.screenState.ScreenState
 
@@ -32,6 +33,8 @@ class StateCongratulation(
         panel.animShowAndEnable(TIME_SCREEN_STATE)
 
         animEnterCardReward()
+
+        gdxGame.soundUtil.apply { play(WIN) }
     }
 
     override fun onExit() {

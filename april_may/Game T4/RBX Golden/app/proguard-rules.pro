@@ -25,3 +25,13 @@
 # Зберігаємо всі data класи для Gson
 -keep class com.rbxgolden.fungamems.adsmodule.** { *; }
 -keepclassmembers class com.rbxgolden.fungamems.adsmodule.** { *; }
+
+#TikTok -----------------------------------------------------------------
+-keep class com.tiktok.** { *; }
+# Google Play Billing Library
+-keep class com.android.billingclient.api.** { *; }
+-dontwarn com.android.billingclient.**
+# Google Install Referrer
+-keep class com.android.installreferrer.api.** { *; }
+# Android Lifecycle
+-keep class androidx.lifecycle.** { *; }

@@ -7,7 +7,7 @@ import kotlinx.coroutines.cancel
 val Any.currentClassName: String get() = this::class.java.simpleName
 
 fun log(message: String) {
-    Log.i("COUNTER", message)
+    Log.i("COUNTER_DEBUG", message)
 }
 
 fun cancelCoroutinesAll(vararg coroutine: CoroutineScope?) {

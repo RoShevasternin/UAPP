@@ -60,6 +60,7 @@ class SpriteUtil {
         val PANEL_MAIN             = SpriteManager.EnumTexture.PANEL_MAIN.data.texture
         val PANEL_SELECT_CONVERTER = SpriteManager.EnumTexture.PANEL_SELECT_CONVERTER.data.texture
         val PANEL_CONVERTER_RESULT = SpriteManager.EnumTexture.PANEL_CONVERTER_RESULT.data.texture
+        val PANEL_SETTINGS         = SpriteManager.EnumTexture.PANEL_SETTINGS.data.texture
 
         // All | scratch
         val PANEL_SCRATCH  = SpriteManager.EnumTexture.PANEL_SCRATCH.data.texture
@@ -97,5 +98,9 @@ class SpriteUtil {
         val CARD_BOSS                 = SpriteManager.EnumTexture.CARD_BOSS.data.texture
         val CARD_REWARD               = SpriteManager.EnumTexture.CARD_REWARD.data.texture
 
+        // All | quiz
+        val PANEL_ANSWER      = SpriteManager.EnumTexture.PANEL_ANSWER.data.texture
+        val PANEL_PLAY_QUIZ   = SpriteManager.EnumTexture.PANEL_PLAY_QUIZ.data.texture
+        val POPUP_QUIZ_RESULT = SpriteManager.EnumTexture.POPUP_QUIZ_RESULT.data.texture
     }
 }

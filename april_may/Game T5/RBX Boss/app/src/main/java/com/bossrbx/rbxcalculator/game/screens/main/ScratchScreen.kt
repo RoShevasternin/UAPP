@@ -143,6 +143,8 @@ class ScratchScreen: AdvancedScreen() {
 
         aDimImg.animShowAndEnable(TIME_ANIM_SCREEN)
         aPopup.animShowAndEnable(TIME_ANIM_SCREEN)
+
+        gdxGame.soundUtil.apply { play(WIN) }
     }
 
 }

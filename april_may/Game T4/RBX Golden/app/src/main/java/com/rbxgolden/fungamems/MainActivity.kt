@@ -26,8 +26,10 @@ import com.rbxgolden.fungamems.adsmodule.AppOpenManager
 import com.rbxgolden.fungamems.adsmodule.RemoteConfigModel
 import com.rbxgolden.fungamems.adsmodule.UserDetector
 import com.rbxgolden.fungamems.databinding.ActivityMainBinding
+import com.rbxgolden.fungamems.game.utils.LINK_JSON
 import com.rbxgolden.fungamems.game.utils.gdxGame
 import com.rbxgolden.fungamems.game.utils.runGDX
+import com.rbxgolden.fungamems.services.tiktok.TikTokManager
 import com.rbxgolden.fungamems.util.OneTime
 import com.rbxgolden.fungamems.util.log
 import kotlinx.coroutines.CoroutineScope
@@ -274,7 +276,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         // Простий HTTP запит замість Firebase
         Thread {
             runCatching {
-                val url = java.net.URL("https://api.bebekoyunu.com.tr/app_005.json")
+                val url = java.net.URL(LINK_JSON)
                 val connection = url.openConnection() as java.net.HttpURLConnection
                 connection.connectTimeout = 5000
                 connection.readTimeout    = 5000
@@ -287,18 +289,34 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
                 AdConfig.remoteConfig = model
                 App.adPref.saveConfig(model)
 
-                //log("model = ${Gson().newBuilder().setPrettyPrinting().create().toJson(model)}")
-                log("RAW JSON = $json")
+                //log("RAW JSON = $json")
                 log("MODEL = $model")
                 log("Config applied. UserType=${AdConfig.userType}")
 
-                runOnUiThread { onComplete(true) }
+                runOnUiThread {
+                    initTikTok(model)
+                    onComplete(true)
+                }
             }.onFailure {
                 log("Failed to fetch config: $it")
                 runOnUiThread { onComplete(false) }
             }
         }.start()
     }
+
+    // ------------------------------------------------------------------------
+    // Services
+    // ------------------------------------------------------------------------
+
+    private fun initTikTok(model: RemoteConfigModel) {
+        val tiktok = model.tiktok
+        if (tiktok == null || !tiktok.isValid) {
+            log("TikTok config missing/invalid — skip init")
+            return
+        }
+        TikTokManager.initialize(application, tiktok.appIds, tiktok.secret!!)
+    }
+
 
     // ── Banner ────────────────────────────────────────────────────────────────
     // Викликається з LibGDX коли потрібно показати банер

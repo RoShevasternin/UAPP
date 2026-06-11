@@ -18,7 +18,6 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.badlogic.gdx.backends.android.AndroidFragmentApplication
-import com.google.gson.Gson
 import com.bossrbx.rbxcalculator.adsmodule.AdConfig
 import com.bossrbx.rbxcalculator.adsmodule.AdManager
 import com.bossrbx.rbxcalculator.adsmodule.AdSizeManager
@@ -26,14 +25,17 @@ import com.bossrbx.rbxcalculator.adsmodule.AppOpenManager
 import com.bossrbx.rbxcalculator.adsmodule.RemoteConfigModel
 import com.bossrbx.rbxcalculator.adsmodule.UserDetector
 import com.bossrbx.rbxcalculator.databinding.ActivityMainBinding
-import com.bossrbx.rbxcalculator.game.utils.gdxGame
 import com.bossrbx.rbxcalculator.game.utils.runGDX
+import com.bossrbx.rbxcalculator.util.NetworkUtils
 import com.bossrbx.rbxcalculator.util.OneTime
 import com.bossrbx.rbxcalculator.util.log
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.analytics
+import com.google.firebase.analytics.logEvent
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
@@ -193,7 +195,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
 
     fun openPrivacyPolicy() {
         runOnUiThread {
-            val url = "https://doc-hosting.flycricket.io/rbx-golden-fun-games-privacy-policy/71cd009e-ff17-4b41-8637-0a452b39d3e8/privacy"
+            val url = "https://doc-hosting.flycricket.io/rbx-boss-counter-privacy-policy/53e7622e-3912-462b-9ff5-e3db8cc9d945/privacy"
             try {
                 startActivity(
                     Intent(Intent.ACTION_VIEW).apply {
@@ -204,37 +206,6 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
             } catch (e: ActivityNotFoundException) {
                 log("No browser found")
             }
-        }
-    }
-
-    fun copyMeme(title: String, text: String) {
-        runOnUiThread {
-            val fullText = """
-                $title
-                $text
-            """.trimIndent()
-
-            val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText("Meme", fullText)
-
-            clipboard.setPrimaryClip(clip)
-            Toast.makeText(this, "Copied Meme", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    fun shareMeme(title: String, text: String) {
-        runOnUiThread {
-            val fullText = """
-                $title
-                $text
-            """.trimIndent()
-
-            val intent = Intent(Intent.ACTION_SEND).apply {
-                type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, fullText)
-            }
-
-            startActivity(Intent.createChooser(intent, "Share Meme"))
         }
     }
 
@@ -274,7 +245,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         // Простий HTTP запит замість Firebase
         Thread {
             runCatching {
-                val url = java.net.URL("https://api.bebekoyunu.com.tr/app_002.json")
+                val url = java.net.URL("https://api.bebekoyunu.com.tr/app_007.json")
                 val connection = url.openConnection() as java.net.HttpURLConnection
                 connection.connectTimeout = 5000
                 connection.readTimeout    = 5000

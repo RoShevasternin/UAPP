@@ -1,6 +1,6 @@
-alias: 
-pass: 
+alias: gert8jhgsSADHoasd9
+pass: hy67ashdbsaDsa
 
-privacy: 
-terms: 
+privacy: https://doc-hosting.flycricket.io/rbx-boss-counter-privacy-policy/53e7622e-3912-462b-9ff5-e3db8cc9d945/privacy
+terms: https://doc-hosting.flycricket.io/rbx-boss-counter-terms-of-use/c33f6b55-e9a9-4619-bcde-17fb19f2b578/terms
 Octo Browser: [Transferred] 2 GP DEV [usolceva4676yana@gmail.com]

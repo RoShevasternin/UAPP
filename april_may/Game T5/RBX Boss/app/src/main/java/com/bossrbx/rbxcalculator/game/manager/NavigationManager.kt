@@ -12,6 +12,8 @@ import com.bossrbx.rbxcalculator.game.screens.main.ScratchScreen
 import com.bossrbx.rbxcalculator.game.screens.main.WheelScreen
 import com.bossrbx.rbxcalculator.game.screens.main.converter.ConverterScreen
 import com.bossrbx.rbxcalculator.game.screens.main.converter.SelectConverterScreen
+import com.bossrbx.rbxcalculator.game.screens.main.quiz.QuizGameScreen
+import com.bossrbx.rbxcalculator.game.screens.main.quiz.QuizPlayScreen
 import com.bossrbx.rbxcalculator.game.screens.onboarding.Onboarding_1_Screen
 import com.bossrbx.rbxcalculator.game.screens.onboarding.Onboarding_2_Screen
 import com.bossrbx.rbxcalculator.game.screens.onboarding.Onboarding_3_Screen
@@ -75,6 +77,8 @@ class NavigationManager(val game: GDXGame) {
         WheelScreen          ::class.java.name -> WheelScreen()
         ScratchScreen        ::class.java.name -> ScratchScreen()
         FlipCardScreen       ::class.java.name -> FlipCardScreen()
+        QuizPlayScreen       ::class.java.name -> QuizPlayScreen()
+        QuizGameScreen       ::class.java.name -> QuizGameScreen()
 
         else -> MainScreen()
     }

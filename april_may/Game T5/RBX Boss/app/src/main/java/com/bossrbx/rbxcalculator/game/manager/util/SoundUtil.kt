@@ -6,8 +6,10 @@ import com.bossrbx.rbxcalculator.game.manager.SoundManager
 
 class SoundUtil {
 
-    val CLICK     = AdvancedSound(SoundManager.EnumSound.CLICK.data.sound, 0.5f)
-    val CHECK_BOX = AdvancedSound(SoundManager.EnumSound.CHECK_BOX.data.sound, 0.1f)
+    val CLICK     = AdvancedSound(SoundManager.EnumSound.CLICK.data.sound, 0.1f)
+    val CHECK_BOX = AdvancedSound(SoundManager.EnumSound.CHECK_BOX.data.sound, 0.5f)
+    val FAIL      = AdvancedSound(SoundManager.EnumSound.FAIL.data.sound, 0.5f)
+    val WIN       = AdvancedSound(SoundManager.EnumSound.WIN.data.sound, 1.0f)
 
     // 0..100
     var volumeLevel = AudioManager.volumeLevelPercent

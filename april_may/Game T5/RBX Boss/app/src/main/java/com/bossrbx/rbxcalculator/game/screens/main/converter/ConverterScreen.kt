@@ -104,6 +104,7 @@ class ConverterScreen: AdvancedScreen() {
             aCountNowBtn.disable()
             aPanelResult.calculate(inputValue)
 
+            gdxGame.soundUtil.apply { play(WIN) }
             aPanelResult.animShowAndEnable(0.25f)
         }
     }

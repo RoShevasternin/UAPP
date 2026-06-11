@@ -11,6 +11,7 @@ import com.bossrbx.rbxcalculator.game.screens.main.flipCard.FlipCardScreen
 import com.bossrbx.rbxcalculator.game.screens.main.converter.SelectConverterScreen
 import com.bossrbx.rbxcalculator.game.screens.main.ScratchScreen
 import com.bossrbx.rbxcalculator.game.screens.main.WheelScreen
+import com.bossrbx.rbxcalculator.game.screens.main.quiz.QuizPlayScreen
 import com.bossrbx.rbxcalculator.game.utils.actor.setBounds
 import com.bossrbx.rbxcalculator.game.utils.actor.setOnTouchListener
 import com.bossrbx.rbxcalculator.game.utils.advanced.AdvancedGroup
@@ -66,7 +67,7 @@ class APanelMain(screen: AdvancedScreen): AScrollLayout(screen) {
             DailyRewardScreen    ::class.java.name,
             SelectConverterScreen::class.java.name,
             WheelScreen          ::class.java.name, ScratchScreen::class.java.name,
-            FlipCardScreen       ::class.java.name, ScratchScreen::class.java.name,
+            FlipCardScreen       ::class.java.name, QuizPlayScreen::class.java.name,
         )
 
         listBtn.forEachIndexed { index, btn ->

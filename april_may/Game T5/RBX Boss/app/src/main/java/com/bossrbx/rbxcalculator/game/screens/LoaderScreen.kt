@@ -159,16 +159,16 @@ class LoaderScreen : AdvancedScreen() {
 
             gdxGame.musicUtil.apply { currentMusic = MAIN.apply {
                 isLooping = true
-                coff      = 0.0f
+                coff      = 0.2f
             } }
 
             // поки тестим потім розкоментуй initAds()
-            goToFirstScreen()
+            //goToFirstScreen()
 
 
             // ── Завантажуємо рекламну конфігурацію ────────────────────────────
             // initAds перевіряє інтернет + завантажує Config
-            //initAds()
+            initAds()
         }
     }
 
@@ -257,7 +257,7 @@ class LoaderScreen : AdvancedScreen() {
     private fun navigateToFirstScreen() {
         animHideScreen {
             gdxGame.backgroundColor = GameColor.background
-            gdxGame.navigationManager.navigate(MainScreen::class.java.name)
+            gdxGame.navigationManager.navigate(LanguageScreen::class.java.name)
         }
     }
 

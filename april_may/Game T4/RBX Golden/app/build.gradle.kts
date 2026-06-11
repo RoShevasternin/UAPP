@@ -16,10 +16,13 @@ android {
         applicationId = "com.rbxgolden.fungamems"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 6
+        versionName = "3.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Field ------------------------------------------------------------------------
+        //buildConfigField("String", "TIKTOK_APP_SECRET", "\"TTM0B5DDqwpeof7Wp7WvEyzbSiix7wNM\"")
     }
 
     buildTypes {
@@ -80,7 +83,7 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.2.1")
 
     // LibGDX ------------------------------------------------------------------------
-    val gdxVersion = "1.14.0"
+    val gdxVersion = "1.14.1"
     implementation("com.badlogicgames.gdx:gdx-backend-android:$gdxVersion")
     natives("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a")
     natives("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a")
@@ -99,14 +102,20 @@ dependencies {
     // Business Logic ------------------------------------------------------------------------
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:34.13.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.14.1"))
     implementation("com.google.firebase:firebase-analytics")
+
+    // TikTok
+    implementation("com.github.tiktok:tiktok-business-android-sdk:1.6.1")
+
+    // Billing
+    implementation("com.android.billingclient:billing-ktx:9.0.0")
 
     // Install Referrer (для визначення organic/paid юзера)
     implementation("com.android.installreferrer:installreferrer:2.2")
 
     // AdMob
-    implementation("com.google.android.gms:play-services-ads:25.2.0")
+    implementation("com.google.android.gms:play-services-ads:25.3.0")
 
     // Gson (парсинг JSON з Firebase)
     implementation("com.google.code.gson:gson:2.14.0")

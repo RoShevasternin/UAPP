@@ -56,6 +56,7 @@ class SpriteManager(var assetManager: AssetManager) {
         PANEL_MAIN             (TextureData("textures/all/panel/panel_main.png")),
         PANEL_SELECT_CONVERTER (TextureData("textures/all/panel/panel_select_converter.png")),
         PANEL_CONVERTER_RESULT (TextureData("textures/all/panel/panel_converter_result.png")),
+        PANEL_SETTINGS         (TextureData("textures/all/panel/panel_settings.png")),
 
         // All | result
         PANEL_SCRATCH (TextureData("textures/all/scratch/panel_scratch.png")),
@@ -89,6 +90,11 @@ class SpriteManager(var assetManager: AssetManager) {
         TEXT_FLIP_CONGRATULATIONS (TextureData("textures/all/flipCard/text_flip_congratulations.png")),
         CARD_BOSS                 (TextureData("textures/all/flipCard/card_boss.png")),
         CARD_REWARD               (TextureData("textures/all/flipCard/card_reward.png")),
+
+        // All | quiz
+        PANEL_ANSWER      (TextureData("textures/all/quiz/panel_answer.png")),
+        PANEL_PLAY_QUIZ   (TextureData("textures/all/quiz/panel_play_quiz.png")),
+        POPUP_QUIZ_RESULT (TextureData("textures/all/quiz/popup_quiz_result.png")),
     }
 
     data class AtlasData(val path: String) {

@@ -3,9 +3,13 @@ package com.rbxgolden.fungamems
 import android.app.Application
 import android.content.Context
 import com.google.android.gms.ads.MobileAds
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.analytics
 import com.rbxgolden.fungamems.adsmodule.AdConfig
 import com.rbxgolden.fungamems.adsmodule.AdPref
 import com.rbxgolden.fungamems.adsmodule.NavigationCounter
+import com.rbxgolden.fungamems.util.NetworkUtils
+import com.rbxgolden.fungamems.util.log
 
 lateinit var appContext: Context private set
 
@@ -19,6 +23,8 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
+
+        enableAnalyticsIfNoVpn()
 
         // ── 1. Ініціалізуємо AdPref ───────────────────────────────────────────
         // Завантажуємо збережений конфіг і тип юзера з минулого запуску
@@ -44,6 +50,16 @@ class App: Application() {
     private fun initNavigationCounter() {
         navigationCounter = NavigationCounter(adPref)
         navigationCounter.applyRestartReset()
+    }
+
+    // ------------------------------------------------------------------------
+    // Firebase
+    // ------------------------------------------------------------------------
+
+    private fun enableAnalyticsIfNoVpn() {
+        val vpn = NetworkUtils.isVpnConnected()
+        log("VPN --- $vpn")
+        if (!vpn) Firebase.analytics.setAnalyticsCollectionEnabled(true)
     }
 
 }

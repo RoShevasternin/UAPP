@@ -24,7 +24,7 @@ class SettingsScreen: AdvancedScreen() {
 
     private val aPanelTop     = APanelTop(this)
     private val aContentGroup = ATmpGroup(this)
-    private val aSettingsImg  = Actor() //Image(gdxGame.assetsAll.PANEL_SETTINGS)
+    private val aSettingsImg  = Image(gdxGame.assetsAll.PANEL_SETTINGS)
 
     // ------------------------------------------------------------------------
     // Lifecycle
@@ -66,7 +66,7 @@ class SettingsScreen: AdvancedScreen() {
     // ------------------------------------------------------------------------
 
     private fun AConstraintLayout.addPanelTop() {
-        aPanelTop.setSize(WIDTH, 56f)
+        aPanelTop.setSize(WIDTH, 64f)
         add(aPanelTop) { centerX(); topToTop() }
 
         aPanelTop.setTitle("Settings")
@@ -74,19 +74,22 @@ class SettingsScreen: AdvancedScreen() {
     }
 
     private fun AConstraintLayout.addContentGroup() {
-        aContentGroup.setSize(WIDTH, 230f)
+        aContentGroup.setSize(WIDTH, 304f)
         add(aContentGroup) { centerX(); topToBottom(aPanelTop) }
 
         aContentGroup.addAndFillActor(aSettingsImg)
 
+        val aLanguage = Actor()
         val aShaeApp  = Actor()
         val aRateUs   = Actor()
         val aPrivacy  = Actor()
-        aContentGroup.addActors(aShaeApp, aRateUs, aPrivacy)
-        aShaeApp.setBounds(16f, 156f, 344f, 58f)
-        aRateUs.setBounds(16f, 86f, 344f, 58f)
-        aPrivacy.setBounds(16f, 16f, 344f, 58f)
+        aContentGroup.addActors(aLanguage, aShaeApp, aRateUs, aPrivacy)
+        aLanguage.setBounds(16f, 228f, 344f, 64f)
+        aShaeApp.setBounds(16f, 156f, 344f, 64f)
+        aRateUs.setBounds(16f, 84f, 344f, 64f)
+        aPrivacy.setBounds(16f, 12f, 344f, 64f)
 
+        aLanguage.setOnClickListener { animHideScreen { gdxGame.navigationManager.navigate(LanguageScreen::class.java.name) } }
         aShaeApp.setOnClickListener { gdxGame.activity.shareApp() }
         aRateUs.setOnClickListener { gdxGame.activity.rateApp() }
         aPrivacy.setOnClickListener { gdxGame.activity.openPrivacyPolicy() }

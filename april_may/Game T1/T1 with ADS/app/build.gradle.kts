@@ -12,8 +12,8 @@ android {
         applicationId = "com.rbuxrds.counterds"
         minSdk = 24
         targetSdk = 36
-        versionCode = 2
-        versionName = "2.0.0"
+        versionCode = 3
+        versionName = "2.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -94,14 +94,14 @@ dependencies {
     // Business Logic ------------------------------------------------------------------------
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:34.13.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.14.0"))
     implementation("com.google.firebase:firebase-analytics")
 
     // Install Referrer (для визначення organic/paid юзера)
     implementation("com.android.installreferrer:installreferrer:2.2")
 
     // AdMob
-    implementation("com.google.android.gms:play-services-ads:25.2.0")
+    implementation("com.google.android.gms:play-services-ads:25.3.0")
 
     // Gson (парсинг JSON з Firebase)
     implementation("com.google.code.gson:gson:2.14.0")
