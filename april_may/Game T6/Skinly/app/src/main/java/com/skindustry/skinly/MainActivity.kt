@@ -23,7 +23,9 @@ import com.skindustry.skinly.adsmodule.AppOpenManager
 import com.skindustry.skinly.adsmodule.RemoteConfigModel
 import com.skindustry.skinly.adsmodule.UserDetector
 import com.skindustry.skinly.databinding.ActivityMainBinding
+import com.skindustry.skinly.game.utils.LINK_JSON
 import com.skindustry.skinly.game.utils.runGDX
+import com.skindustry.skinly.services.tiktok.TikTokManager
 import com.skindustry.skinly.util.OneTime
 import com.skindustry.skinly.util.ShareManager
 import com.skindustry.skinly.util.log
@@ -31,6 +33,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.compareTo
 import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
@@ -210,7 +213,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         // Простий HTTP запит замість Firebase
         Thread {
             runCatching {
-                val url = java.net.URL("https://api.bebekoyunu.com.tr/app_009.json ")
+                val url = java.net.URL(LINK_JSON)
                 val connection = url.openConnection() as java.net.HttpURLConnection
                 connection.connectTimeout = 5000
                 connection.readTimeout    = 5000
@@ -223,17 +226,32 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
                 AdConfig.remoteConfig = model
                 App.adPref.saveConfig(model)
 
-                //log("model = ${Gson().newBuilder().setPrettyPrinting().create().toJson(model)}")
-                log("RAW JSON = $json")
+                //log("RAW JSON = $json")
                 log("MODEL = $model")
                 log("Config applied. UserType=${AdConfig.userType}")
 
-                runOnUiThread { onComplete(true) }
+                runOnUiThread {
+                    initTikTok(model)
+                    onComplete(true)
+                }
             }.onFailure {
                 log("Failed to fetch config: $it")
                 runOnUiThread { onComplete(false) }
             }
         }.start()
+    }
+
+    // ------------------------------------------------------------------------
+    // Services
+    // ------------------------------------------------------------------------
+
+    private fun initTikTok(model: RemoteConfigModel) {
+        val tiktok = model.tiktok
+        if (tiktok == null || !tiktok.isValid) {
+            log("TikTok config missing/invalid — skip init")
+            return
+        }
+        TikTokManager.initialize(application, tiktok.appIds, tiktok.secret!!)
     }
 
     // ── Banner ────────────────────────────────────────────────────────────────

@@ -7,7 +7,6 @@ import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
-import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
@@ -18,12 +17,14 @@ import com.badlogic.gdx.backends.android.AndroidFragmentApplication
 import com.google.gson.Gson
 import com.rsbuxs.rcounbux.adsmodule.AdConfig
 import com.rsbuxs.rcounbux.adsmodule.AdManager
+import com.rsbuxs.rcounbux.adsmodule.AdSizeManager
 import com.rsbuxs.rcounbux.adsmodule.AppOpenManager
 import com.rsbuxs.rcounbux.adsmodule.RemoteConfigModel
 import com.rsbuxs.rcounbux.adsmodule.UserDetector
 import com.rsbuxs.rcounbux.databinding.ActivityMainBinding
-import com.rsbuxs.rcounbux.game.utils.gdxGame
+import com.rsbuxs.rcounbux.game.utils.LINK_JSON
 import com.rsbuxs.rcounbux.game.utils.runGDX
+import com.rsbuxs.rcounbux.services.tiktok.TikTokManager
 import com.rsbuxs.rcounbux.util.OneTime
 import com.rsbuxs.rcounbux.util.log
 import kotlinx.coroutines.CoroutineScope
@@ -37,10 +38,6 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     companion object {
         var statusBarHeight = 0
         var navBarHeight    = 0
-        var bannerHeight    = 0
-        var nativeHeight    = 0
-
-        val adBottomHeightPx get() = bannerHeight + nativeHeight
     }
 
     private val coroutine  = CoroutineScope(Dispatchers.Default)
@@ -242,7 +239,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         // Простий HTTP запит замість Firebase
         Thread {
             runCatching {
-                val url = java.net.URL("https://api.bebekoyunu.com.tr/app_003.json")
+                val url = java.net.URL(LINK_JSON)
                 val connection = url.openConnection() as java.net.HttpURLConnection
                 connection.connectTimeout = 5000
                 connection.readTimeout    = 5000
@@ -255,16 +252,32 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
                 AdConfig.remoteConfig = model
                 App.adPref.saveConfig(model)
 
-                //log("model = ${Gson().newBuilder().setPrettyPrinting().create().toJson(model)}")
-                log("RAW JSON = $json")
+                //log("RAW JSON = $json")
+                log("MODEL = $model")
                 log("Config applied. UserType=${AdConfig.userType}")
 
-                runOnUiThread { onComplete(true) }
+                runOnUiThread {
+                    initTikTok(model)
+                    onComplete(true)
+                }
             }.onFailure {
                 log("Failed to fetch config: $it")
                 runOnUiThread { onComplete(false) }
             }
         }.start()
+    }
+
+    // ------------------------------------------------------------------------
+    // Services
+    // ------------------------------------------------------------------------
+
+    private fun initTikTok(model: RemoteConfigModel) {
+        val tiktok = model.tiktok
+        if (tiktok == null || !tiktok.isValid) {
+            log("TikTok config missing/invalid — skip init")
+            return
+        }
+        TikTokManager.initialize(application, tiktok.appIds, tiktok.secret!!)
     }
 
     // ── Banner ────────────────────────────────────────────────────────────────
@@ -278,8 +291,16 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
 
             container.viewTreeObserver.addOnGlobalLayoutListener {
                 val height = container.height
-                if (height > 0) bannerHeight = height
+                if (height > 0) AdSizeManager.bannerHeightPx = height
             }
+        }
+    }
+
+    fun hideBanner() {
+        runOnUiThread {
+            binding.bannerContainer.visibility = View.GONE
+            //binding.bannerContainer.removeAllViews()
+            AdSizeManager.bannerHeightPx = 0
         }
     }
 
@@ -297,9 +318,9 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
 
                         binding.nativeContainer.viewTreeObserver.removeOnGlobalLayoutListener(this)
                         binding.nativeContainer.y = screenY - h
-                        nativeHeight = h
+                        AdSizeManager.nativeHeightPx = h
 
-                        log("showNativeAt: nativeHeight = $nativeHeight")
+                        log("showNativeAt: nativeHeight = $h")
                     }
                 }
             )
@@ -311,6 +332,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         runOnUiThread {
             binding.nativeContainer.visibility = View.GONE
             binding.nativeContainer.removeAllViews()
+            AdSizeManager.nativeHeightPx = 0
         }
     }
 
@@ -323,6 +345,10 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
 
     fun onBackNavigation(onComplete: () -> Unit = {}) {
         runOnUiThread { adManager.onBackNavigation(onComplete) }
+    }
+
+    fun showInterstitial(onComplete: () -> Unit = {}) {
+        runOnUiThread { adManager.showInterstitial(onComplete) }
     }
 
     // ── Connectivity ──────────────────────────────────────────────────────────

@@ -1,6 +1,7 @@
 package com.rsbuxs.rcounbux.game.actors.panel
 
 import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.rsbuxs.rcounbux.adsmodule.AdSizeManager
 import com.rsbuxs.rcounbux.game.actors.AScrollPane
 import com.rsbuxs.rcounbux.game.actors.ATmpGroup
 import com.rsbuxs.rcounbux.game.actors.button.AGreenButton
@@ -16,7 +17,9 @@ import com.rsbuxs.rcounbux.game.utils.actor.disable
 import com.rsbuxs.rcounbux.game.utils.advanced.AdvancedGroup
 import com.rsbuxs.rcounbux.game.utils.advanced.AdvancedScreen
 import com.rsbuxs.rcounbux.game.utils.gdxGame
+import com.rsbuxs.rcounbux.game.utils.runGDX
 import com.rsbuxs.rcounbux.util.log
+import kotlinx.coroutines.launch
 
 class APanelLanguage(override val screen: AdvancedScreen): AConstraintLayout(screen) {
 
@@ -55,8 +58,13 @@ class APanelLanguage(override val screen: AdvancedScreen): AConstraintLayout(scr
         aVerticalGroup.addUpContentGroup()
         aVerticalGroup.addDoneBtn()
 
-        if (screen.adBottomUI >= 0f) aVerticalGroup.paddingBottom += screen.adBottomUI
-        log("APanelMain adBottomUI = ${screen.adBottomUI}")
+        coroutine?.launch {
+            AdSizeManager.adBottomFlow.collect { runGDX {
+                if (screen.adBottomUI >= 0f) aVerticalGroup.paddingBottom += screen.adBottomUI
+                log("APanelMain adBottomUI = ${screen.adBottomUI}")
+            } }
+        }
+
 
     }
 

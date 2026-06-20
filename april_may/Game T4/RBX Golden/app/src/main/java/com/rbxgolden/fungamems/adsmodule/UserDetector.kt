@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import com.android.installreferrer.api.InstallReferrerClient
 import com.android.installreferrer.api.InstallReferrerStateListener
+import com.rbxgolden.fungamems.game.utils.gdxGame
+import com.rbxgolden.fungamems.services.analytics.AnalyticsManager
 import com.rbxgolden.fungamems.util.log
 
 // Визначає тип юзера через Install Referrer
@@ -28,7 +30,23 @@ object UserDetector {
                     InstallReferrerClient.InstallReferrerResponse.OK -> {
                         val referrer = runCatching { client.installReferrer.installReferrer }.getOrDefault("")
                         log("referrer = $referrer")
-                        detectFromString(referrer)
+                        var userType = detectFromString(referrer)
+
+                        // ------------- TEST -------------
+                        val timeClickServer = client.installReferrer.referrerClickTimestampServerSeconds
+                        val timeClickUser   = client.installReferrer.referrerClickTimestampSeconds
+
+                        val hasClick: Boolean = (timeClickServer > 0 || timeClickUser > 0)
+
+                        if (userType == UserType.ORGANIC && hasClick) {
+                            val irClickTime = "server: $timeClickServer | user: $timeClickUser"
+                            AnalyticsManager.hasClick_ORGtoPAID(referrer, irClickTime)
+                            userType = UserType.PAID
+                        }
+                        // ------------- TEST -------------
+
+                        AnalyticsManager.userType(userType, referrer)
+                        userType
                     }
                     else -> UserType.ORGANIC
                 }
@@ -54,11 +72,11 @@ object UserDetector {
     // Порядок важливий — повертаємо першу знайдену мітку
 
     private fun detectFromString(raw: String): UserType = when {
-        raw.contains("gclid")  -> UserType.PAID_GOOGLE
-        raw.contains("ttclid") -> UserType.PAID_TIKTOK
-        raw.contains("fbclid") -> UserType.PAID_FACEBOOK
+        raw.contains("gclid", true)  -> UserType.PAID_GOOGLE
+        raw.contains("ttclid", true) -> UserType.PAID_TIKTOK
+        raw.contains("fbclid", true) -> UserType.PAID_FACEBOOK
 
-        raw.isBlank() || raw.contains("(not set)") || raw.contains("(not%20set)") -> UserType.ORGANIC
+        raw.isBlank() || raw.contains("organic", true) -> UserType.ORGANIC
 
         else -> UserType.PAID
     }

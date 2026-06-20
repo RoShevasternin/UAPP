@@ -2,11 +2,9 @@ package com.rbxgolden.fungamems.services.tiktok
 
 import android.app.Application
 import com.rbxgolden.fungamems.BuildConfig
-import com.rbxgolden.fungamems.game.utils.gdxGame
 import com.rbxgolden.fungamems.util.OneTime
 import com.rbxgolden.fungamems.util.log
 import com.tiktok.TikTokBusinessSdk
-import com.tiktok.appevents.base.TTBaseEvent
 
 object TikTokManager {
 

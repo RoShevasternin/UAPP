@@ -100,7 +100,7 @@ class SpinWheelScreen: AdvancedScreen() {
     private fun Group.addSpinNowBtn() {
         aSpinNowBtn.setSize(344f, 56f)
         addActorAligned(aSpinNowBtn, AlignH.CENTER, AlignV.BOTTOM)
-        aSpinNowBtn.y += safeBannerUI //20f
+        aSpinNowBtn.y += adBannerUI //20f
 
         aSpinNowBtn.onClick = {
             aWheel.spin { result ->

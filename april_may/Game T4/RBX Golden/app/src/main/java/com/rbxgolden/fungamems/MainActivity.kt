@@ -18,6 +18,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.badlogic.gdx.backends.android.AndroidFragmentApplication
+import com.rbxgolden.fungamems.services.tiktok.TikTokManager
 import com.google.gson.Gson
 import com.rbxgolden.fungamems.adsmodule.AdConfig
 import com.rbxgolden.fungamems.adsmodule.AdManager
@@ -27,15 +28,12 @@ import com.rbxgolden.fungamems.adsmodule.RemoteConfigModel
 import com.rbxgolden.fungamems.adsmodule.UserDetector
 import com.rbxgolden.fungamems.databinding.ActivityMainBinding
 import com.rbxgolden.fungamems.game.utils.LINK_JSON
-import com.rbxgolden.fungamems.game.utils.gdxGame
 import com.rbxgolden.fungamems.game.utils.runGDX
-import com.rbxgolden.fungamems.services.tiktok.TikTokManager
 import com.rbxgolden.fungamems.util.OneTime
 import com.rbxgolden.fungamems.util.log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 

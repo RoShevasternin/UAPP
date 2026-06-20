@@ -14,6 +14,7 @@ import com.rbxgolden.fungamems.game.utils.actor.animShow
 import com.rbxgolden.fungamems.game.utils.actor.setOnClickListener
 import com.rbxgolden.fungamems.game.utils.advanced.AdvancedScreen
 import com.rbxgolden.fungamems.game.utils.gdxGame
+import com.rbxgolden.fungamems.services.analytics.AnalyticsManager
 
 class MainScreen: AdvancedScreen() {
 
@@ -33,7 +34,7 @@ class MainScreen: AdvancedScreen() {
 
         stageUI.root.color.a = 0f
         super.show()
-        animShowScreen()
+        animShowScreen { AnalyticsManager.openHomeScreen() }
     }
 
     override fun hide() {

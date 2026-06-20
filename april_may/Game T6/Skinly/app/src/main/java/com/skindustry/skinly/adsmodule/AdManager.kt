@@ -3,9 +3,13 @@ package com.skindustry.skinly.adsmodule
 import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
 import com.bumptech.glide.Glide
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -13,6 +17,7 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.skindustry.skinly.App
 import com.skindustry.skinly.R
@@ -113,7 +118,7 @@ class AdManager(private val activity: Activity) {
         container.visibility = View.VISIBLE
         container.removeAllViews()
 
-        val adLoader = com.google.android.gms.ads.AdLoader.Builder(activity, unitId)
+        val adLoader = AdLoader.Builder(activity, unitId)
             .forNativeAd { nativeAd ->
                 val adView = LayoutInflater.from(activity).inflate(R.layout.a_ad_unified_big, container, false) as NativeAdView
                 populateAdmobNativeView(nativeAd, adView)
@@ -125,7 +130,7 @@ class AdManager(private val activity: Activity) {
     }
 
     private fun populateAdmobNativeView(
-        nativeAd: com.google.android.gms.ads.nativead.NativeAd,
+        nativeAd: NativeAd,
         adView: NativeAdView
     ) {
         adView.headlineView     = adView.findViewById(R.id.ad_headline)
@@ -134,9 +139,9 @@ class AdManager(private val activity: Activity) {
         adView.iconView         = adView.findViewById(R.id.ad_app_icon)
         adView.mediaView        = adView.findViewById(R.id.ad_media)
 
-        (adView.headlineView     as? android.widget.TextView)?.text = nativeAd.headline
-        (adView.bodyView         as? android.widget.TextView)?.text = nativeAd.body
-        (adView.callToActionView as? android.widget.Button)?.text   = nativeAd.callToAction
+        (adView.headlineView     as? TextView)?.text = nativeAd.headline
+        (adView.bodyView         as? TextView)?.text = nativeAd.body
+        (adView.callToActionView as? Button)?.text   = nativeAd.callToAction
         nativeAd.icon?.let { (adView.iconView as? ImageView)?.setImageDrawable(it.drawable) }
         adView.setNativeAd(nativeAd)
     }
@@ -152,9 +157,9 @@ class AdManager(private val activity: Activity) {
 
         val view = LayoutInflater.from(activity).inflate(R.layout.a_custom_native_big, container, false)
 
-        view.findViewById<android.widget.TextView>(R.id.tv_appname)?.text  = item.headline
-        view.findViewById<android.widget.TextView>(R.id.tv_desc)?.text     = item.description
-        view.findViewById<android.widget.TextView>(R.id.btn_install)?.text = item.cta
+        view.findViewById<TextView>(R.id.tv_appname)?.text  = item.headline
+        view.findViewById<TextView>(R.id.tv_desc)?.text     = item.description
+        view.findViewById<TextView>(R.id.btn_install)?.text = item.cta
 
         Glide.with(activity.applicationContext)
             .load(item.image)
@@ -278,7 +283,7 @@ class AdManager(private val activity: Activity) {
                 onComplete()
                 preloadAdmobInterstitial()
             }
-            override fun onAdFailedToShowFullScreenContent(error: com.google.android.gms.ads.AdError) {
+            override fun onAdFailedToShowFullScreenContent(error: AdError) {
                 AdConfig.isFullscreenAdShowing = false
                 onComplete()
             }

@@ -7,7 +7,6 @@ import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
-import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
@@ -23,14 +22,14 @@ import com.rbuxdrop.cougame.adsmodule.AppOpenManager
 import com.rbuxdrop.cougame.adsmodule.RemoteConfigModel
 import com.rbuxdrop.cougame.adsmodule.UserDetector
 import com.rbuxdrop.cougame.databinding.ActivityMainBinding
-import com.rbuxdrop.cougame.game.utils.gdxGame
+import com.rbuxdrop.cougame.game.utils.LINK_JSON
 import com.rbuxdrop.cougame.game.utils.runGDX
+import com.rbuxdrop.cougame.services.tiktok.TikTokManager
 import com.rbuxdrop.cougame.util.OneTime
 import com.rbuxdrop.cougame.util.log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
@@ -113,7 +112,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
                 inputType = android.text.InputType.TYPE_CLASS_NUMBER
                 textSize  = 32f
                 setTextColor(android.graphics.Color.WHITE)
-                textAlignment = android.view.View.TEXT_ALIGNMENT_CENTER
+                textAlignment = View.TEXT_ALIGNMENT_CENTER
                 hint = "0"
                 setHintTextColor(0xFF5C6070.toInt())
             }
@@ -240,7 +239,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         // Простий HTTP запит замість Firebase
         Thread {
             runCatching {
-                val url = java.net.URL("https://api.bebekoyunu.com.tr/app_004.json")
+                val url = java.net.URL(LINK_JSON)
                 val connection = url.openConnection() as java.net.HttpURLConnection
                 connection.connectTimeout = 5000
                 connection.readTimeout    = 5000
@@ -253,17 +252,32 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
                 AdConfig.remoteConfig = model
                 App.adPref.saveConfig(model)
 
-                //log("model = ${Gson().newBuilder().setPrettyPrinting().create().toJson(model)}")
-                log("RAW JSON = $json")
+                //log("RAW JSON = $json")
                 log("MODEL = $model")
                 log("Config applied. UserType=${AdConfig.userType}")
 
-                runOnUiThread { onComplete(true) }
+                runOnUiThread {
+                    initTikTok(model)
+                    onComplete(true)
+                }
             }.onFailure {
                 log("Failed to fetch config: $it")
                 runOnUiThread { onComplete(false) }
             }
         }.start()
+    }
+
+    // ------------------------------------------------------------------------
+    // Services
+    // ------------------------------------------------------------------------
+
+    private fun initTikTok(model: RemoteConfigModel) {
+        val tiktok = model.tiktok
+        if (tiktok == null || !tiktok.isValid) {
+            log("TikTok config missing/invalid — skip init")
+            return
+        }
+        TikTokManager.initialize(application, tiktok.appIds, tiktok.secret!!)
     }
 
     // ── Banner ────────────────────────────────────────────────────────────────
@@ -279,6 +293,14 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
                 val height = container.height
                 if (height > 0) AdSizeManager.bannerHeightPx = height
             }
+        }
+    }
+
+    fun hideBanner() {
+        runOnUiThread {
+            binding.bannerContainer.visibility = View.GONE
+            //binding.bannerContainer.removeAllViews()
+            AdSizeManager.bannerHeightPx = 0
         }
     }
 
@@ -323,6 +345,10 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
 
     fun onBackNavigation(onComplete: () -> Unit = {}) {
         runOnUiThread { adManager.onBackNavigation(onComplete) }
+    }
+
+    fun showInterstitial(onComplete: () -> Unit = {}) {
+        runOnUiThread { adManager.showInterstitial(onComplete) }
     }
 
     // ── Connectivity ──────────────────────────────────────────────────────────

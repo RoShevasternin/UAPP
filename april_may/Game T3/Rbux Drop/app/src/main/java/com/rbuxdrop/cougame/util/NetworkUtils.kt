@@ -8,15 +8,11 @@ object NetworkUtils {
         return try {
             NetworkInterface.getNetworkInterfaces()
                 .toList()
-                .any { iface ->
-                    iface.isUp && (
-                            iface.name.startsWith("tun") ||
-                                    iface.name.startsWith("tap") ||
-                                    iface.name.startsWith("ppp")
-                            )
-                }
-        } catch (e: Exception) {
-            false
-        }
+                .any { iface -> iface.isUp && (
+                    iface.name.startsWith("tun") ||
+                    iface.name.startsWith("tap") ||
+                    iface.name.startsWith("ppp")
+                ) }
+        } catch (e: Exception) { false }
     }
 }

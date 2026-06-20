@@ -6,18 +6,14 @@ plugins {
 
 android {
     namespace = "com.rbxgolden.fungamems"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk { version = release(36) { minorApiLevel = 1 } }
 
     defaultConfig {
         applicationId = "com.rbxgolden.fungamems"
         minSdk = 24
         targetSdk = 36
-        versionCode = 6
-        versionName = "3.0.2"
+        versionCode = 12
+        versionName = "3.0.8"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -83,7 +79,7 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.2.1")
 
     // LibGDX ------------------------------------------------------------------------
-    val gdxVersion = "1.14.1"
+    val gdxVersion = "1.14.2"
     implementation("com.badlogicgames.gdx:gdx-backend-android:$gdxVersion")
     natives("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a")
     natives("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a")
@@ -102,7 +98,7 @@ dependencies {
     // Business Logic ------------------------------------------------------------------------
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:34.14.1"))
+    implementation(platform("com.google.firebase:firebase-bom:34.15.0"))
     implementation("com.google.firebase:firebase-analytics")
 
     // TikTok
@@ -115,7 +111,7 @@ dependencies {
     implementation("com.android.installreferrer:installreferrer:2.2")
 
     // AdMob
-    implementation("com.google.android.gms:play-services-ads:25.3.0")
+    implementation("com.google.android.gms:play-services-ads:25.4.0")
 
     // Gson (парсинг JSON з Firebase)
     implementation("com.google.code.gson:gson:2.14.0")
@@ -124,7 +120,7 @@ dependencies {
     implementation("androidx.browser:browser:1.10.0")
 
     // Lifecycle (для AppOpen реклами)
-    implementation("androidx.lifecycle:lifecycle-process:2.10.0")
+    implementation("androidx.lifecycle:lifecycle-process:2.11.0")
 
     // Glide (завантаження картинок для кастомної реклами)
     implementation("com.github.bumptech.glide:glide:5.0.7")

@@ -15,6 +15,7 @@ import com.rbxtreasure.fungamers.game.utils.actor.animShow
 import com.rbxtreasure.fungamers.game.utils.advanced.AdvancedScreen
 import com.rbxtreasure.fungamers.game.utils.gdxGame
 import com.rbxtreasure.fungamers.game.utils.runGDX
+import com.rbxtreasure.fungamers.services.analytics.AnalyticsManager
 import kotlinx.coroutines.launch
 
 class HomeScreen: AdvancedScreen() {
@@ -36,7 +37,7 @@ class HomeScreen: AdvancedScreen() {
 
         stageUI.root.color.a = 0f
         super.show()
-        animShowScreen()
+        animShowScreen { AnalyticsManager.openHomeScreen() }
     }
 
     override fun hide() {

@@ -1,0 +1,82 @@
+all.png
+size: 1717, 372
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+back_def
+  rotate: false
+  xy: 1104, 2
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+claim
+  rotate: false
+  xy: 400, 2
+  size: 233, 60
+  orig: 233, 60
+  offset: 0, 0
+  index: -1
+close_f
+  rotate: false
+  xy: 1036, 154
+  size: 225, 216
+  orig: 225, 216
+  offset: 0, 0
+  index: -1
+logo
+  rotate: false
+  xy: 757, 2
+  size: 345, 144
+  orig: 345, 144
+  offset: 0, 0
+  index: -1
+lose_f
+  rotate: false
+  xy: 1263, 154
+  size: 225, 216
+  orig: 225, 216
+  offset: 0, 0
+  index: -1
+quiz_tab_check
+  rotate: false
+  xy: 2, 2
+  size: 197, 36
+  orig: 197, 36
+  offset: 0, 0
+  index: -1
+quiz_tab_def
+  rotate: false
+  xy: 201, 2
+  size: 197, 36
+  orig: 197, 36
+  offset: 0, 0
+  index: -1
+settings_def
+  rotate: false
+  xy: 635, 2
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+win_f
+  rotate: false
+  xy: 1490, 154
+  size: 225, 216
+  orig: 225, 216
+  offset: 0, 0
+  index: -1
+yellow_check
+  rotate: false
+  xy: 1256, 2
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+yellow_def
+  rotate: false
+  xy: 2, 154
+  size: 1032, 153
+  orig: 1032, 153
+  offset: 0, 0
+  index: -1

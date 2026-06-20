@@ -6,18 +6,14 @@ plugins {
 
 android {
     namespace = "com.skindustry.skinly"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk { version = release(36) { minorApiLevel = 1 } }
 
     defaultConfig {
         applicationId = "com.skindustry.skinly"
         minSdk = 24
         targetSdk = 36
-        versionCode = 2
-        versionName = "1.0.1"
+        versionCode = 3
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -80,7 +76,7 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.2.1")
 
     // LibGDX ------------------------------------------------------------------------
-    val gdxVersion = "1.14.1"
+    val gdxVersion = "1.14.2"
     implementation("com.badlogicgames.gdx:gdx-backend-android:$gdxVersion")
     natives("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a")
     natives("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a")
@@ -99,8 +95,14 @@ dependencies {
     // Business Logic ------------------------------------------------------------------------
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:34.14.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.14.1"))
     implementation("com.google.firebase:firebase-analytics")
+
+    // TikTok
+    implementation("com.github.tiktok:tiktok-business-android-sdk:1.6.1")
+
+    // Billing
+    implementation("com.android.billingclient:billing-ktx:9.0.0")
 
     // Install Referrer (для визначення organic/paid юзера)
     implementation("com.android.installreferrer:installreferrer:2.2")

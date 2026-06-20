@@ -68,7 +68,7 @@ class ClothingScreen: AdvancedScreen() {
 
     // Переходи — викликаєш з будь-якого місця
     fun goToSelect()   {
-        val coords = stageUI.root.localToScreenCoordinates(Vector2(0f, safeBannerUI))
+        val coords = stageUI.root.localToScreenCoordinates(Vector2(0f, adBannerUI))
         gdxGame.activity.showNativeAt(coords.y)
         stateMachine.setState(stateSelect)
     }

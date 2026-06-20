@@ -3,15 +3,18 @@ package com.rbuxrds.counterds.game.actors.daily
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.utils.Align
+import com.rbuxrds.counterds.adsmodule.AdSizeManager
 import com.rbuxrds.counterds.game.actors.button.ABlueButton
 import com.rbuxrds.counterds.game.actors.label.ALabel
 import com.rbuxrds.counterds.game.utils.GameColor
 import com.rbuxrds.counterds.game.utils.actor.setOnClickListener
+import com.rbuxrds.counterds.game.utils.actor.setSize
 import com.rbuxrds.counterds.game.utils.advanced.AdvancedGroup
 import com.rbuxrds.counterds.game.utils.advanced.AdvancedScreen
 import com.rbuxrds.counterds.game.utils.font.FontParameter
 import com.rbuxrds.counterds.game.utils.gdxGame
 import com.rbuxrds.counterds.game.utils.runGDX
+import kotlinx.coroutines.launch
 
 class ADailyFreeRbxCalculatorInput(
     override val screen: AdvancedScreen,
@@ -83,7 +86,12 @@ class ADailyFreeRbxCalculatorInput(
 
     private fun Group.addCountNowBtn() {
         addActor(aCountNowBtn)
-        aCountNowBtn.setBounds(0f, 0f + screen.safeBannerUI, 344f, 56f)
+        //aCountNowBtn.setBounds(0f, 0f + screen.safeBannerUI, 344f, 56f)
+        aCountNowBtn.setSize(344f, 56f)
+
+        coroutine?.launch {
+            AdSizeManager.adBottomFlow.collect { runGDX { aCountNowBtn.y += screen.adBannerUI } }
+        }
 
         aCountNowBtn.onClick = { onCountNowClick() }
     }

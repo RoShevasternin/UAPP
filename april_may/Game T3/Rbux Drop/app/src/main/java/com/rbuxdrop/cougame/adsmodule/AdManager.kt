@@ -3,9 +3,13 @@ package com.rbuxdrop.cougame.adsmodule
 import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
 import com.bumptech.glide.Glide
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -13,26 +17,24 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.rbuxdrop.cougame.App
 import com.rbuxdrop.cougame.R
 
 // Головний клас для показу реклами
 //
-// Створюється один раз в MainActivity або GdxGame:
-//   val adManager = AdManager(this)
+// Провайдер визначається через AdConfig.getProvider(adType) на основі типу юзера:
+//   ADMOB / CUSTOM / CUSTOM_GOOGLE / CUSTOM_TIKTOK / CUSTOM_FACEBOOK / NA
 //
-// Використання з LibGDX:
-//   game.activity.adManager.showBanner(container)
-//   game.activity.adManager.onFrontNavigation()
-//   game.activity.adManager.onBackNavigation { finish() }
+// Усі CUSTOM* обробляються однаково — різниця тільки в тому з якої секції
+// конфігу беруться юніти (AdConfig сам це вирішує за provider).
 
 class AdManager(private val activity: Activity) {
 
     private var admobInterstitial: InterstitialAd? = null
     private val counter get() = App.navigationCounter
 
-    // Debounce — не показуємо дві реклами підряд швидше ніж 500мс
     private var lastAdShownMs: Long = 0
     private fun isDebouncing() = System.currentTimeMillis() - lastAdShownMs < 500L
     private fun markAdShown()  { lastAdShownMs = System.currentTimeMillis() }
@@ -41,14 +43,21 @@ class AdManager(private val activity: Activity) {
         preloadAdmobInterstitial()
     }
 
+    // Чи це один з кастомних провайдерів
+    private fun AdProvider.isCustom() = this == AdProvider.CUSTOM ||
+            this == AdProvider.CUSTOM_GOOGLE ||
+            this == AdProvider.CUSTOM_TIKTOK ||
+            this == AdProvider.CUSTOM_FACEBOOK
+
     // ── Banner ────────────────────────────────────────────────────────────────
 
     fun showBanner(container: FrameLayout) {
         activity.runOnUiThread {
-            when (AdConfig.getProvider(AdType.BANNER)) {
-                AdProvider.ADMOB   -> showAdmobBanner(container)
-                AdProvider.CUSTOM  -> showCustomBanner(container)
-                AdProvider.NA      -> container.visibility = View.GONE
+            val provider = AdConfig.getProvider(AdType.BANNER)
+            when {
+                provider == AdProvider.ADMOB -> showAdmobBanner(container)
+                provider.isCustom()          -> showCustomBanner(container, provider)
+                else                         -> container.visibility = View.GONE
             }
         }
     }
@@ -68,8 +77,8 @@ class AdManager(private val activity: Activity) {
         adView.loadAd(AdRequest.Builder().build())
     }
 
-    private fun showCustomBanner(container: FrameLayout) {
-        val images = AdConfig.customBannerImages()
+    private fun showCustomBanner(container: FrameLayout, provider: AdProvider) {
+        val images = AdConfig.customBannerImages(provider)
         if (images.isEmpty()) { container.visibility = View.GONE; return }
 
         val item = images.random()
@@ -93,10 +102,11 @@ class AdManager(private val activity: Activity) {
 
     fun showNative(container: FrameLayout) {
         activity.runOnUiThread {
-            when (AdConfig.getProvider(AdType.NATIVE)) {
-                AdProvider.ADMOB   -> showAdmobNative(container)
-                AdProvider.CUSTOM  -> showCustomNative(container)
-                AdProvider.NA      -> container.visibility = View.GONE
+            val provider = AdConfig.getProvider(AdType.NATIVE)
+            when {
+                provider == AdProvider.ADMOB -> showAdmobNative(container)
+                provider.isCustom()          -> showCustomNative(container, provider)
+                else                         -> container.visibility = View.GONE
             }
         }
     }
@@ -108,7 +118,7 @@ class AdManager(private val activity: Activity) {
         container.visibility = View.VISIBLE
         container.removeAllViews()
 
-        val adLoader = com.google.android.gms.ads.AdLoader.Builder(activity, unitId)
+        val adLoader = AdLoader.Builder(activity, unitId)
             .forNativeAd { nativeAd ->
                 val adView = LayoutInflater.from(activity).inflate(R.layout.a_ad_unified_big, container, false) as NativeAdView
                 populateAdmobNativeView(nativeAd, adView)
@@ -120,7 +130,7 @@ class AdManager(private val activity: Activity) {
     }
 
     private fun populateAdmobNativeView(
-        nativeAd: com.google.android.gms.ads.nativead.NativeAd,
+        nativeAd: NativeAd,
         adView: NativeAdView
     ) {
         adView.headlineView     = adView.findViewById(R.id.ad_headline)
@@ -129,15 +139,15 @@ class AdManager(private val activity: Activity) {
         adView.iconView         = adView.findViewById(R.id.ad_app_icon)
         adView.mediaView        = adView.findViewById(R.id.ad_media)
 
-        (adView.headlineView     as? android.widget.TextView)?.text = nativeAd.headline
-        (adView.bodyView         as? android.widget.TextView)?.text = nativeAd.body
-        (adView.callToActionView as? android.widget.Button)?.text   = nativeAd.callToAction
+        (adView.headlineView     as? TextView)?.text = nativeAd.headline
+        (adView.bodyView         as? TextView)?.text = nativeAd.body
+        (adView.callToActionView as? Button)?.text   = nativeAd.callToAction
         nativeAd.icon?.let { (adView.iconView as? ImageView)?.setImageDrawable(it.drawable) }
         adView.setNativeAd(nativeAd)
     }
 
-    private fun showCustomNative(container: FrameLayout) {
-        val assets = AdConfig.customNativeAssets()
+    private fun showCustomNative(container: FrameLayout, provider: AdProvider) {
+        val assets = AdConfig.customNativeAssets(provider)
         if (assets.isEmpty()) { container.visibility = View.GONE; return }
 
         val item = assets.random()
@@ -147,9 +157,9 @@ class AdManager(private val activity: Activity) {
 
         val view = LayoutInflater.from(activity).inflate(R.layout.a_custom_native_big, container, false)
 
-        view.findViewById<android.widget.TextView>(R.id.tv_appname)?.text  = item.headline
-        view.findViewById<android.widget.TextView>(R.id.tv_desc)?.text     = item.description
-        view.findViewById<android.widget.TextView>(R.id.btn_install)?.text = item.cta
+        view.findViewById<TextView>(R.id.tv_appname)?.text  = item.headline
+        view.findViewById<TextView>(R.id.tv_desc)?.text     = item.description
+        view.findViewById<TextView>(R.id.btn_install)?.text = item.cta
 
         Glide.with(activity.applicationContext)
             .load(item.image)
@@ -173,27 +183,38 @@ class AdManager(private val activity: Activity) {
     fun onFrontNavigation(onComplete: () -> Unit = {}) {
         if (isDebouncing()) { onComplete(); return }
 
-        when (AdConfig.getProvider(AdType.INTERSTITIAL)) {
-            AdProvider.ADMOB   -> showAdmobInterstitial(onComplete)
-            AdProvider.CUSTOM  -> handleCustomFrontNav(onComplete)
-            AdProvider.NA      -> onComplete()
+        val provider = AdConfig.getProvider(AdType.INTERSTITIAL)
+        when {
+            provider == AdProvider.ADMOB -> showAdmobInterstitial(onComplete)
+            provider.isCustom()          -> handleCustomFrontNav(onComplete, provider)
+            else                         -> onComplete()
         }
     }
 
     fun onBackNavigation(onComplete: () -> Unit = {}) {
         if (isDebouncing()) { onComplete(); return }
 
-        when (AdConfig.getProvider(AdType.INTERSTITIAL)) {
-            AdProvider.ADMOB   -> showAdmobInterstitial(onComplete)
-            AdProvider.CUSTOM  -> handleCustomBackNav(onComplete)
-            AdProvider.NA      -> onComplete()
+        val provider = AdConfig.getProvider(AdType.INTERSTITIAL)
+        when {
+            provider == AdProvider.ADMOB -> showAdmobInterstitial(onComplete)
+            provider.isCustom()          -> handleCustomBackNav(onComplete, provider)
+            else                         -> onComplete()
+        }
+    }
+
+    fun showInterstitial(onComplete: () -> Unit = {}) {
+        val provider = AdConfig.getProvider(AdType.INTERSTITIAL)
+        when {
+            provider == AdProvider.ADMOB -> showAdmobInterstitial(onComplete)
+            provider.isCustom()          -> showCustomInterstitial(onComplete, provider)
+            else                         -> onComplete()
         }
     }
 
     // ── Custom Interstitial логіка ────────────────────────────────────────────
 
-    private fun handleCustomFrontNav(onComplete: () -> Unit) {
-        val cfg = AdConfig.customInterstitial()
+    private fun handleCustomFrontNav(onComplete: () -> Unit, provider: AdProvider) {
+        val cfg = AdConfig.customInterstitial(provider)
         if (cfg == null || !cfg.frontNavigation.enabled) { onComplete(); return }
 
         counter.incrementFront()
@@ -207,8 +228,8 @@ class AdManager(private val activity: Activity) {
         onComplete()
     }
 
-    private fun handleCustomBackNav(onComplete: () -> Unit) {
-        val cfg = AdConfig.customInterstitial()
+    private fun handleCustomBackNav(onComplete: () -> Unit, provider: AdProvider) {
+        val cfg = AdConfig.customInterstitial(provider)
         if (cfg == null || !cfg.backNavigation.enabled) { onComplete(); return }
 
         counter.incrementBack()
@@ -216,6 +237,15 @@ class AdManager(private val activity: Activity) {
         if (counter.backCount >= cfg.backNavigation.frequency) {
             counter.resetBack()
             markAdShown()
+            AdConfig.isFullscreenAdShowing = true
+            BrowserUtil.open(activity, cfg.targetUrl)
+        }
+        onComplete()
+    }
+
+    private fun showCustomInterstitial(onComplete: () -> Unit, provider: AdProvider) {
+        val cfg = AdConfig.customInterstitial(provider)
+        if (cfg != null) {
             AdConfig.isFullscreenAdShowing = true
             BrowserUtil.open(activity, cfg.targetUrl)
         }
@@ -233,8 +263,8 @@ class AdManager(private val activity: Activity) {
             unitId,
             AdRequest.Builder().build(),
             object : InterstitialAdLoadCallback() {
-                override fun onAdLoaded(ad: InterstitialAd)       { admobInterstitial = ad }
-                override fun onAdFailedToLoad(e: LoadAdError)     { admobInterstitial = null }
+                override fun onAdLoaded(ad: InterstitialAd)   { admobInterstitial = ad }
+                override fun onAdFailedToLoad(e: LoadAdError) { admobInterstitial = null }
             }
         )
     }
@@ -248,15 +278,12 @@ class AdManager(private val activity: Activity) {
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
                 AdConfig.isFullscreenAdShowing = false
-
                 admobInterstitial = null
                 markAdShown()
                 onComplete()
                 preloadAdmobInterstitial()
             }
-            override fun onAdFailedToShowFullScreenContent(
-                error: com.google.android.gms.ads.AdError
-            ) {
+            override fun onAdFailedToShowFullScreenContent(error: AdError) {
                 AdConfig.isFullscreenAdShowing = false
                 onComplete()
             }

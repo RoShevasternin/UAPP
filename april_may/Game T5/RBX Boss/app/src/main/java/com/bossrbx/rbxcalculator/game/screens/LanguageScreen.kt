@@ -37,7 +37,7 @@ class LanguageScreen: AdvancedScreen() {
     // Lifecycle
     // ------------------------------------------------------------------------
     override fun show() {
-        val coords = stageUI.root.localToScreenCoordinates(Vector2(0f, safeBannerUI))
+        val coords = stageUI.root.localToScreenCoordinates(Vector2(0f, adBannerUI))
         gdxGame.activity.showNativeAt(coords.y)
 
         stageUI.root.color.a = 0f

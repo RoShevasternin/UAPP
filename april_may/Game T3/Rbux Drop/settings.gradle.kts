@@ -23,5 +23,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Rbux Drop – Counter & Games"
+rootProject.name = "RBX Drop – Counter & Games"
 include(":app")

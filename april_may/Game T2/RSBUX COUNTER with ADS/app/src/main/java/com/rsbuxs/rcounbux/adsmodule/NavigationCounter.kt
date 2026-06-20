@@ -36,10 +36,12 @@ class NavigationCounter(private val adPref: AdPref) {
     // Скидає front лічильник якщо reset_on_app_restart = true
 
     fun applyRestartReset() {
-        val cfg = AdConfig.customInterstitial() ?: return
+        val provider = AdConfig.getProvider(AdType.INTERSTITIAL)
+        if (!provider.isCustomProvider()) return
+
+        val cfg = AdConfig.customInterstitial(provider) ?: return
         if (cfg.frontNavigation.resetOnAppRestart) {
             resetFront()
         }
-        // back лічильник завжди в пам'яті — він і так вже 0
     }
 }

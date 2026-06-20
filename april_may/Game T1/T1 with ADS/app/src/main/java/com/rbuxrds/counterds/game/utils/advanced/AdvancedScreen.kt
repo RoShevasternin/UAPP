@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.rbuxrds.counterds.MainActivity
+import com.rbuxrds.counterds.adsmodule.AdSizeManager
 import com.rbuxrds.counterds.game.utils.Block
 import com.rbuxrds.counterds.game.utils.HEIGHT_UI
 import com.rbuxrds.counterds.game.utils.ShapeDrawerUtil
@@ -31,6 +32,7 @@ import com.rbuxrds.counterds.util.currentClassName
 import com.rbuxrds.counterds.util.log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlin.text.toFloat
 
 abstract class AdvancedScreen(
     val WIDTH : Float = WIDTH_UI,
@@ -43,16 +45,20 @@ abstract class AdvancedScreen(
     val viewportUI by lazy { ExtendViewport(WIDTH, HEIGHT) }
     val stageUI    by lazy { AdvancedStage(viewportUI) }
 
-    val safeTop    get() = MainActivity.statusBarHeight
-    val safeBottom get() = MainActivity.navBarHeight
-    val safeBanner get() = MainActivity.bannerHeight
+    val safeStatusBarPX get() = MainActivity.statusBarHeight
+    val safeNavBarPX    get() = MainActivity.navBarHeight
 
-    val scaleScreenToUiY: Float
-        get() = viewportUI.worldHeight / (Gdx.graphics.height - (safeTop + safeBottom)).toFloat()
+    val screenWidthPX  get() = Gdx.graphics.width
+    val screenHeightPX get() = Gdx.graphics.height - safeStatusBarPX
 
-    val safeTopUI    get() = safeTop    * scaleScreenToUiY
-    val safeBottomUI get() = safeBottom * scaleScreenToUiY
-    val safeBannerUI get() = safeBanner * scaleScreenToUiY
+    private val scaleScreenToUiY: Float get() = (viewportUI.worldHeight / screenHeightPX)
+    private fun Int.toUI() = this * scaleScreenToUiY
+
+    val safeStatusBarUI get() = safeStatusBarPX.toUI()
+    val safeNavBarUI    get() = safeNavBarPX.toUI()
+
+    val adBannerUI get() = AdSizeManager.bannerHeightPx.toUI()
+    val adBottomUI get() = AdSizeManager.adBottomHeightPx.toUI()
 
     val inputMultiplexer    = InputMultiplexer()
 
@@ -80,17 +86,7 @@ abstract class AdvancedScreen(
 
     override fun show() {
         log("show AdvancedScreen: $currentClassName")
-        val screenWidth  = Gdx.graphics.width
-        val screenHeight = Gdx.graphics.height - (safeTop + safeBottom)
-
-        scalerUItoScreen.calculateScale(scalerVector.set(screenWidth.toFloat(), screenHeight.toFloat()))
-
-        stageBack.update(screenWidth, screenHeight, true)
-        stageUI.update(screenWidth, screenHeight, true)
-
-        // Зміщуємо viewport вниз щоб рендер починався від safeBottom
-        stageBack.viewport.screenY = safeBottom
-        stageUI.viewport.screenY   = safeBottom
+        updateSize()
 
         stageBack.root.addAndFillActor(backBackgroundImage)
         stageUI.root.addAndFillActor(uiBackgroundImage)
@@ -143,6 +139,12 @@ abstract class AdvancedScreen(
 
     open fun Group.addActorsOnStageBack() {}
     open fun Group.addActorsOnStageUI() {}
+
+    private fun updateSize() {
+        stageBack.update(Gdx.graphics.width, Gdx.graphics.height, true)
+        stageUI.update(screenWidthPX, screenHeightPX, true)
+        scalerUItoScreen.calculateScale(scalerVector.set(screenWidthPX.toFloat(), screenHeightPX.toFloat()))
+    }
 
     fun setBackBackground(region: TextureRegion) {
         backBackgroundImage.drawable = TextureRegionDrawable(region)

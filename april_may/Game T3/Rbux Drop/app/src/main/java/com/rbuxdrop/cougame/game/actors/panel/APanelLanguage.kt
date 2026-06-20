@@ -62,7 +62,7 @@ class APanelLanguage(override val screen: AdvancedScreen): AConstraintLayout(scr
             AdSizeManager.adBottomFlow.collect {
                 runGDX {
                     if (screen.adBottomUI >= 0f) aVerticalGroup.paddingBottom += screen.adBottomUI
-                    log("APanelLanguage adBottomUI = ${screen.adBottomUI} | banner = ${screen.safeBannerUI}")
+                    log("APanelLanguage adBottomUI = ${screen.adBottomUI} | banner = ${screen.adBannerUI}")
                 }
             }
         }

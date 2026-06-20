@@ -116,7 +116,7 @@ class LogicQuizTimeScreen: AdvancedScreen() {
             bottomToBottomOf = this@addBtns
 
             marginEnd    = 16f
-            marginBottom = safeBannerUI //33f
+            marginBottom = adBannerUI //33f
         }
 
         aFalseBtn.setSize(168f, 56f)
@@ -125,7 +125,7 @@ class LogicQuizTimeScreen: AdvancedScreen() {
             bottomToBottomOf = this@addBtns
 
             marginStart  = 16f
-            marginBottom = safeBannerUI //33f
+            marginBottom = adBannerUI //33f
         }
 
         aTrueBtn.setOnClickListener  { onAnswer(true)  }

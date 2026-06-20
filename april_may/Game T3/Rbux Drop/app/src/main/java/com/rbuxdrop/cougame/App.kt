@@ -24,7 +24,7 @@ class App: Application() {
         super.onCreate()
         appContext = applicationContext
 
-        checkVpnAndToggleAnalytics()
+        enableAnalyticsIfNoVpn()
 
         // ── 1. Ініціалізуємо AdPref ───────────────────────────────────────────
         // Завантажуємо збережений конфіг і тип юзера з минулого запуску
@@ -54,16 +54,13 @@ class App: Application() {
 
 
     // ------------------------------------------------------------------------
-    // Firebase
+    // Firebase | VPN
     // ------------------------------------------------------------------------
 
-    private fun checkVpnAndToggleAnalytics() {
-        if (!NetworkUtils.isVpnConnected()) {
-            // VPN вимкнено -> Усе чисто, вмикаємо аналітику.
-            // Якщо це перший "чистий" запуск, Firebase сам зафіксує first_open.
-            log("VPN ------------------ false")
-            Firebase.analytics.setAnalyticsCollectionEnabled(true)
-        } else log("VPN ------------------ true")
+    private fun enableAnalyticsIfNoVpn() {
+        val vpn = NetworkUtils.isVpnConnected()
+        log("VPN --- $vpn")
+        if (!vpn) Firebase.analytics.setAnalyticsCollectionEnabled(true)
     }
 
 }

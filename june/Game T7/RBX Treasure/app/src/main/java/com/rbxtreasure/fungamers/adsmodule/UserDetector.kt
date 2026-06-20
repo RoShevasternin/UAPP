@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.android.installreferrer.api.InstallReferrerClient
 import com.android.installreferrer.api.InstallReferrerStateListener
+import com.rbxtreasure.fungamers.services.analytics.AnalyticsManager
 import com.rbxtreasure.fungamers.util.log
 
 // Визначає тип юзера через Install Referrer
@@ -27,8 +28,21 @@ object UserDetector {
                 val userType = when (responseCode) {
                     InstallReferrerClient.InstallReferrerResponse.OK -> {
                         val referrer = runCatching { client.installReferrer.installReferrer }.getOrDefault("")
-                        log("referrer KAKA GGGGG = $referrer")
-                        detectFromString(referrer)
+                        log("referrer = $referrer")
+                        var userType = detectFromString(referrer)
+
+                        // ------------- TEST -------------
+                        val hasClick = client.installReferrer.referrerClickTimestampServerSeconds > 0 ||
+                                client.installReferrer.referrerClickTimestampSeconds       > 0
+
+                        if (userType == UserType.ORGANIC && hasClick) {
+                            AnalyticsManager.hasClickToPAID(referrer)
+                            userType = UserType.PAID
+                        }
+                        // ------------- TEST -------------
+
+                        AnalyticsManager.userType(userType, referrer)
+                        userType
                     }
                     else -> UserType.ORGANIC
                 }
@@ -53,10 +67,17 @@ object UserDetector {
     // ── Розпізнавання мережі за рядком ──────────────────────────────────────────
     // Порядок важливий — повертаємо першу знайдену мітку
 
+
+    // ── Розпізнавання мережі за рядком ──────────────────────────────────────────
+    // Порядок важливий — повертаємо першу знайдену мітку
+
     private fun detectFromString(raw: String): UserType = when {
-        raw.contains("gclid")  -> UserType.PAID_GOOGLE
-        raw.contains("ttclid") -> UserType.PAID_TIKTOK
-        raw.contains("fbclid") -> UserType.PAID_FACEBOOK
-        else                   -> UserType.ORGANIC
+        raw.contains("gclid", true)  -> UserType.PAID_GOOGLE
+        raw.contains("ttclid", true) -> UserType.PAID_TIKTOK
+        raw.contains("fbclid", true) -> UserType.PAID_FACEBOOK
+
+        raw.isBlank() || raw.contains("organic", true) -> UserType.ORGANIC
+
+        else -> UserType.PAID
     }
 }

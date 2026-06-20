@@ -70,8 +70,8 @@ class Onboarding_3_Screen: AdvancedScreen() {
         coroutine?.launch {
             AdSizeManager.bannerFlow.collect {
                 runGDX {
-                    if (safeBannerUI >= 0f) update(aNextBtn) {
-                        marginBottom += screen.safeBannerUI
+                    if (adBannerUI >= 0f) update(aNextBtn) {
+                        marginBottom += screen.adBannerUI
                     }
                 }
             }

@@ -2,13 +2,18 @@ package com.skindustry.skinly.adsmodule
 
 import com.google.gson.annotations.SerializedName
 
+// ------------------------------------------------------------------------
+// RemoteConfigModel
+// ------------------------------------------------------------------------
 data class RemoteConfigModel(
     val config: Config?,
-    @SerializedName("ad_units") val adUnits: AdUnits?
+    @SerializedName("ad_units") val adUnits: AdUnits?,
+    @SerializedName("tiktok")   val tiktok : TikTokConfig? = null,
 )
 
-// ── Config — який провайдер для кожного типу юзера ──────────────────────────
-
+// ------------------------------------------------------------------------
+// Config — який провайдер для кожного типу юзера
+// ------------------------------------------------------------------------
 data class Config(
     val organic: AdProviders?,
     val paid   : AdProviders?,
@@ -24,8 +29,9 @@ data class AdProviders(
     @SerializedName("app_open") val appOpen: String = "na"
 )
 
-// ── AdUnits — конкретні рекламні юніти ──────────────────────────────────────
-
+// ------------------------------------------------------------------------
+// AdUnits — конкретні рекламні юніти
+// ------------------------------------------------------------------------
 data class AdUnits(
     val admob          : AdmobUnits?,
     val custom         : CustomUnits?,
@@ -85,3 +91,21 @@ data class NavConfig(
 data class CustomAppOpen(
     @SerializedName("target_url") val targetUrl: String = ""
 )
+
+// ------------------------------------------------------------------------
+// TikTok
+// ------------------------------------------------------------------------
+data class TikTokConfig(
+    @SerializedName("app_id") val appIdRaw: String? = null,
+    @SerializedName("secret") val secret  : String? = null,
+) {
+    val appIds: List<String>
+        get() = appIdRaw
+            ?.split(",")
+            ?.map { it.trim() }
+            ?.filter { it.isNotEmpty() }
+            ?: emptyList()
+
+    val isValid: Boolean
+        get() = appIds.isNotEmpty() && !secret.isNullOrBlank()
+}

@@ -1,8 +1,6 @@
 package com.bossrbx.rbxcalculator
 
 import android.content.ActivityNotFoundException
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -10,7 +8,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
@@ -25,13 +22,11 @@ import com.bossrbx.rbxcalculator.adsmodule.AppOpenManager
 import com.bossrbx.rbxcalculator.adsmodule.RemoteConfigModel
 import com.bossrbx.rbxcalculator.adsmodule.UserDetector
 import com.bossrbx.rbxcalculator.databinding.ActivityMainBinding
+import com.bossrbx.rbxcalculator.game.utils.LINK_JSON
 import com.bossrbx.rbxcalculator.game.utils.runGDX
-import com.bossrbx.rbxcalculator.util.NetworkUtils
+import com.bossrbx.rbxcalculator.services.tiktok.TikTokManager
 import com.bossrbx.rbxcalculator.util.OneTime
 import com.bossrbx.rbxcalculator.util.log
-import com.google.firebase.Firebase
-import com.google.firebase.analytics.analytics
-import com.google.firebase.analytics.logEvent
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -245,7 +240,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         // Простий HTTP запит замість Firebase
         Thread {
             runCatching {
-                val url = java.net.URL("https://api.bebekoyunu.com.tr/app_007.json")
+                val url = java.net.URL(LINK_JSON)
                 val connection = url.openConnection() as java.net.HttpURLConnection
                 connection.connectTimeout = 5000
                 connection.readTimeout    = 5000
@@ -258,17 +253,32 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
                 AdConfig.remoteConfig = model
                 App.adPref.saveConfig(model)
 
-                //log("model = ${Gson().newBuilder().setPrettyPrinting().create().toJson(model)}")
-                log("RAW JSON = $json")
+                //log("RAW JSON = $json")
                 log("MODEL = $model")
                 log("Config applied. UserType=${AdConfig.userType}")
 
-                runOnUiThread { onComplete(true) }
+                runOnUiThread {
+                    initTikTok(model)
+                    onComplete(true)
+                }
             }.onFailure {
                 log("Failed to fetch config: $it")
                 runOnUiThread { onComplete(false) }
             }
         }.start()
+    }
+
+    // ------------------------------------------------------------------------
+    // Services
+    // ------------------------------------------------------------------------
+
+    private fun initTikTok(model: RemoteConfigModel) {
+        val tiktok = model.tiktok
+        if (tiktok == null || !tiktok.isValid) {
+            log("TikTok config missing/invalid — skip init")
+            return
+        }
+        TikTokManager.initialize(application, tiktok.appIds, tiktok.secret!!)
     }
 
     // ── Banner ────────────────────────────────────────────────────────────────
@@ -336,6 +346,10 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
 
     fun onBackNavigation(onComplete: () -> Unit = {}) {
         runOnUiThread { adManager.onBackNavigation(onComplete) }
+    }
+
+    fun showInterstitial(onComplete: () -> Unit = {}) {
+        runOnUiThread { adManager.showInterstitial(onComplete) }
     }
 
     // ── Connectivity ──────────────────────────────────────────────────────────

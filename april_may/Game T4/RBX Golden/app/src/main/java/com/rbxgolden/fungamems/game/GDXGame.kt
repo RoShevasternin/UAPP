@@ -32,6 +32,9 @@ import kotlinx.coroutines.cancel
 
 class GDXGame(val activity: MainActivity) : AdvancedGame() {
 
+    // ------------------------------------------------------------------------
+    // Managers
+    // ------------------------------------------------------------------------
     lateinit var assetManager     : AssetManager      private set
     lateinit var navigationManager: NavigationManager private set
     lateinit var spriteManager    : SpriteManager     private set
@@ -49,13 +52,22 @@ class GDXGame(val activity: MainActivity) : AdvancedGame() {
     val particleEffectLoader by lazy { ParticleEffectUtil.Loader() }
     val particleEffectAll    by lazy { ParticleEffectUtil.All() }
 
+    // ------------------------------------------------------------------------
+    // Misc
+    // ------------------------------------------------------------------------
     var backgroundColor = GameColor.background
     val disposableSet   = mutableSetOf<Disposable>()
 
+    // ------------------------------------------------------------------------
+    // Coroutine
+    // ------------------------------------------------------------------------
     val coroutine = CoroutineScope(Dispatchers.Default)
 
     private val dsPlayer = DS_Player(coroutine)
 
+    // ------------------------------------------------------------------------
+    // Models
+    // ------------------------------------------------------------------------
     val modelPlayer = PlayerModel(dsPlayer, coroutine)
 
     override fun create() {

@@ -103,7 +103,7 @@ class ScratchScreen: AdvancedScreen() {
     private fun Group.addScratchNowBtn() {
         aScratchNowBtn.setSize(344f, 56f)
         addActorAligned(aScratchNowBtn, AlignH.CENTER, AlignV.BOTTOM)
-        aScratchNowBtn.y += safeBannerUI //20f
+        aScratchNowBtn.y += adBannerUI //20f
 
         aScratchNowBtn.onClick = { aScratch.regenerateScratch() }
     }

@@ -1,8 +1,6 @@
 package com.rbuxrds.counterds.game.screens
 
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Group
-import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.rbuxrds.counterds.game.actors.layout.AlignH
 import com.rbuxrds.counterds.game.actors.layout.AlignV
 import com.rbuxrds.counterds.game.actors.panel.APanelMain
@@ -14,10 +12,9 @@ import com.rbuxrds.counterds.game.utils.actor.addActorWithConstraints
 import com.rbuxrds.counterds.game.utils.actor.animDelay
 import com.rbuxrds.counterds.game.utils.actor.animHide
 import com.rbuxrds.counterds.game.utils.actor.animShow
-import com.rbuxrds.counterds.game.utils.actor.setSize
 import com.rbuxrds.counterds.game.utils.advanced.AdvancedScreen
 import com.rbuxrds.counterds.game.utils.gdxGame
-import com.rbuxrds.counterds.util.log
+import com.rbuxrds.counterds.services.analytics.AnalyticsManager
 
 class MainScreen: AdvancedScreen() {
 
@@ -38,7 +35,7 @@ class MainScreen: AdvancedScreen() {
         addPanelTop()
         addPanelMain()
 
-        animShowScreen()
+        animShowScreen { AnalyticsManager.openHomeScreen() }
     }
 
     // ------------------------------------------------------------------------
@@ -67,7 +64,7 @@ class MainScreen: AdvancedScreen() {
     }
 
     private fun Group.addPanelMain() {
-        aPanelMain.setSize(376f, aPanelTop.y - safeBannerUI)
+        aPanelMain.setSize(376f, aPanelTop.y - adBannerUI)
         addActorWithConstraints(aPanelMain) {
             startToStartOf = this@addPanelMain
             endToEndOf     = this@addPanelMain

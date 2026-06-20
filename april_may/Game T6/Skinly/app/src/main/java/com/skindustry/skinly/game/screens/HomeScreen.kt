@@ -13,6 +13,7 @@ import com.skindustry.skinly.game.utils.actor.animShow
 import com.skindustry.skinly.game.utils.advanced.AdvancedScreen
 import com.skindustry.skinly.game.utils.gdxGame
 import com.skindustry.skinly.game.utils.runGDX
+import com.skindustry.skinly.services.analytics.AnalyticsManager
 import com.skindustry.skinly.util.log
 import kotlinx.coroutines.launch
 
@@ -32,7 +33,7 @@ class HomeScreen: AdvancedScreen() {
     override fun show() {
         stageUI.root.color.a = 0f
         super.show()
-        animShowScreen()
+        animShowScreen { AnalyticsManager.openHomeScreen() }
     }
 
     override fun AConstraintLayout.addActorsOnRootConstraintLayout() {

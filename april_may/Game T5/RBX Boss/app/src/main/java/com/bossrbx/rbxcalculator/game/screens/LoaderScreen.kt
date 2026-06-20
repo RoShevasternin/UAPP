@@ -179,11 +179,9 @@ class LoaderScreen : AdvancedScreen() {
     private fun initAds() {
         gdxGame.activity.initAds { success ->
             if (success) {
-                // Конфіг отримано — йдемо в гру
                 log("Ads initialized successfully")
                 goToFirstScreen()
             } else {
-                // Немає інтернету — показуємо UI
                 log("No internet connection")
                 showNoWifi()
             }
@@ -194,7 +192,6 @@ class LoaderScreen : AdvancedScreen() {
         runGDX {
             aMain.showNoWifi()
             aMain.onRetry = {
-                // Юзер натиснув Retry — пробуємо знову
                 log("Retry initAds")
                 initAds()
             }
@@ -204,52 +201,10 @@ class LoaderScreen : AdvancedScreen() {
     private fun goToFirstScreen() {
         runGDX {
             gdxGame.activity.showBanner()
-            showAppOpenThenGoToMenu()
-        }
-    }
 
-    private fun showAppOpenThenGoToMenu() {
-        when (AdConfig.getProvider(AdType.APP_OPEN)) {
-            AdProvider.ADMOB -> waitAndShowAdmobAppOpen()
-            AdProvider.CUSTOM -> {
-                val url = AdConfig.customAppOpenUrl()
-                if (url.isNotEmpty()) {
-                    AdConfig.isFullscreenAdShowing = true
-                    gdxGame.activity.runOnUiThread {
-                        BrowserUtil.open(gdxGame.activity, url)
-                    }
-                }
-                navigateToFirstScreen()
-            }
-            AdProvider.NA -> navigateToFirstScreen()
-        }
-    }
-
-    private fun waitAndShowAdmobAppOpen() {
-        val appOpenManager = gdxGame.activity.appOpenManager
-
-        gdxGame.activity.runOnUiThread {
-            appOpenManager.loadAdmobAppOpen()
-        }
-
-        coroutine?.launch {
-            var waited = 0
-            while (!appOpenManager.isAdReady() && waited < 3000) {
-                kotlinx.coroutines.delay(100)
-                waited += 100
-            }
-
-            gdxGame.activity.runOnUiThread {
-                if (appOpenManager.isAdReady()) {
-                    appOpenManager.showAdmobAppOpen(gdxGame.activity) {
-                        // Після показу — встановлюємо cooldown
-                        // щоб onAppForeground не показав ще раз одразу
-                        appOpenManager.markShown()  // ← додамо цей метод
-                        runGDX { navigateToFirstScreen() }
-                    }
-                } else {
-                    runGDX { navigateToFirstScreen() }
-                }
+            // App Open показ повністю в AppOpenManager — чекаємо onDone і навігуємо
+            gdxGame.activity.appOpenManager.showOnLoader(gdxGame.activity) {
+                runGDX { navigateToFirstScreen() }
             }
         }
     }

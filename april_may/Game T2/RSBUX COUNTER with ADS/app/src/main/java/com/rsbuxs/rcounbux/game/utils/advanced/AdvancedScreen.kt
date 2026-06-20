@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.rsbuxs.rcounbux.MainActivity
+import com.rsbuxs.rcounbux.adsmodule.AdSizeManager
 import com.rsbuxs.rcounbux.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rsbuxs.rcounbux.game.utils.Block
 import com.rsbuxs.rcounbux.game.utils.HEIGHT_UI
@@ -44,22 +45,20 @@ abstract class AdvancedScreen(
     val viewportUI by lazy { ExtendViewport(WIDTH, HEIGHT) }
     val stageUI    by lazy { AdvancedStage(viewportUI) }
 
-    val safeTopPX    get() = MainActivity.statusBarHeight
-    val safeBottomPX get() = MainActivity.navBarHeight
-    val safeBannerPX get() = MainActivity.bannerHeight
+    val safeStatusBarPX get() = MainActivity.statusBarHeight
+    val safeNavBarPX    get() = MainActivity.navBarHeight
 
     val screenWidthPX  get() = Gdx.graphics.width
-    val screenHeightPX get() = Gdx.graphics.height - safeTopPX
+    val screenHeightPX get() = Gdx.graphics.height - safeStatusBarPX
 
     private val scaleScreenToUiY: Float get() = (viewportUI.worldHeight / screenHeightPX)
+    private fun Int.toUI() = this * scaleScreenToUiY
 
-    val safeTopUI    get() = safeTopPX * scaleScreenToUiY
-    val safeBottomUI get() = safeBottomPX * scaleScreenToUiY
-    val safeBannerUI get() = safeBannerPX * scaleScreenToUiY
+    val safeStatusBarUI get() = safeStatusBarPX.toUI()
+    val safeNavBarUI    get() = safeNavBarPX.toUI()
 
-    // Сумарна висота банера + нативної реклами знизу в UI одиницях
-    // Якщо реклами немає — повертає 0f
-    val adBottomUI get() = MainActivity.adBottomHeightPx * scaleScreenToUiY
+    val adBannerUI get() = AdSizeManager.bannerHeightPx.toUI()
+    val adBottomUI get() = AdSizeManager.adBottomHeightPx.toUI()
 
     val inputMultiplexer    = InputMultiplexer()
 

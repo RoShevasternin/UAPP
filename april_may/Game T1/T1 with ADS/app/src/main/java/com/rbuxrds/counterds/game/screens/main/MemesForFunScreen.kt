@@ -35,7 +35,7 @@ class MemesForFunScreen: AdvancedScreen() {
 
         animShowScreen()
 
-        val coords = localToScreenCoordinates(Vector2(0f, safeBannerUI))
+        val coords = localToScreenCoordinates(Vector2(0f, adBannerUI))
         gdxGame.activity.showNativeAt(coords.y)
     }
 

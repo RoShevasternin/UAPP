@@ -16,8 +16,8 @@ android {
         applicationId = "com.rbxtreasure.fungamers"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -80,7 +80,7 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.2.1")
 
     // LibGDX ------------------------------------------------------------------------
-    val gdxVersion = "1.14.1"
+    val gdxVersion = "1.14.2"
     implementation("com.badlogicgames.gdx:gdx-backend-android:$gdxVersion")
     natives("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a")
     natives("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a")

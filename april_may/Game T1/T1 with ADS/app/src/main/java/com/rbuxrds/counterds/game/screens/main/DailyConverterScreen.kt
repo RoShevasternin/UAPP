@@ -1,5 +1,6 @@
 package com.rbuxrds.counterds.game.screens.main
 
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.rbuxrds.counterds.game.actors.ATmpGroup
 import com.rbuxrds.counterds.game.actors.daily.ADailyConverterItem
@@ -13,8 +14,6 @@ import com.rbuxrds.counterds.game.utils.actor.addActorWithConstraints
 import com.rbuxrds.counterds.game.utils.actor.animDelay
 import com.rbuxrds.counterds.game.utils.actor.animHide
 import com.rbuxrds.counterds.game.utils.actor.animShow
-import com.rbuxrds.counterds.game.utils.actor.setBounds
-import com.rbuxrds.counterds.game.utils.actor.setSize
 import com.rbuxrds.counterds.game.utils.advanced.AdvancedScreen
 import com.rbuxrds.counterds.game.utils.gdxGame
 
@@ -50,6 +49,13 @@ class DailyConverterScreen: AdvancedScreen() {
     // ------------------------------------------------------------------------
     // Lifecycle
     // ------------------------------------------------------------------------
+
+    override fun show() {
+        val coords = stageUI.root.localToScreenCoordinates(Vector2(0f, adBannerUI))
+        gdxGame.activity.showNativeAt(coords.y)
+
+        super.show()
+    }
 
     override fun Group.addActorsOnStageUI() {
         color.a = 0f

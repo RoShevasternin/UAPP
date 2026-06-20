@@ -23,6 +23,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Rbux Counter"
+rootProject.name = "RBX Hub"
 include(":app")
  

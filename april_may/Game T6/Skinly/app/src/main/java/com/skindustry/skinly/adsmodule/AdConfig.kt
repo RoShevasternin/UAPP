@@ -20,7 +20,7 @@ object AdConfig {
             AdType.INTERSTITIAL -> providers.interstitial
             AdType.APP_OPEN     -> providers.appOpen
         }
-        return AdProvider.from(value)
+        return AdProvider.Companion.from(value)
     }
 
     // Яка секція config відповідає типу юзера

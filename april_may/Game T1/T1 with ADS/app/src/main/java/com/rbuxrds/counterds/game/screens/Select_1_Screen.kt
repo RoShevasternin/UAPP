@@ -2,6 +2,7 @@ package com.rbuxrds.counterds.game.screens
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Group
+import com.rbuxrds.counterds.adsmodule.AdSizeManager
 import com.rbuxrds.counterds.game.actors.button.ABlueButton
 import com.rbuxrds.counterds.game.actors.layout.AlignH
 import com.rbuxrds.counterds.game.actors.layout.AlignV
@@ -23,9 +24,11 @@ import com.rbuxrds.counterds.game.utils.actor.enable
 import com.rbuxrds.counterds.game.utils.actor.setSize
 import com.rbuxrds.counterds.game.utils.advanced.AdvancedScreen
 import com.rbuxrds.counterds.game.utils.gdxGame
+import com.rbuxrds.counterds.game.utils.runGDX
 import com.rbuxrds.counterds.game.utils.wizardHelper.WizardController
 import com.rbuxrds.counterds.game.utils.wizardHelper.WizardStep
 import com.rbuxrds.counterds.util.log
+import kotlinx.coroutines.launch
 
 class Select_1_Screen: AdvancedScreen() {
 
@@ -101,7 +104,10 @@ class Select_1_Screen: AdvancedScreen() {
     private fun Group.addNextBtn() {
         aNextBtn.setSize(344f, 56f)
         addActorAligned(aNextBtn, AlignH.CENTER, AlignV.BOTTOM)
-        aNextBtn.y += safeBannerUI
+
+        coroutine?.launch {
+            AdSizeManager.adBottomFlow.collect { runGDX { aNextBtn.y += adBannerUI } }
+        }
 
         aNextBtn.disableBtn()
 
@@ -132,10 +138,10 @@ class Select_1_Screen: AdvancedScreen() {
             }
 
             step.onEnterBlock = {
-                if (index <= 1) {
-                    val coords = stageUI.root.localToScreenCoordinates(Vector2(0f, aNextBtn.y + aNextBtn.height + 15f))
-                    gdxGame.activity.showNativeAt(coords.y)
-                } else gdxGame.activity.hideNative()
+//                if (index <= 1) {
+//                    val coords = stageUI.root.localToScreenCoordinates(Vector2(0f, aNextBtn.y + aNextBtn.height + 15f))
+//                    gdxGame.activity.showNativeAt(coords.y)
+//                } else gdxGame.activity.hideNative()
 
                 aPanelTop.setTitle(step.title)
             }

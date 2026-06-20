@@ -142,7 +142,7 @@ class AllCharactersScreen: AdvancedScreen() {
     private fun Group.addDoneBtn() {
         aDoneBtn.setSize(344f, 56f)
         addActorAligned(aDoneBtn, AlignH.CENTER, AlignV.BOTTOM)
-        aDoneBtn.y += safeBannerUI //20f
+        aDoneBtn.y += adBannerUI //20f
 
         aDoneBtn.onClick = { goToCharacters() }
     }

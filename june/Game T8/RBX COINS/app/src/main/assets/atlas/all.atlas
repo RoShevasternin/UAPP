@@ -1,0 +1,96 @@
+all.png
+size: 2041, 465
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+back_def
+  rotate: false
+  xy: 779, 2
+  size: 123, 123
+  orig: 123, 123
+  offset: 0, 0
+  index: -1
+claim
+  rotate: false
+  xy: 473, 2
+  size: 108, 96
+  orig: 108, 96
+  offset: 0, 0
+  index: -1
+claimed
+  rotate: false
+  xy: 583, 2
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+claimed_circle
+  rotate: false
+  xy: 2, 2
+  size: 24, 27
+  orig: 24, 27
+  offset: 0, 0
+  index: -1
+close
+  rotate: false
+  xy: 681, 2
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+close_f
+  rotate: false
+  xy: 1027, 127
+  size: 336, 336
+  orig: 336, 336
+  offset: 0, 0
+  index: -1
+icon_get_prize
+  rotate: false
+  xy: 28, 2
+  size: 324, 60
+  orig: 324, 60
+  offset: 0, 0
+  index: -1
+logo
+  rotate: false
+  xy: 904, 2
+  size: 195, 123
+  orig: 195, 123
+  offset: 0, 0
+  index: -1
+lose_f
+  rotate: false
+  xy: 1365, 127
+  size: 336, 336
+  orig: 336, 336
+  offset: 0, 0
+  index: -1
+rbx
+  rotate: false
+  xy: 354, 2
+  size: 117, 60
+  orig: 117, 60
+  offset: 0, 0
+  index: -1
+settings_def
+  rotate: false
+  xy: 1101, 2
+  size: 123, 123
+  orig: 123, 123
+  offset: 0, 0
+  index: -1
+win_f
+  rotate: false
+  xy: 1703, 127
+  size: 336, 336
+  orig: 336, 336
+  offset: 0, 0
+  index: -1
+yellow_def
+  rotate: false
+  xy: 2, 127
+  size: 1023, 171
+  orig: 1023, 171
+  offset: 0, 0
+  index: -1
