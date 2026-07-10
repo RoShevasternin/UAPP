@@ -1,0 +1,152 @@
+all.png
+size: 1873, 817
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+back_def
+  rotate: false
+  xy: 140, 2
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+claim
+  rotate: false
+  xy: 384, 2
+  size: 126, 195
+  orig: 126, 195
+  offset: 0, 0
+  index: -1
+claim_def
+  rotate: false
+  xy: 805, 528
+  size: 954, 114
+  orig: 954, 114
+  offset: 0, 0
+  index: -1
+claimed
+  rotate: false
+  xy: 512, 2
+  size: 126, 195
+  orig: 126, 195
+  offset: 0, 0
+  index: -1
+close
+  rotate: false
+  xy: 640, 2
+  size: 126, 195
+  orig: 126, 195
+  offset: 0, 0
+  index: -1
+close_f
+  rotate: false
+  xy: 2, 199
+  size: 327, 327
+  orig: 327, 327
+  offset: 0, 0
+  index: -1
+get_prize_def
+  rotate: false
+  xy: 2, 528
+  size: 801, 114
+  orig: 801, 114
+  offset: 0, 0
+  index: -1
+icon_btn_1
+  rotate: false
+  xy: 989, 199
+  size: 357, 75
+  orig: 357, 75
+  offset: 0, 0
+  index: -1
+icon_btn_2
+  rotate: false
+  xy: 1314, 2
+  size: 246, 75
+  orig: 246, 75
+  offset: 0, 0
+  index: -1
+icon_btn_3
+  rotate: false
+  xy: 1348, 199
+  size: 501, 75
+  orig: 501, 75
+  offset: 0, 0
+  index: -1
+icon_get_prize
+  rotate: false
+  xy: 1562, 2
+  size: 309, 54
+  orig: 309, 54
+  offset: 0, 0
+  index: -1
+lose_f
+  rotate: false
+  xy: 331, 199
+  size: 327, 327
+  orig: 327, 327
+  offset: 0, 0
+  index: -1
+o_point_1
+  rotate: false
+  xy: 768, 2
+  size: 180, 30
+  orig: 180, 30
+  offset: 0, 0
+  index: -1
+o_point_2
+  rotate: false
+  xy: 950, 2
+  size: 180, 30
+  orig: 180, 30
+  offset: 0, 0
+  index: -1
+o_point_3
+  rotate: false
+  xy: 1132, 2
+  size: 180, 30
+  orig: 180, 30
+  offset: 0, 0
+  index: -1
+pink_def
+  rotate: false
+  xy: 2, 644
+  size: 1032, 171
+  orig: 1032, 171
+  offset: 0, 0
+  index: -1
+point_check
+  rotate: false
+  xy: 2, 2
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+point_def
+  rotate: false
+  xy: 34, 2
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+rbx
+  rotate: false
+  xy: 66, 2
+  size: 72, 72
+  orig: 72, 72
+  offset: 0, 0
+  index: -1
+settings_def
+  rotate: false
+  xy: 262, 2
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+win_f
+  rotate: false
+  xy: 660, 199
+  size: 327, 327
+  orig: 327, 327
+  offset: 0, 0
+  index: -1

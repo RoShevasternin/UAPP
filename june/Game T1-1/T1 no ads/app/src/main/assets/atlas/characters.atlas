@@ -1,0 +1,145 @@
+characters.png
+size: 882, 1222
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+1
+  rotate: false
+  xy: 2, 2
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+2
+  rotate: false
+  xy: 222, 2
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+3
+  rotate: false
+  xy: 442, 2
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+4
+  rotate: false
+  xy: 662, 2
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+5
+  rotate: false
+  xy: 2, 246
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+6
+  rotate: false
+  xy: 222, 246
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+7
+  rotate: false
+  xy: 442, 246
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+8
+  rotate: false
+  xy: 662, 246
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+9
+  rotate: false
+  xy: 2, 490
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+10
+  rotate: false
+  xy: 222, 490
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+11
+  rotate: false
+  xy: 442, 490
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+12
+  rotate: false
+  xy: 662, 490
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+13
+  rotate: false
+  xy: 2, 734
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+14
+  rotate: false
+  xy: 222, 734
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+15
+  rotate: false
+  xy: 442, 734
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+16
+  rotate: false
+  xy: 662, 734
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+17
+  rotate: false
+  xy: 2, 978
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+18
+  rotate: false
+  xy: 222, 978
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+19
+  rotate: false
+  xy: 442, 978
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1
+20
+  rotate: false
+  xy: 662, 978
+  size: 218, 242
+  orig: 218, 242
+  offset: 0, 0
+  index: -1

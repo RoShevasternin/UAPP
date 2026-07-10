@@ -1,0 +1,6 @@
+alias: oi9jaUsaduMMMJHH
+pass: o90TTHgtyhasdGuxzcvm
+
+privacy: https://vadopruk.github.io/RBX-Blitz/
+
+Octo Browser: 1 GP DEV

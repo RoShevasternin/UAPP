@@ -1,0 +1,138 @@
+all.png
+size: 1992, 671
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+back_def
+  rotate: false
+  xy: 76, 2
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+claim
+  rotate: false
+  xy: 320, 2
+  size: 126, 195
+  orig: 126, 195
+  offset: 0, 0
+  index: -1
+claim_def
+  rotate: false
+  xy: 2, 498
+  size: 954, 114
+  orig: 954, 114
+  offset: 0, 0
+  index: -1
+claimed
+  rotate: false
+  xy: 448, 2
+  size: 126, 195
+  orig: 126, 195
+  offset: 0, 0
+  index: -1
+close
+  rotate: false
+  xy: 576, 2
+  size: 126, 195
+  orig: 126, 195
+  offset: 0, 0
+  index: -1
+close_f
+  rotate: false
+  xy: 2, 199
+  size: 297, 297
+  orig: 297, 297
+  offset: 0, 0
+  index: -1
+icon_btn_1
+  rotate: false
+  xy: 1210, 199
+  size: 357, 75
+  orig: 357, 75
+  offset: 0, 0
+  index: -1
+icon_btn_2
+  rotate: false
+  xy: 1632, 2
+  size: 246, 75
+  orig: 246, 75
+  offset: 0, 0
+  index: -1
+icon_get_prize
+  rotate: false
+  xy: 899, 199
+  size: 309, 54
+  orig: 309, 54
+  offset: 0, 0
+  index: -1
+lose_f
+  rotate: false
+  xy: 301, 199
+  size: 297, 297
+  orig: 297, 297
+  offset: 0, 0
+  index: -1
+o_point_1
+  rotate: false
+  xy: 704, 2
+  size: 180, 30
+  orig: 180, 30
+  offset: 0, 0
+  index: -1
+o_point_2
+  rotate: false
+  xy: 886, 2
+  size: 180, 30
+  orig: 180, 30
+  offset: 0, 0
+  index: -1
+o_point_3
+  rotate: false
+  xy: 1068, 2
+  size: 180, 30
+  orig: 180, 30
+  offset: 0, 0
+  index: -1
+pink_def
+  rotate: false
+  xy: 958, 498
+  size: 1032, 171
+  orig: 1032, 171
+  offset: 0, 0
+  index: -1
+quiz_check
+  rotate: false
+  xy: 1250, 2
+  size: 189, 24
+  orig: 189, 24
+  offset: 0, 0
+  index: -1
+quiz_def
+  rotate: false
+  xy: 1441, 2
+  size: 189, 24
+  orig: 189, 24
+  offset: 0, 0
+  index: -1
+rbx
+  rotate: false
+  xy: 2, 2
+  size: 72, 72
+  orig: 72, 72
+  offset: 0, 0
+  index: -1
+settings_def
+  rotate: false
+  xy: 198, 2
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+win_f
+  rotate: false
+  xy: 600, 199
+  size: 297, 297
+  orig: 297, 297
+  offset: 0, 0
+  index: -1

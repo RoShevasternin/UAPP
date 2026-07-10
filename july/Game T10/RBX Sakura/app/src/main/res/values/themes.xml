@@ -1,0 +1,7 @@
+<resources>
+<style name="Base.Theme.RBXSakura" parent="Theme.AppCompat.NoActionBar">
+    <item name="android:windowBackground">@color/background</item>
+</style>
+
+<style name="Theme.RBXSakura" parent="Base.Theme.RBXSakura" />
+</resources>

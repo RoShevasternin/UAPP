@@ -1,0 +1,103 @@
+all.png
+size: 1933, 569
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+back_def
+  rotate: false
+  xy: 959, 2
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+blue_def
+  rotate: false
+  xy: 2, 124
+  size: 936, 132
+  orig: 936, 132
+  offset: 0, 0
+  index: -1
+claim
+  rotate: false
+  xy: 940, 124
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+claimed
+  rotate: false
+  xy: 763, 2
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+close
+  rotate: false
+  xy: 861, 2
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+close_f
+  rotate: false
+  xy: 1036, 270
+  size: 297, 297
+  orig: 297, 297
+  offset: 0, 0
+  index: -1
+icon_get_prize
+  rotate: false
+  xy: 384, 2
+  size: 309, 54
+  orig: 309, 54
+  offset: 0, 0
+  index: -1
+lose_f
+  rotate: false
+  xy: 1335, 270
+  size: 297, 297
+  orig: 297, 297
+  offset: 0, 0
+  index: -1
+quiz_check
+  rotate: false
+  xy: 2, 2
+  size: 189, 24
+  orig: 189, 24
+  offset: 0, 0
+  index: -1
+quiz_def
+  rotate: false
+  xy: 193, 2
+  size: 189, 24
+  orig: 189, 24
+  offset: 0, 0
+  index: -1
+rbx
+  rotate: false
+  xy: 695, 2
+  size: 66, 72
+  orig: 66, 72
+  offset: 0, 0
+  index: -1
+settings_def
+  rotate: false
+  xy: 1081, 2
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+win_f
+  rotate: false
+  xy: 1634, 270
+  size: 297, 297
+  orig: 297, 297
+  offset: 0, 0
+  index: -1
+yellow_def
+  rotate: false
+  xy: 2, 270
+  size: 1032, 168
+  orig: 1032, 168
+  offset: 0, 0
+  index: -1
