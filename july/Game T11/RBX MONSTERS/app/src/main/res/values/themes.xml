@@ -1,0 +1,7 @@
+<resources>
+<style name="Base.Theme.RBXMONSTERS" parent="Theme.AppCompat.NoActionBar">
+    <item name="android:windowBackground">@color/black</item>
+</style>
+
+<style name="Theme.RBXMONSTERS" parent="Base.Theme.RBXMONSTERS" />
+</resources>
