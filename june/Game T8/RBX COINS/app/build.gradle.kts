@@ -6,22 +6,22 @@ plugins {
 
 android {
     namespace = "com.coinsclub.funrbx"
-    compileSdk { version = release(36) { minorApiLevel = 1 } }
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.coinsclub.funrbx"
         minSdk        = 24
-        targetSdk     = 36
-        versionCode   = 1
-        versionName   = "1.0.0"
+        targetSdk     = 37
+        versionCode   = 2
+        versionName   = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         debug {
-            isMinifyEnabled   = true
-            isShrinkResources = true
+            isMinifyEnabled   = false
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -68,10 +68,10 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
 
     // AndroidX ------------------------------------------------------------------------
-    implementation("androidx.core:core-ktx:1.18.0")
+    implementation("androidx.core:core-ktx:1.19.0")
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("androidx.activity:activity-ktx:1.13.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.2")
     implementation("androidx.navigation:navigation-fragment-ktx:2.9.8")
     implementation("androidx.datastore:datastore-preferences:1.2.1")
 
@@ -95,14 +95,15 @@ dependencies {
     // Business Logic ------------------------------------------------------------------------
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:34.15.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.16.0"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-config")
 
     // TikTok
     implementation("com.github.tiktok:tiktok-business-android-sdk:1.6.1")
 
     // Billing
-    implementation("com.android.billingclient:billing-ktx:9.0.0")
+    implementation("com.android.billingclient:billing-ktx:9.1.0")
 
     // Install Referrer (для визначення organic/paid юзера)
     implementation("com.android.installreferrer:installreferrer:2.2")
@@ -120,7 +121,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-process:2.11.0")
 
     // Glide (завантаження картинок для кастомної реклами)
-    implementation("com.github.bumptech.glide:glide:5.0.7")
+    implementation("com.github.bumptech.glide:glide:5.0.9")
 }
 
 tasks.register("copyAndroidNatives") {

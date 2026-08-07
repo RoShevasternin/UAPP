@@ -15,7 +15,6 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.badlogic.gdx.backends.android.AndroidFragmentApplication
-import com.google.gson.Gson
 import com.coinsclub.funrbx.adsmodule.AdConfig
 import com.coinsclub.funrbx.adsmodule.AdManager
 import com.coinsclub.funrbx.adsmodule.AdSizeManager
@@ -23,11 +22,14 @@ import com.coinsclub.funrbx.adsmodule.AppOpenManager
 import com.coinsclub.funrbx.adsmodule.RemoteConfigModel
 import com.coinsclub.funrbx.adsmodule.UserDetector
 import com.coinsclub.funrbx.databinding.ActivityMainBinding
-import com.coinsclub.funrbx.game.utils.LINK_JSON
 import com.coinsclub.funrbx.game.utils.runGDX
 import com.coinsclub.funrbx.services.tiktok.TikTokManager
 import com.coinsclub.funrbx.util.OneTime
 import com.coinsclub.funrbx.util.log
+import com.google.firebase.Firebase
+import com.google.firebase.remoteconfig.remoteConfig
+import com.google.firebase.remoteconfig.remoteConfigSettings
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -239,35 +241,35 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     }
 
     private fun fetchRemoteConfig(onComplete: (success: Boolean) -> Unit) {
-        // Простий HTTP запит замість Firebase
-        Thread {
-            runCatching {
-                val url = java.net.URL(LINK_JSON)
-                val connection = url.openConnection() as java.net.HttpURLConnection
-                connection.connectTimeout = 5000
-                connection.readTimeout    = 5000
-                connection.requestMethod  = "GET"
+        val remoteConfig = Firebase.remoteConfig
 
-                val json = connection.inputStream.bufferedReader().readText()
-                connection.disconnect()
+        // налаштування (інтервал оновлення)
+        val settings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = 3600   // 1 год; для тесту постав 0
+        }
+        remoteConfig.setConfigSettingsAsync(settings)
 
-                val model = Gson().fromJson(json, RemoteConfigModel::class.java)
-                AdConfig.remoteConfig = model
-                App.adPref.saveConfig(model)
+        remoteConfig.fetchAndActivate().addOnCompleteListener(this) { task ->
+            if (task.isSuccessful) {
+                runCatching {
+                    val json = remoteConfig.getString("config")
+                    val model = Gson().fromJson(json, RemoteConfigModel::class.java)
 
-                //log("RAW JSON = $json")
-                log("MODEL = $model")
-                log("Config applied. UserType=${AdConfig.userType}")
+                    AdConfig.remoteConfig = model
+                    App.adPref.saveConfig(model)
+                    log("MODEL FRC = $model")
 
-                runOnUiThread {
                     initTikTok(model)
                     onComplete(true)
+                }.onFailure {
+                    log("Parse failed FRC: $it")
+                    onComplete(false)
                 }
-            }.onFailure {
-                log("Failed to fetch config: $it")
-                runOnUiThread { onComplete(false) }
+            } else {
+                log("Fetch failed FRC: ${task.exception}")
+                onComplete(false)
             }
-        }.start()
+        }
     }
 
     // ------------------------------------------------------------------------

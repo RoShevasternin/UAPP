@@ -6,5 +6,3 @@ const val HEIGHT_UI = 815f
 const val TIME_ANIM_SCREEN = 0.25f
 
 const val VERTICAL_BIAS = 0.73f
-
-const val LINK_JSON = "https://api.bebekoyunu.com.tr/app_011.json"

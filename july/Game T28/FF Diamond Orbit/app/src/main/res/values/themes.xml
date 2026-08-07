@@ -1,0 +1,7 @@
+<resources>
+    <style name="Base.Theme.FFDiamondOrbit" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/black</item>
+    </style>
+
+    <style name="Theme.FFDiamondOrbit" parent="Base.Theme.FFDiamondOrbit" />
+</resources>

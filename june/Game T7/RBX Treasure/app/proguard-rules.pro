@@ -20,8 +20,7 @@
     boolean[] active;
 }
 
-#Ads -----------------------------------------------------------------
-
+#Ads Module -----------------------------------------------------------------
 # Зберігаємо всі data класи для Gson
 -keep class com.rbxtreasure.fungamers.adsmodule.** { *; }
 -keepclassmembers class com.rbxtreasure.fungamers.adsmodule.** { *; }

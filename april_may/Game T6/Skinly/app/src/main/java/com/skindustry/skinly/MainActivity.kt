@@ -7,7 +7,6 @@ import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
-import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
@@ -15,6 +14,9 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.badlogic.gdx.backends.android.AndroidFragmentApplication
+import com.google.firebase.Firebase
+import com.google.firebase.remoteconfig.remoteConfig
+import com.google.firebase.remoteconfig.remoteConfigSettings
 import com.google.gson.Gson
 import com.skindustry.skinly.adsmodule.AdConfig
 import com.skindustry.skinly.adsmodule.AdManager
@@ -23,8 +25,6 @@ import com.skindustry.skinly.adsmodule.AppOpenManager
 import com.skindustry.skinly.adsmodule.RemoteConfigModel
 import com.skindustry.skinly.adsmodule.UserDetector
 import com.skindustry.skinly.databinding.ActivityMainBinding
-import com.skindustry.skinly.game.utils.LINK_JSON
-import com.skindustry.skinly.game.utils.runGDX
 import com.skindustry.skinly.services.tiktok.TikTokManager
 import com.skindustry.skinly.util.OneTime
 import com.skindustry.skinly.util.ShareManager
@@ -33,7 +33,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.compareTo
 import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
@@ -210,35 +209,35 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     }
 
     private fun fetchRemoteConfig(onComplete: (success: Boolean) -> Unit) {
-        // Простий HTTP запит замість Firebase
-        Thread {
-            runCatching {
-                val url = java.net.URL(LINK_JSON)
-                val connection = url.openConnection() as java.net.HttpURLConnection
-                connection.connectTimeout = 5000
-                connection.readTimeout    = 5000
-                connection.requestMethod  = "GET"
+        val remoteConfig = Firebase.remoteConfig
 
-                val json = connection.inputStream.bufferedReader().readText()
-                connection.disconnect()
+        // налаштування (інтервал оновлення)
+        val settings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = 3600   // 1 год; для тесту постав 0
+        }
+        remoteConfig.setConfigSettingsAsync(settings)
 
-                val model = Gson().fromJson(json, RemoteConfigModel::class.java)
-                AdConfig.remoteConfig = model
-                App.adPref.saveConfig(model)
+        remoteConfig.fetchAndActivate().addOnCompleteListener(this) { task ->
+            if (task.isSuccessful) {
+                runCatching {
+                    val json = remoteConfig.getString("config")
+                    val model = Gson().fromJson(json, RemoteConfigModel::class.java)
 
-                //log("RAW JSON = $json")
-                log("MODEL = $model")
-                log("Config applied. UserType=${AdConfig.userType}")
+                    AdConfig.remoteConfig = model
+                    App.adPref.saveConfig(model)
+                    log("MODEL FRC = $model")
 
-                runOnUiThread {
                     initTikTok(model)
                     onComplete(true)
+                }.onFailure {
+                    log("Parse failed FRC: $it")
+                    onComplete(false)
                 }
-            }.onFailure {
-                log("Failed to fetch config: $it")
-                runOnUiThread { onComplete(false) }
+            } else {
+                log("Fetch failed FRC: ${task.exception}")
+                onComplete(false)
             }
-        }.start()
+        }
     }
 
     // ------------------------------------------------------------------------

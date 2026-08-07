@@ -1,0 +1,145 @@
+all.png
+size: 1782, 1484
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+back_def
+  rotate: false
+  xy: 1330, 58
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+claim
+  rotate: false
+  xy: 1036, 58
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+claimed
+  rotate: false
+  xy: 1134, 58
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+close
+  rotate: false
+  xy: 1232, 58
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+di
+  rotate: false
+  xy: 1318, 2
+  size: 54, 54
+  orig: 54, 54
+  offset: 0, 0
+  index: -1
+false_def
+  rotate: false
+  xy: 2, 180
+  size: 888, 156
+  orig: 888, 156
+  offset: 0, 0
+  index: -1
+item_check
+  rotate: false
+  xy: 340, 864
+  size: 504, 618
+  orig: 504, 618
+  offset: 0, 0
+  index: -1
+item_def
+  rotate: false
+  xy: 846, 864
+  size: 504, 618
+  orig: 504, 618
+  offset: 0, 0
+  index: -1
+p1
+  rotate: false
+  xy: 2, 2
+  size: 102, 30
+  orig: 102, 30
+  offset: 0, 0
+  index: -1
+p2
+  rotate: false
+  xy: 106, 2
+  size: 102, 30
+  orig: 102, 30
+  offset: 0, 0
+  index: -1
+p3
+  rotate: false
+  xy: 210, 2
+  size: 102, 30
+  orig: 102, 30
+  offset: 0, 0
+  index: -1
+progress
+  rotate: false
+  xy: 314, 2
+  size: 1002, 30
+  orig: 1002, 30
+  offset: 0, 0
+  index: -1
+progress_back
+  rotate: false
+  xy: 2, 58
+  size: 1032, 60
+  orig: 1032, 60
+  offset: 0, 0
+  index: -1
+scratch_25
+  rotate: false
+  xy: 1036, 526
+  size: 336, 336
+  orig: 336, 336
+  offset: 0, 0
+  index: -1
+scratch_here
+  rotate: false
+  xy: 1374, 526
+  size: 336, 336
+  orig: 336, 336
+  offset: 0, 0
+  index: -1
+scratch_zero
+  rotate: false
+  xy: 2, 864
+  size: 336, 336
+  orig: 336, 336
+  offset: 0, 0
+  index: -1
+settings_def
+  rotate: false
+  xy: 1452, 58
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+true_def
+  rotate: false
+  xy: 892, 180
+  size: 888, 156
+  orig: 888, 156
+  offset: 0, 0
+  index: -1
+yellow_def
+  rotate: false
+  xy: 2, 338
+  size: 1035, 186
+  orig: 1035, 186
+  offset: 0, 0
+  index: -1
+yellow_dis
+  rotate: false
+  xy: 2, 526
+  size: 1032, 186
+  orig: 1032, 186
+  offset: 0, 0
+  index: -1

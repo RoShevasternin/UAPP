@@ -146,7 +146,7 @@ class LoaderScreen : AdvancedScreen() {
 
             gdxGame.musicUtil.apply { currentMusic = MAIN.apply {
                 isLooping = true
-                coff      = 0.25f
+                coff      = 0.12f
             } }
 
             // ── Завантажуємо рекламну конфігурацію ────────────────────────────

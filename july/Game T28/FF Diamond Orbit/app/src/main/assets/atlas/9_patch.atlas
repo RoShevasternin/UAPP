@@ -1,0 +1,32 @@
+9_patch.png
+size: 472, 404
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+panel_balance
+  rotate: false
+  xy: 2, 2
+  size: 357, 120
+  orig: 357, 120
+  offset: 0, 0
+  index: -1
+  split: 164, 150, 0, 120
+  pad: -1, -1, -1, -1
+tab_check
+  rotate: false
+  xy: 2, 124
+  size: 468, 138
+  orig: 468, 138
+  offset: 0, 0
+  index: -1
+  split: 10, 6, 0, 138
+  pad: -1, -1, -1, -1
+tab_def
+  rotate: false
+  xy: 2, 264
+  size: 468, 138
+  orig: 468, 138
+  offset: 0, 0
+  index: -1
+  split: 10, 9, 0, 138
+  pad: -1, -1, -1, -1
