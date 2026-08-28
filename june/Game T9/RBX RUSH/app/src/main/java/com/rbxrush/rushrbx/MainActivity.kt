@@ -1,20 +1,28 @@
 package com.rbxrush.rushrbx
 
+import android.Manifest
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.badlogic.gdx.backends.android.AndroidFragmentApplication
+import com.google.firebase.Firebase
+import com.google.firebase.remoteconfig.remoteConfig
+import com.google.firebase.remoteconfig.remoteConfigSettings
 import com.google.gson.Gson
 import com.rbxrush.rushrbx.adsmodule.AdConfig
 import com.rbxrush.rushrbx.adsmodule.AdManager
@@ -23,7 +31,6 @@ import com.rbxrush.rushrbx.adsmodule.AppOpenManager
 import com.rbxrush.rushrbx.adsmodule.RemoteConfigModel
 import com.rbxrush.rushrbx.adsmodule.UserDetector
 import com.rbxrush.rushrbx.databinding.ActivityMainBinding
-import com.rbxrush.rushrbx.game.utils.LINK_JSON
 import com.rbxrush.rushrbx.game.utils.runGDX
 import com.rbxrush.rushrbx.services.tiktok.TikTokManager
 import com.rbxrush.rushrbx.util.OneTime
@@ -66,6 +73,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         super.onCreate(savedInstanceState)
 
         initialize()
+        requestNotificationPermission()
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             onceSystemBarHeight.use {
@@ -240,35 +248,35 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     }
 
     private fun fetchRemoteConfig(onComplete: (success: Boolean) -> Unit) {
-        // Простий HTTP запит замість Firebase
-        Thread {
-            runCatching {
-                val url = java.net.URL(LINK_JSON)
-                val connection = url.openConnection() as java.net.HttpURLConnection
-                connection.connectTimeout = 5000
-                connection.readTimeout    = 5000
-                connection.requestMethod  = "GET"
+        val remoteConfig = Firebase.remoteConfig
 
-                val json = connection.inputStream.bufferedReader().readText()
-                connection.disconnect()
+        // налаштування (інтервал оновлення)
+        val settings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = 3600   // 1 год; для тесту постав 0
+        }
+        remoteConfig.setConfigSettingsAsync(settings)
 
-                val model = Gson().fromJson(json, RemoteConfigModel::class.java)
-                AdConfig.remoteConfig = model
-                App.adPref.saveConfig(model)
+        remoteConfig.fetchAndActivate().addOnCompleteListener(this) { task ->
+            if (task.isSuccessful) {
+                runCatching {
+                    val json = remoteConfig.getString("config")
+                    val model = Gson().fromJson(json, RemoteConfigModel::class.java)
 
-                //log("RAW JSON = $json")
-                log("MODEL = $model")
-                log("Config applied. UserType=${AdConfig.userType}")
+                    AdConfig.remoteConfig = model
+                    App.adPref.saveConfig(model)
+                    log("MODEL FRC = $model")
 
-                runOnUiThread {
                     initTikTok(model)
                     onComplete(true)
+                }.onFailure {
+                    log("Parse failed FRC: $it")
+                    onComplete(false)
                 }
-            }.onFailure {
-                log("Failed to fetch config: $it")
-                runOnUiThread { onComplete(false) }
+            } else {
+                log("Fetch failed FRC: ${task.exception}")
+                onComplete(false)
             }
-        }.start()
+        }
     }
 
     // ------------------------------------------------------------------------
@@ -361,6 +369,25 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         val cm = getSystemService(CONNECTIVITY_SERVICE) as? ConnectivityManager ?: return false
         val caps = cm.getNetworkCapabilities(cm.activeNetwork) ?: return false
         return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    // ------------------------------------------------------------------------
+    // Push permission (Android 13+)
+    // ------------------------------------------------------------------------
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        log("POST_NOTIFICATIONS granted = $granted")
+    }
+
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+
+        val granted = ContextCompat.checkSelfPermission(
+            this, Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
+
+        if (!granted) notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
 
 }

@@ -1,0 +1,234 @@
+{
+  "id": "big_five",
+  "title": "Big Five",
+  "engine": "axis",
+  "answerFormat": "scale",
+  "scaleSize": 5,
+  "resultRule": "per_axis",
+  "axes": [
+    {
+      "id": "openness",
+      "threshold": 12
+    },
+    {
+      "id": "conscientiousness",
+      "threshold": 12
+    },
+    {
+      "id": "extraversion",
+      "threshold": 12
+    },
+    {
+      "id": "agreeableness",
+      "threshold": 12
+    },
+    {
+      "id": "emotional_sensitivity",
+      "threshold": 12
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1",
+      "text": "Am the life of the party",
+      "axis": "extraversion",
+      "reverse": false
+    },
+    {
+      "id": "q2",
+      "text": "Talk to a lot of different people at parties",
+      "axis": "extraversion",
+      "reverse": false
+    },
+    {
+      "id": "q3",
+      "text": "Don't talk a lot",
+      "axis": "extraversion",
+      "reverse": true
+    },
+    {
+      "id": "q4",
+      "text": "Keep in the background",
+      "axis": "extraversion",
+      "reverse": true
+    },
+    {
+      "id": "q5",
+      "text": "Sympathize with others' feelings",
+      "axis": "agreeableness",
+      "reverse": false
+    },
+    {
+      "id": "q6",
+      "text": "Feel others' emotions",
+      "axis": "agreeableness",
+      "reverse": false
+    },
+    {
+      "id": "q7",
+      "text": "Am not interested in other people's problems",
+      "axis": "agreeableness",
+      "reverse": true
+    },
+    {
+      "id": "q8",
+      "text": "Am not really interested in others",
+      "axis": "agreeableness",
+      "reverse": true
+    },
+    {
+      "id": "q9",
+      "text": "Get chores done right away",
+      "axis": "conscientiousness",
+      "reverse": false
+    },
+    {
+      "id": "q10",
+      "text": "Like order",
+      "axis": "conscientiousness",
+      "reverse": false
+    },
+    {
+      "id": "q11",
+      "text": "Often forget to put things back in their proper place",
+      "axis": "conscientiousness",
+      "reverse": true
+    },
+    {
+      "id": "q12",
+      "text": "Make a mess of things",
+      "axis": "conscientiousness",
+      "reverse": true
+    },
+    {
+      "id": "q13",
+      "text": "Have frequent mood swings",
+      "axis": "emotional_sensitivity",
+      "reverse": false
+    },
+    {
+      "id": "q14",
+      "text": "Get upset easily",
+      "axis": "emotional_sensitivity",
+      "reverse": false
+    },
+    {
+      "id": "q15",
+      "text": "Am relaxed most of the time",
+      "axis": "emotional_sensitivity",
+      "reverse": true
+    },
+    {
+      "id": "q16",
+      "text": "Seldom feel blue",
+      "axis": "emotional_sensitivity",
+      "reverse": true
+    },
+    {
+      "id": "q17",
+      "text": "Have a vivid imagination",
+      "axis": "openness",
+      "reverse": false
+    },
+    {
+      "id": "q18",
+      "text": "Am not interested in abstract ideas",
+      "axis": "openness",
+      "reverse": true
+    },
+    {
+      "id": "q19",
+      "text": "Have difficulty understanding abstract ideas",
+      "axis": "openness",
+      "reverse": true
+    },
+    {
+      "id": "q20",
+      "text": "Do not have a good imagination",
+      "axis": "openness",
+      "reverse": true
+    }
+  ],
+  "results": [
+    {
+      "id": "openness_high",
+      "name": "Openness — High",
+      "tagline": "A mind that wanders far.",
+      "body": "You're drawn to ideas, art, and the road less taken. Novelty excites you and sameness drains you. You'd rather explore a question than accept an easy answer.",
+      "atYourBest": "imaginative, curious, endlessly creative.",
+      "youGrowWhen": "you ground your big ideas in the here and now."
+    },
+    {
+      "id": "openness_low",
+      "name": "Openness — Low",
+      "tagline": "Rooted and real.",
+      "body": "You trust what's proven and value the comfort of the familiar. You're practical, grounded, and hard to sway with hype. While others chase the new, you keep what works.",
+      "atYourBest": "practical, consistent, dependable.",
+      "youGrowWhen": "you stay open to the occasional new path."
+    },
+    {
+      "id": "conscientiousness_high",
+      "name": "Conscientiousness — High",
+      "tagline": "The one who follows through.",
+      "body": "You plan, you finish, you keep your word. Discipline comes more naturally to you than to most, and messiness quietly bothers you. People trust you because you earn it, every time.",
+      "atYourBest": "organized, driven, reliable to the end.",
+      "youGrowWhen": "you leave room for spontaneity and rest."
+    },
+    {
+      "id": "conscientiousness_low",
+      "name": "Conscientiousness — Low",
+      "tagline": "Free and flexible.",
+      "body": "You go with the flow and adapt fast when plans change. Rigid structure feels like a cage — you'd rather stay open and improvise. Life with you is rarely boring.",
+      "atYourBest": "spontaneous, easygoing, adaptable.",
+      "youGrowWhen": "you add just enough structure to reach your goals."
+    },
+    {
+      "id": "extraversion_high",
+      "name": "Extraversion — High",
+      "tagline": "Charged by people.",
+      "body": "You come alive around others — energy in, energy out. You think out loud, connect easily, and rooms feel warmer when you arrive. Solitude is fine, but people are your fuel.",
+      "atYourBest": "sociable, energetic, magnetic.",
+      "youGrowWhen": "you make space for quiet to recharge."
+    },
+    {
+      "id": "extraversion_low",
+      "name": "Extraversion — Low",
+      "tagline": "Quiet depth.",
+      "body": "You recharge in your own company and prefer meaning over noise. You listen more than you speak, and when you do speak, it counts. Your inner world is rich and entirely yours.",
+      "atYourBest": "thoughtful, self-sufficient, deep.",
+      "youGrowWhen": "you share more of that inner world with the right people."
+    },
+    {
+      "id": "agreeableness_high",
+      "name": "Agreeableness — High",
+      "tagline": "Warm by nature.",
+      "body": "You lead with empathy and give people the benefit of the doubt. Harmony matters to you, and you feel others' emotions almost as your own. Kindness isn't a strategy for you — it's who you are.",
+      "atYourBest": "compassionate, trusting, cooperative.",
+      "youGrowWhen": "you stand firm for yourself as easily as you do for others."
+    },
+    {
+      "id": "agreeableness_low",
+      "name": "Agreeableness — Low",
+      "tagline": "Honest and direct.",
+      "body": "You say what you mean and value truth over comfort. You're not swayed by pressure and you don't hand out trust for free. People always know where they stand with you.",
+      "atYourBest": "straightforward, independent, fair.",
+      "youGrowWhen": "you soften the edges when it helps the people you value."
+    },
+    {
+      "id": "emotional_sensitivity_high",
+      "name": "Emotional Sensitivity — High",
+      "tagline": "You feel it all, deeply.",
+      "body": "Your emotions run rich and close to the surface — joy is brighter, and so is worry. You sense subtleties others miss, which makes you empathetic and perceptive. Your feelings aren't a weakness; they're a kind of intelligence.",
+      "atYourBest": "empathetic, passionate, deeply aware.",
+      "youGrowWhen": "you build calm anchors so the waves don't pull you under."
+    },
+    {
+      "id": "emotional_sensitivity_low",
+      "name": "Emotional Sensitivity — Low",
+      "tagline": "Calm in the storm.",
+      "body": "Little rattles you. You stay level when others spiral, which makes you the steady one people turn to in a crisis. Stress rolls off you more easily than most.",
+      "atYourBest": "composed, resilient, unshakeable.",
+      "youGrowWhen": "you stay tuned in to the feelings under the calm — yours and theirs."
+    }
+  ]
+}

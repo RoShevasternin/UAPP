@@ -1,0 +1,92 @@
+{
+  "header": "YOUR PERSONAL PORTRAIT",
+  "titles": [
+    {
+      "id": "untamed_horizon",
+      "name": "The Untamed Horizon",
+      "tagline": "Built to move, born to question",
+      "body": "Your tests agree on one thing: standing still was never your plan. You chase what's new, doubt what's given, and treat every wall as a question rather than an answer. People around you feel that pull — you make the world seem bigger just by refusing to accept its current size.",
+      "rules": [
+        { "test": "archetype", "anyOf": ["explorer", "rebel"] },
+        { "test": "big_five", "anyOf": ["openness_high"] }
+      ]
+    },
+    {
+      "id": "quiet_anchor",
+      "name": "The Quiet Anchor",
+      "tagline": "Strength that feels like warmth",
+      "body": "Across every dimension, one pattern repeats: people are safe around you. You notice what others miss, hold steady when things shake, and give without keeping score. Your kind of strength doesn't announce itself — it just shows up, again and again, until everyone quietly depends on it.",
+      "rules": [
+        { "test": "archetype", "anyOf": ["caregiver"] },
+        { "test": "big_five", "anyOf": ["agreeableness_high"] }
+      ]
+    },
+    {
+      "id": "vivid_original",
+      "name": "The Vivid Original",
+      "tagline": "You make the world less grey",
+      "body": "Your portrait is painted in more colors than most. Ideas find you constantly, and you can't help turning them into something real — a project, an image, a way of living. The tests see both the imagination and the restlessness behind it: you're not trying to stand out, you simply can't render yourself in standard settings.",
+      "rules": [
+        { "test": "archetype", "anyOf": ["creator"] },
+        { "test": "big_five", "anyOf": ["openness_high"] }
+      ]
+    },
+    {
+      "id": "architect_of_order",
+      "name": "The Architect of Order",
+      "tagline": "You build what others wish for",
+      "body": "Where others see chaos, you see a to-do list. Your results line up around structure, follow-through, and quiet command: you take responsibility before anyone asks and deliver after everyone else has stopped. Order isn't a cage for you — it's the scaffolding you build so people can climb higher.",
+      "rules": [
+        { "test": "archetype", "anyOf": ["ruler"] },
+        { "test": "big_five", "anyOf": ["conscientiousness_high"] }
+      ]
+    },
+    {
+      "id": "deliberate_mind",
+      "name": "The Deliberate Mind",
+      "tagline": "Depth, by design",
+      "body": "You don't skim — you study. Every test points to the same engine: a mind that wants the real answer, not the fast one. You'd rather understand a thing completely than impress a room instantly, and that patience gives your conclusions a weight that louder voices never quite reach.",
+      "rules": [
+        { "test": "archetype", "anyOf": ["sage"] },
+        { "test": "types16", "anyOf": ["intj", "intp", "entj", "entp", "istj"] }
+      ]
+    },
+    {
+      "id": "live_wire",
+      "name": "The Live Wire",
+      "tagline": "Rooms change when you enter",
+      "body": "Your energy is the common thread: people, momentum, out-loud thinking. The tests show someone who recharges through connection and gives that charge right back. You don't wait for life to get interesting — you're usually the reason it already is.",
+      "rules": [
+        { "test": "big_five", "anyOf": ["extraversion_high"] },
+        { "test": "types16", "anyOf": ["enfp", "enfj", "entp", "entj", "esfp", "esfj", "estp", "estj"] }
+      ]
+    },
+    {
+      "id": "inner_world",
+      "name": "The Inner World",
+      "tagline": "Still waters, endless depth",
+      "body": "The loudest thing about you is what happens inside. Your results describe a rich private landscape — reflection, selectivity, meaning over noise. Few people get full access, and that's not distance; it's curation. The ones you let in know exactly how much that means.",
+      "rules": [
+        { "test": "big_five", "anyOf": ["extraversion_low"] },
+        { "test": "types16", "anyOf": ["intj", "intp", "infj", "infp", "istj", "isfj", "istp", "isfp"] }
+      ]
+    },
+    {
+      "id": "whole_heart",
+      "name": "The Whole Heart",
+      "tagline": "You love in high definition",
+      "body": "Connection isn't a side quest for you — it's the main storyline. Your dimensions converge on depth of feeling: you notice, you care, you commit fully. It costs more to live this way, and it gives more back. The people you choose are lucky, whether they fully realize it or not.",
+      "rules": [
+        { "test": "attachment", "anyOf": ["anxious", "fearful"] },
+        { "test": "big_five", "anyOf": ["agreeableness_high"] }
+      ]
+    },
+    {
+      "id": "layered_original",
+      "name": "The Layered Original",
+      "tagline": "There is more to you than the first impression",
+      "body": "Five tests, one verdict: you don't fit in one sentence. There's the version of you people meet first — and then the layers underneath that only time reveals. You show different sides in different rooms, not because you're pretending, but because you genuinely contain that much.",
+      "rules": []
+    }
+  ]
+}

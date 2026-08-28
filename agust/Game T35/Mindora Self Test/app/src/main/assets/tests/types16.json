@@ -1,0 +1,286 @@
+{
+  "id": "types16",
+  "title": "16 Personality Types",
+  "engine": "axis",
+  "answerFormat": "scale",
+  "scaleSize": 5,
+  "resultRule": "letters",
+  "axes": [
+    {
+      "id": "EI",
+      "pole": "E",
+      "opposite": "I",
+      "threshold": 15
+    },
+    {
+      "id": "SN",
+      "pole": "N",
+      "opposite": "S",
+      "threshold": 15
+    },
+    {
+      "id": "TF",
+      "pole": "F",
+      "opposite": "T",
+      "threshold": 15
+    },
+    {
+      "id": "JP",
+      "pole": "J",
+      "opposite": "P",
+      "threshold": 15
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1",
+      "text": "Being in a group energizes me",
+      "axis": "EI",
+      "reverse": false
+    },
+    {
+      "id": "q2",
+      "text": "I easily start conversations with strangers",
+      "axis": "EI",
+      "reverse": false
+    },
+    {
+      "id": "q3",
+      "text": "After a party I feel energized, not drained",
+      "axis": "EI",
+      "reverse": false
+    },
+    {
+      "id": "q4",
+      "text": "I prefer silence and solitude to recharge",
+      "axis": "EI",
+      "reverse": true
+    },
+    {
+      "id": "q5",
+      "text": "I often keep to myself in new company",
+      "axis": "EI",
+      "reverse": true
+    },
+    {
+      "id": "q6",
+      "text": "Ideas and possibilities excite me more than facts",
+      "axis": "SN",
+      "reverse": false
+    },
+    {
+      "id": "q7",
+      "text": "I often think about the future and ‘what if’",
+      "axis": "SN",
+      "reverse": false
+    },
+    {
+      "id": "q8",
+      "text": "I enjoy abstract concepts and metaphors",
+      "axis": "SN",
+      "reverse": false
+    },
+    {
+      "id": "q9",
+      "text": "I trust concrete experience more than theories",
+      "axis": "SN",
+      "reverse": true
+    },
+    {
+      "id": "q10",
+      "text": "I notice details and practical things",
+      "axis": "SN",
+      "reverse": true
+    },
+    {
+      "id": "q11",
+      "text": "When deciding, I think about people's feelings first",
+      "axis": "TF",
+      "reverse": false
+    },
+    {
+      "id": "q12",
+      "text": "Harmony in relationships matters to me",
+      "axis": "TF",
+      "reverse": false
+    },
+    {
+      "id": "q13",
+      "text": "I easily empathize with others' emotions",
+      "axis": "TF",
+      "reverse": false
+    },
+    {
+      "id": "q14",
+      "text": "I put logic above emotions when deciding",
+      "axis": "TF",
+      "reverse": true
+    },
+    {
+      "id": "q15",
+      "text": "I value fairness more than sympathy",
+      "axis": "TF",
+      "reverse": true
+    },
+    {
+      "id": "q16",
+      "text": "I love plans and to-do lists",
+      "axis": "JP",
+      "reverse": false
+    },
+    {
+      "id": "q17",
+      "text": "I feel better when everything is decided in advance",
+      "axis": "JP",
+      "reverse": false
+    },
+    {
+      "id": "q18",
+      "text": "I finish things well before the deadline",
+      "axis": "JP",
+      "reverse": false
+    },
+    {
+      "id": "q19",
+      "text": "I prefer to keep my options open",
+      "axis": "JP",
+      "reverse": true
+    },
+    {
+      "id": "q20",
+      "text": "I easily adapt to unexpected changes",
+      "axis": "JP",
+      "reverse": true
+    }
+  ],
+  "results": [
+    {
+      "id": "intj",
+      "name": "INTJ — The Strategist",
+      "tagline": "Always several moves ahead.",
+      "body": "You live in the future — running scenarios, seeing outcomes others reach months later. You trust logic and a small circle, and you'd rather be right and alone than agreeable and wrong.",
+      "atYourBest": "visionary, independent, relentlessly competent.",
+      "youGrowWhen": "you let people in and trust feelings, not just plans."
+    },
+    {
+      "id": "intp",
+      "name": "INTP — The Thinker",
+      "tagline": "A universe of ideas inside.",
+      "body": "You take everything apart to see how it truly works. Rules mean little to you unless they make sense, and a good problem can absorb you for hours. Your mind is your favorite place to be.",
+      "atYourBest": "brilliant, curious, refreshingly original.",
+      "youGrowWhen": "you turn one idea into something real instead of a hundred that stay in your head."
+    },
+    {
+      "id": "entj",
+      "name": "ENTJ — The Commander",
+      "tagline": "You were built to lead.",
+      "body": "You see the goal and the fastest path to it, and you can't help but organize the people around you toward it. Inefficiency frustrates you because you know things could be better.",
+      "atYourBest": "driven, strategic, a natural force.",
+      "youGrowWhen": "you slow down enough to hear the people behind the plan."
+    },
+    {
+      "id": "entp",
+      "name": "ENTP — The Visionary",
+      "tagline": "The one who asks 'but why not?'",
+      "body": "You spark ideas and love a good debate — not to win, but to see the world crack open a little. Boredom is your enemy; possibility is your fuel.",
+      "atYourBest": "inventive, quick, magnetically curious.",
+      "youGrowWhen": "you finish the exciting thing before the next shiny idea arrives."
+    },
+    {
+      "id": "infj",
+      "name": "INFJ — The Insightful",
+      "tagline": "You see straight through people.",
+      "body": "You feel what others hide and carry a quiet idealism most never notice. Deeply private, you give a lot — sometimes more than you have. Few people ever fully know you, and that's by design.",
+      "atYourBest": "perceptive, principled, quietly powerful.",
+      "youGrowWhen": "you protect your energy before you burn out for everyone else."
+    },
+    {
+      "id": "infp",
+      "name": "INFP — The Dreamer",
+      "tagline": "Guided by an inner compass.",
+      "body": "Meaning matters more to you than money or status. You have a rich inner world and a strong sense of who you are, even when you don't say it out loud. When something touches your values, you feel it all the way through.",
+      "atYourBest": "authentic, imaginative, deeply kind.",
+      "youGrowWhen": "you turn your ideals into small, real actions."
+    },
+    {
+      "id": "enfj",
+      "name": "ENFJ — The Mentor",
+      "tagline": "You bring out the best in people.",
+      "body": "You read people effortlessly and can't help lifting them up. Rooms feel warmer when you're in them. But the same radar that reads everyone can make you forget to check in on yourself.",
+      "atYourBest": "inspiring, warm, a natural leader of hearts.",
+      "youGrowWhen": "you set boundaries as generously as you give."
+    },
+    {
+      "id": "enfp",
+      "name": "ENFP — The Spark",
+      "tagline": "Alive with possibility.",
+      "body": "You light up around people and ideas, jumping between passions with real enthusiasm. Life feels like an open field of what-ifs. Underneath the energy is a search for something — and someone — that truly means it.",
+      "atYourBest": "enthusiastic, creative, impossible not to like.",
+      "youGrowWhen": "you channel the spark into a few things you see all the way through."
+    },
+    {
+      "id": "istj",
+      "name": "ISTJ — The Backbone",
+      "tagline": "The one people count on.",
+      "body": "You do what you say, quietly and well. Order and reliability aren't boring to you — they're how you show you care. When everyone else flakes, you're still standing there, keeping the promise.",
+      "atYourBest": "dependable, grounded, honest to the core.",
+      "youGrowWhen": "you stay open to new ways, not just the proven ones."
+    },
+    {
+      "id": "isfj",
+      "name": "ISFJ — The Protector",
+      "tagline": "Quiet strength, endless care.",
+      "body": "You notice the small things — who's tired, what's missing, what needs doing — and you handle it without asking for credit. Your loyalty runs deep. People feel safe with you, even if they can't say why.",
+      "atYourBest": "caring, attentive, steady as a rock.",
+      "youGrowWhen": "you speak your own needs out loud."
+    },
+    {
+      "id": "estj",
+      "name": "ESTJ — The Director",
+      "tagline": "You make things happen.",
+      "body": "You bring structure to chaos and people naturally fall in line because you get results. You value honesty and hard work, and you have little patience for excuses.",
+      "atYourBest": "organized, decisive, a true anchor.",
+      "youGrowWhen": "you lead with empathy as well as standards."
+    },
+    {
+      "id": "esfj",
+      "name": "ESFJ — The Harmonizer",
+      "tagline": "The heart of every group.",
+      "body": "You keep people connected and cared for, and you feel it deeply when the vibe is off. Being needed feels good — but you deserve to be chosen, not just relied on.",
+      "atYourBest": "warm, sociable, wonderfully thoughtful.",
+      "youGrowWhen": "you value your own worth beyond others' approval."
+    },
+    {
+      "id": "istp",
+      "name": "ISTP — The Maker",
+      "tagline": "Calm hands, sharp mind.",
+      "body": "You figure things out by doing, not talking. Cool under pressure, you solve what others panic over. You need freedom and space — and you say more with actions than words.",
+      "atYourBest": "practical, unflappable, quietly skilled.",
+      "youGrowWhen": "you let people closer to the world inside you."
+    },
+    {
+      "id": "isfp",
+      "name": "ISFP — The Artist",
+      "tagline": "You feel life in color.",
+      "body": "Gentle and observant, you live in the present and notice beauty others walk past. You don't need the spotlight; you just need to be true to yourself. Beneath the quiet is a strong, private core.",
+      "atYourBest": "sensitive, authentic, effortlessly cool.",
+      "youGrowWhen": "you back your talent with a bit of structure and self-belief."
+    },
+    {
+      "id": "estp",
+      "name": "ESTP — The Daredevil",
+      "tagline": "Right here, right now.",
+      "body": "You're bold, fast, and fully alive in the moment. Risk doesn't scare you — stagnation does. People are drawn to your energy and your nerve.",
+      "atYourBest": "charismatic, brave, endlessly fun.",
+      "youGrowWhen": "you pause long enough to weigh the long game."
+    },
+    {
+      "id": "esfp",
+      "name": "ESFP — The Performer",
+      "tagline": "You turn life into a show.",
+      "body": "Warm, spontaneous, and generous, you make ordinary moments feel like an event. You love people and they love you back. Behind the fun is someone who feels things far more deeply than they let on.",
+      "atYourBest": "vibrant, big-hearted, unforgettable.",
+      "youGrowWhen": "you pair the spark with steady, long-term follow-through."
+    }
+  ]
+}

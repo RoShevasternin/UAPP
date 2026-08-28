@@ -1,0 +1,54 @@
+loader.png
+size: 987, 2451
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+bottom_title
+  rotate: false
+  xy: 2, 2
+  size: 930, 102
+  orig: 930, 102
+  offset: 0, 0
+  index: -1
+icon
+  rotate: false
+  xy: 2, 106
+  size: 768, 771
+  orig: 768, 771
+  offset: 0, 0
+  index: -1
+loader
+  rotate: false
+  xy: 772, 106
+  size: 213, 213
+  orig: 213, 213
+  offset: 0, 0
+  index: -1
+logo
+  rotate: false
+  xy: 2, 879
+  size: 768, 201
+  orig: 768, 201
+  offset: 0, 0
+  index: -1
+panel_no_wifi
+  rotate: false
+  xy: 2, 1082
+  size: 948, 948
+  orig: 948, 948
+  offset: 0, 0
+  index: -1
+retry_def
+  rotate: false
+  xy: 2, 2032
+  size: 360, 105
+  orig: 360, 105
+  offset: 0, 0
+  index: -1
+wifi
+  rotate: false
+  xy: 364, 2032
+  size: 417, 417
+  orig: 417, 417
+  offset: 0, 0
+  index: -1

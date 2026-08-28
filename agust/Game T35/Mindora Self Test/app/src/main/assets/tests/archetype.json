@@ -1,0 +1,331 @@
+{
+  "id": "archetype",
+  "title": "Archetype",
+  "engine": "count_max",
+  "answerFormat": "choice",
+  "resultRule": "single",
+  "categories": [
+    "explorer",
+    "sage",
+    "creator",
+    "caregiver",
+    "ruler",
+    "rebel"
+  ],
+  "questions": [
+    {
+      "id": "q1",
+      "text": "Your ideal weekend is...",
+      "options": [
+        {
+          "text": "A trip somewhere new",
+          "category": "explorer"
+        },
+        {
+          "text": "A day with a book or a course",
+          "category": "sage"
+        },
+        {
+          "text": "Making or creating something",
+          "category": "creator"
+        },
+        {
+          "text": "Meeting and helping loved ones",
+          "category": "caregiver"
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "text": "In a team, you usually...",
+      "options": [
+        {
+          "text": "Suggest bold ideas",
+          "category": "rebel"
+        },
+        {
+          "text": "Take the lead",
+          "category": "ruler"
+        },
+        {
+          "text": "Support others",
+          "category": "caregiver"
+        },
+        {
+          "text": "Look for the best solution",
+          "category": "sage"
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "text": "What energizes you the most?",
+      "options": [
+        {
+          "text": "New experiences",
+          "category": "explorer"
+        },
+        {
+          "text": "Creating something of my own",
+          "category": "creator"
+        },
+        {
+          "text": "Influence and results",
+          "category": "ruler"
+        },
+        {
+          "text": "Helping people",
+          "category": "caregiver"
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "text": "How do you feel about rules?",
+      "options": [
+        {
+          "text": "I often question them",
+          "category": "rebel"
+        },
+        {
+          "text": "I respect order",
+          "category": "ruler"
+        },
+        {
+          "text": "I follow logic, not form",
+          "category": "sage"
+        },
+        {
+          "text": "If they help people, I'm for them",
+          "category": "caregiver"
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "text": "Your friends would say you are...",
+      "options": [
+        {
+          "text": "Curious",
+          "category": "sage"
+        },
+        {
+          "text": "Adventurous",
+          "category": "explorer"
+        },
+        {
+          "text": "Creative",
+          "category": "creator"
+        },
+        {
+          "text": "Caring",
+          "category": "caregiver"
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "text": "Which goal resonates with you the most?",
+      "options": [
+        {
+          "text": "Freedom",
+          "category": "explorer"
+        },
+        {
+          "text": "Mastery",
+          "category": "creator"
+        },
+        {
+          "text": "Influence",
+          "category": "ruler"
+        },
+        {
+          "text": "Changing the system",
+          "category": "rebel"
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "text": "In a difficult situation, you...",
+      "options": [
+        {
+          "text": "Look for an unconventional move",
+          "category": "rebel"
+        },
+        {
+          "text": "Analyze the facts",
+          "category": "sage"
+        },
+        {
+          "text": "Organize everyone",
+          "category": "ruler"
+        },
+        {
+          "text": "Support the team",
+          "category": "caregiver"
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "text": "What inspires you in people?",
+      "options": [
+        {
+          "text": "Courage",
+          "category": "explorer"
+        },
+        {
+          "text": "Intelligence",
+          "category": "sage"
+        },
+        {
+          "text": "Originality",
+          "category": "creator"
+        },
+        {
+          "text": "Kindness",
+          "category": "caregiver"
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "text": "Your motto is closer to...",
+      "options": [
+        {
+          "text": "Try new things",
+          "category": "explorer"
+        },
+        {
+          "text": "Understand the essence",
+          "category": "sage"
+        },
+        {
+          "text": "Create",
+          "category": "creator"
+        },
+        {
+          "text": "Challenge everything",
+          "category": "rebel"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "text": "What annoys you the most?",
+      "options": [
+        {
+          "text": "Routine",
+          "category": "explorer"
+        },
+        {
+          "text": "Chaos",
+          "category": "ruler"
+        },
+        {
+          "text": "Stupidity",
+          "category": "sage"
+        },
+        {
+          "text": "Injustice",
+          "category": "rebel"
+        }
+      ]
+    },
+    {
+      "id": "q11",
+      "text": "How do you make decisions?",
+      "options": [
+        {
+          "text": "By intuition and curiosity",
+          "category": "explorer"
+        },
+        {
+          "text": "By logic",
+          "category": "sage"
+        },
+        {
+          "text": "By how they affect people",
+          "category": "caregiver"
+        },
+        {
+          "text": "By my own vision",
+          "category": "creator"
+        }
+      ]
+    },
+    {
+      "id": "q12",
+      "text": "What do you want to achieve?",
+      "options": [
+        {
+          "text": "To see the world",
+          "category": "explorer"
+        },
+        {
+          "text": "To leave a legacy",
+          "category": "creator"
+        },
+        {
+          "text": "To lead others",
+          "category": "ruler"
+        },
+        {
+          "text": "To make the world kinder",
+          "category": "caregiver"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "id": "explorer",
+      "name": "The Explorer",
+      "tagline": "Born for the horizon.",
+      "body": "You feel most alive when there's a road ahead and no map. Routine doesn't bore you — it quietly suffocates you, because a part of you always needs to know what's around the next corner. People notice your courage, but your real secret is restlessness: you'd rather risk the unknown than settle for 'fine.'",
+      "atYourBest": "fearless, curious, impossible to cage.",
+      "youGrowWhen": "you turn all that energy into one journey you actually finish."
+    },
+    {
+      "id": "sage",
+      "name": "The Sage",
+      "tagline": "The mind that has to know.",
+      "body": "You don't just want answers — you want to understand. While others react, you're already three questions deeper, quietly connecting dots nobody else sees. You can seem calm and detached, but inside there's a constant hum of curiosity that never really switches off.",
+      "atYourBest": "clear-headed, insightful, hard to fool.",
+      "youGrowWhen": "you stop over-analyzing and let yourself simply act."
+    },
+    {
+      "id": "creator",
+      "name": "The Creator",
+      "tagline": "You see what isn't there yet.",
+      "body": "Where others see empty space, you see what it could become. Ideas arrive faster than you can build them, and an unfinished vision can keep you up at night. You're happiest when you're making something that carries a piece of you in it.",
+      "atYourBest": "original, imaginative, quietly bold.",
+      "youGrowWhen": "you let 'good enough' ship instead of chasing perfect forever."
+    },
+    {
+      "id": "caregiver",
+      "name": "The Caregiver",
+      "tagline": "You feel it before they say it.",
+      "body": "You read the room through people, not words — you sense when someone's off before they admit it. Being the one others lean on feels natural, almost automatic. But here's the truth few notice: you give so easily that you often forget to refill your own cup.",
+      "atYourBest": "warm, loyal, the person everyone trusts.",
+      "youGrowWhen": "you protect your own energy as fiercely as you protect others."
+    },
+    {
+      "id": "ruler",
+      "name": "The Ruler",
+      "tagline": "Order is your superpower.",
+      "body": "You don't wait for someone to take charge — you already have. Chaos makes you uneasy, so you build structure, and people follow because you actually deliver. Underneath the control is something simpler: you care too much to let things fall apart.",
+      "atYourBest": "decisive, organized, unshakeably reliable.",
+      "youGrowWhen": "you loosen the grip and trust others to carry their part."
+    },
+    {
+      "id": "rebel",
+      "name": "The Rebel",
+      "tagline": "Rules are just a starting question.",
+      "body": "You've never accepted 'because that's how it's done.' Something in you needs to test the wall to see if it's real. It can look like defiance, but it's really honesty — you'd rather break a comfortable lie than live inside it.",
+      "atYourBest": "independent, brave, a genuine original.",
+      "youGrowWhen": "you choose your battles so your fire changes what actually matters."
+    }
+  ]
+}

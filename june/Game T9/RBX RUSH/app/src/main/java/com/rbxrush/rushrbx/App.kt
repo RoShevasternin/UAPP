@@ -5,6 +5,7 @@ import android.content.Context
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.analytics
+import com.google.firebase.messaging.FirebaseMessaging
 import com.rbxrush.rushrbx.adsmodule.AdConfig
 import com.rbxrush.rushrbx.adsmodule.AdPref
 import com.rbxrush.rushrbx.adsmodule.NavigationCounter
@@ -23,6 +24,8 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
+
+        //FirebaseMessaging.getInstance().token.addOnSuccessListener { log("FCM token: $it") }
 
         enableAnalyticsIfNoVpn()
 

@@ -1,16 +1,25 @@
 package com.fimer.skintool.game.screens
 
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.fimer.skintool.adsmodule.AdSizeManager
 import com.fimer.skintool.game.actors.layout.constraintLayout.AConstraintLayout
 import com.fimer.skintool.game.actors.panel.APanelTopHome
 import com.fimer.skintool.game.actors.panel.home.APanelHome
+import com.fimer.skintool.game.actors.popup.APopup
+import com.fimer.skintool.game.screens.home.FreeScreen
 import com.fimer.skintool.game.utils.Block
+import com.fimer.skintool.game.utils.GameColor
 import com.fimer.skintool.game.utils.TIME_ANIM_SCREEN
+import com.fimer.skintool.game.utils.VERTICAL_BIAS
 import com.fimer.skintool.game.utils.actor.animHide
+import com.fimer.skintool.game.utils.actor.animHideAndDisable
 import com.fimer.skintool.game.utils.actor.animShow
+import com.fimer.skintool.game.utils.actor.animShowAndEnable
+import com.fimer.skintool.game.utils.actor.setOnClickListener
 import com.fimer.skintool.game.utils.advanced.AdvancedScreen
 import com.fimer.skintool.game.utils.gdxGame
+import com.fimer.skintool.game.utils.overlay.OverlayManager
 import com.fimer.skintool.game.utils.runGDX
 import com.fimer.skintool.services.analytics.AnalyticsManager
 import kotlinx.coroutines.launch

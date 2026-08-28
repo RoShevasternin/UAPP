@@ -1,0 +1,257 @@
+all.png
+size: 1999, 1878
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+back_btn
+  rotate: false
+  xy: 1088, 106
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+btn_def
+  rotate: false
+  xy: 2, 583
+  size: 1032, 168
+  orig: 1032, 168
+  offset: 0, 0
+  index: -1
+btn_press
+  rotate: false
+  xy: 822, 416
+  size: 1032, 165
+  orig: 1032, 165
+  offset: 0, 0
+  index: -1
+card_test_dis
+  rotate: false
+  xy: 2, 753
+  size: 1032, 264
+  orig: 1032, 264
+  offset: 0, 0
+  index: -1
+card_test_ena
+  rotate: false
+  xy: 2, 1019
+  size: 1032, 264
+  orig: 1032, 264
+  offset: 0, 0
+  index: -1
+check
+  rotate: false
+  xy: 949, 2
+  size: 72, 72
+  orig: 72, 72
+  offset: 0, 0
+  index: -1
+claim
+  rotate: false
+  xy: 1036, 1019
+  size: 240, 315
+  orig: 240, 315
+  offset: 0, 0
+  index: -1
+claimed
+  rotate: false
+  xy: 1278, 1019
+  size: 240, 315
+  orig: 240, 315
+  offset: 0, 0
+  index: -1
+close
+  rotate: false
+  xy: 1520, 1019
+  size: 240, 315
+  orig: 240, 315
+  offset: 0, 0
+  index: -1
+double_def
+  rotate: false
+  xy: 2, 252
+  size: 1032, 150
+  orig: 1032, 150
+  offset: 0, 0
+  index: -1
+fire
+  rotate: false
+  xy: 1036, 252
+  size: 141, 150
+  orig: 141, 150
+  offset: 0, 0
+  index: -1
+ic_dis_1
+  rotate: false
+  xy: 1179, 252
+  size: 162, 162
+  orig: 162, 162
+  offset: 0, 0
+  index: -1
+ic_dis_2
+  rotate: false
+  xy: 1343, 252
+  size: 162, 162
+  orig: 162, 162
+  offset: 0, 0
+  index: -1
+ic_dis_3
+  rotate: false
+  xy: 1507, 252
+  size: 162, 162
+  orig: 162, 162
+  offset: 0, 0
+  index: -1
+ic_dis_4
+  rotate: false
+  xy: 1671, 252
+  size: 162, 162
+  orig: 162, 162
+  offset: 0, 0
+  index: -1
+ic_dis_5
+  rotate: false
+  xy: 1835, 252
+  size: 162, 162
+  orig: 162, 162
+  offset: 0, 0
+  index: -1
+ic_ena_1
+  rotate: false
+  xy: 2, 416
+  size: 162, 162
+  orig: 162, 162
+  offset: 0, 0
+  index: -1
+ic_ena_2
+  rotate: false
+  xy: 166, 416
+  size: 162, 162
+  orig: 162, 162
+  offset: 0, 0
+  index: -1
+ic_ena_3
+  rotate: false
+  xy: 330, 416
+  size: 162, 162
+  orig: 162, 162
+  offset: 0, 0
+  index: -1
+ic_ena_4
+  rotate: false
+  xy: 494, 416
+  size: 162, 162
+  orig: 162, 162
+  offset: 0, 0
+  index: -1
+ic_ena_5
+  rotate: false
+  xy: 658, 416
+  size: 162, 162
+  orig: 162, 162
+  offset: 0, 0
+  index: -1
+lock
+  rotate: false
+  xy: 1023, 2
+  size: 69, 87
+  orig: 69, 87
+  offset: 0, 0
+  index: -1
+lumens_big
+  rotate: false
+  xy: 694, 1336
+  size: 540, 540
+  orig: 540, 540
+  offset: 0, 0
+  index: -1
+medium_def
+  rotate: false
+  xy: 244, 106
+  size: 420, 108
+  orig: 420, 108
+  offset: 0, 0
+  index: -1
+medium_dis
+  rotate: false
+  xy: 666, 106
+  size: 420, 108
+  orig: 420, 108
+  offset: 0, 0
+  index: -1
+p1
+  rotate: false
+  xy: 529, 2
+  size: 138, 30
+  orig: 138, 30
+  offset: 0, 0
+  index: -1
+p2
+  rotate: false
+  xy: 669, 2
+  size: 138, 30
+  orig: 138, 30
+  offset: 0, 0
+  index: -1
+p3
+  rotate: false
+  xy: 809, 2
+  size: 138, 30
+  orig: 138, 30
+  offset: 0, 0
+  index: -1
+progress_mask_portrait
+  rotate: false
+  xy: 2, 2
+  size: 525, 15
+  orig: 525, 15
+  offset: 0, 0
+  index: -1
+settings_btn
+  rotate: false
+  xy: 1234, 106
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+test_btn_again
+  rotate: false
+  xy: 1094, 2
+  size: 240, 102
+  orig: 240, 102
+  offset: 0, 0
+  index: -1
+test_btn_dis
+  rotate: false
+  xy: 1336, 2
+  size: 240, 102
+  orig: 240, 102
+  offset: 0, 0
+  index: -1
+test_btn_ena
+  rotate: false
+  xy: 1578, 2
+  size: 240, 102
+  orig: 240, 102
+  offset: 0, 0
+  index: -1
+test_btn_open
+  rotate: false
+  xy: 2, 106
+  size: 240, 102
+  orig: 240, 102
+  offset: 0, 0
+  index: -1
+test_card_done
+  rotate: false
+  xy: 1380, 106
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+watch_ad
+  rotate: false
+  xy: 2, 1336
+  size: 690, 462
+  orig: 690, 462
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,217 @@
+package com.rbxhubpro.rohumex.game.screens.main
+
+import com.badlogic.gdx.scenes.scene2d.Group
+import com.rbxhubpro.rohumex.businesModule.backend.Bt
+import com.rbxhubpro.rohumex.game.actors.ADim
+import com.rbxhubpro.rohumex.game.actors.daily.ADailyFreeRbxCalculatorInput
+import com.rbxhubpro.rohumex.game.actors.daily.ADailyFreeRbxCalculatorSelect
+import com.rbxhubpro.rohumex.game.actors.daily.ADialogLose
+import com.rbxhubpro.rohumex.game.actors.daily.ADialogWin
+import com.rbxhubpro.rohumex.game.actors.layout.AlignH
+import com.rbxhubpro.rohumex.game.actors.layout.AlignV
+import com.rbxhubpro.rohumex.game.actors.panel.APanelTop
+import com.rbxhubpro.rohumex.game.utils.Block
+import com.rbxhubpro.rohumex.game.utils.TIME_ANIM_SCREEN
+import com.rbxhubpro.rohumex.game.utils.actor.addActorAligned
+import com.rbxhubpro.rohumex.game.utils.actor.addActorWithConstraints
+import com.rbxhubpro.rohumex.game.utils.actor.addAndFillActor
+import com.rbxhubpro.rohumex.game.utils.actor.animDelay
+import com.rbxhubpro.rohumex.game.utils.actor.animHide
+import com.rbxhubpro.rohumex.game.utils.actor.animHideAndDisable
+import com.rbxhubpro.rohumex.game.utils.actor.animShow
+import com.rbxhubpro.rohumex.game.utils.actor.animShowAndEnable
+import com.rbxhubpro.rohumex.game.utils.actor.setOnClickListener
+import com.rbxhubpro.rohumex.game.utils.advanced.AdvancedScreen
+import com.rbxhubpro.rohumex.game.utils.gdxGame
+import com.rbxhubpro.rohumex.game.utils.screenState.ScreenState
+import com.rbxhubpro.rohumex.game.utils.screenState.ScreenStateMachine
+
+class DailyFreeRbxCalculatorScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "daily_free_rbx_calculator_screen"
+
+    companion object {
+        private var hasWin = false
+    }
+
+    // ------------------------------------------------------------------------
+    // Actors
+    // ------------------------------------------------------------------------
+    private val aPanelTop = APanelTop(this)
+
+    private val aSelect = ADailyFreeRbxCalculatorSelect(this)
+    private val aInput  = ADailyFreeRbxCalculatorInput(this)
+
+    // Актори для результату
+    private val aDim         = ADim(this)           // затемнення
+    private val aResultWin   = ADialogWin(this)     // Well done! з числом
+    private val aResultLose  = ADialogLose(this)    // That's all for today!
+
+    private val listGroup = listOf(aSelect, aInput, aDim, aResultWin, aResultLose)
+
+    // State
+    private val stateSelect = object : ScreenState {
+        override fun onEnter() { aSelect.animShowAndEnable(0.25f)  }
+        override fun onExit()  { aSelect.animHideAndDisable(0.25f) }
+    }
+
+    private val stateInput = object : ScreenState {
+        override fun onEnter() { aInput.animShowAndEnable(0.25f)  }
+        override fun onExit()  { aInput.animHideAndDisable(0.25f) }
+    }
+
+    private val stateResultWin = object : ScreenState {
+        override fun onEnter() {
+            aDim.animShowAndEnable(0.25f)
+            aResultWin.animShowAndEnable(0.25f)
+        }
+        override fun onExit() {
+            aDim.animHideAndDisable(0.25f)
+            aResultWin.animHideAndDisable(0.25f)
+        }
+    }
+
+    private val stateResultLose = object : ScreenState {
+        override fun onEnter() {
+            aDim.animShowAndEnable(0.25f)
+            aResultLose.animShowAndEnable(0.25f)
+        }
+        override fun onExit() {
+            aDim.animHideAndDisable(0.25f)
+            aResultLose.animHideAndDisable(0.25f)
+        }
+    }
+
+    private val stateMachine = ScreenStateMachine()
+
+    // Переходи — викликаєш з будь-якого місця
+    fun goToSelect() { stateMachine.setState(stateSelect) }
+    fun goToInput() { stateMachine.setState(stateInput) }
+
+    fun goToResultWin(value: Int) {
+        ADialogWin.VALUE.value = value
+        stateMachine.setState(stateResultWin)
+    }
+    fun goToResultLose() { stateMachine.setState(stateResultLose) }
+
+    // ------------------------------------------------------------------------
+    // Fields
+    // ------------------------------------------------------------------------
+
+    // ------------------------------------------------------------------------
+    // Lifecycle
+    // ------------------------------------------------------------------------
+
+    override fun Group.addActorsOnStageUI() {
+        color.a = 0f
+
+        hasWin = false
+
+        addPanelTop()
+        addSelect()
+        addInput()
+
+        // Dim і результати — поверх всього
+        addDim()
+        addResultWin()
+        addResultLose()
+
+        // Всі групи приховані
+        listGroup.forEach { it.animHideAndDisable() }
+
+        // Початковий стан
+        goToSelect()
+
+        animShowScreen()
+    }
+
+    // ------------------------------------------------------------------------
+    // Screen Animations
+    // ------------------------------------------------------------------------
+    override fun animHideScreen(blockEnd: Block) {
+        stageUI.root.animHide(TIME_ANIM_SCREEN)
+        stageUI.root.animDelay(TIME_ANIM_SCREEN) { blockEnd() }
+    }
+
+    override fun animShowScreen(blockEnd: Block) {
+        stageUI.root.animShow(TIME_ANIM_SCREEN)
+        stageUI.root.animDelay(TIME_ANIM_SCREEN) { blockEnd() }
+    }
+
+    // ------------------------------------------------------------------------
+    // Add Actors
+    // ------------------------------------------------------------------------
+
+    private fun Group.addPanelTop() {
+        aPanelTop.setSize(376f, 56f)
+        addActorAligned(aPanelTop, AlignH.CENTER, AlignV.TOP)
+        aPanelTop.setTitle("Daily Free Rbx Calculator")
+
+        aPanelTop.onBack = { animHideScreen { gdxGame.navigationManager.back() } }
+    }
+
+    private fun Group.addSelect() {
+        aSelect.setSize(344f, 272f)
+        addActorWithConstraints(aSelect) {
+            startToStartOf = this@addSelect
+            endToEndOf     = this@addSelect
+            topToBottomOf  = aPanelTop
+
+            marginTop = 16f
+        }
+
+        aSelect.onSelect = { title ->
+            aPanelTop.setTitle(title)
+            goToInput()
+        }
+    }
+
+    private fun Group.addInput() {
+        aInput.setSize(344f, 641f)
+        addActorWithConstraints(aInput) {
+            startToStartOf   = this@addInput
+            endToEndOf       = this@addInput
+            bottomToBottomOf = this@addInput
+
+            marginBottom = 20f
+        }
+
+        aInput.onCountNowClick = {
+            val result = aInput.resultInput
+            // правка 5: сюда Wallet НЕ подключаем — result это ЧИСЛО ИЗ
+            // ПОЛЬЗОВАТЕЛЬСКОГО ВВОДА (bt=tool, витринный «выигрыш»
+            // калькулятора): начисление по вводу = свободная накрутка баланса.
+            // TODO(econ): block="daily_free_rbx_calculator" — если решим
+            // платить за использование утилиты, награда должна быть
+            // Econ.reward(block, N) с разовым дневным гейтом, не result.
+            if (!hasWin && result > 0) {
+                goToResultWin(result)
+                hasWin = true
+            } else {
+                goToResultLose()
+            }
+        }
+
+    }
+
+    private fun Group.addDim() {
+        addAndFillActor(aDim)
+        aDim.setOnClickListener { }  // блокуємо кліки крізь dim
+    }
+
+    private fun Group.addResultWin() {
+        aResultWin.setSize(316f, 338f)
+        addActorAligned(aResultWin, AlignH.CENTER, AlignV.CENTER)
+
+        aResultWin.onOk = { goToInput() }
+    }
+
+    private fun Group.addResultLose() {
+        aResultLose.setSize(316f, 338f)
+        addActorAligned(aResultLose, AlignH.CENTER, AlignV.CENTER)
+
+        aResultLose.onOk = { goToInput() }
+    }
+
+}

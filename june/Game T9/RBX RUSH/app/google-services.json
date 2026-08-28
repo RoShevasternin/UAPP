@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "483649110801",
+    "project_id": "t9-rbx-rush",
+    "storage_bucket": "t9-rbx-rush.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:483649110801:android:12c6f8fcc9637a274d02b0",
+        "android_client_info": {
+          "package_name": "com.rbxrush.rushrbx"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDix5eGvoowyNd8uqhiCn36G5hTzHAYoI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

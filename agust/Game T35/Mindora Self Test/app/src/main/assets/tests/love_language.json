@@ -1,0 +1,255 @@
+{
+  "id": "love_language",
+  "title": "Love Language",
+  "engine": "count_max",
+  "answerFormat": "choice",
+  "scaleSize": 5,
+  "resultRule": "single",
+  "secondaryResult": false,
+  "categories": [
+    "words",
+    "time",
+    "acts",
+    "touch",
+    "gifts"
+  ],
+  "questions": [
+    {
+      "id": "q1",
+      "text": "Hearing warm words and compliments matters to me",
+      "options": [
+        {
+          "text": "Yes",
+          "category": "words"
+        },
+        {
+          "text": "No"
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "text": "Praise from someone close makes my day",
+      "options": [
+        {
+          "text": "Yes",
+          "category": "words"
+        },
+        {
+          "text": "No"
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "text": "Harsh words hurt me more than actions",
+      "options": [
+        {
+          "text": "Yes",
+          "category": "words"
+        },
+        {
+          "text": "No"
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "text": "The best is when someone close spends time just with me",
+      "options": [
+        {
+          "text": "Yes",
+          "category": "time"
+        },
+        {
+          "text": "No"
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "text": "I value attention without phones and distractions",
+      "options": [
+        {
+          "text": "Yes",
+          "category": "time"
+        },
+        {
+          "text": "No"
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "text": "Doing things together brings me closer than anything",
+      "options": [
+        {
+          "text": "Yes",
+          "category": "time"
+        },
+        {
+          "text": "No"
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "text": "I feel loved when someone helps me with my tasks",
+      "options": [
+        {
+          "text": "Yes",
+          "category": "acts"
+        },
+        {
+          "text": "No"
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "text": "Care shows in actions, not words",
+      "options": [
+        {
+          "text": "Yes",
+          "category": "acts"
+        },
+        {
+          "text": "No"
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "text": "When someone close takes on part of my tasks, it means a lot",
+      "options": [
+        {
+          "text": "Yes",
+          "category": "acts"
+        },
+        {
+          "text": "No"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "text": "Hugs and touch are important to me",
+      "options": [
+        {
+          "text": "Yes",
+          "category": "touch"
+        },
+        {
+          "text": "No"
+        }
+      ]
+    },
+    {
+      "id": "q11",
+      "text": "I miss closeness without physical contact",
+      "options": [
+        {
+          "text": "Yes",
+          "category": "touch"
+        },
+        {
+          "text": "No"
+        }
+      ]
+    },
+    {
+      "id": "q12",
+      "text": "A touch calms me better than words",
+      "options": [
+        {
+          "text": "Yes",
+          "category": "touch"
+        },
+        {
+          "text": "No"
+        }
+      ]
+    },
+    {
+      "id": "q13",
+      "text": "A thoughtful gift touches me",
+      "options": [
+        {
+          "text": "Yes",
+          "category": "gifts"
+        },
+        {
+          "text": "No"
+        }
+      ]
+    },
+    {
+      "id": "q14",
+      "text": "It's the gesture that matters to me, not the price",
+      "options": [
+        {
+          "text": "Yes",
+          "category": "gifts"
+        },
+        {
+          "text": "No"
+        }
+      ]
+    },
+    {
+      "id": "q15",
+      "text": "I keep gifts for a long time as cherished memories",
+      "options": [
+        {
+          "text": "Yes",
+          "category": "gifts"
+        },
+        {
+          "text": "No"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "id": "words",
+      "name": "Words of Affirmation",
+      "tagline": "Say it, and you feel it.",
+      "body": "For you, love lives in language — a genuine 'I'm proud of you' can carry you for days. You notice words others forget, both the kind and the careless. When someone tells you what you mean to them, it lands deeper than any gesture.",
+      "atYourBest": "expressive, encouraging, emotionally tuned-in.",
+      "youGrowWhen": "you ask for the words you need instead of waiting for them."
+    },
+    {
+      "id": "time",
+      "name": "Quality Time",
+      "tagline": "Presence over everything.",
+      "body": "You don't want grand gestures — you want someone fully there, phone down, eyes up. Undivided attention feels like love in its purest form. Time is the one thing that can't be faked, and you feel the difference instantly.",
+      "atYourBest": "present, loyal, deeply attentive.",
+      "youGrowWhen": "you speak up for the focused time you deserve."
+    },
+    {
+      "id": "acts",
+      "name": "Acts of Service",
+      "tagline": "Love is a verb.",
+      "body": "You believe in showing, not just telling. When someone lightens your load without being asked, it hits you right in the heart. You give the same way — quietly handling things for the people you love.",
+      "atYourBest": "thoughtful, dependable, quietly generous.",
+      "youGrowWhen": "you let others take care of you too."
+    },
+    {
+      "id": "touch",
+      "name": "Physical Touch",
+      "tagline": "Closeness that speaks.",
+      "body": "A hand on your shoulder can say more than a paragraph. Touch grounds you, reassures you, brings you home. Without it, even a good relationship can feel a little far away.",
+      "atYourBest": "affectionate, warm, deeply present.",
+      "youGrowWhen": "you ask for the closeness you need, out loud."
+    },
+    {
+      "id": "gifts",
+      "name": "Receiving Gifts",
+      "tagline": "It's the thought, made real.",
+      "body": "For you, a gift isn't about price — it's proof that someone was thinking of you when you weren't around. You keep the little tokens, the notes, the small surprises, because each one is a moment of being seen.",
+      "atYourBest": "appreciative, sentimental, attentive to meaning.",
+      "youGrowWhen": "you remember your worth isn't measured in gestures."
+    }
+  ]
+}

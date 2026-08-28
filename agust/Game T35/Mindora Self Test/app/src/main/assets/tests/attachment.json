@@ -1,0 +1,120 @@
+{
+  "id": "attachment",
+  "title": "Attachment Style",
+  "engine": "axis",
+  "answerFormat": "scale",
+  "scaleSize": 5,
+  "resultRule": "matrix",
+  "axes": [
+    {
+      "id": "anxiety",
+      "threshold": 15
+    },
+    {
+      "id": "avoidance",
+      "threshold": 15
+    }
+  ],
+  "matrix": {
+    "low_low": "secure",
+    "high_low": "anxious",
+    "low_high": "avoidant",
+    "high_high": "fearful"
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "text": "I often worry that my partner will stop loving me",
+      "axis": "anxiety",
+      "reverse": false
+    },
+    {
+      "id": "q2",
+      "text": "I need a lot of reassurance that I am loved",
+      "axis": "anxiety",
+      "reverse": false
+    },
+    {
+      "id": "q3",
+      "text": "I get upset when my partner is around less than I'd like",
+      "axis": "anxiety",
+      "reverse": false
+    },
+    {
+      "id": "q4",
+      "text": "I am afraid of being abandoned",
+      "axis": "anxiety",
+      "reverse": false
+    },
+    {
+      "id": "q5",
+      "text": "I think a lot about our relationship",
+      "axis": "anxiety",
+      "reverse": false
+    },
+    {
+      "id": "q6",
+      "text": "I feel uncomfortable opening up to my partner completely",
+      "axis": "avoidance",
+      "reverse": false
+    },
+    {
+      "id": "q7",
+      "text": "I prefer not to depend on others",
+      "axis": "avoidance",
+      "reverse": false
+    },
+    {
+      "id": "q8",
+      "text": "I find it hard to ask for support",
+      "axis": "avoidance",
+      "reverse": false
+    },
+    {
+      "id": "q9",
+      "text": "I keep my distance when things get too close",
+      "axis": "avoidance",
+      "reverse": false
+    },
+    {
+      "id": "q10",
+      "text": "I find it easier to deal with problems on my own",
+      "axis": "avoidance",
+      "reverse": false
+    }
+  ],
+  "results": [
+    {
+      "id": "secure",
+      "name": "Secure",
+      "tagline": "Steady in love.",
+      "body": "You can be close without losing yourself, and alone without feeling abandoned. You trust, you communicate, and you don't play games — because you don't need to. It sounds simple, but it's rare, and it makes you the person others feel safe with.",
+      "atYourBest": "trusting, balanced, emotionally grounded.",
+      "youGrowWhen": "you keep choosing partners who can meet you where you are."
+    },
+    {
+      "id": "anxious",
+      "name": "Anxious",
+      "tagline": "You love with your whole heart.",
+      "body": "When you care, you care completely — and a part of you quietly fears losing it. You're deeply attuned to the people you love, sometimes so much that their moods become yours. Your capacity for closeness is a gift; it just needs a calmer inner anchor.",
+      "atYourBest": "devoted, warm, deeply connected.",
+      "youGrowWhen": "you build security inside yourself, not only in others."
+    },
+    {
+      "id": "avoidant",
+      "name": "Avoidant",
+      "tagline": "Independent to the core.",
+      "body": "You value your freedom and handle life on your own terms — asking for help doesn't come naturally. Closeness can feel like pressure, so you keep a little distance to breathe. Underneath the self-reliance is more warmth than you let show.",
+      "atYourBest": "self-reliant, calm, refreshingly low-drama.",
+      "youGrowWhen": "you let the right people in and lean on them a little."
+    },
+    {
+      "id": "fearful",
+      "name": "Fearful",
+      "tagline": "Torn between closeness and safety.",
+      "body": "You crave deep connection and fear it at the same time — pulled in, then pulling back. It's not confusion; it's a heart that has learned to be careful. When you feel truly safe, few people love as fully as you do.",
+      "atYourBest": "passionate, sensitive, deeply feeling.",
+      "youGrowWhen": "you build trust slowly, in small, safe steps."
+    }
+  ]
+}

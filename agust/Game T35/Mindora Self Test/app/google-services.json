@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1017546978709",
+    "project_id": "t35-mindora-self-test",
+    "storage_bucket": "t35-mindora-self-test.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017546978709:android:d6daa6e68506517e58b29c",
+        "android_client_info": {
+          "package_name": "com.selftest.mindora"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDM7cjtfs9qim_zN_WNYQht-3hrloNQBiY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
