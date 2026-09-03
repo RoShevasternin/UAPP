@@ -76,9 +76,10 @@ class SpriteManager(var assetManager: AssetManager) {
         //LIGHT    (TextureData("textures/all/LIGHT.png")),
 
         // All | popup
-        POPUP_START(TextureData("textures/all/popup/popup_start.png")),
-        POPUP      (TextureData("textures/all/popup/popup.png")),
-        POPUP_MORE (TextureData("textures/all/popup/popup_more.png")),
+        POPUP_START         (TextureData("textures/all/popup/popup_start.png")),
+        POPUP               (TextureData("textures/all/popup/popup.png")),
+        POPUP_MORE          (TextureData("textures/all/popup/popup_more.png")),
+        POPUP_UNLOCK_RESULT (TextureData("textures/all/popup/popup_unlock_result.png")),
 
         // All | item
         ITEM_PORTRAIT(TextureData("textures/all/item/item_portrait.png")),
@@ -86,7 +87,12 @@ class SpriteManager(var assetManager: AssetManager) {
         ITEM_INSIGHT (TextureData("textures/all/item/item_insight.png")),
 
         // All | panel
-        PANEL_STREAK(TextureData("textures/all/panel/panel_streak.png")),
+        PANEL_STREAK            (TextureData("textures/all/panel/panel_streak.png")),
+        PANEL_YOUR_PRE_PORTRAIT(TextureData("textures/all/panel/panel_your_pre_portrait.png")),
+
+        // All | more
+        MORE_CARD_MEMORY(TextureData("textures/all/more/more_card_memory.png")),
+        MORE_CARD_WATCH (TextureData("textures/all/more/more_card_watch.png")),
     }
 
     // ------------------------------------------------------------------------
@@ -98,7 +104,9 @@ class SpriteManager(var assetManager: AssetManager) {
         private val count : Int,
         private val separator: String = "_",
     ) {
-        ONBOARDING    ("textures/all/onboarding", "onboarding", 3),
+        ONBOARDING    ("textures/all/onboarding" , "onboarding", 3),
+        RESULT        ("textures/all/result"     , "", 4, ""),
+        RESULT_BIG_5  ("textures/all/result/big5", "", 5, ""),
 
         ;
         val data: TextureGroupData by lazy {

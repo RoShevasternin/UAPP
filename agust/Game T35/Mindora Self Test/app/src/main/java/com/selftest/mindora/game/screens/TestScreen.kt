@@ -1,13 +1,15 @@
 package com.selftest.mindora.game.screens
 
+import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.utils.Align
+import com.selftest.mindora.game.actors.checkbox.base.ACheckBoxGroup
 import com.selftest.mindora.game.actors.label.AMsdfLabel
 import com.selftest.mindora.game.actors.layout.autoLayout.AAutoLayout
 import com.selftest.mindora.game.actors.layout.constraintLayout.AConstraintLayout
 import com.selftest.mindora.game.actors.panel.APanelTop
 import com.selftest.mindora.game.actors.test.AItemTestOption
-import com.selftest.mindora.game.actors.test.AProgressTestBar
+import com.selftest.mindora.game.actors.progress.AProgressTestBar
 import com.selftest.mindora.game.actors.test.AScaleSelector
 import com.selftest.mindora.game.content.TestRepository
 import com.selftest.mindora.game.controller.TestController
@@ -53,8 +55,8 @@ class TestScreen : AdvancedScreen() {
     // ------------------------------------------------------------------------
     private val msdf = gdxGame.msdfManager
 
-    private val styleProgress = MsdfStyle(msdf, msdf.fontMontserrat_Regular, 12f, GameColor.white_70)
-    private val styleQuestion = MsdfStyle(msdf, msdf.fontMontserrat_Medium, 20f)
+    private val styleProgress = MsdfStyle(msdf, msdf.fontMontserrat_Regular, 12f)
+    private val styleQuestion = MsdfStyle(msdf, msdf.fontMontserrat_Medium, 24f)
 
     // ------------------------------------------------------------------------
     // Controller
@@ -84,6 +86,11 @@ class TestScreen : AdvancedScreen() {
         )
     }
     private val aOptions = mutableListOf<AItemTestOption>()
+
+    // Radio-група питання. Одна на весь екран, а не на питання: варіанти
+    // перевикористовуються з пулу, тож група теж лишається та сама, її
+    // достатньо чистити при біндінгу.
+    private val optionsGroup = ACheckBoxGroup()
 
     private val aScale by lazy { AScaleSelector(this) }
 
@@ -145,23 +152,24 @@ class TestScreen : AdvancedScreen() {
     private fun AConstraintLayout.addProgress() {
         aProgressLbl.setSize(344f, 14f)
         add(aProgressLbl) { centerX(); topToBottom(aPanelTop, 24f) }
-        aProgressLbl.setAlignment(Align.left)
+        aProgressLbl.setAlignment(Align.center)
+        aProgressLbl.markup = true
 
         aProgressBar.setSize(344f, 5f)
         add(aProgressBar) { centerX(); topToBottom(aProgressLbl, 12f) }
     }
 
     private fun AConstraintLayout.addQuestion() {
-        aQuestionLbl.setSize(344f, 58f)
+        aQuestionLbl.setSize(344f, 72f)
         add(aQuestionLbl) { centerX(); topToBottom(aProgressBar, 32f) }
-        aQuestionLbl.setAlignment(Align.topLeft)
+        aQuestionLbl.setAlignment(Align.top, Align.center)
         aQuestionLbl.setWrap(true)
     }
 
     private fun AConstraintLayout.addAnswers() {
         if (controller.test.isScale) {
             aScale.setSize(344f, aScale.fullHeight)
-            add(aScale) { centerX(); topToBottom(aQuestionLbl, 24f) }
+            add(aScale) { centerX(); topToBottom(aQuestionLbl, 32f) }
             aScale.onPick = { value -> onAnswered(value) }
         } else {
             // Пул на максимум (4): біндінг лише перемикає видимість — без
@@ -176,6 +184,7 @@ class TestScreen : AdvancedScreen() {
                 val item = AItemTestOption(this@TestScreen)
                 item.setSize(344f, 64f)
                 aOptionsLayout.add(item)
+                item.attachTo(optionsGroup)        // ← додати
                 item.onPick = { onOptionPicked(i) }
                 aOptions += item
             }
@@ -189,7 +198,6 @@ class TestScreen : AdvancedScreen() {
         if (inputLocked) return
         if (optionIndex >= controller.question.options.size) return
 
-        aOptions.forEachIndexed { i, item -> item.setSelected(i == optionIndex) }
         onAnswered(optionIndex)
     }
 
@@ -197,10 +205,15 @@ class TestScreen : AdvancedScreen() {
         if (inputLocked) return
         inputLocked = true
 
-        // Дати оку зафіксувати вибір, потім гортати.
+        // inputLocked ігнорує ПОВТОРНИЙ onPick, але сам чекбокс усе одно
+        // перемкнувся б візуально: юзер побачив би підсвіченим другий варіант,
+        // а зарахувався перший. Гасимо тачі фізично на час анімації.
+        aOptionsLayout.touchable = Touchable.disabled
+
         stageUI.root.addAction(Actions.sequence(
             Actions.delay(TIME_PICKED),
             Actions.run {
+                aOptionsLayout.touchable = Touchable.enabled
                 if (controller.answer(value)) bindQuestion(animated = true)
                 else finishTest()
             }
@@ -214,7 +227,10 @@ class TestScreen : AdvancedScreen() {
      */
     private fun bindQuestion(animated: Boolean, backwards: Boolean = false) {
         val apply = {
-            aProgressLbl.setText(controller.progressText)
+            // «Question 3» білим (базовий колір стилю), « of 12» — приглушено.
+            // Color.toString() дає 8-символьний RRGGBBAA — саме той формат, який
+            // чекає розмітка scene2d.
+            aProgressLbl.setText("${controller.progressHead}[#${GameColor.white_80}]${controller.progressTail}")
             aProgressBar.setProgress(controller.progressFraction, animated)
             aQuestionLbl.setText(controller.question.text)
 
@@ -222,14 +238,23 @@ class TestScreen : AdvancedScreen() {
                 aScale.bind(controller.test.scaleSize, controller.currentAnswer)
             } else {
                 val opts = controller.question.options
+
+                // Скинути вибір ПЕРЕД показом нового питання: без цього на кожному
+                // наступному питанні лишався підсвіченим варіант із попереднього.
+                optionsGroup.clear()
+
                 aOptions.forEachIndexed { i, item ->
                     val visible = i < opts.size
                     item.isVisible = visible
-                    if (visible) {
-                        item.setText(opts[i].text)
-                        item.setSelected(selected = (controller.currentAnswer == i), animated = false)
-                    }
+                    if (visible) item.setText(opts[i].text)
                 }
+
+                // Юзер повернувся назад — показуємо, що він тоді обрав. ТИХО:
+                // звичайний select викликав би onPick і згорнув би питання вперед.
+                controller.currentAnswer
+                    ?.takeIf { it < opts.size }
+                    ?.let { aOptions[it].selectSilently(optionsGroup) }
+
                 aOptionsLayout.invalidate()
             }
             inputLocked = false
@@ -251,11 +276,14 @@ class TestScreen : AdvancedScreen() {
     }
 
     private fun finishTest() {
-        val outcome = controller.finish()
+        controller.finish()
 
-        // TODO(result): за макетом далі екран «рахуємо результат» (лоадер) і
-        //  екран результату. Поки їх немає — повертаємось на хаб: результат
-        //  уже збережений, картка портрета підхопить +1 вимір через flow.
-        animHideScreen { gdxGame.navigationManager.back() }
+        animHideScreen {
+            gdxGame.navigationManager.navigate(
+                ResultScreen::class.java.name,
+                MenuScreen::class.java.name,          // назад — на хаб, не в тест
+                key = TestRepository.ALL.indexOf(controller.testId),
+            )
+        }
     }
 }

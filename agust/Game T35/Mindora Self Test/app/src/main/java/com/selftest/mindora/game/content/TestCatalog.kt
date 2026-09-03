@@ -24,30 +24,27 @@ import com.selftest.mindora.config.TestId
 object TestCatalog {
 
     data class Entry(
-        val id      : String,
-        val testId  : TestId,
-        /** Позиція в списку = індекс іконки ic_ena_N / ic_dis_N (N = index+1). */
-        val index   : Int,
-        val subtitle: String,
+        val id           : String,
+        val testId       : TestId,
+        val index        : Int,
+        val subtitle     : String,
+        /** Рядок над назвою результату: «Your Archetype», «Your love language». */
+        val resultKicker : String,
     )
 
     /** id → (ключ ціни, підпис на картці). Порядку тут немає — тільки дані. */
-    private val META: Map<String, Pair<TestId, String>> = mapOf(
-        TestRepository.ARCHETYPE     to (TestId.ARCHETYPE     to "Reveal the role that shapes you"),
-        TestRepository.TYPES16       to (TestId.TYPES16_DEEP  to "Understand how you think and decide"),
-        TestRepository.ATTACHMENT    to (TestId.ATTACHMENT    to "See how you connect with others"),
-        TestRepository.LOVE_LANGUAGE to (TestId.LOVE_LANGUAGE to "Learn what makes you feel valued"),
-        TestRepository.BIG_FIVE      to (TestId.BIG_FIVE      to "Measure the traits that shape you"),
+    private val META: Map<String, Triple<TestId, String, String>> = mapOf(
+        TestRepository.ARCHETYPE     to Triple(TestId.ARCHETYPE,     "Reveal the role that shapes you",      "Your Archetype"),
+        TestRepository.TYPES16       to Triple(TestId.TYPES16_DEEP,  "Understand how you think and decide",  "Your Personality type"),
+        TestRepository.ATTACHMENT    to Triple(TestId.ATTACHMENT,    "See how you connect with others",      "Your attachment style"),
+        TestRepository.LOVE_LANGUAGE to Triple(TestId.LOVE_LANGUAGE, "Learn what makes you feel valued",     "Your love language"),
+        TestRepository.BIG_FIVE      to Triple(TestId.BIG_FIVE,      "Measure the traits that shape you",    "Your traits"),
     )
 
-    /**
-     * Порядок карток на екрані. Успадковується від TestRepository.ALL —
-     * додали тест туди, додайте META тут, і список зійдеться сам.
-     */
     val ALL: List<Entry> = TestRepository.ALL.mapIndexed { i, id ->
-        val (testId, subtitle) = META[id]
-            ?: error("TestCatalog: немає META для '$id' — додай підпис і ключ ціни")
-        Entry(id = id, testId = testId, index = i, subtitle = subtitle)
+        val (testId, subtitle, kicker) = META[id]
+            ?: error("TestCatalog: немає META для '$id'")
+        Entry(id = id, testId = testId, index = i, subtitle = subtitle, resultKicker = kicker)
     }
 
     private val byId = ALL.associateBy { it.id }

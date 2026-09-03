@@ -47,6 +47,8 @@ class PortraitController(
         val cards          : List<DimensionCard>,
         val unlockedCount  : Int,
         val totalCount     : Int,
+        /** Скільки вимірів треба для синтезу. З конфігу, а не константа. */
+        val threshold      : Int,
         val canSynthesize  : Boolean,          // поріг взято, синтез ще не зроблено
         val synthesis      : SynthesisTitle?,  // готовий портрет (якщо вже відкрито)
     )
@@ -82,19 +84,21 @@ class PortraitController(
     // ------------------------------------------------------------------------
 
     /**
-     * Тап по картці теста. done → перепроходження (безкоштовне, «Take Again»);
-     * не done → або списуємо люмени і відкриваємо, або тост «не вистачає».
+     * Тап по картці теста.
+     *
+     * ⚠️ БУВ БАГ: перевірявся тільки `resultOf != null`, тобто «пройдений».
+     * Куплений, але ще не пройдений тест у цю умову не потрапляв — і
+     * spendLumens намагався списати ціну ВДРУГЕ. Людина бачила картку
+     * «Open», тиснула, і отримувала «не вистачає люменів» за те, що вже
+     * оплатила.
+     *
+     * Тепер рішення ухвалює model.unlockTest — та сама точка, що на хабі.
+     * Вона ідемпотентна: відкритий тест (куплений АБО пройдений) повертає
+     * true без списання, а неоплачений списує рівно раз.
      */
     fun tapTest(testId: String) {
-        val done = model.resultOf(testId) != null
-        if (done) { onOpenTest(testId); return }
-
-        val cost = costOf(testId)
-        when {
-            cost <= 0L               -> onOpenTest(testId)
-            model.spendLumens(cost)  -> onOpenTest(testId)
-            else                     -> onNotEnoughLumens(testId, cost)
-        }
+        if (model.unlockTest(testId)) onOpenTest(testId)
+        else onNotEnoughLumens(testId, costOf(testId))
     }
 
     /** Чи активна кнопка «Unlock My Portrait». */
@@ -151,6 +155,7 @@ class PortraitController(
             cards         = cards,
             unlockedCount = results.size,
             totalCount    = TestRepository.ALL.size,
+            threshold     = config.portrait.synthesisThreshold,
             canSynthesize = canSynthesize(),
             synthesis     = synthesis,
         )

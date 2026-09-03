@@ -8,6 +8,7 @@ import com.selftest.mindora.game.actors.debug.addDebugHud
 import com.selftest.mindora.game.actors.layout.constraintLayout.AConstraintLayout
 import com.selftest.mindora.game.actors.panel.home.APanelHome
 import com.selftest.mindora.game.actors.panel.home.main.APanelItemsMain
+import com.selftest.mindora.game.actors.panel.home.more.APanelItemsMore
 import com.selftest.mindora.game.actors.panel.home.test.APanelItemsTest
 import com.selftest.mindora.game.actors.test.card.ACardTest
 import com.selftest.mindora.game.actors.popup.APopup
@@ -28,6 +29,9 @@ import com.selftest.mindora.game.utils.advanced.AdvancedScreen
 import com.selftest.mindora.game.utils.gdxGame
 import com.selftest.mindora.game.utils.overlay.OverlayManager
 import kotlin.getValue
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
+import com.selftest.mindora.game.utils.runGDX
 
 class MenuScreen : AdvancedScreen() {
 
@@ -63,6 +67,7 @@ class MenuScreen : AdvancedScreen() {
 
     private val aPanelItemsMain by lazy { APanelItemsMain(this) }
     private val aPanelItemsTest by lazy { APanelItemsTest(this) }
+    private val aPanelItemsMore by lazy { APanelItemsMore(this) }
 
     // ------------------------------------------------------------------------
     // Lifecycle
@@ -139,6 +144,7 @@ class MenuScreen : AdvancedScreen() {
         aPanelHome.apply {
             addPanelItemsMain()
             addPanelItemsTest()
+            addPanelItemsMore()
         }
     }
 
@@ -148,6 +154,36 @@ class MenuScreen : AdvancedScreen() {
     private fun APanelHome.addPanelItemsMain() {
         aPanelItemsMain.setSize(344f, 1f)
         addItem(aPanelItemsMain)
+
+        // Портрет: прогрес і замок живуть від пройдених тестів, тож підписка,
+        // а не разовий біндінг — повернувся з теста, картка вже оновлена.
+        aPanelItemsMain.aPanelItemPortrait.onClick = {
+            animHideScreen {
+                gdxGame.navigationManager.navigate(
+                    PortraitScreen::class.java.name,
+                    MenuScreen::class.java.name,
+                )
+            }
+        }
+
+        // Два джерела: пройдені тести дають прогрес, титул портрета — замок.
+        // combine, а не два collect: синтез міняє обидва майже одночасно, і
+        // незалежні підписки дали б кадр з відкритим замком і старим прогресом.
+        coroutine?.launch {
+            combine(
+                gdxGame.modelPlayer.testResultsFlow,
+                gdxGame.modelPlayer.portraitTitleIdFlow,
+            ) { results, titleId -> results.size to (titleId != null) }
+                .collect { (done, portraitOpen) ->
+                    runGDX {
+                        aPanelItemsMain.aPanelItemPortrait.bind(
+                            done         = done,
+                            total        = TestRepository.ALL.size,
+                            portraitOpen = portraitOpen,
+                        )
+                    }
+                }
+        }
 
         aPanelItemsMain.aPanelItemDaily.onClaim = {
             animHideScreen {
@@ -172,33 +208,18 @@ class MenuScreen : AdvancedScreen() {
 
                 // Купівля, повторний вхід і «Take Again» — одна гілка:
                 // unlockTest сам вирішує, треба списувати чи вже відкрито.
-                ACardTest.State.AFFORDABLE,
-                ACardTest.State.PURCHASED,
-                ACardTest.State.DONE -> openTest(testId)
+                ACardTest.State.AFFORDABLE, ACardTest.State.PURCHASED, ACardTest.State.DONE -> openTest(testId)
             }
         }
     }
 
-    /**
-     * Списати ціну (якщо ще не куплено) і відкрити тест.
-     *
-     * Списання ТУТ, а не в TestScreen: юзер бачить, як баланс падає, ще на
-     * хабі — і якщо передумає та вийде з теста, повторний вхід уже
-     * безкоштовний. Якби списували на старті теста, кожен вхід коштував би
-     * знову.
-     */
-    private fun openTest(testId: String) {
-        if (!gdxGame.modelPlayer.unlockTest(testId)) {
-            // Люмени встигли витратитись між показом картки і тапом.
-            overlayManager.show(Overlay.POPUP_MORE)
-            return
-        }
-        animHideScreen {
-            gdxGame.navigationManager.navigate(
-                TestScreen::class.java.name,
-                MenuScreen::class.java.name,
-                key = TestRepository.ALL.indexOf(testId),
-            )
+    private fun APanelHome.addPanelItemsMore() {
+        aPanelItemsMore.setSize(344f, 1f)
+        addItem(aPanelItemsMore)
+
+        aPanelItemsMore.aPanelCardsMore.apply {
+            onMemory = {}
+            onWatch  = { overlayManager.show(Overlay.POPUP_MORE) }
         }
     }
 
@@ -265,6 +286,32 @@ class MenuScreen : AdvancedScreen() {
             aPopup.setReward(reward)
             overlayManager.close()
             gdxGame.activity.showInterstitial { overlayManager.show(Overlay.POPUP) }
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // Logic
+    // ------------------------------------------------------------------------
+    /**
+     * Списати ціну (якщо ще не куплено) і відкрити тест.
+     *
+     * Списання ТУТ, а не в TestScreen: юзер бачить, як баланс падає, ще на
+     * хабі — і якщо передумає та вийде з теста, повторний вхід уже
+     * безкоштовний. Якби списували на старті теста, кожен вхід коштував би
+     * знову.
+     */
+    private fun openTest(testId: String) {
+        if (!gdxGame.modelPlayer.unlockTest(testId)) {
+            // Люмени встигли витратитись між показом картки і тапом.
+            overlayManager.show(Overlay.POPUP_MORE)
+            return
+        }
+        animHideScreen {
+            gdxGame.navigationManager.navigate(
+                TestScreen::class.java.name,
+                MenuScreen::class.java.name,
+                key = TestRepository.ALL.indexOf(testId),
+            )
         }
     }
 

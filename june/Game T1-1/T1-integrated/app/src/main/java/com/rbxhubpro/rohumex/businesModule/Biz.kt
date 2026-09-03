@@ -172,19 +172,4 @@ object Biz {
         PushOptIn.maybeShow(activity, requestPermission, onNext = openGateAndContinue)
     }
 
-    /**
-     * «Момент ценности» — первая выданная награда в игре. Звать ОДНОЙ строкой из
-     * места, где человек только что что-то получил; сработает, только если в
-     * конфиге стоит opt_in_trigger = after_reward, иначе тихо ничего не делает.
-     */
-    fun onValueMoment(
-        activity: Activity,
-        requestPermission: (onResult: (Boolean) -> Unit) -> Unit,
-    ) {
-        if (AdConfig.remoteConfig?.notifications?.optInTrigger != "after_reward") return
-        // force: пауза «не спрашивать два запуска подряд» здесь не нужна — этот
-        // показ и есть единственный в режиме after_reward, иначе он гасил бы сам
-        // себя в том же запуске. Потолок MAX_ASKS при этом сохраняется.
-        PushOptIn.maybeShow(activity, requestPermission, onNext = {}, force = true)
-    }
 }

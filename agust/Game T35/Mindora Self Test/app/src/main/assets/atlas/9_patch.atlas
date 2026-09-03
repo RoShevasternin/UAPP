@@ -1,14 +1,41 @@
 9_patch.png
-size: 559, 148
+size: 939, 1364
 format: RGBA8888
 filter: Linear, Linear
 repeat: none
 panel_balance
   rotate: false
-  xy: 2, 2
+  xy: 382, 2
   size: 555, 144
   orig: 555, 144
   offset: 0, 0
   index: -1
   split: 155, 131, 0, 144
+  pad: -1, -1, -1, -1
+panel_best
+  rotate: false
+  xy: 2, 1108
+  size: 930, 126
+  orig: 930, 126
+  offset: 0, 0
+  index: -1
+  split: 622, 269, 103, 21
+  pad: -1, -1, -1, -1
+panel_grow
+  rotate: false
+  xy: 2, 1236
+  size: 930, 126
+  orig: 930, 126
+  offset: 0, 0
+  index: -1
+  split: 599, 265, 104, 21
+  pad: -1, -1, -1, -1
+panel_result
+  rotate: false
+  xy: 2, 2
+  size: 378, 1104
+  orig: 378, 1104
+  offset: 0, 0
+  index: -1
+  split: 60, 54, 67, 62
   pad: -1, -1, -1, -1

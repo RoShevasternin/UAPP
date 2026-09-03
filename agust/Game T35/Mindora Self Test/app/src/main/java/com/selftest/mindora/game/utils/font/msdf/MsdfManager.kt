@@ -32,6 +32,10 @@ class MsdfManager : Disposable {
         "font/msdf/Montserrat-Bold.json",
         "font/msdf/Montserrat-Bold.png",
     )
+    val fontMontserrat_Italic = MsdfFont(
+        "font/msdf/Montserrat-Italic.json",
+        "font/msdf/Montserrat-Italic.png",
+    )
 
     val fontKarla_Bold = MsdfFont(
         "font/msdf/Karla-Bold.json",
@@ -57,6 +61,7 @@ class MsdfManager : Disposable {
             fontMontserrat_Regular,
             fontMontserrat_Medium,
             fontMontserrat_Bold,
+            fontMontserrat_Italic,
 
             fontKarla_Bold
         )

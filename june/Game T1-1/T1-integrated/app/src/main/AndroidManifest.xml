@@ -46,7 +46,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- reward — людина вивела монети на лендінгу і повертається за ними
                      optin  — тапнула на лендінгу «увімкнути нотифікації» -->
-                <data android:scheme="rohumexapp" />
+                <data android:scheme="rohumex" />
                 <data android:host="reward" />
                 <data android:host="optin" />
             </intent-filter>

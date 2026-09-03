@@ -41,8 +41,11 @@ class TestController(
     val isLast        : Boolean      get() = index == total - 1
     val currentAnswer : Int?         get() = answers[index]
 
-    /** «Question 3 of 12» */
-    val progressText : String get() = "Question ${index + 1} of $total"
+    /** «Question 3» — акцентна частина (білим). */
+    val progressHead: String get() = "Question ${index + 1}"
+
+    /** «of 12» — приглушена частина. */
+    val progressTail: String get() = "/$total"
 
     /** Частка для прогрес-бара: перше питання вже трохи зафарбоване (як у макеті). */
     val progressFraction : Float get() = (index + 1).toFloat() / total

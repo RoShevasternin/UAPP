@@ -2,6 +2,7 @@ package com.selftest.mindora.game.actors.panel.home.test
 
 import com.selftest.mindora.game.actors.label.AMsdfLabel
 import com.selftest.mindora.game.actors.layout.autoLayout.AAutoLayout
+import com.selftest.mindora.game.utils.GameColor
 import com.selftest.mindora.game.utils.advanced.AdvancedScreen
 import com.selftest.mindora.game.utils.font.msdf.MsdfStyle
 import com.selftest.mindora.game.utils.gdxGame
@@ -19,7 +20,7 @@ class APanelItemsTest(screen: AdvancedScreen): AAutoLayout(
     // ------------------------------------------------------------------------
     private val msdf = gdxGame.msdfManager
 
-    private val styleDef = MsdfStyle(msdf, msdf.fontMontserrat_Medium, 14f)
+    private val styleDef = MsdfStyle(msdf, msdf.fontMontserrat_Medium, 14f, GameColor.white_80)
 
     // ------------------------------------------------------------------------
     // Actors

@@ -47,6 +47,8 @@ class SpriteUtil {
         val double_def              = getAllRegion("double_def")
         val back_btn                = getAllRegion("back_btn")
         val fire                    = getAllRegion("fire")
+        val unlock_result_def       = getAllRegion("unlock_result_def")
+        val shevron                 = getAllRegion("shevron")
 
         // Card Test
         val test_card_done = getAllRegion("test_card_done")
@@ -56,6 +58,20 @@ class SpriteUtil {
         val test_btn_dis   = getAllRegion("test_btn_dis")
         val test_btn_ena   = getAllRegion("test_btn_ena")
         val test_btn_open  = getAllRegion("test_btn_open")
+
+        // Test Items
+        val progress_back_test = getAllRegion("progress_back_test")
+        val mask_progress_test = getAllRegion("mask_progress_test")
+        val progress_test      = getAllRegion("progress_test")
+        val test_option_def    = getAllRegion("test_option_def")
+        val test_option_check  = getAllRegion("test_option_check")
+        val test_scale_check   = getAllRegion("test_scale_check")
+        val test_scale_def     = getAllRegion("test_scale_def")
+
+        // Result
+        val add_to_portrait_def = getAllRegion("add_to_portrait_def")
+        val open_next_test_def  = getAllRegion("open_next_test_def")
+        val share_result_def    = getAllRegion("share_result_def")
 
         val listIcDis = List(5) { getAllRegion("ic_dis_${it.inc()}") }
         val listIcEna = List(5) { getAllRegion("ic_ena_${it.inc()}") }
@@ -69,6 +85,9 @@ class SpriteUtil {
         private fun get9PatchScaled(name: String, scale: Int = 1) = get9Patch(name).apply { this.scale(1f / scale, 1f / scale) }
 
         val panel_balance = get9PatchScaled("panel_balance", 3)
+        val panel_result  = get9PatchScaled("panel_result", 3)
+        val panel_best    = get9PatchScaled("panel_best", 3)
+        val panel_grow    = get9PatchScaled("panel_grow", 3)
 
         // ------------------------------------------------------------------------------
         // TEXTURES
@@ -81,12 +100,18 @@ class SpriteUtil {
         val LIGHT = TextureEmpty //SpriteManager.EnumTexture.LIGHT.data.texture
 
         // All | panel
-        val PANEL_STREAK = SpriteManager.EnumTexture.PANEL_STREAK.data.texture
+        val PANEL_STREAK            = SpriteManager.EnumTexture.PANEL_STREAK.data.texture
+        val PANEL_YOUR_PRE_PORTRAIT = SpriteManager.EnumTexture.PANEL_YOUR_PRE_PORTRAIT.data.texture
+
+        // All | more
+        val more_card_memory = SpriteManager.EnumTexture.MORE_CARD_MEMORY.data.texture
+        val more_card_watch  = SpriteManager.EnumTexture.MORE_CARD_WATCH.data.texture
 
         // All | popup
-        val POPUP_START = SpriteManager.EnumTexture.POPUP_START.data.texture
-        val POPUP       = SpriteManager.EnumTexture.POPUP.data.texture
-        val POPUP_MORE  = SpriteManager.EnumTexture.POPUP_MORE.data.texture
+        val POPUP_START          = SpriteManager.EnumTexture.POPUP_START.data.texture
+        val POPUP                = SpriteManager.EnumTexture.POPUP.data.texture
+        val POPUP_MORE           = SpriteManager.EnumTexture.POPUP_MORE.data.texture
+        val POPUP_UNLOCK_RESULT  = SpriteManager.EnumTexture.POPUP_UNLOCK_RESULT.data.texture
 
         // All | item
         val ITEM_PORTRAIT = SpriteManager.EnumTexture.ITEM_PORTRAIT.data.texture
@@ -96,6 +121,8 @@ class SpriteUtil {
 
         // All | list
         val listOnboarding = SpriteManager.EnumTextureGroup.ONBOARDING.data.textures
+        val listResult     = SpriteManager.EnumTextureGroup.RESULT.data.textures
+        val listResultBig5 = SpriteManager.EnumTextureGroup.RESULT_BIG_5.data.textures
     }
 
 }

@@ -175,6 +175,22 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">add_to_portrait_def.png</key>
+            <key type="filename">share_result_def.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>233,41,465,83</rect>
+                <key>scale9Paddings</key>
+                <rect>233,41,465,83</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">back_btn.png</key>
             <key type="filename">settings_btn.png</key>
             <key type="filename">test_card_done.png</key>
@@ -239,6 +255,7 @@
                 <false/>
             </struct>
             <key type="filename">check.png</key>
+            <key type="filename">shevron.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -354,6 +371,23 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">mask_progress_test.png</key>
+            <key type="filename">progress_back_test.png</key>
+            <key type="filename">progress_test.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>258,4,516,7</rect>
+                <key>scale9Paddings</key>
+                <rect>258,4,516,7</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">medium_def.png</key>
             <key type="filename">medium_dis.png</key>
             <struct type="IndividualSpriteSettings">
@@ -367,6 +401,21 @@
                 <rect>105,27,210,54</rect>
                 <key>scale9Paddings</key>
                 <rect>105,27,210,54</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">open_next_test_def.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>233,38,465,75</rect>
+                <key>scale9Paddings</key>
+                <rect>233,38,465,75</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -417,6 +466,53 @@
                 <rect>60,26,120,51</rect>
                 <key>scale9Paddings</key>
                 <rect>60,26,120,51</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">test_option_check.png</key>
+            <key type="filename">test_option_def.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>258,48,516,96</rect>
+                <key>scale9Paddings</key>
+                <rect>258,48,516,96</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">test_scale_check.png</key>
+            <key type="filename">test_scale_def.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>47,47,93,93</rect>
+                <key>scale9Paddings</key>
+                <rect>47,47,93,93</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">unlock_result_def.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>207,38,414,75</rect>
+                <key>scale9Paddings</key>
+                <rect>207,38,414,75</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

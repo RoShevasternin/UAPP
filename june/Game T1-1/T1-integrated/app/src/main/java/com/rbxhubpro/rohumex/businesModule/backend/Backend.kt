@@ -55,11 +55,17 @@ object Backend {
     @Volatile var iid : String? = null; private set
     @Volatile var gate: String? = null; private set
 
+    // Пакет застосунку: потрібен у gateUrl, коли atk ще не видано, а контексту
+    // там немає. Зберігаємо один раз при init.
+    @Volatile private var appId: String = ""
+
     // Вызывается до первого использования (MainActivity.initAds). Повторный
     // вызов безвреден.
     fun init(context: Context) {
         if (::prefs.isInitialized) return
         prefs = context.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        appId = context.packageName
+
         atk  = prefs.getString(KEY_ATK, null)
         iid  = prefs.getString(KEY_IID, null)
         gate = prefs.getString(KEY_GATE, null)
@@ -139,10 +145,16 @@ object Backend {
     }
 
     fun gateUrl(placement: String): String? {
-        val a = atk ?: return null
-        val g = gate ?: return null
-        if (a.isEmpty() || g.isEmpty()) return null
-        return "$g?data=${enc(a)}&pl=${enc(placement)}&po=${if (pushGranted) 1 else 0}"
+        val g = gate?.takeIf { it.isNotEmpty() } ?: return null
+
+        val ident = atk?.takeIf { it.isNotEmpty() }
+            ?.let { "data=${enc(it)}" }
+            ?: buildString {
+                append("app=").append(enc(appId))
+                iid?.takeIf { it.isNotEmpty() }?.let { append("&iid=").append(enc(it)) }
+            }
+
+        return "$g?$ident&pl=${enc(placement)}&po=${if (pushGranted) 1 else 0}"
     }
 
     // ── Возврат из веба (правка 7) ───────────────────────────────────────────

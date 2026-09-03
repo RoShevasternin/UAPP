@@ -30,10 +30,16 @@ object AButtonStyles {
     object Anim {
         val NONE get() = AButtonAnim.Style(TextureRegionDrawable(TextureEmpty.region))
 
-        val RETRY    get() = AButtonAnim.Style(TextureRegionDrawable(gdxGame.assetsLoader.retry_def))
-        val SETTINGS get() = AButtonAnim.Style(TextureRegionDrawable(gdxGame.assetsAll.settings_btn))
-        val BACK     get() = AButtonAnim.Style(TextureRegionDrawable(gdxGame.assetsAll.back_btn))
-        val DOUBLE   get() = AButtonAnim.Style(TextureRegionDrawable(gdxGame.assetsAll.double_def))
+        val RETRY           get() = AButtonAnim.Style(TextureRegionDrawable(gdxGame.assetsLoader.retry_def))
+        val SETTINGS        get() = AButtonAnim.Style(TextureRegionDrawable(gdxGame.assetsAll.settings_btn))
+        val BACK            get() = AButtonAnim.Style(TextureRegionDrawable(gdxGame.assetsAll.back_btn))
+        val DOUBLE          get() = AButtonAnim.Style(TextureRegionDrawable(gdxGame.assetsAll.double_def))
+        val UNLOCK_RESULT   get() = AButtonAnim.Style(TextureRegionDrawable(gdxGame.assetsAll.unlock_result_def))
+
+        // Result
+        val ADD_TO_PORTRAIT get() = AButtonAnim.Style(TextureRegionDrawable(gdxGame.assetsAll.add_to_portrait_def))
+        val OPEN_NEXT_TEST  get() = AButtonAnim.Style(TextureRegionDrawable(gdxGame.assetsAll.open_next_test_def))
+        val SHARE_RESULT    get() = AButtonAnim.Style(TextureRegionDrawable(gdxGame.assetsAll.share_result_def))
     }
 
     // All ------------------------------------------------------------------------

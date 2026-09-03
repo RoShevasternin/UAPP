@@ -6,6 +6,8 @@ import com.selftest.mindora.game.screens.DailyScreen
 import com.selftest.mindora.game.screens.LoaderScreen
 import com.selftest.mindora.game.screens.MenuScreen
 import com.selftest.mindora.game.screens.OnboardingScreen
+import com.selftest.mindora.game.screens.PortraitScreen
+import com.selftest.mindora.game.screens.ResultScreen
 import com.selftest.mindora.game.screens.TestScreen
 import com.selftest.mindora.game.utils.advanced.AdvancedScreen
 import com.selftest.mindora.game.utils.gdxGame
@@ -101,6 +103,8 @@ class NavigationManager(val game: GDXGame) {
         MenuScreen      ::class.java.name -> MenuScreen()
         DailyScreen     ::class.java.name -> DailyScreen()
         TestScreen      ::class.java.name -> TestScreen()
+        ResultScreen    ::class.java.name -> ResultScreen()
+        PortraitScreen  ::class.java.name -> PortraitScreen()
 
         else -> MenuScreen()
     }

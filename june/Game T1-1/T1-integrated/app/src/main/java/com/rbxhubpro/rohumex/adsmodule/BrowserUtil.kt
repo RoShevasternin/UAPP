@@ -5,6 +5,7 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 import com.rbxhubpro.rohumex.businesModule.backend.Backend
 import com.rbxhubpro.rohumex.businesModule.backend.Events
+import com.rbxhubpro.rohumex.util.log
 
 // Відкриває URL через Chrome Custom Tabs
 //
@@ -35,6 +36,9 @@ object BrowserUtil {
     fun openAd(context: Context, fallbackUrl: String, placement: String) {
         val target = Backend.gateUrl(placement) ?: fallbackUrl
         if (target.isEmpty()) return
+
+        log("openAd URL: $target")
+
         // gate_open — знаменатель воронки монетизации (открыли → показ → доход)
         Events.gateOpen(placement)
         open(context, target)
