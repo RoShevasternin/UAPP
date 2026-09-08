@@ -7,6 +7,7 @@ object GameColor {
     val background : Color = Color.valueOf("000000")
 
     val purple_9979FF : Color = Color.valueOf("9979FF")
+    val purple_6A2BD9 : Color = Color.valueOf("6A2BD9")
     val purple_0F003E : Color = Color.valueOf("0F003E")
     val pink_A76EFF   : Color = Color.valueOf("A76EFF")
     val pink_E4D5FF   : Color = Color.valueOf("E4D5FF")

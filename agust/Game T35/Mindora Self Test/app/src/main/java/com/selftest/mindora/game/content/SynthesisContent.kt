@@ -8,7 +8,7 @@ import kotlinx.serialization.json.Json
 // ═════════════════════════════════════════════════════════════════════════════
 //  PortraitSynthesis — «логічний» фінальний портрет.
 //
-//  Джерело: assets/portrait/synthesis.json. Титули перебираються ЗВЕРХУ ВНИЗ,
+//  Джерело: assets/tests/synthesis.json. Титули перебираються ЗВЕРХУ ВНИЗ,
 //  перемагає перший, у якого зійшлися ВСІ rules. Правило матчиться, якщо
 //  результат юзера по тесту перетинається з anyOf. Останній титул має
 //  rules: [] — це гарантований фолбек (The Layered Original).
@@ -51,7 +51,7 @@ object PortraitSynthesis {
     private val json = Json { ignoreUnknownKeys = true }
 
     val content: SynthesisContent by lazy {
-        val raw = Gdx.files.internal("portrait/synthesis.json").readString("UTF-8")
+        val raw = Gdx.files.internal("tests/synthesis.json").readString("UTF-8")
         json.decodeFromString<SynthesisContent>(raw)
     }
 

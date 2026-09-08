@@ -7,18 +7,39 @@
       "tagline": "Built to move, born to question",
       "body": "Your tests agree on one thing: standing still was never your plan. You chase what's new, doubt what's given, and treat every wall as a question rather than an answer. People around you feel that pull — you make the world seem bigger just by refusing to accept its current size.",
       "rules": [
-        { "test": "archetype", "anyOf": ["explorer", "rebel"] },
-        { "test": "big_five", "anyOf": ["openness_high"] }
+        {
+          "test": "archetype",
+          "anyOf": [
+            "explorer",
+            "rebel"
+          ]
+        },
+        {
+          "test": "big_five",
+          "anyOf": [
+            "openness_high"
+          ]
+        }
       ]
     },
     {
       "id": "quiet_anchor",
       "name": "The Quiet Anchor",
       "tagline": "Strength that feels like warmth",
-      "body": "Across every dimension, one pattern repeats: people are safe around you. You notice what others miss, hold steady when things shake, and give without keeping score. Your kind of strength doesn't announce itself — it just shows up, again and again, until everyone quietly depends on it.",
+      "body": "Across your results, one pattern repeats: people are safe around you. You notice what others miss, hold steady when things shake, and give without keeping score. Your kind of strength doesn't announce itself — it just shows up, again and again, until everyone quietly depends on it.",
       "rules": [
-        { "test": "archetype", "anyOf": ["caregiver"] },
-        { "test": "big_five", "anyOf": ["agreeableness_high"] }
+        {
+          "test": "archetype",
+          "anyOf": [
+            "caregiver"
+          ]
+        },
+        {
+          "test": "big_five",
+          "anyOf": [
+            "agreeableness_high"
+          ]
+        }
       ]
     },
     {
@@ -27,8 +48,18 @@
       "tagline": "You make the world less grey",
       "body": "Your portrait is painted in more colors than most. Ideas find you constantly, and you can't help turning them into something real — a project, an image, a way of living. The tests see both the imagination and the restlessness behind it: you're not trying to stand out, you simply can't render yourself in standard settings.",
       "rules": [
-        { "test": "archetype", "anyOf": ["creator"] },
-        { "test": "big_five", "anyOf": ["openness_high"] }
+        {
+          "test": "archetype",
+          "anyOf": [
+            "creator"
+          ]
+        },
+        {
+          "test": "big_five",
+          "anyOf": [
+            "openness_high"
+          ]
+        }
       ]
     },
     {
@@ -37,55 +68,466 @@
       "tagline": "You build what others wish for",
       "body": "Where others see chaos, you see a to-do list. Your results line up around structure, follow-through, and quiet command: you take responsibility before anyone asks and deliver after everyone else has stopped. Order isn't a cage for you — it's the scaffolding you build so people can climb higher.",
       "rules": [
-        { "test": "archetype", "anyOf": ["ruler"] },
-        { "test": "big_five", "anyOf": ["conscientiousness_high"] }
+        {
+          "test": "archetype",
+          "anyOf": [
+            "ruler"
+          ]
+        },
+        {
+          "test": "big_five",
+          "anyOf": [
+            "conscientiousness_high"
+          ]
+        }
       ]
     },
     {
       "id": "deliberate_mind",
       "name": "The Deliberate Mind",
-      "tagline": "Depth, by design",
-      "body": "You don't skim — you study. Every test points to the same engine: a mind that wants the real answer, not the fast one. You'd rather understand a thing completely than impress a room instantly, and that patience gives your conclusions a weight that louder voices never quite reach.",
+      "tagline": "Depth over speed, always",
+      "body": "You don't skim — you study. Your results point to the same engine: a mind that wants the real answer, not the fast one. You'd rather understand a thing completely than impress a room instantly, and that patience gives your conclusions a weight that louder voices never quite reach.",
       "rules": [
-        { "test": "archetype", "anyOf": ["sage"] },
-        { "test": "types16", "anyOf": ["intj", "intp", "entj", "entp", "istj"] }
+        {
+          "test": "archetype",
+          "anyOf": [
+            "sage"
+          ]
+        },
+        {
+          "test": "types16",
+          "anyOf": [
+            "intj",
+            "intp",
+            "entj",
+            "entp",
+            "istj"
+          ]
+        }
       ]
     },
     {
       "id": "live_wire",
       "name": "The Live Wire",
-      "tagline": "Rooms change when you enter",
+      "tagline": "The room starts when you walk in",
       "body": "Your energy is the common thread: people, momentum, out-loud thinking. The tests show someone who recharges through connection and gives that charge right back. You don't wait for life to get interesting — you're usually the reason it already is.",
       "rules": [
-        { "test": "big_five", "anyOf": ["extraversion_high"] },
-        { "test": "types16", "anyOf": ["enfp", "enfj", "entp", "entj", "esfp", "esfj", "estp", "estj"] }
+        {
+          "test": "big_five",
+          "anyOf": [
+            "extraversion_high"
+          ]
+        },
+        {
+          "test": "types16",
+          "anyOf": [
+            "entj",
+            "entp",
+            "enfj",
+            "enfp",
+            "estj",
+            "esfj",
+            "estp",
+            "esfp"
+          ]
+        }
       ]
     },
     {
       "id": "inner_world",
       "name": "The Inner World",
-      "tagline": "Still waters, endless depth",
+      "tagline": "Most of you happens where no one looks",
       "body": "The loudest thing about you is what happens inside. Your results describe a rich private landscape — reflection, selectivity, meaning over noise. Few people get full access, and that's not distance; it's curation. The ones you let in know exactly how much that means.",
       "rules": [
-        { "test": "big_five", "anyOf": ["extraversion_low"] },
-        { "test": "types16", "anyOf": ["intj", "intp", "infj", "infp", "istj", "isfj", "istp", "isfp"] }
+        {
+          "test": "big_five",
+          "anyOf": [
+            "extraversion_low"
+          ]
+        },
+        {
+          "test": "types16",
+          "anyOf": [
+            "intj",
+            "intp",
+            "infj",
+            "infp",
+            "istj",
+            "isfj",
+            "istp",
+            "isfp"
+          ]
+        }
       ]
     },
     {
       "id": "whole_heart",
       "name": "The Whole Heart",
-      "tagline": "You love in high definition",
+      "tagline": "You never learned to love halfway",
       "body": "Connection isn't a side quest for you — it's the main storyline. Your dimensions converge on depth of feeling: you notice, you care, you commit fully. It costs more to live this way, and it gives more back. The people you choose are lucky, whether they fully realize it or not.",
       "rules": [
-        { "test": "attachment", "anyOf": ["anxious", "fearful"] },
-        { "test": "big_five", "anyOf": ["agreeableness_high"] }
+        {
+          "test": "attachment",
+          "anyOf": [
+            "anxious",
+            "fearful"
+          ]
+        },
+        {
+          "test": "big_five",
+          "anyOf": [
+            "agreeableness_high"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "true_north",
+      "name": "The True North",
+      "tagline": "You know what matters — even when it costs you",
+      "body": "Beneath everything your results say, there's a compass. You have lines you won't cross, people you won't abandon, and a standard you hold yourself to that's higher than anyone realizes — often higher than you'd ever demand from others. You can adapt, compromise, play the game when needed, but on the things that truly matter, you don't move.",
+      "rules": [
+        {
+          "test": "attachment",
+          "anyOf": [
+            "secure"
+          ]
+        },
+        {
+          "test": "big_five",
+          "anyOf": [
+            "conscientiousness_high"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "steady_flame",
+      "name": "The Steady Flame",
+      "tagline": "Quietly unbreakable",
+      "body": "Read your results together and one thing stands out: this is someone life has already tested. You've been through chapters most people around you never fully saw — and instead of getting colder, you got wiser. You still show up. You still care. That's not luck; that's character doing quiet, daily work.",
+      "rules": [
+        {
+          "test": "attachment",
+          "anyOf": [
+            "secure"
+          ]
+        },
+        {
+          "test": "big_five",
+          "anyOf": [
+            "emotional_sensitivity_high"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "unwritten_story",
+      "name": "The Unwritten Story",
+      "tagline": "Your best chapters are still ahead",
+      "body": "Most people take tests to find out who they are. Your results read like someone who is still becoming — on purpose. You've already outgrown versions of yourself that once felt permanent, and you'll do it again, because standing still was never really your style.",
+      "rules": [
+        {
+          "test": "attachment",
+          "anyOf": [
+            "anxious",
+            "fearful",
+            "avoidant"
+          ]
+        },
+        {
+          "test": "big_five",
+          "anyOf": [
+            "openness_high"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warm_edge",
+      "name": "The Warm Edge",
+      "tagline": "Kind — but nobody's fool",
+      "body": "Your results draw a rare combination: a warm heart with a sharp eye. You give people real warmth — and you also see through them faster than they'd like. You've learned, sometimes the hard way, that kindness without boundaries becomes an open door, so you keep both: the softness and the edge.",
+      "rules": [
+        {
+          "test": "attachment",
+          "anyOf": [
+            "secure",
+            "avoidant"
+          ]
+        },
+        {
+          "test": "love_language",
+          "anyOf": [
+            "acts",
+            "time"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "living_contrast",
+      "name": "The Living Contrast",
+      "tagline": "Soft and strong were never opposites in you",
+      "body": "Your results refuse to pick one lane — and that's the whole point. You can be gentle and firm, playful and serious, open and guarded, sometimes within the same hour. What looks like contradiction from the outside is actually range: you read the moment and become what it needs.",
+      "rules": [
+        {
+          "test": "attachment",
+          "anyOf": [
+            "avoidant",
+            "anxious",
+            "fearful"
+          ]
+        },
+        {
+          "test": "love_language",
+          "anyOf": [
+            "words",
+            "touch",
+            "gifts"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "quiet_signal",
+      "name": "The Quiet Signal",
+      "tagline": "You let people in slowly, and completely",
+      "body": "Your results describe someone who guards the entrance and then holds nothing back. You process inward, you decide slowly, and you've learned to check the ground before putting weight on it. People who mistake that for indifference never find out how much was actually there.",
+      "rules": [
+        {
+          "test": "types16",
+          "anyOf": [
+            "intj",
+            "intp",
+            "infj",
+            "infp",
+            "istj",
+            "isfj",
+            "istp",
+            "isfp"
+          ]
+        },
+        {
+          "test": "attachment",
+          "anyOf": [
+            "avoidant",
+            "anxious",
+            "fearful"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "open_frequency",
+      "name": "The Open Frequency",
+      "tagline": "You say it while it's still warm",
+      "body": "Your results describe someone who lives out loud. Affection, excitement, irritation — it all reaches the surface fast, and you'd rather be read than guessed at. It makes you easy to love and almost impossible to file away neatly.",
+      "rules": [
+        {
+          "test": "types16",
+          "anyOf": [
+            "entj",
+            "entp",
+            "enfj",
+            "enfp",
+            "estj",
+            "esfj",
+            "estp",
+            "esfp"
+          ]
+        },
+        {
+          "test": "love_language",
+          "anyOf": [
+            "words",
+            "touch",
+            "gifts"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "open_road",
+      "name": "The Open Road",
+      "tagline": "You'd rather find out than be told",
+      "body": "Your results keep pointing outward. Rules read like opening offers to you, and the map matters less than what's past its edge. It isn't recklessness — it's a low tolerance for living inside someone else's answer when you could go check for yourself.",
+      "rules": [
+        {
+          "test": "archetype",
+          "anyOf": [
+            "explorer",
+            "rebel"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "restless_maker",
+      "name": "The Restless Maker",
+      "tagline": "Ideas don't leave you alone",
+      "body": "Something in your results never fully switches off. You take the world apart to see how it works, then put it back together in a shape that wasn't there before. Understanding and making are the same movement for you, and neither of them ever feels finished.",
+      "rules": [
+        {
+          "test": "archetype",
+          "anyOf": [
+            "creator",
+            "sage"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "steady_hand",
+      "name": "The Steady Hand",
+      "tagline": "People lean on you before they ask",
+      "body": "Your results describe the person others quietly organize themselves around. You see what needs doing and you do it — not for credit, but because leaving it undone would bother you more than the work. Responsibility isn't a burden you accepted; it's a reflex.",
+      "rules": [
+        {
+          "test": "archetype",
+          "anyOf": [
+            "caregiver",
+            "ruler"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "outward_current",
+      "name": "The Outward Current",
+      "tagline": "You think best out loud",
+      "body": "Your results show a mind that works in company. Ideas sharpen when you say them, decisions get clearer when someone pushes back, and energy comes from the exchange itself. Left alone too long, you don't get calmer — you get slower.",
+      "rules": [
+        {
+          "test": "types16",
+          "anyOf": [
+            "entj",
+            "entp",
+            "enfj",
+            "enfp",
+            "estj",
+            "esfj",
+            "estp",
+            "esfp"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "deep_current",
+      "name": "The Deep Current",
+      "tagline": "Still on the surface, moving underneath",
+      "body": "Your results describe someone who processes before speaking. By the time you say a thing, you've usually already turned it over from four sides. People sometimes read the pause as distance — it's the opposite: it's how seriously you're taking them.",
+      "rules": [
+        {
+          "test": "types16",
+          "anyOf": [
+            "intj",
+            "intp",
+            "infj",
+            "infp",
+            "istj",
+            "isfj",
+            "istp",
+            "isfp"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "settled_heart",
+      "name": "The Settled Heart",
+      "tagline": "Close without losing yourself",
+      "body": "Your results show something a lot of people spend years building: you can be near someone and still be entirely yourself. You don't need constant proof, and you don't hand out distance as punishment. That steadiness is quietly rare, and the people close to you feel it every day.",
+      "rules": [
+        {
+          "test": "attachment",
+          "anyOf": [
+            "secure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "careful_closeness",
+      "name": "The Careful Closeness",
+      "tagline": "You want it real, so you don't rush it",
+      "body": "Your results show someone who takes closeness seriously — sometimes seriously enough to circle it a few times first. You've learned what it costs to get this wrong, so you watch, you test the ground, you hold something back. It isn't coldness and it isn't neediness; it's care that hasn't decided yet where it's safe to land.",
+      "rules": [
+        {
+          "test": "attachment",
+          "anyOf": [
+            "anxious",
+            "avoidant",
+            "fearful"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "spoken_warmth",
+      "name": "The Spoken Warmth",
+      "tagline": "Love that has to be said and shown",
+      "body": "Your results point to someone who needs love made visible. A word at the right moment, a hand on the shoulder, a small thing chosen on purpose — these aren't extras for you, they're the whole signal. Silence doesn't read as peace; it reads as absence.",
+      "rules": [
+        {
+          "test": "love_language",
+          "anyOf": [
+            "words",
+            "touch",
+            "gifts"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "quiet_proof",
+      "name": "The Quiet Proof",
+      "tagline": "Love is what somebody actually does",
+      "body": "Your results describe someone who trusts action over announcement. Anyone can say it; you're watching who shows up, who remembers, who stays. That's how you love too — not loudly, but in a hundred things nobody was supposed to notice.",
+      "rules": [
+        {
+          "test": "love_language",
+          "anyOf": [
+            "acts",
+            "time"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wide_lens",
+      "name": "The Wide Lens",
+      "tagline": "You never stopped asking what else",
+      "body": "Your results describe a mind with the aperture open. New ideas don't threaten you, they interest you, and you'd rather sit with a complicated truth than a comfortable summary of it. It makes you harder to bore and harder to fool.",
+      "rules": [
+        {
+          "test": "big_five",
+          "anyOf": [
+            "openness_high"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "firm_ground",
+      "name": "The Firm Ground",
+      "tagline": "You keep what actually works",
+      "body": "Your results describe someone who trusts what's been proven. Where others chase the next thing, you finish the current one, and that's why people build on top of you — plans, promises, whole years. Reliability looks unglamorous right up until it's the only thing that held.",
+      "rules": [
+        {
+          "test": "big_five",
+          "anyOf": [
+            "openness_low"
+          ]
+        }
       ]
     },
     {
       "id": "layered_original",
       "name": "The Layered Original",
       "tagline": "There is more to you than the first impression",
-      "body": "Five tests, one verdict: you don't fit in one sentence. There's the version of you people meet first — and then the layers underneath that only time reveals. You show different sides in different rooms, not because you're pretending, but because you genuinely contain that much.",
+      "body": "Your results reach one verdict: you don't fit in one sentence. There's the version of you people meet first — and then the layers underneath that only time reveals. You show different sides in different rooms, not because you're pretending, but because you genuinely contain that much.",
       "rules": []
     }
   ]

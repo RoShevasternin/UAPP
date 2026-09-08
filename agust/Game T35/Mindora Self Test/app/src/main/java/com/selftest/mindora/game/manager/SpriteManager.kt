@@ -73,7 +73,8 @@ class SpriteManager(var assetManager: AssetManager) {
         BACKGROUND(TextureData("textures/loader/background.png")),
 
         // All
-        //LIGHT    (TextureData("textures/all/LIGHT.png")),
+        ICON_PORTRAIT_RESULT(TextureData("textures/all/icon_portrait_result.png")),
+        SHARE               (TextureData("textures/all/share.png")),
 
         // All | popup
         POPUP_START         (TextureData("textures/all/popup/popup_start.png")),

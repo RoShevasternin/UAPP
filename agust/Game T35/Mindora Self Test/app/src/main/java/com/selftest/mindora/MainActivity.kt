@@ -17,6 +17,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -43,6 +44,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
+import java.io.File
 import kotlin.system.exitProcess
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -163,25 +165,60 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         }
     }
 
-    fun shareApp() {
-        runOnUiThread {
-            val appPackage = packageName
-            val appName    = getString(R.string.app_name)
-            val playStoreUrl = "https://play.google.com/store/apps/details?id=$appPackage"
+    // ------------------------------------------------------------------------
+    // Share
+    // ------------------------------------------------------------------------
+    /** Один текст на обидва шери — щоб вони не розʼїхались при правках. */
+    private fun buildShareText(): String {
+        val appName      = getString(R.string.app_name)
+        val playStoreUrl = "https://play.google.com/store/apps/details?id=$packageName"
 
-            val shareText = """
-            🎮 Hey! Check out this awesome $appName app!
+        return """
+            🔮 I just discovered my type in $appName. What's yours?
             
-            Download now 👇
+            Take the test 👇
             $playStoreUrl
         """.trimIndent()
+    }
 
+    fun shareApp() {
+        runOnUiThread {
             val intent = Intent(Intent.ACTION_SEND).apply {
-                type    = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, shareText)
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, buildShareText())
             }
 
             startActivity(Intent.createChooser(intent, "Share via"))
+        }
+    }
+
+    /**
+     * Шер картки результату: PNG + текст із посиланням на Play Store.
+     *
+     * Uri тільки через FileProvider — прямий file:// на Android 7+ кидає
+     * FileUriExposedException, а копіювати картинку в публічну галерею
+     * означало б просити дозвіл на сторедж заради одного тапу.
+     *
+     * Будь-яка помилка не має ламати кнопку: падаємо в текстовий шер, він
+     * працює завжди.
+     */
+    fun shareImage(file: File) {
+        runOnUiThread {
+            try {
+                val uri = FileProvider.getUriForFile(this, "$packageName.fileprovider", file)
+
+                val intent = Intent(Intent.ACTION_SEND).apply {
+                    type = "image/png"
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    putExtra(Intent.EXTRA_TEXT, buildShareText())
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+
+                startActivity(Intent.createChooser(intent, "Share via"))
+            } catch (e: Exception) {
+                log("shareImage error: ${e.message}")
+                shareApp()
+            }
         }
     }
 

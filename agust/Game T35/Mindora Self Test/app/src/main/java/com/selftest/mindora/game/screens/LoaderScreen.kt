@@ -17,6 +17,7 @@ import com.selftest.mindora.game.utils.gdxGame
 import com.selftest.mindora.game.utils.runGDX
 import com.selftest.mindora.util.log
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class LoaderScreen : AdvancedScreen() {
@@ -111,6 +112,25 @@ class LoaderScreen : AdvancedScreen() {
         gdxGame.musicManager.init()
         gdxGame.soundManager.init()
 //        gdxGame.particleEffectManager.init()
+
+        applySoundSetting()
+    }
+
+    /**
+     * Застосувати збережений вибір «Sound Effect» до SoundUtil.
+     *
+     * ⚠️ РАНІШЕ ЦЕ ЗРОБИТИ НЕ МОЖНА, і саме тому воно тут, а не в GDXGame.create():
+     *   • SoundUtil створюється ліниво, а його Sound'и — lateinit, які
+     *     заповнює soundManager.init() рядком вище. Дотик до gdxGame.soundUtil
+     *     до цього моменту дав би UninitializedPropertyAccessException.
+     *   • DataStore читається асинхронно, тож просто «взяти значення зараз»
+     *     мало б шанс застати ще дефолт. Чекаємо isLoadedFlow.
+     */
+    private fun applySoundSetting() {
+        coroutine?.launch {
+            gdxGame.modelPlayer.isLoadedFlow.first { it }
+            runGDX { gdxGame.settings.IS_SOUND = gdxGame.modelPlayer.isSoundOn() }
+        }
     }
 
     private fun loadingAssets() {

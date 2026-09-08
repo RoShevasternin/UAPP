@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>8.2.0</string>
+        <string>8.2.2</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -208,6 +208,22 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">box_check.png</key>
+            <key type="filename">box_def.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>26,15,51,30</rect>
+                <key>scale9Paddings</key>
+                <rect>26,15,51,30</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">btn_def.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -255,6 +271,7 @@
                 <false/>
             </struct>
             <key type="filename">check.png</key>
+            <key type="filename">chevrone_right.png</key>
             <key type="filename">shevron.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -338,6 +355,46 @@
                 <rect>41,41,81,81</rect>
                 <key>scale9Paddings</key>
                 <rect>41,41,81,81</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">lang_1.png</key>
+            <key type="filename">lang_10.png</key>
+            <key type="filename">lang_2.png</key>
+            <key type="filename">lang_3.png</key>
+            <key type="filename">lang_4.png</key>
+            <key type="filename">lang_5.png</key>
+            <key type="filename">lang_6.png</key>
+            <key type="filename">lang_7.png</key>
+            <key type="filename">lang_8.png</key>
+            <key type="filename">lang_9.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,29,48,57</rect>
+                <key>scale9Paddings</key>
+                <rect>24,29,48,57</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">lang_check.png</key>
+            <key type="filename">lang_def.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>258,54,516,108</rect>
+                <key>scale9Paddings</key>
+                <rect>258,54,516,108</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -451,6 +508,23 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">settings_card.png</key>
+            <key type="filename">test_option_check.png</key>
+            <key type="filename">test_option_def.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>258,48,516,96</rect>
+                <key>scale9Paddings</key>
+                <rect>258,48,516,96</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">test_btn_again.png</key>
             <key type="filename">test_btn_dis.png</key>
             <key type="filename">test_btn_ena.png</key>
@@ -466,22 +540,6 @@
                 <rect>60,26,120,51</rect>
                 <key>scale9Paddings</key>
                 <rect>60,26,120,51</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">test_option_check.png</key>
-            <key type="filename">test_option_def.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>258,48,516,96</rect>
-                <key>scale9Paddings</key>
-                <rect>258,48,516,96</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

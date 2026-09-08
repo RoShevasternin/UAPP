@@ -1,172 +1,277 @@
 all.png
-size: 1968, 2616
+size: 4030, 1465
 format: RGBA8888
 filter: Linear, Linear
 repeat: none
 add_to_portrait_def
   rotate: false
-  xy: 2, 766
+  xy: 658, 344
   size: 930, 165
   orig: 930, 165
   offset: 0, 0
   index: -1
 back_btn
   rotate: false
-  xy: 1572, 140
+  xy: 3435, 34
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
+box_check
+  rotate: false
+  xy: 142, 34
+  size: 102, 60
+  orig: 102, 60
+  offset: 0, 0
+  index: -1
+box_def
+  rotate: false
+  xy: 246, 34
+  size: 102, 60
+  orig: 102, 60
+  offset: 0, 0
+  index: -1
 btn_def
   rotate: false
-  xy: 934, 933
+  xy: 2, 511
   size: 1032, 168
   orig: 1032, 168
   offset: 0, 0
   index: -1
 btn_press
   rotate: false
-  xy: 934, 766
+  xy: 1590, 344
   size: 1032, 165
   orig: 1032, 165
   offset: 0, 0
   index: -1
 card_test_dis
   rotate: false
-  xy: 2, 1491
+  xy: 2, 923
   size: 1032, 264
   orig: 1032, 264
   offset: 0, 0
   index: -1
 card_test_ena
   rotate: false
-  xy: 2, 1757
+  xy: 1036, 923
   size: 1032, 264
   orig: 1032, 264
   offset: 0, 0
   index: -1
 check
   rotate: false
-  xy: 1456, 36
+  xy: 350, 34
+  size: 72, 72
+  orig: 72, 72
+  offset: 0, 0
+  index: -1
+chevrone_right
+  rotate: false
+  xy: 424, 34
   size: 72, 72
   orig: 72, 72
   offset: 0, 0
   index: -1
 claim
   rotate: false
-  xy: 1036, 1757
+  xy: 2070, 923
   size: 240, 315
   orig: 240, 315
   offset: 0, 0
   index: -1
 claimed
   rotate: false
-  xy: 1278, 1757
+  xy: 2312, 923
   size: 240, 315
   orig: 240, 315
   offset: 0, 0
   index: -1
 close
   rotate: false
-  xy: 1520, 1757
+  xy: 2554, 923
   size: 240, 315
   orig: 240, 315
   offset: 0, 0
   index: -1
 double_def
   rotate: false
-  xy: 148, 286
+  xy: 2, 180
   size: 1032, 150
   orig: 1032, 150
   offset: 0, 0
   index: -1
 fire
   rotate: false
-  xy: 1182, 286
+  xy: 1036, 180
   size: 141, 150
   orig: 141, 150
   offset: 0, 0
   index: -1
 ic_dis_1
   rotate: false
-  xy: 1764, 438
+  xy: 2941, 180
   size: 162, 162
   orig: 162, 162
   offset: 0, 0
   index: -1
 ic_dis_2
   rotate: false
-  xy: 2, 602
+  xy: 3105, 180
   size: 162, 162
   orig: 162, 162
   offset: 0, 0
   index: -1
 ic_dis_3
   rotate: false
-  xy: 166, 602
+  xy: 3269, 180
   size: 162, 162
   orig: 162, 162
   offset: 0, 0
   index: -1
 ic_dis_4
   rotate: false
-  xy: 330, 602
+  xy: 3433, 180
   size: 162, 162
   orig: 162, 162
   offset: 0, 0
   index: -1
 ic_dis_5
   rotate: false
-  xy: 494, 602
+  xy: 3597, 180
   size: 162, 162
   orig: 162, 162
   offset: 0, 0
   index: -1
 ic_ena_1
   rotate: false
-  xy: 658, 602
+  xy: 3761, 180
   size: 162, 162
   orig: 162, 162
   offset: 0, 0
   index: -1
 ic_ena_2
   rotate: false
-  xy: 822, 602
+  xy: 2, 344
   size: 162, 162
   orig: 162, 162
   offset: 0, 0
   index: -1
 ic_ena_3
   rotate: false
-  xy: 986, 602
+  xy: 166, 344
   size: 162, 162
   orig: 162, 162
   offset: 0, 0
   index: -1
 ic_ena_4
   rotate: false
-  xy: 1150, 602
+  xy: 330, 344
   size: 162, 162
   orig: 162, 162
   offset: 0, 0
   index: -1
 ic_ena_5
   rotate: false
-  xy: 1314, 602
+  xy: 494, 344
   size: 162, 162
   orig: 162, 162
   offset: 0, 0
   index: -1
+lang_1
+  rotate: false
+  xy: 2455, 34
+  size: 96, 114
+  orig: 96, 114
+  offset: 0, 0
+  index: -1
+lang_2
+  rotate: false
+  xy: 2553, 34
+  size: 96, 114
+  orig: 96, 114
+  offset: 0, 0
+  index: -1
+lang_3
+  rotate: false
+  xy: 2651, 34
+  size: 96, 114
+  orig: 96, 114
+  offset: 0, 0
+  index: -1
+lang_4
+  rotate: false
+  xy: 2749, 34
+  size: 96, 114
+  orig: 96, 114
+  offset: 0, 0
+  index: -1
+lang_5
+  rotate: false
+  xy: 2847, 34
+  size: 96, 114
+  orig: 96, 114
+  offset: 0, 0
+  index: -1
+lang_6
+  rotate: false
+  xy: 2945, 34
+  size: 96, 114
+  orig: 96, 114
+  offset: 0, 0
+  index: -1
+lang_7
+  rotate: false
+  xy: 3043, 34
+  size: 96, 114
+  orig: 96, 114
+  offset: 0, 0
+  index: -1
+lang_8
+  rotate: false
+  xy: 3141, 34
+  size: 96, 114
+  orig: 96, 114
+  offset: 0, 0
+  index: -1
+lang_9
+  rotate: false
+  xy: 3239, 34
+  size: 96, 114
+  orig: 96, 114
+  offset: 0, 0
+  index: -1
+lang_10
+  rotate: false
+  xy: 3337, 34
+  size: 96, 114
+  orig: 96, 114
+  offset: 0, 0
+  index: -1
+lang_check
+  rotate: false
+  xy: 1036, 705
+  size: 1032, 216
+  orig: 1032, 216
+  offset: 0, 0
+  index: -1
+lang_def
+  rotate: false
+  xy: 2070, 705
+  size: 1032, 216
+  orig: 1032, 216
+  offset: 0, 0
+  index: -1
 lock
   rotate: false
-  xy: 1604, 36
+  xy: 572, 34
   size: 69, 87
   orig: 69, 87
   offset: 0, 0
   index: -1
 lumens_big
   rotate: false
-  xy: 694, 2074
+  xy: 3488, 923
   size: 540, 540
   orig: 540, 540
   offset: 0, 0
@@ -180,161 +285,168 @@ mask_progress_test
   index: -1
 medium_def
   rotate: false
-  xy: 728, 140
+  xy: 1611, 34
   size: 420, 108
   orig: 420, 108
   offset: 0, 0
   index: -1
 medium_dis
   rotate: false
-  xy: 1150, 140
+  xy: 2033, 34
   size: 420, 108
   orig: 420, 108
   offset: 0, 0
   index: -1
 open_next_test_def
   rotate: false
-  xy: 2, 438
+  xy: 1179, 180
   size: 930, 150
   orig: 930, 150
   offset: 0, 0
   index: -1
 p1
   rotate: false
-  xy: 1036, 36
+  xy: 3631, 2
   size: 138, 30
   orig: 138, 30
   offset: 0, 0
   index: -1
 p2
   rotate: false
-  xy: 1176, 36
+  xy: 3771, 2
   size: 138, 30
   orig: 138, 30
   offset: 0, 0
   index: -1
 p3
   rotate: false
-  xy: 1316, 36
+  xy: 2, 34
   size: 138, 30
   orig: 138, 30
   offset: 0, 0
   index: -1
 progress_back_test
   rotate: false
-  xy: 2, 19
+  xy: 1036, 2
   size: 1032, 15
   orig: 1032, 15
   offset: 0, 0
   index: -1
 progress_mask_portrait
   rotate: false
-  xy: 1036, 19
+  xy: 2070, 2
   size: 525, 15
   orig: 525, 15
   offset: 0, 0
   index: -1
 progress_test
   rotate: false
-  xy: 2, 36
+  xy: 2597, 2
   size: 1032, 15
   orig: 1032, 15
   offset: 0, 0
   index: -1
 settings_btn
   rotate: false
-  xy: 1718, 140
+  xy: 3581, 34
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
+settings_card
+  rotate: false
+  xy: 1412, 511
+  size: 1032, 192
+  orig: 1032, 192
+  offset: 0, 0
+  index: -1
 share_result_def
   rotate: false
-  xy: 2, 933
+  xy: 2624, 344
   size: 930, 165
   orig: 930, 165
   offset: 0, 0
   index: -1
 shevron
   rotate: false
-  xy: 1530, 36
+  xy: 498, 34
   size: 72, 72
   orig: 72, 72
   offset: 0, 0
   index: -1
 test_btn_again
   rotate: false
-  xy: 1675, 36
+  xy: 643, 34
   size: 240, 102
   orig: 240, 102
   offset: 0, 0
   index: -1
 test_btn_dis
   rotate: false
-  xy: 2, 140
+  xy: 885, 34
   size: 240, 102
   orig: 240, 102
   offset: 0, 0
   index: -1
 test_btn_ena
   rotate: false
-  xy: 244, 140
+  xy: 1127, 34
   size: 240, 102
   orig: 240, 102
   offset: 0, 0
   index: -1
 test_btn_open
   rotate: false
-  xy: 486, 140
+  xy: 1369, 34
   size: 240, 102
   orig: 240, 102
   offset: 0, 0
   index: -1
 test_card_done
   rotate: false
-  xy: 2, 286
+  xy: 3727, 34
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 test_option_check
   rotate: false
-  xy: 378, 1103
+  xy: 2446, 511
   size: 1032, 192
   orig: 1032, 192
   offset: 0, 0
   index: -1
 test_option_def
   rotate: false
-  xy: 2, 1297
+  xy: 2, 705
   size: 1032, 192
   orig: 1032, 192
   offset: 0, 0
   index: -1
 test_scale_check
   rotate: false
-  xy: 2, 1103
+  xy: 1036, 511
   size: 186, 186
   orig: 186, 186
   offset: 0, 0
   index: -1
 test_scale_def
   rotate: false
-  xy: 190, 1103
+  xy: 1224, 511
   size: 186, 186
   orig: 186, 186
   offset: 0, 0
   index: -1
 unlock_result_def
   rotate: false
-  xy: 934, 438
+  xy: 2111, 180
   size: 828, 150
   orig: 828, 150
   offset: 0, 0
   index: -1
 watch_ad
   rotate: false
-  xy: 2, 2074
+  xy: 2796, 923
   size: 690, 462
   orig: 690, 462
   offset: 0, 0

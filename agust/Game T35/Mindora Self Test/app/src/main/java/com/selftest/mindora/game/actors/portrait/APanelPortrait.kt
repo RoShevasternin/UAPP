@@ -2,7 +2,6 @@ package com.selftest.mindora.game.actors.portrait
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
@@ -70,6 +69,12 @@ class APanelPortrait(override val screen: AdvancedScreen) : AConstraintLayout(sc
         private val LINE_OPEN   = Color.valueOf("D7C1FF")
 
         private const val LINE_H = 1.5f
+
+        /** Портрет ще не зібраний. */
+        private const val TEXT_UNLOCK = "Unlock My Portrait"
+
+        /** Зібраний: та сама кнопка веде переглянути свої сторони ще раз. */
+        private const val TEXT_VIEW   = "View My Portrait"
     }
 
     // ------------------------------------------------------------------------
@@ -77,9 +82,7 @@ class APanelPortrait(override val screen: AdvancedScreen) : AConstraintLayout(sc
     // ------------------------------------------------------------------------
     private val msdf = gdxGame.msdfManager
 
-    private val styleHint    = MsdfStyle(msdf, msdf.fontMontserrat_Regular, 12f, GameColor.white_80)
-    private val styleName    = MsdfStyle(msdf, msdf.fontMontserrat_Medium, 24f, Color.WHITE)
-    private val styleTagline = MsdfStyle(msdf, msdf.fontMontserrat_Italic, 13f, GameColor.yellow_FFD98A)
+    private val styleHint = MsdfStyle(msdf, msdf.fontMontserrat_Regular, 12f, GameColor.white_80)
 
     // ------------------------------------------------------------------------
     // Actors
@@ -92,9 +95,7 @@ class APanelPortrait(override val screen: AdvancedScreen) : AConstraintLayout(sc
 
     private val aIcons = List(TestRepository.ALL.size) { Image() }
 
-    private val aNameLbl    = AMsdfLabel("", styleName)
-    private val aTaglineLbl = AMsdfLabel("", styleTagline)
-    private val aUnlockBtn  = AMainButton(screen, "Unlock My Portrait")
+    private val aUnlockBtn = AMainButton(screen, TEXT_UNLOCK)
 
     // ------------------------------------------------------------------------
     // Field
@@ -121,16 +122,6 @@ class APanelPortrait(override val screen: AdvancedScreen) : AConstraintLayout(sc
 
         addArt()
         addIcons()
-
-        // Назва і таглайн займають місце кнопки: після синтезу вона зникає,
-        // тож нижня зона панелі вільна і нічого не накладається.
-        aNameLbl.setSize(W - SIDE * 2, 28f)
-        add(aNameLbl) { centerX(); bottomToBottom(margin = BTN_BOT + 24f) }
-        aNameLbl.setAlignment(Align.center)
-
-        aTaglineLbl.setSize(W - SIDE * 2, 18f)
-        add(aTaglineLbl) { centerX(); bottomToBottom(margin = BTN_BOT) }
-        aTaglineLbl.setAlignment(Align.center)
 
         aUnlockBtn.setSize(W - SIDE * 2, BTN_H)
         add(aUnlockBtn) { centerX(); bottomToBottom(margin = BTN_BOT) }
@@ -230,36 +221,44 @@ class APanelPortrait(override val screen: AdvancedScreen) : AConstraintLayout(sc
             aIcons[i].drawable = TextureRegionDrawable(region)
         }
 
-        val synth = state.synthesis
+        val isOpen = state.synthesis != null
 
-        if (synth != null) {
-            // Портрет зібраний — замок і кнопка більше не потрібні.
-            aLockImg.animHide(t)
-            aUnlockBtn.animHide(t)
-            aUnlockBtn.touchable = Touchable.disabled
+        // Замок — рівно індикатор «портрет ще не зібраний».
+        if (isOpen) aLockImg.animHide(t) else aLockImg.animShow(t)
 
-            aNameLbl.setText(synth.name)
-            aTaglineLbl.setText(synth.tagline)
-            aNameLbl.animShow(t)
-            aTaglineLbl.animShow(t)
+        // ── КНОПКА НЕ ЗНИКАЄ НІКОЛИ ──────────────────────────────────────────
+        //
+        // Вона постійний вхід у портрет: доки тестів не вистачає — сіра й
+        // неактивна, далі назавжди доступна і веде переглянути свої сторони
+        // ще раз. Раніше після синтезу вона ховалась, і зайти в зібраний
+        // портрет вдруге не було чим.
+        //
+        // Саме тому з панелі прибрані назва й таглайн: вони жили в цьому
+        // місці, під кнопкою. Тепер їх показує сам екран портрета, куди
+        // кнопка й веде.
+        aUnlockBtn.label.setText(if (isOpen) TEXT_VIEW else TEXT_UNLOCK)
 
-            aHintLbl.setText("Your portrait is complete")
-        } else {
-            aLockImg.animShow(t)
-            aNameLbl.animHide(t)
-            aTaglineLbl.animHide(t)
+        // Активна у двох випадках: поріг узято (можна зібрати) або портрет
+        // уже зібраний (можна переглянути). Сам поріг — у конфізі, панель
+        // його не знає і знати не повинна.
+        //
+        // ⚠️ ПОРЯДОК ВАЖЛИВИЙ: enable/disable ПЕРЕД animShow.
+        //
+        // Було навпаки — і затемнення не працювало взагалі. animShow це
+        // Actions.fadeIn, тобто дія, яка всі 0.2 с тягне alpha ДО 1.
+        // Виставлений одразу після неї color.a = 0.5f вона просто
+        // переїжджала, і неактивна кнопка світилась як активна.
+        //
+        // Альфою стан більше не керуємо: штатний disable() з
+        // AButtonAnimTexture підмінює текстуру на сіру (btn_press) і сам
+        // знімає touchable — рівно як ACardTest робить із картками.
+        if (isOpen || state.canSynthesize) aUnlockBtn.enable() else aUnlockBtn.disable()
+        aUnlockBtn.animShow(t)
 
-            aUnlockBtn.animShow(t)
-            // Активна тільки коли поріг узято. Сам поріг — у канfigу, панель
-            // його не знає і знати не повинна.
-            aUnlockBtn.touchable =
-                if (state.canSynthesize) Touchable.enabled else Touchable.disabled
-            aUnlockBtn.color.a = if (state.canSynthesize) 1f else 0.5f
-
-            // Текст підказки теж з конфігу: «at least N out of M».
-            aHintLbl.setText(
-                "Unlock at least ${state.threshold} out of ${state.totalCount} tests to unlock your portrait"
-            )
-        }
+        aHintLbl.setText(
+            if (isOpen) "Your portrait is complete"
+            // Текст підказки з конфігу: «at least N out of M».
+            else "Unlock at least ${state.threshold} out of ${state.totalCount} tests to unlock your portrait"
+        )
     }
 }

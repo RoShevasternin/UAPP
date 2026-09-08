@@ -54,6 +54,29 @@ class PlayerModel(
     fun getIsFirstOpen(): Boolean = gameState.isFirstOpenFlow.value
 
     // ------------------------------------------------------------------------
+    // Settings
+    // ------------------------------------------------------------------------
+    /**
+     * Звук.
+     *
+     * ДЖЕРЕЛО ПРАВДИ ТУТ, а не в SoundUtil: SoundUtil створюється ліниво (його
+     * Sound'и — lateinit, до initAssets їх ще немає), тож питати в нього стан
+     * на будь-якому екрані небезпечно. SoundUtil лишається виконавцем.
+     */
+    val isSoundOnFlow: StateFlow<Boolean> = gameState.isSoundOnFlow
+
+    fun isSoundOn(): Boolean = gameState.isSoundOnFlow.value
+
+    fun setSoundOn(on: Boolean) { gameState.isSoundOnFlow.value = on }
+
+    /** Обрана мова — id з LanguageCatalog. Перекладу ще немає, це лише вибір. */
+    val languageIdFlow: StateFlow<String> = gameState.languageIdFlow
+
+    fun languageId(): String = gameState.languageIdFlow.value
+
+    fun setLanguageId(id: String) { gameState.languageIdFlow.value = id }
+
+    // ------------------------------------------------------------------------
     // Daily Reward
     //
     //   day    — 1..7, циклічний. Визначає клітинку і суму.

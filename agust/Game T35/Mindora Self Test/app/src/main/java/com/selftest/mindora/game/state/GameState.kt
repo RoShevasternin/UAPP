@@ -25,6 +25,10 @@ class GameState {
 
     val isFirstOpenFlow     = MutableStateFlow(true)
 
+    // Налаштування
+    val isSoundOnFlow       = MutableStateFlow(true)
+    val languageIdFlow      = MutableStateFlow("en")
+
     /** LOAD SIGNAL
      * Стає true ПІСЛЯ повного loadFrom. Моделі, що залежать від збереженого
      * стану, чекають саме його — це усуває race з флоу.
@@ -46,6 +50,8 @@ class GameState {
         purchasedTestsFlow.value  = data.purchasedTests
 
         isFirstOpenFlow.value     = data.isFirstOpen
+        isSoundOnFlow.value       = data.isSoundOn
+        languageIdFlow.value      = data.languageId
 
         // сигнал "усе завантажено" — після всіх присвоєнь
         isLoadedFlow.value = true
@@ -63,6 +69,8 @@ class GameState {
         purchasedTests  = purchasedTestsFlow.value,
 
         isFirstOpen     = isFirstOpenFlow.value,
+        isSoundOn       = isSoundOnFlow.value,
+        languageId      = languageIdFlow.value,
     )
 
 }

@@ -17,4 +17,12 @@ object ACheckBoxStyles {
         default = TextureRegionDrawable(gdxGame.assetsAll.test_scale_def),
         checked = TextureRegionDrawable(gdxGame.assetsAll.test_scale_check),
     )
+    val BOX get() = ACheckBox.Style(
+        default = TextureRegionDrawable(gdxGame.assetsAll.box_def),
+        checked = TextureRegionDrawable(gdxGame.assetsAll.box_check),
+    )
+    val LANG get() = ACheckBox.Style(
+        default = TextureRegionDrawable(gdxGame.assetsAll.lang_def),
+        checked = TextureRegionDrawable(gdxGame.assetsAll.lang_check),
+    )
 }

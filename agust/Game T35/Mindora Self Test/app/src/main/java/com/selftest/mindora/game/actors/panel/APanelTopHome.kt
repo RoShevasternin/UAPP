@@ -3,8 +3,10 @@ package com.selftest.mindora.game.actors.panel
 import com.selftest.mindora.game.actors.button.base.AButtonAnim
 import com.selftest.mindora.game.actors.button.base.AButtonStyles
 import com.selftest.mindora.game.actors.layout.constraintLayout.AConstraintLayout
+import com.selftest.mindora.game.screens.SettingsScreen
 import com.selftest.mindora.game.utils.actor.setOnClickListener
 import com.selftest.mindora.game.utils.advanced.AdvancedScreen
+import com.selftest.mindora.game.utils.gdxGame
 
 class APanelTopHome(override val screen: AdvancedScreen): AConstraintLayout(screen) {
 
@@ -40,7 +42,14 @@ class APanelTopHome(override val screen: AdvancedScreen): AConstraintLayout(scre
     private fun addSettBtn() {
         aSettBtn.setSize(48f, 48f)
         add(aSettBtn) { endToEnd(); centerY() }
-        //aSettBtn.setOnClickListener { screen.animHideScreen { gdxGame.navigationManager.navigate(SettingsScreen::class.java.name, screen::class.java.name) } }
+        aSettBtn.setOnClickListener {
+            screen.animHideScreen {
+                gdxGame.navigationManager.navigate(
+                    SettingsScreen::class.java.name,
+                    screen::class.java.name,   // назад — на той екран, звідки прийшли
+                )
+            }
+        }
     }
 
 }

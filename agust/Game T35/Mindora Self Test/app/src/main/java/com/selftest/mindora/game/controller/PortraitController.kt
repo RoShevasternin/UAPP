@@ -3,6 +3,7 @@ package com.selftest.mindora.game.controller
 import com.selftest.mindora.game.content.PortraitSynthesis
 import com.selftest.mindora.game.content.SynthesisTitle
 import com.selftest.mindora.game.content.TestCatalog
+import com.selftest.mindora.game.content.TestResultText
 import com.selftest.mindora.game.content.TestRepository
 import com.selftest.mindora.game.model.PlayerModel
 import com.selftest.mindora.game.utils.gdxGame
@@ -36,11 +37,13 @@ class PortraitController(
     data class DimensionCard(
         val testId        : String,
         val title         : String,   // назва теста ("Attachment Style")
+        val kicker        : String,   // «Your attachment style» — рядок над результатом
         val done          : Boolean,
         val cost          : Long,     // 0 = Free
         val affordable    : Boolean,  // done=false і балансу вистачає
         val resultName    : String?,  // "Secure" — якщо done
         val resultTagline : String?,  // "Steady in love" — якщо done
+        val resultBody    : String?,  // повний опис; розкривається на екрані портрета
     )
 
     data class State(
@@ -135,16 +138,25 @@ class PortraitController(
             val content = TestRepository.get(id)
             val saved   = results[id]
             val cost    = costOf(id)
-            val primary = saved?.resultIds?.firstOrNull()?.let(content::resultById)
+
+            // Big Five дає П'ЯТЬ результатів (по одному на рису), решта тестів
+            // — рівно один. Тому беремо весь список, а не firstOrNull: у рядку
+            // «Your Big five» на макеті стоїть саме перелік рис.
+            val texts = saved?.resultIds?.mapNotNull(content::resultById).orEmpty()
 
             DimensionCard(
                 testId        = id,
                 title         = content.title,
+                kicker        = TestCatalog.byId(id).resultKicker,
                 done          = saved != null,
                 cost          = cost,
                 affordable    = saved == null && (cost <= 0L || lumens >= cost),
-                resultName    = primary?.name,
-                resultTagline = primary?.tagline,
+                resultName    = joinNames(texts),
+                // Таглайн лише в однорезультатних тестів: у Big Five їх п'ять,
+                // і будь-який один був би довільним.
+                resultTagline = texts.singleOrNull()?.tagline,
+                resultBody    = texts.takeIf { it.isNotEmpty() }
+                    ?.joinToString("\n\n") { it.body },
             )
         }
 
@@ -159,6 +171,19 @@ class PortraitController(
             canSynthesize = canSynthesize(),
             synthesis     = synthesis,
         )
+    }
+
+    /**
+     * Назва результату для рядка портрета.
+     *
+     * Один результат — беремо як є («INTJ — The Strategist»). Кілька — це
+     * Big Five, і повні назви виду «Openness — High» у рядок не влазять, тож
+     * лишаємо тільки саму рису: «Openness, Conscientiousness, …».
+     */
+    private fun joinNames(texts: List<TestResultText>): String? = when {
+        texts.isEmpty()  -> null
+        texts.size == 1  -> texts.first().name
+        else             -> texts.joinToString(", ") { it.name.substringBefore("—").trim() }
     }
 
     // Місток «рядковий id → ключ ціни» живе в TestCatalog і тільки там:

@@ -166,7 +166,35 @@ class PortraitScreen : AdvancedScreen() {
         controller.tapTest(testId)
     }
 
+    /**
+     * Перехід на зібраний портрет.
+     *
+     * Замок і кнопка на панелі вже зникли (render відпрацював на collect), тож
+     * людина встигає побачити відкритий портрет у кадрі до того, як екран
+     * поїде.
+     */
+    private fun openPersonalPortrait() {
+        animHideScreen {
+            gdxGame.navigationManager.navigate(
+                PersonalPortraitScreen::class.java.name,
+                PortraitScreen::class.java.name,   // назад — сюди ж
+            )
+        }
+    }
+
+    /**
+     * Тап по кнопці панелі. Вона одна на два сценарії.
+     *
+     * Портрет ЩЕ НЕ зібраний — це «Unlock»: ролик, синтез, перехід.
+     * Портрет УЖЕ зібраний — це «View»: одразу перехід, без реклами і без
+     * повторного синтезу (титул фіксується назавжди при першому резолві).
+     */
     private fun unlockPortrait() {
+        if (gdxGame.modelPlayer.portraitTitleId() != null) {
+            openPersonalPortrait()
+            return
+        }
+
         if (synthesizing || !controller.canSynthesize()) return
         synthesizing = true
 
@@ -176,6 +204,11 @@ class PortraitScreen : AdvancedScreen() {
             runGDX {
                 controller.completeSynthesis()   // тригерить collect → onRender
                 synthesizing = false
+
+                // Перевіряємо МОДЕЛЬ, а не повертане значення: completeSynthesis
+                // мовчки виходить, якщо синтез уже неможливий (подвійний колбек
+                // реклами), і вести на порожній екран у цьому разі не можна.
+                if (gdxGame.modelPlayer.portraitTitleId() != null) openPersonalPortrait()
             }
         }
     }

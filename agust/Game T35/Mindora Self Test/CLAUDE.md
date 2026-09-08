@@ -16,6 +16,12 @@ ADB=~/Library/Android/sdk/platform-tools/adb
 
 ./gradlew installDebug                       # зібрати + залити на девайс
 
+# MIUI іноді ріже саме gradle-таск: INSTALL_FAILED_USER_RESTRICTED
+# («Install canceled by user», при тому що жодного діалогу на екрані немає).
+# Обхід — зібрати і залити окремо, так проходить завжди:
+./gradlew assembleDebug
+$ADB install -r -t app/build/outputs/apk/debug/app-debug.apk
+
 # запуск: MainActivity НЕ exported, тому `am start` падає з SecurityException.
 # єдиний робочий спосіб з adb:
 $ADB shell monkey -p com.selftest.mindora -c android.intent.category.LAUNCHER 1

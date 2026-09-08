@@ -35,6 +35,15 @@ data class PlayerData(
     val purchasedTests  : Set<String> = emptySet(),
 
     val isFirstOpen : Boolean = true,
+
+    // ── Налаштування ──
+    // Звук увімкнено за замовчуванням. Нове поле з дефолтом → міграція НЕ
+    // потрібна, CURRENT_VERSION не рухаємо (див. правила в PlayerDataMigration).
+    val isSoundOn : Boolean = true,
+
+    // id з LanguageCatalog. Зберігаємо id, а не індекс: індекс поїде, щойно
+    // мову вставлять у середину списку, а id лишається собою назавжди.
+    val languageId : String = "en",
 )
 
 /**

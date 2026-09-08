@@ -10,10 +10,12 @@ import com.selftest.mindora.game.actors.popup.APopupUnlockResult
 import com.selftest.mindora.game.actors.result.ACardResultSingle
 import com.selftest.mindora.game.actors.result.ACardResultTrait
 import com.selftest.mindora.game.actors.vfx.ABlurBack
+import com.selftest.mindora.game.content.ResultAssets
 import com.selftest.mindora.game.content.TestCatalog
 import com.selftest.mindora.game.content.TestRepository
 import com.selftest.mindora.game.utils.Block
 import com.selftest.mindora.game.utils.GameColor
+import com.selftest.mindora.game.utils.ShareCardRenderer
 import com.selftest.mindora.game.utils.TIME_ANIM_SCREEN
 import com.selftest.mindora.game.utils.actor.animHide
 import com.selftest.mindora.game.utils.actor.animHideAndDisable
@@ -90,6 +92,11 @@ class ResultScreen : AdvancedScreen() {
 
     private val aSingleCard by lazy { ACardResultSingle(this) }
     private val aTraitCards = mutableListOf<ACardResultTrait>()
+
+    /** Див. коментар у PersonalPortraitScreen — створюється на першому шері. */
+    private val shareRenderer by lazy {
+        ShareCardRenderer(this, "result.png").also { disposableSet.add(it) }
+    }
 
     private val aBlurBack by lazy { ABlurBack(this) }
     private val aDimImg   by lazy { Image(drawerUtil.getTexture(GameColor.black_0A001D_80)) }
@@ -255,8 +262,25 @@ class ResultScreen : AdvancedScreen() {
     // ------------------------------------------------------------------------
     // Actions
     // ------------------------------------------------------------------------
+    /**
+     * Шер результату. Тільки одиночні тести: у big_five кнопки «Share result»
+     * немає взагалі — там п'ять рис, і жодна з них не є «результатом теста».
+     *
+     * Пропорція арту 310/200 — рівно та, з якою картинка стоїть на картці
+     * результату, тож у шері вона не спотворюється.
+     */
     private fun shareResult() {
-        // TODO(share): системний share-sheet зі скріншотом картки (AScreenShot).
+        val result = resultIds.firstOrNull()?.let { test.resultById(it) } ?: return
+
+        shareRenderer.card.bind(
+            kicker   = entry.resultKicker,
+            name     = result.name,
+            tagline  = result.tagline,
+            art      = ResultAssets.single(entry.index),
+            artRatio = 310f / 200f,
+        )
+
+        gdxGame.activity.shareImage(shareRenderer.render() ?: return)
     }
 
     private fun addToPortrait() {

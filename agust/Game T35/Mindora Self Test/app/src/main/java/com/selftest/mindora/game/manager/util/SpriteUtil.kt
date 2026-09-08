@@ -49,6 +49,13 @@ class SpriteUtil {
         val fire                    = getAllRegion("fire")
         val unlock_result_def       = getAllRegion("unlock_result_def")
         val shevron                 = getAllRegion("shevron")
+        val box_check               = getAllRegion("box_check")
+        val box_def                 = getAllRegion("box_def")
+        val chevrone_right          = getAllRegion("chevrone_right")
+        val settings_card           = getAllRegion("settings_card")
+        val lang_check              = getAllRegion("lang_check")
+        val lang_def                = getAllRegion("lang_def")
+
 
         // Card Test
         val test_card_done = getAllRegion("test_card_done")
@@ -62,7 +69,6 @@ class SpriteUtil {
         // Test Items
         val progress_back_test = getAllRegion("progress_back_test")
         val mask_progress_test = getAllRegion("mask_progress_test")
-        val progress_test      = getAllRegion("progress_test")
         val test_option_def    = getAllRegion("test_option_def")
         val test_option_check  = getAllRegion("test_option_check")
         val test_scale_check   = getAllRegion("test_scale_check")
@@ -76,8 +82,8 @@ class SpriteUtil {
         val listIcDis = List(5) { getAllRegion("ic_dis_${it.inc()}") }
         val listIcEna = List(5) { getAllRegion("ic_ena_${it.inc()}") }
 
-
-        val listP = List(3) { getAllRegion("p${it.inc()}") }
+        val listP        = List(3) { getAllRegion("p${it.inc()}") }
+        val listLangFlag = List(10) { getAllRegion("lang_${it.inc()}") }
 
         // ------------------------------------------------------------------------------
         // ATLAS 9_PATCH
@@ -97,7 +103,8 @@ class SpriteUtil {
         //val bg_test    = SpriteManager.EnumTexture.bg_test.data.texture
 
         // ALL
-        val LIGHT = TextureEmpty //SpriteManager.EnumTexture.LIGHT.data.texture
+        val ICON_PORTRAIT_RESULT = SpriteManager.EnumTexture.ICON_PORTRAIT_RESULT.data.texture
+        val SHARE                = SpriteManager.EnumTexture.SHARE.data.texture
 
         // All | panel
         val PANEL_STREAK            = SpriteManager.EnumTexture.PANEL_STREAK.data.texture
