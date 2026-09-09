@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "689733668273",
+    "project_id": "t5-rbx-boss",
+    "storage_bucket": "t5-rbx-boss.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689733668273:android:7eaae32604eb845598c190",
+        "android_client_info": {
+          "package_name": "com.bossrbx.rbxcalculator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZtwgmgp7U2TBLXNUg-CgCaNRWN0IltYU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

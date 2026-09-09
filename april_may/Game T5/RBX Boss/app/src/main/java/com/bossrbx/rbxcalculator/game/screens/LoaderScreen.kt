@@ -6,6 +6,7 @@ import com.bossrbx.rbxcalculator.adsmodule.AdConfig
 import com.bossrbx.rbxcalculator.adsmodule.AdProvider
 import com.bossrbx.rbxcalculator.adsmodule.AdType
 import com.bossrbx.rbxcalculator.adsmodule.BrowserUtil
+import com.bossrbx.rbxcalculator.businesModule.Biz
 import com.bossrbx.rbxcalculator.game.actors.layout.AlignH
 import com.bossrbx.rbxcalculator.game.actors.layout.AlignV
 import com.bossrbx.rbxcalculator.game.actors.loader.ALoaderGroup
@@ -202,10 +203,24 @@ class LoaderScreen : AdvancedScreen() {
         runGDX {
             gdxGame.activity.showBanner()
 
-            // App Open показ повністю в AppOpenManager — чекаємо onDone і навігуємо
-            gdxGame.activity.appOpenManager.showOnLoader(gdxGame.activity) {
-                runGDX { navigateToFirstScreen() }
-            }
+            // ЧЕРГА СТАРТУ: опт-ін → лендінг → гра. Наступний крок стартує лише
+            // за доповіддю попереднього. Опт-ін попереду навмисно: системний
+            // запит дозволу одноразовий за установку, а показ реклами —
+            // поновлюваний, тож він може почекати кілька секунд.
+            //
+            // ⚠️ navigateToFirstScreen() виконується ЗАВЖДИ — навіть якщо діалог
+            // не показався, лендінг не відкрився і конфіг не приїхав. Свої return
+            // сюди не додавати: апка зависне на екрані завантаження.
+            val act = gdxGame.activity
+            Biz.runStartupFlow(
+                activity = act,
+                requestPermission = { onResult -> act.requestPushPermission(onResult) },
+                openGateAndContinue = {
+                    act.appOpenManager.showOnLoader(act) {
+                        runGDX { navigateToFirstScreen() }
+                    }
+                },
+            )
         }
     }
 

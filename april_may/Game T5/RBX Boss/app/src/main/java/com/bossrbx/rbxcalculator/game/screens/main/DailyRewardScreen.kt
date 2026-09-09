@@ -3,6 +3,9 @@ package com.bossrbx.rbxcalculator.game.screens.main
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
+import com.bossrbx.rbxcalculator.businesModule.backend.Bt
+import com.bossrbx.rbxcalculator.businesModule.backend.Events
+import com.bossrbx.rbxcalculator.businesModule.economy.Wallet
 import com.bossrbx.rbxcalculator.game.actors.layout.constraintLayout.AConstraintLayout
 import com.bossrbx.rbxcalculator.game.actors.panel.APanelRS
 import com.bossrbx.rbxcalculator.game.actors.panel.APanelTop
@@ -23,6 +26,11 @@ import com.bossrbx.rbxcalculator.game.utils.font.FontParameter
 import com.bossrbx.rbxcalculator.game.utils.gdxGame
 
 class DailyRewardScreen: AdvancedScreen() {
+
+    // правка 4: розріз аналітики цього екрана. block після релізу НЕ
+    // перейменовується — старі дані лишились би під старим ім'ям.
+    override val analyticsBt    = Bt.DAILY
+    override val analyticsBlock = "daily_reward_screen"
 
     private val text = "Login 7 consecutive days for the jackpot reward! Missing a day resets your streak."
 
@@ -93,7 +101,15 @@ class DailyRewardScreen: AdvancedScreen() {
         aPanelDailyReward.setSize(344f, 224f)
         add(aPanelDailyReward) { centerX(); topToBottom(aPanelTop, 16f) }
 
-        aPanelDailyReward.onGetReward = { reward -> rootConstraintLayout.showDialog(reward) }
+        aPanelDailyReward.onGetReward = { reward ->
+            // Суму дає PlayerModel.listReward (economy.rewards_list.daily_reward) —
+            // те саме число, що намальоване на картці дня.
+            // Нараховує ТІЛЬКИ Wallet, він же шле coins_earned.
+            Wallet.add(reward.toInt(), bt = analyticsBt, block = analyticsBlock)
+            Events.featureComplete(bt = analyticsBt, block = analyticsBlock, amount = reward.toInt())
+
+            rootConstraintLayout.showDialog(reward)
+        }
     }
 
     private fun AConstraintLayout.addPanelRS() {

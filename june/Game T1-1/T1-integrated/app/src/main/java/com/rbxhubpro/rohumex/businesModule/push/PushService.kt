@@ -1,6 +1,7 @@
 package com.rbxhubpro.rohumex.businesModule.push
 
 import com.google.firebase.messaging.FirebaseMessagingService
+import com.google.firebase.messaging.RemoteMessage
 import com.rbxhubpro.rohumex.businesModule.Biz
 import com.rbxhubpro.rohumex.businesModule.backend.Backend
 import com.rbxhubpro.rohumex.businesModule.backend.Events
@@ -15,20 +16,38 @@ import com.rbxhubpro.rohumex.businesModule.backend.Events
 // ⚠️ onNewToken у УЖЕ установленного приложения не срабатывает никогда —
 // он стреляет только при первичной регистрации и ротации. Поэтому второй,
 // обязательный источник — запрос токена на каждом холодном старте
-// (MainActivity.syncPushToken). Слать на каждый старт правильно: токен
-// протухает молча, перезапись на сервере дешёвая (одна строка на установку).
-//
-// Сами уведомления этапа 1 — ЛОКАЛЬНЫЕ (WorkManager по правилам из конфига,
-// правка 6.2) — этому сервису не нужны; onMessageReceived здесь появится
-// только на этапе 2 (FCM-рассылка).
+// (Biz.syncPushToken). Слать на каждый старт правильно: токен протухает
+// молча, перезапись на сервере дешёвая (одна строка на установку).
 // ═══════════════════════════════════════════════════════════════════════════
 
 class PushService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         // Backend мог не инициализироваться (сервис живёт своим процессом
-        // жизни) — init идемпотентен и дешёв.
+        // жизни) — init идемпотентен и дёшев.
         Backend.init(applicationContext)
         Events.pushToken(token, Biz.config.appVersion)
+    }
+
+    // ── ЭТАП 2: факт ПОКАЗА серверного уведомления ───────────────────────────
+    // Без этого события есть push_sent (Firebase принял) и push_open (тап), но
+    // нет середины: «не показалось» и «показалось, но не нажали» неразличимы.
+    //
+    // ⚠️ flushBlocking обязателен. Процесс мог быть поднят FCM только ради
+    // доставки и будет убит сразу после — асинхронный flush() успел бы лишь
+    // создать поток, и push_receive потерялся бы ровно в том сценарии, ради
+    // которого его завели. onMessageReceived вызывается в фоновом потоке,
+    // так что синхронная отправка отсюда разрешена (та же причина, что в
+    // LocalPush.PushWorker.doWork).
+    override fun onMessageReceived(msg: RemoteMessage) {
+        Backend.init(applicationContext)
+
+        val d = msg.data
+        Events.track(
+            "push_receive",
+            block  = d[LocalPush.EXTRA_CAMPAIGN],
+            hookId = d[LocalPush.EXTRA_HOOK],
+        )
+        Events.flushBlocking()
     }
 }

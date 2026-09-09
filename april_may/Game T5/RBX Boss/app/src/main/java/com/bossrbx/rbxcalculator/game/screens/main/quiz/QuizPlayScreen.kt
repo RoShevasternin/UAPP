@@ -1,6 +1,7 @@
 package com.bossrbx.rbxcalculator.game.screens.main.quiz
 
 import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.bossrbx.rbxcalculator.businesModule.backend.Bt
 import com.bossrbx.rbxcalculator.game.actors.button.ABlueButton
 import com.bossrbx.rbxcalculator.game.actors.layout.constraintLayout.AConstraintLayout
 import com.bossrbx.rbxcalculator.game.actors.panel.APanelRS
@@ -17,6 +18,11 @@ import com.bossrbx.rbxcalculator.game.utils.gdxGame
 import com.bossrbx.rbxcalculator.util.log
 
 class QuizPlayScreen: AdvancedScreen() {
+
+    // правка 4: розріз аналітики цього екрана. block після релізу НЕ
+    // перейменовується — старі дані лишились би під старим ім'ям.
+    override val analyticsBt    = Bt.QUIZ
+    override val analyticsBlock = "quiz_play_screen"
 
     // ------------------------------------------------------------------------
     // Actors

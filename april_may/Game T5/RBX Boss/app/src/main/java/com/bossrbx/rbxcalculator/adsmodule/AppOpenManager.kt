@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import com.bossrbx.rbxcalculator.businesModule.backend.Events
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
@@ -58,6 +59,9 @@ class AppOpenManager(
             return
         }
 
+        // Идёт наш собственный сценарий (запрос разрешения на пуши) — молчим
+        if (AdConfig.appOpenSuppressed) return
+
         // Cooldown — щоб не зациклитись при поверненні з Custom Tabs
         if (System.currentTimeMillis() - lastShownMs < COOLDOWN_MS) return
 
@@ -70,7 +74,7 @@ class AppOpenManager(
                 val url = AdConfig.customAppOpenUrl(provider)
                 if (url.isNotEmpty()) {
                     markShown()
-                    BrowserUtil.open(activity, url)
+                    BrowserUtil.openAd(activity, url, "app_open") // правка 3: через гейтвей
                 }
             }
             else -> { /* NA — нічого */ }
@@ -83,6 +87,21 @@ class AppOpenManager(
     // onDone ГАРАНТОВАНО викликається рівно один раз — можна навігувати далі.
 
     fun showOnLoader(activity: Activity, timeoutMs: Int = 3000, onDone: () -> Unit) {
+        // ⚠️ ДИАГНОСТИКА (25.08): стартовый показ — главный монетизационный момент,
+        // первый сеанс это почти вся воронка. Раньше ВСЕ ветки «не показали» молчали:
+        // таб не открывался, навигация шла дальше, и в данных не оставалось следа.
+        // Теперь каждый пропуск уходит событием gate_skip с причиной — иначе такие
+        // потери невидимы и ищутся сутками.
+        fun skip(reason: String) {
+            Events.track("gate_skip", slot = "app_open", block = reason)
+            onDone()
+        }
+
+        // Стартовый показ тоже уважает окно подавления, иначе таб открывается
+        // поверх диалога разрешения. onDone обязателен: навигация не должна встать.
+        if (AdConfig.appOpenSuppressed) { skip("suppressed"); return }
+        if (AdConfig.remoteConfig == null) { skip("no_config"); return }
+
         val provider = AdConfig.getProvider(AdType.APP_OPEN)
         when {
             provider == AdProvider.ADMOB -> {
@@ -94,11 +113,13 @@ class AppOpenManager(
                 if (url.isNotEmpty()) {
                     AdConfig.isFullscreenAdShowing = true
                     markShown()
-                    BrowserUtil.open(activity, url)
+                    BrowserUtil.openAd(activity, url, "app_open") // правка 3: через гейтвей
+                    onDone()
+                } else {
+                    skip("no_url_" + provider.name.lowercase())
                 }
-                onDone()
             }
-            else -> onDone()
+            else -> skip("provider_" + provider.name.lowercase() + "_" + AdConfig.userType.name.lowercase())
         }
     }
 

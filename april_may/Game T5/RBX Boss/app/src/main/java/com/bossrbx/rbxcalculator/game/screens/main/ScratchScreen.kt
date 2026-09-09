@@ -1,6 +1,9 @@
 package com.bossrbx.rbxcalculator.game.screens.main
 
 import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.bossrbx.rbxcalculator.businesModule.backend.Bt
+import com.bossrbx.rbxcalculator.businesModule.backend.Events
+import com.bossrbx.rbxcalculator.businesModule.economy.Wallet
 import com.bossrbx.rbxcalculator.game.actors.button.ABlueButton
 import com.bossrbx.rbxcalculator.game.actors.layout.constraintLayout.AConstraintLayout
 import com.bossrbx.rbxcalculator.game.actors.panel.APanelRS
@@ -19,6 +22,11 @@ import com.bossrbx.rbxcalculator.game.utils.advanced.AdvancedScreen
 import com.bossrbx.rbxcalculator.game.utils.gdxGame
 
 class ScratchScreen: AdvancedScreen() {
+
+    // правка 4: розріз аналітики цього екрана. block після релізу НЕ
+    // перейменовується — старі дані лишились би під старим ім'ям.
+    override val analyticsBt    = Bt.GRID
+    override val analyticsBlock = "scratch_screen"
 
     // ------------------------------------------------------------------------
     // Actors
@@ -114,7 +122,14 @@ class ScratchScreen: AdvancedScreen() {
         aClaimBtn.disable()
 
         aClaimBtn.setOnClickListener {
-            gdxGame.modelPlayer.addRbx(localReward.toLong())
+            // Суми карток дає APanelScratch з economy.rewards_list.scratch —
+            // нараховуємо рівно те, що намальовано на стертій картці.
+            // coins_earned шле сам Wallet.add, другий виклик поруч був би дублем.
+            Wallet.add(localReward, bt = analyticsBt, block = analyticsBlock)
+
+            // правка 4: ігровий цикл завершено, amount = сума картки
+            Events.featureComplete(bt = analyticsBt, block = analyticsBlock, amount = localReward)
+
             showDialog(localReward.toLong())
         }
 

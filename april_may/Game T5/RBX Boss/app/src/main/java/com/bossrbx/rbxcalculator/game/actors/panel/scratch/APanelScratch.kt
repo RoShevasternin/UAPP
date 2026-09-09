@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
+import com.bossrbx.rbxcalculator.businesModule.economy.Econ
 import com.bossrbx.rbxcalculator.game.utils.GameColor
 import com.bossrbx.rbxcalculator.game.utils.actor.addActors
 import com.bossrbx.rbxcalculator.game.utils.advanced.AdvancedGroup
@@ -29,7 +30,7 @@ class APanelScratch(override val screen: AdvancedScreen) : AdvancedGroup() {
     // ------------------------------------------------------------------------
     // Fields
     // ------------------------------------------------------------------------
-    private var listRandomResult = Result.entries.shuffled().take(4).map { it.sum }
+    private var listRandomResult = Result.entries.shuffled().take(4).map { payout(it) }
         set(value) {
             value.forEachIndexed { index, i ->
                 listResultLbl[index].setText(i.toString())
@@ -60,7 +61,7 @@ class APanelScratch(override val screen: AdvancedScreen) : AdvancedGroup() {
     override fun addActorsOnGroup() {
         addAndFillActor(aPanelImg)
 
-        listRandomResult = Result.entries.shuffled().take(4).map { it.sum }
+        listRandomResult = Result.entries.shuffled().take(4).map { payout(it) }
 
         addListResult()
         addListScratchCard()
@@ -128,6 +129,17 @@ class APanelScratch(override val screen: AdvancedScreen) : AdvancedGroup() {
     // ------------------------------------------------------------------------
     // Data
     // ------------------------------------------------------------------------
+
+    // правка 5: номінали карток приїжджають СПИСКОМ з конфігу —
+    // economy.rewards_list.scratch, порядок = порядок enum Result.
+    // ОДНА точка і для підпису на картці, і для нарахування: два різні
+    // джерела числа = гравець бачить 50, отримує 5.
+    private fun payout(result: Result): Int =
+        Econ.rewardList("scratch", DEFAULT_SUMS).getOrElse(result.ordinal) { result.sum }
+
+    companion object {
+        private val DEFAULT_SUMS = intArrayOf(5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
+    }
 
     enum class Result(val sum: Int) {
         _5  (5),

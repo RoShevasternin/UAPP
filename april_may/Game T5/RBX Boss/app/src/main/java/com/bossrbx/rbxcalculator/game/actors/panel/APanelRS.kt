@@ -3,6 +3,7 @@ package com.bossrbx.rbxcalculator.game.actors.panel
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.bossrbx.rbxcalculator.businesModule.economy.Wallet
 import com.bossrbx.rbxcalculator.game.actors.layout.constraintLayout.AConstraintLayout
 import com.bossrbx.rbxcalculator.game.utils.NumberFormatter
 import com.bossrbx.rbxcalculator.game.utils.advanced.AdvancedScreen
@@ -54,9 +55,14 @@ class APanelRS(override val screen: AdvancedScreen): AConstraintLayout(screen) {
     // Logic
     // ------------------------------------------------------------------------
 
+    // Підписка на ЄДИНЕ джерело балансу. Оновлюється після будь-якої мутації,
+    // звідки б вона не прийшла: екран гри, диплінк повернення з веба, опт-ін.
+    //
+    // ⚠️ collect віддає значення в потоці підписника (тут Dispatchers.Default),
+    // тому чіпати scene2d можна лише через runGDX.
     private fun collectRS() {
         coroutine?.launch {
-            gdxGame.modelPlayer.rbxFlow.collect { rs ->
+            Wallet.balanceFlow.collect { rs ->
                 runGDX { aLbl.setText(NumberFormatter.format(rs)) }
             }
         }

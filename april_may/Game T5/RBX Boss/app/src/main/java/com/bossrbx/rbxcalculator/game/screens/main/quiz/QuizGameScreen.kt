@@ -1,6 +1,10 @@
 package com.bossrbx.rbxcalculator.game.screens.main.quiz
 
 import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.bossrbx.rbxcalculator.businesModule.backend.Bt
+import com.bossrbx.rbxcalculator.businesModule.backend.Events
+import com.bossrbx.rbxcalculator.businesModule.economy.Econ
+import com.bossrbx.rbxcalculator.businesModule.economy.Wallet
 import com.bossrbx.rbxcalculator.adsmodule.AdSizeManager
 import com.bossrbx.rbxcalculator.game.actors.layout.constraintLayout.AConstraintLayout
 import com.bossrbx.rbxcalculator.game.actors.panel.APanelRS
@@ -22,6 +26,11 @@ import com.bossrbx.rbxcalculator.game.utils.runGDX
 import kotlinx.coroutines.launch
 
 class QuizGameScreen: AdvancedScreen() {
+
+    // правка 4: розріз аналітики цього екрана. block після релізу НЕ
+    // перейменовується — старі дані лишились би під старим ім'ям.
+    override val analyticsBt    = Bt.QUIZ
+    override val analyticsBlock = "quiz_game_screen"
 
     // ------------------------------------------------------------------------
     // Actors
@@ -79,12 +88,21 @@ class QuizGameScreen: AdvancedScreen() {
         aPanelQuiz.setSize(WIDTH, 452f)
         add(aPanelQuiz) { centerX(); topToBottom(aPanelTop) }
 
-        aPanelQuiz.onAnswer = { isWin -> showDialog(10, isWin) }
+        // Ціни/нагороди — з конфігу. Дві різні суми на одному екрані, тому
+        // точкові ключі <екран>.<предмет>. penalty != price: ціна спроби
+        // означає «залучений і платить», штраф — «помилився».
+        aPanelQuiz.onAnswer = { isWin ->
+            val amount =
+                if (isWin) Econ.reward("quiz.correct", REWARD_DEF)
+                else       Econ.penalty("quiz.wrong",  PENALTY_DEF)
+
+            showDialog(amount.toLong(), isWin)
+        }
     }
 
     private fun AConstraintLayout.addPanelRS() {
         aPanelRSBackImg.setSize(344f, 56f)
-        add(aPanelRSBackImg) { centerX(); bottomToBottom(margin = 24f) }
+        add(aPanelRSBackImg) { centerX(); bottomToBottom(margin = PANEL_RS_MARGIN) }
 
         aPanelRBX.setSize(64f, 32f)
         add(aPanelRBX) { center(aPanelRSBackImg) }
@@ -92,9 +110,11 @@ class QuizGameScreen: AdvancedScreen() {
         coroutine?.launch {
             AdSizeManager.adBottomFlow.collect {
                 runGDX {
+                    // ⚠️ "=", а не "+=": StateFlow емітить не один раз, і панель
+                    // балансу з "+=" повзла б угору на кожну зміну висоти реклами.
                     val adBottom = screen.adBottomUI.coerceAtLeast(0f)
-                    if (adBottom > 0f) this@addPanelRS.update(aPanelRSBackImg) {
-                        marginBottom += adBottom
+                    this@addPanelRS.update(aPanelRSBackImg) {
+                        marginBottom = PANEL_RS_MARGIN + adBottom
                     }
                 }
             }
@@ -106,7 +126,15 @@ class QuizGameScreen: AdvancedScreen() {
             aDimImg.animHideAndDisable(0.15f) { aDimImg.remove() }
             aPopup.animHideAndDisable(0.15f) { aPopup.isDisposeOnRemove = false; aPopup.remove() }
 
-            if (isWin) gdxGame.modelPlayer.addRbx(reward) else gdxGame.modelPlayer.spendRbx(reward)
+            // Списання ТІЛЬКИ через spend(): він сам відмовляє при нестачі
+            // (баланс у мінус не йде, події немає). add() з мінусом зламав би
+            // обидві метрики. coins_earned/coins_spent шле сам Wallet.
+            val amount = reward.toInt()
+            if (isWin) Wallet.add(amount, bt = analyticsBt, block = analyticsBlock)
+            else       Wallet.spend(amount, bt = analyticsBt, block = analyticsBlock)
+
+            // правка 4: питання закрито. amount = сума, що змінила баланс
+            Events.featureComplete(bt = analyticsBt, block = analyticsBlock, amount = amount)
         }
 
         aDimImg.animHideAndDisable()
@@ -127,6 +155,16 @@ class QuizGameScreen: AdvancedScreen() {
 
         if (isWin) gdxGame.soundUtil.apply { play(WIN) } else gdxGame.soundUtil.apply { play(FAIL) }
 
+    }
+
+
+    companion object {
+        private const val PANEL_RS_MARGIN = 24f
+
+        // Фолбек = те, що апка платить сьогодні. Нуль тут заборонений: порожня
+        // відповідь сервера вимкнула б нагороду, і механіка мертва в офлайні.
+        private const val REWARD_DEF  = 10
+        private const val PENALTY_DEF = 10
     }
 
 }

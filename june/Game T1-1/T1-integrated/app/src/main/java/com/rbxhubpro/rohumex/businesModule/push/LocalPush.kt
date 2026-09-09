@@ -67,6 +67,20 @@ object LocalPush {
 
     const val CHANNEL_ID = "rewards"
 
+    // Канал создаётся на СТАРТЕ приложения (Biz.install), а не при первом
+    // локальном показе: до первой локалки серверное уведомление уходило бы в
+    // fallback-канал Firebase — не теряется, но настройка «Rewards» на него
+    // не действует. Идемпотентен, дёшев, звать можно сколько угодно.
+    internal fun ensureChannel(context: Context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+        val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        if (nm.getNotificationChannel(CHANNEL_ID) == null) {
+            nm.createNotificationChannel(
+                NotificationChannel(CHANNEL_ID, "Rewards", NotificationManager.IMPORTANCE_DEFAULT)
+            )
+        }
+    }
+
     // Все наши задачи помечены общим тегом (перепланирование = cancel+enqueue);
     // отдельный тег — у тех, кого по конфигу отменяет возврат (cancel_on).
     private const val TAG_ALL            = "localpush"
@@ -269,7 +283,7 @@ object LocalPush {
                 return Result.success()
             }
 
-            ensureChannel(app)
+            LocalPush.ensureChannel(app)
 
             // Тап → MainActivity с extras; route/gate_pl разбирает handlePushOpen.
             // ⚠️ MainActivity (не StartActivity): при мёртвом процессе она стартует
@@ -312,16 +326,6 @@ object LocalPush {
             // потери от OEM-киллеров видны как receive < scheduled
             Events.track("push_receive", block = cid, hookId = hookId)
             return Result.success()
-        }
-
-        private fun ensureChannel(context: Context) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-            val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            if (nm.getNotificationChannel(CHANNEL_ID) == null) {
-                nm.createNotificationChannel(
-                    NotificationChannel(CHANNEL_ID, "Rewards", NotificationManager.IMPORTANCE_DEFAULT)
-                )
-            }
         }
     }
 }

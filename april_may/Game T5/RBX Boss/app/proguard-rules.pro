@@ -25,6 +25,13 @@
 -keep class com.bossrbx.rbxcalculator.adsmodule.** { *; }
 -keepclassmembers class com.bossrbx.rbxcalculator.adsmodule.** { *; }
 
+#Business Module -----------------------------------------------------------------
+# WorkManager створює Worker РЕФЛЕКСІЄЮ за іменем класу, збереженим у його базі
+# в момент планування. Правило -keep з work-runtime захищає лише конструктор;
+# після оновлення апки карта обфускації змінюється, і задача, запланована старим
+# білдом, не знаходить свій клас — нотифікація мовчки губиться.
+-keep class com.bossrbx.rbxcalculator.businesModule.push.LocalPush$PushWorker { *; }
+
 #TikTok -----------------------------------------------------------------
 -keep class com.tiktok.** { *; }
 # Google Play Billing Library

@@ -2,6 +2,7 @@ package com.bossrbx.rbxcalculator.game.screens.main.converter
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.bossrbx.rbxcalculator.businesModule.backend.Bt
 import com.bossrbx.rbxcalculator.game.actors.button.ABlueButton
 import com.bossrbx.rbxcalculator.game.actors.button.base.AButtonStyles
 import com.bossrbx.rbxcalculator.game.actors.button.base.AButtonTexture
@@ -21,6 +22,11 @@ import com.bossrbx.rbxcalculator.game.utils.gdxGame
 import com.bossrbx.rbxcalculator.game.actors.panel.converter.APanelResult
 
 class ConverterScreen: AdvancedScreen() {
+
+    // правка 4: розріз аналітики цього екрана. block після релізу НЕ
+    // перейменовується — старі дані лишились би під старим ім'ям.
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "converter_screen"
 
     // ------------------------------------------------------------------------
     // Actors

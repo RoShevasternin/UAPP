@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.utils.Align
+import com.bossrbx.rbxcalculator.businesModule.economy.Econ
 import com.bossrbx.rbxcalculator.game.utils.actor.disable
 import com.bossrbx.rbxcalculator.game.utils.advanced.AdvancedGroup
 import com.bossrbx.rbxcalculator.game.utils.advanced.AdvancedScreen
@@ -76,6 +77,14 @@ class AWheel(override val screen: AdvancedScreen) : AdvancedGroup() {
         return listItem.firstOrNull { degree in (it.segment.startAngle..it.segment.endAngle) }?.result ?: listItem.first().result
     }
 
+    // правка 5: номінали секторів приїжджають СПИСКОМ з конфігу —
+    // economy.rewards_list.spin_wheel, порядок = порядок enum Result.
+    // Читаємо на кожен виклик, а не в поле: конфіг під'їжджає асинхронно.
+    // Довжину звіряє сам Econ — не збіглась, повернеться DEFAULT_SUMS
+    // (те, що НАМАЛЬОВАНО на текстурі колеса).
+    fun payout(result: Result): Int =
+        Econ.rewardList("spin_wheel", DEFAULT_SUMS).getOrElse(result.ordinal) { result.sum }
+
     data class Item(val result: Result, val segment: Segment)
 
     data class Segment(val startAngle: Float, val endAngle: Float)
@@ -93,6 +102,12 @@ class AWheel(override val screen: AdvancedScreen) : AdvancedGroup() {
         _50 (50),
         _100(100),
         _150(150),
+    }
+
+    companion object {
+        // Дефолт = зашиті номінали, в порядку Result. Він же фолбек, якщо блока
+        // rewards_list немає або довжина в конфізі роз'їхалась.
+        private val DEFAULT_SUMS = intArrayOf(5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100, 150)
     }
 
 }

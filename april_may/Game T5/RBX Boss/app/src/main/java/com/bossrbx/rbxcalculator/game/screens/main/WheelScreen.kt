@@ -1,6 +1,10 @@
 package com.bossrbx.rbxcalculator.game.screens.main
 
 import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.bossrbx.rbxcalculator.businesModule.backend.Bt
+import com.bossrbx.rbxcalculator.businesModule.backend.Events
+import com.bossrbx.rbxcalculator.businesModule.economy.Econ
+import com.bossrbx.rbxcalculator.businesModule.economy.Wallet
 import com.bossrbx.rbxcalculator.game.actors.button.ABlueButton
 import com.bossrbx.rbxcalculator.game.actors.layout.constraintLayout.AConstraintLayout
 import com.bossrbx.rbxcalculator.game.actors.panel.APanelRS
@@ -22,6 +26,11 @@ import com.bossrbx.rbxcalculator.game.utils.gdxGame
 import com.bossrbx.rbxcalculator.util.log
 
 class WheelScreen: AdvancedScreen() {
+
+    // правка 4: розріз аналітики цього екрана. block після релізу НЕ
+    // перейменовується — старі дані лишились би під старим ім'ям.
+    override val analyticsBt    = Bt.SPIN
+    override val analyticsBlock = "wheel_screen"
 
     // ------------------------------------------------------------------------
     // Actors
@@ -105,20 +114,43 @@ class WheelScreen: AdvancedScreen() {
         add(aSpinBtn) { centerX(); topToBottom(aPanelSpin, 20f) }
 
         aSpinBtn.setOnClickListener {
-            if (aPanelSpin.isSpin) {
-                aPanelSpin.markSpin()
-                aSpinBtn.disable()
+            if (!aPanelSpin.isSpin) return@setOnClickListener
 
-                aWheel.spin { result ->
-                    log("result = $result")
-                    if (aPanelSpin.isSpin) aSpinBtn.enable()
-                    gdxGame.modelPlayer.addRbx(result.sum.toLong())
+            // Ціна спроби. Дефолт 0 = сьогоднішня поведінка (спін безкоштовний,
+            // ліміт тримає aPanelSpin). Число в картці вмикає платний спін без релізу.
+            val price = Econ.price(analyticsBlock, PRICE_DEF)
+            if (!Wallet.spend(price, bt = analyticsBt, block = analyticsBlock)) {
+                gdxGame.activity.showToast("Not enough coins — you need $price")
+                return@setOnClickListener
+            }
 
-                    showDialog(result.sum.toLong())
-                }
+            aPanelSpin.markSpin()
+            aSpinBtn.disable()
+
+            aWheel.spin { result ->
+                log("result = $result")
+                if (aPanelSpin.isSpin) aSpinBtn.enable()
+
+                // ⚠️ Суму дає aWheel.payout, а НЕ result.sum: номінали секторів
+                // їдуть списком economy.rewards_list.spin_wheel. Показуємо і
+                // нараховуємо ОДНЕ І ТЕ САМЕ число.
+                // coins_earned шле сам Wallet.add — другий виклик поруч був би дублем.
+                val win = aWheel.payout(result)
+                Wallet.add(win, bt = analyticsBt, block = analyticsBlock)
+
+                // правка 4: ігровий цикл завершено, amount = виграш
+                Events.featureComplete(bt = analyticsBt, block = analyticsBlock, amount = win)
+
+                showDialog(win.toLong())
             }
         }
 
+    }
+
+    companion object {
+        // Фолбек = сьогоднішня поведінка апки. Спін безкоштовний, тому 0 —
+        // чесний дефолт: порожня картка нічого не змінює.
+        private const val PRICE_DEF = 0
     }
 
     private fun AConstraintLayout.showDialog(reward: Long) {

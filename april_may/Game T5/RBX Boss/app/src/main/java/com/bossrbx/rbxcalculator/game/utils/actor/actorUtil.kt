@@ -19,6 +19,16 @@ import com.bossrbx.rbxcalculator.game.utils.gdxGame
 // Listeners
 // ------------------------------------------------------------------------
 
+/**
+ * ⚠️ НЕ використовувати всередині ScrollPane (AScrollLayout).
+ *
+ * touchDown робить event.stop() — подія не спливає до предків, тому
+ * flick-листенер ScrollPane її не бачить: список не скролиться, щойно
+ * палець ліг на актора з цим лістенером. Плюс тут немає порогу зсуву,
+ * тому протяжка, що завершилась у межах актора, зарахується як тап.
+ *
+ * Для елементів списків бери [setOnTouchListener].
+ */
 fun Actor.setOnClickListener(sound: SoundUtil.AdvancedSound? = gdxGame.soundUtil.CLICK, block: (Actor) -> Unit) {
     addListener(object : InputListener() {
         var isWithin = false

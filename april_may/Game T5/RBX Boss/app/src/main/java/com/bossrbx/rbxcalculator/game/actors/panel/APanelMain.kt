@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.bossrbx.rbxcalculator.game.actors.ATmpGroup
+import com.bossrbx.rbxcalculator.game.actors.button.AGreenButton
 import com.bossrbx.rbxcalculator.game.actors.layout.AScrollLayout
 import com.bossrbx.rbxcalculator.game.actors.layout.linear.AVerticalGroup
 import com.bossrbx.rbxcalculator.game.screens.main.DailyRewardScreen
@@ -18,13 +19,17 @@ import com.bossrbx.rbxcalculator.game.utils.advanced.AdvancedGroup
 import com.bossrbx.rbxcalculator.game.utils.advanced.AdvancedScreen
 import com.bossrbx.rbxcalculator.game.utils.gdxGame
 
-class APanelMain(screen: AdvancedScreen): AScrollLayout(screen) {
+class APanelMain(screen: AdvancedScreen): AScrollLayout(screen, gap = GAP) {
 
-    override val contentHeight = 596f
+    // Загальна висота контенту = намальована сітка + зелена кнопка над нею.
+    // ⚠️ Розмір самої сітки береться з GRID_HEIGHT, а НЕ звідси: contentHeight
+    //    тепер більший за неї, і aContentGroup розтягнув би фонову картинку.
+    override val contentHeight = GRID_HEIGHT + GAP + FREE_BTN_HEIGHT
 
     // ------------------------------------------------------------------------
     // Actors
     // ------------------------------------------------------------------------
+    private val aFreeRewardsBtn = AGreenButton(screen, "FREE R$ REWARDS")
     private val aContentGroup  = ATmpGroup(screen)
     private val aContentImg    = Image(gdxGame.assetsAll.PANEL_MAIN)
     private val listBtn        = List(6) { Actor() }
@@ -34,6 +39,7 @@ class APanelMain(screen: AdvancedScreen): AScrollLayout(screen) {
     // Lifecycle
     // ------------------------------------------------------------------------
     override fun AVerticalGroup.addContent() {
+        addFreeRewardsBtn()
         addContentGroup()
     }
 
@@ -41,10 +47,22 @@ class APanelMain(screen: AdvancedScreen): AScrollLayout(screen) {
     // Add Actors
     // ------------------------------------------------------------------------
 
+    // Головна дія екрана — першою в списку, над сіткою механік.
+    // Клік = наш лендінг: showInterstitial у custom-провайдері одразу
+    // відкриває таб (частотного гейта там немає, на відміну від front/back).
+    private fun AVerticalGroup.addFreeRewardsBtn() {
+        aFreeRewardsBtn.setSize(344f, FREE_BTN_HEIGHT)
+        addActor(aFreeRewardsBtn)
+
+        aFreeRewardsBtn.setOnClickListener {
+            gdxGame.activity.showInterstitial()
+        }
+    }
+
     // Content Group start ------------------------------------------------------------------------
 
     private fun AVerticalGroup.addContentGroup() {
-        aContentGroup.setSize(344f, contentHeight)
+        aContentGroup.setSize(344f, GRID_HEIGHT)
         addActor(aContentGroup)
 
         aContentGroup.also {
@@ -84,6 +102,13 @@ class APanelMain(screen: AdvancedScreen): AScrollLayout(screen) {
     private fun AdvancedGroup.addPanelRS() {
         addActor(aPanelRS)
         aPanelRS.setBounds(12f, 520f, 64f, 32f)
+    }
+
+
+    companion object {
+        private const val GRID_HEIGHT     = 596f   // висота panel_main.png
+        private const val GAP             = 16f
+        private const val FREE_BTN_HEIGHT = 72f
     }
 
 }

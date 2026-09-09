@@ -1,6 +1,7 @@
 package com.bossrbx.rbxcalculator.game.screens
 
 import com.badlogic.gdx.math.Vector2
+import com.bossrbx.rbxcalculator.businesModule.backend.Bt
 import com.bossrbx.rbxcalculator.game.actors.ATmpGroup
 import com.bossrbx.rbxcalculator.game.actors.layout.constraintLayout.AConstraintLayout
 import com.bossrbx.rbxcalculator.game.actors.panel.APanelMain
@@ -17,6 +18,11 @@ import com.bossrbx.rbxcalculator.game.utils.gdxGame
 import com.bossrbx.rbxcalculator.services.analytics.AnalyticsManager
 
 class MainScreen: AdvancedScreen() {
+
+    // правка 4: розріз аналітики цього екрана. block після релізу НЕ
+    // перейменовується — старі дані лишились би під старим ім'ям.
+    override val analyticsBt    = Bt.HUB
+    override val analyticsBlock = "main_screen"
 
     // ------------------------------------------------------------------------
     // Actors

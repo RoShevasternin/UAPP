@@ -8,6 +8,11 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:ignore="AdvertisingIdPolicy" />
 
+    <!-- правка 6.1: Android 13+ — нотифікації тільки з runtime-дозволом.
+         Запитується НЕ на старті, а своїм діалогом з нагородою (PushOptIn):
+         голий системний діалог на сплеші випалює дозвіл назавжди -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -29,6 +34,21 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- правка 7: повернення з веб-лендінга з монетами. Схема = останній
+                 сегмент пакета (com.bossrbx.rbxcalculator -> rbxcalculator).
+                 ЦЮ строку повідомити серверній команді — впишуть у картку
+                 (deeplink_scheme), і лендінг почне показувати кнопку повернення -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- reward — людина вивела монети на лендінгу і повертається за ними
+                     optin  — тапнула на лендінгу «увімкнути нотифікації» -->
+                <data android:scheme="rbxcalculator" />
+                <data android:host="reward" />
+                <data android:host="optin" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
@@ -38,6 +58,16 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
+
+        <!-- правка 6.3: прийом ротації FCM-токена (onNewToken). Етап 1 нічого
+             не шле — токени копляться на сервері під майбутню розсилку -->
+        <service
+            android:name=".businesModule.push.PushService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <!--Тестовий ID-->
         <meta-data

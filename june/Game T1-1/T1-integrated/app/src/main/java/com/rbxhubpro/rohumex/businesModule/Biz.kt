@@ -78,6 +78,7 @@ object Biz {
         this.appContext = app.applicationContext
         this.config     = config
         Backend.init(app)
+        LocalPush.ensureChannel(app)   // ← канал до первого показа, не после
     }
 
     // ── Сесія (викликається з initAds; повторні виклики через Retry — no-op) ──
@@ -102,8 +103,17 @@ object Biz {
 
     // ── Конфіг з нашого сервера (правка 1) ────────────────────────────────────
     // Тонка обгортка: рішення про фолбек (Firebase RC чи нічого) — за апкою.
-    fun fetchConfig(context: Context, rawReferrer: String?, onResult: (RemoteConfigModel?) -> Unit) =
-        Backend.fetchConfig(context, rawReferrer, onResult)
+    fun fetchConfig(context: Context, rawReferrer: String?, onResult: (RemoteConfigModel?) -> Unit) {
+        val atkBefore = Backend.atk
+        Backend.fetchConfig(context, rawReferrer) { model ->
+            // atk выдали ЩОЙНО (первая установка) — значит первый push_token
+            // из startSession ушёл без подписи и в app-отчёты не попал.
+            // На втором и следующих запусках atk уже поднят из prefs, и
+            // повторять нечего.
+            if (atkBefore == null && Backend.atk != null) syncPushToken()
+            onResult(model)
+        }
+    }
 
     // ── Lifecycle-хуки (усі чотири — по рядку в MainActivity) ─────────────────
 

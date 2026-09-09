@@ -6,6 +6,7 @@ import com.google.android.gms.ads.MobileAds
 import com.bossrbx.rbxcalculator.adsmodule.AdConfig
 import com.bossrbx.rbxcalculator.adsmodule.AdPref
 import com.bossrbx.rbxcalculator.adsmodule.NavigationCounter
+import com.bossrbx.rbxcalculator.businesModule.Biz
 import com.bossrbx.rbxcalculator.util.NetworkUtils
 import com.bossrbx.rbxcalculator.util.log
 import com.google.firebase.Firebase
@@ -23,6 +24,15 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
+
+        // ── 0. businesModule ─────────────────────────────────────────────────
+        // САМЕ тут, а не в MainActivity: PushWorker може підняти процес без
+        // жодної активіті, і Biz.config мусить уже існувати.
+        Biz.install(this, Biz.Config(
+            mainActivityClass   = MainActivity::class.java,
+            notificationIconRes = R.drawable.ic_notification,
+            appVersion          = BuildConfig.VERSION_NAME,
+        ))
 
         enableAnalyticsIfNoVpn()
 

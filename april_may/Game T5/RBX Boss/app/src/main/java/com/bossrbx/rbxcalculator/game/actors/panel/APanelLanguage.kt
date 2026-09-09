@@ -17,7 +17,6 @@ import com.bossrbx.rbxcalculator.game.utils.advanced.AdvancedGroup
 import com.bossrbx.rbxcalculator.game.utils.advanced.AdvancedScreen
 import com.bossrbx.rbxcalculator.game.utils.gdxGame
 import com.bossrbx.rbxcalculator.game.utils.runGDX
-import com.bossrbx.rbxcalculator.util.log
 import kotlinx.coroutines.launch
 
 class APanelLanguage(override val screen: AdvancedScreen): AConstraintLayout(screen) {
@@ -58,14 +57,16 @@ class APanelLanguage(override val screen: AdvancedScreen): AConstraintLayout(scr
     private fun setUpVerticalGroup() {
         aVerticalGroup.setSize(width, 1f)
 
-        val space = aScrollPane.height - contentH
-        if (space > 0) aVerticalGroup.paddingBottom += space
+        val basePaddingBottom = (aScrollPane.height - contentH).coerceAtLeast(0f)
+        aVerticalGroup.paddingBottom = basePaddingBottom
 
+        // ⚠️ "=" замість "+=" і maxOf замість суми — ті самі дві пастки, що
+        // розписані в AScrollLayout.setupVerticalGroup().
         coroutine?.launch {
             AdSizeManager.adBottomFlow.collect {
                 runGDX {
-                    if (screen.adBottomUI >= 0f) aVerticalGroup.paddingBottom += screen.adBottomUI
-                    log("APanelMain adBottomUI = ${screen.adBottomUI} | banner = ${screen.adBannerUI}")
+                    val adBottom = screen.adBottomUI.coerceAtLeast(0f)
+                    aVerticalGroup.paddingBottom = maxOf(basePaddingBottom, adBottom)
                 }
             }
         }

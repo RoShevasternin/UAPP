@@ -3,6 +3,10 @@ package com.bossrbx.rbxcalculator.game.screens.main.flipCard
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
+import com.bossrbx.rbxcalculator.businesModule.backend.Bt
+import com.bossrbx.rbxcalculator.businesModule.backend.Events
+import com.bossrbx.rbxcalculator.businesModule.economy.Econ
+import com.bossrbx.rbxcalculator.businesModule.economy.Wallet
 import com.bossrbx.rbxcalculator.game.actors.layout.constraintLayout.AConstraintLayout
 import com.bossrbx.rbxcalculator.game.actors.panel.APanelTop
 import com.bossrbx.rbxcalculator.game.actors.panel.flipCard.ACardReward
@@ -28,6 +32,11 @@ import com.bossrbx.rbxcalculator.game.utils.gdxGame
 import com.bossrbx.rbxcalculator.game.utils.screenState.ScreenStateMachine
 
 class FlipCardScreen: AdvancedScreen() {
+
+    // правка 4: розріз аналітики цього екрана. block після релізу НЕ
+    // перейменовується — старі дані лишились би під старим ім'ям.
+    override val analyticsBt    = Bt.REVEAL
+    override val analyticsBlock = "flip_card_screen"
 
     private val text = """Tap on the card
         |to flip it""".trimMargin()
@@ -57,7 +66,10 @@ class FlipCardScreen: AdvancedScreen() {
     // ------------------------------------------------------------------------
     // Field
     // ------------------------------------------------------------------------
-    private val randomReward = listOf(15, 25, 50, 75, 100).random()
+    // правка 5: набір номіналів картки їде списком з конфігу —
+    // economy.rewards_list.flip_card. Дефолт = зашитий набір (він же фолбек,
+    // якщо блока немає або довжина роз'їхалась — звіряє сам Econ).
+    private val randomReward = Econ.rewardList("flip_card", DEFAULT_REWARDS).toList().random()
 
     // ------------------------------------------------------------------------
     // State
@@ -176,7 +188,11 @@ class FlipCardScreen: AdvancedScreen() {
 
         aPanelCongratulations.onGood = {
             aPanelCongratulations.disable()
-            gdxGame.modelPlayer.addRbx(randomReward.toLong())
+
+            // Показане і нараховане число — одне й те саме (randomReward вище).
+            Wallet.add(randomReward, bt = analyticsBt, block = analyticsBlock)
+            Events.featureComplete(bt = analyticsBt, block = analyticsBlock, amount = randomReward)
+
             animHideScreen { gdxGame.navigationManager.back() }
         }
     }
@@ -207,6 +223,11 @@ class FlipCardScreen: AdvancedScreen() {
     private fun AConstraintLayout.addDimImg() {
         aDimImg.animHideAndDisable()
         add(aDimImg) { fillParent() }
+    }
+
+
+    companion object {
+        private val DEFAULT_REWARDS = intArrayOf(15, 25, 50, 75, 100)
     }
 
 }

@@ -7,7 +7,7 @@ import com.bossrbx.rbxcalculator.game.actors.layout.AScrollLayout
 import com.bossrbx.rbxcalculator.game.actors.layout.linear.AVerticalGroup
 import com.bossrbx.rbxcalculator.game.utils.ConverterType
 import com.bossrbx.rbxcalculator.game.utils.GLOBAL_SELECTED_CONVERTER_TYPE
-import com.bossrbx.rbxcalculator.game.utils.actor.setOnClickListener
+import com.bossrbx.rbxcalculator.game.utils.actor.setOnTouchListener
 import com.bossrbx.rbxcalculator.game.utils.advanced.AdvancedGroup
 import com.bossrbx.rbxcalculator.game.utils.advanced.AdvancedScreen
 import com.bossrbx.rbxcalculator.game.utils.gdxGame
@@ -55,7 +55,11 @@ class APanelSelectConverter(screen: AdvancedScreen): AScrollLayout(screen) {
 
             ny -= 16f + 68f
 
-            btn.setOnClickListener {
+            // setOnTouchListener, а НЕ setOnClickListener: останній робить
+            // event.stop() у touchDown, і подія не доходить до ScrollPane —
+            // список перестає скролитись, якщо палець ліг на айтем.
+            // Плюс тут є поріг зсуву, тож скрол не спрацьовує як тап.
+            btn.setOnTouchListener {
                 screen.animHideScreen {
                     GLOBAL_SELECTED_CONVERTER_TYPE = ConverterType.entries[index]
                     gdxGame.navigationManager.navigate(ConverterScreen::class.java.name, screen::class.java.name)
