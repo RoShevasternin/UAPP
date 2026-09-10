@@ -10,6 +10,10 @@ import com.rbxgolden.fungamems.game.utils.actor.disable
 import com.rbxgolden.fungamems.game.utils.actor.setOnClickListener
 import com.rbxgolden.fungamems.game.utils.font.FontFactory
 import com.rbxgolden.fungamems.game.utils.font.FontParameter
+import com.rbxgolden.fungamems.businesModule.backend.Bt
+import com.rbxgolden.fungamems.businesModule.backend.Events
+import com.rbxgolden.fungamems.businesModule.economy.Econ
+import com.rbxgolden.fungamems.businesModule.economy.Wallet
 import com.rbxgolden.fungamems.game.utils.advanced.AdvancedScreen
 import com.rbxgolden.fungamems.game.utils.gdxGame
 
@@ -157,12 +161,23 @@ class APanelQuiz(
         aQuestionLbl.setText(question.question)
     }
 
+    // лічильник правильних — іде в feature_complete наприкінці проходження
+    private var correctCount = 0
+
     private fun onAnswer(userAnswer: Boolean) {
         val question = selectedQuestions[currentIndex]
 
-        // +10 за правильну
+        // Нагорода з конфігу: ключ = analyticsBlock екрана ("quiz_screen") —
+        // рівно цей рядок вписуємо в картку апки на сервері.
+        // Дефолт 10 = сьогоднішня поведінка. coins_earned шле сам Wallet.
         if (userAnswer == question.answer) {
-            gdxGame.modelPlayer.addRbx(10)
+            correctCount++
+            Wallet.add(Econ.reward(BLOCK, 10), bt = Bt.QUIZ, block = BLOCK)
+        } else {
+            // Штраф з конфігу (economy.penalties.quiz_screen). Дефолт 0 —
+            // сьогодні неправильна відповідь нічого не коштує, гілка холоста,
+            // але ручка є. spend не пускає баланс у мінус.
+            Wallet.spend(Econ.penalty(BLOCK, PENALTY_DEF), bt = Bt.QUIZ, block = BLOCK)
         }
 
         showQuestion(currentIndex + 1)
@@ -172,6 +187,16 @@ class APanelQuiz(
         aTrueBtn.disable()
         aFalseBtn.disable()
 
+        // Ігровий цикл завершено, amount = число правильних відповідей.
+        // Це ЄДИНИЙ сигнал «квіз реально пройшли до кінця».
+        Events.featureComplete(bt = Bt.QUIZ, block = BLOCK, amount = correctCount)
+
         onFinish()
+    }
+
+    companion object {
+        // Той самий рядок, що analyticsBlock у QuizScreen — ключ економіки й подій
+        private const val BLOCK = "quiz_screen"
+        private const val PENALTY_DEF = 0
     }
 }

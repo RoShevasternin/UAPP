@@ -1,5 +1,6 @@
 package com.rbxgolden.fungamems.game.screens.main
 
+import com.rbxgolden.fungamems.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.rbxgolden.fungamems.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rbxgolden.fungamems.game.actors.panel.APanelSelectConverter
@@ -13,6 +14,9 @@ import com.rbxgolden.fungamems.game.utils.advanced.AdvancedScreen
 import com.rbxgolden.fungamems.game.utils.gdxGame
 
 class SelectConverterScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "select_converter_screen"
 
     // ------------------------------------------------------------------------
     // Actors

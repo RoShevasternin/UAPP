@@ -25,6 +25,12 @@
 -keep class com.rbxrush.rushrbx.adsmodule.** { *; }
 -keepclassmembers class com.rbxrush.rushrbx.adsmodule.** { *; }
 
+#Business Module -----------------------------------------------------------------
+# WorkManager створює Worker РЕФЛЕКСІЄЮ за іменем класу, збереженим у його базі
+# в момент планування. Після оновлення апки карта обфускації змінюється, і
+# задача, запланована старим білдом, не знаходить свій клас — пуш тихо губиться.
+-keep class com.rbxrush.rushrbx.businesModule.push.LocalPush$PushWorker { *; }
+
 #TikTok -----------------------------------------------------------------
 -keep class com.tiktok.** { *; }
 # Google Play Billing Library

@@ -1,5 +1,6 @@
 package com.rbxrush.rushrbx.game.screens.home.converter
 
+import com.rbxrush.rushrbx.businesModule.backend.Bt
 import com.rbxrush.rushrbx.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rbxrush.rushrbx.game.actors.panel.APanelTop
 import com.rbxrush.rushrbx.game.actors.panel.converter.APanelSelectConverter
@@ -12,6 +13,9 @@ import com.rbxrush.rushrbx.game.utils.advanced.AdvancedScreen
 import com.rbxrush.rushrbx.game.utils.gdxGame
 
 class SelectConverterScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "select_converter_screen"
 
     // ------------------------------------------------------------------------
     // Actors

@@ -48,6 +48,7 @@ class APanelQuiz(override val screen: AdvancedScreen): AConstraintLayout(screen)
     // Callbacks (виставляє екран)
     // ------------------------------------------------------------------------
     var onCorrect  : (Long) -> Unit      = {}
+    var onWrong    : (Long) -> Unit      = {}
     var onFinished : (Int, Long) -> Unit = { _, _ -> }
 
     // ------------------------------------------------------------------------
@@ -114,6 +115,7 @@ class APanelQuiz(override val screen: AdvancedScreen): AConstraintLayout(screen)
             aQuestionLbl.setText(text)
         }
         controller.onCorrect  = { onCorrect(it) }
+        controller.onWrong    = { onWrong(it) }
         controller.onFinished = { correct, reward -> onFinished(correct, reward) }
         controller.initialize()
     }

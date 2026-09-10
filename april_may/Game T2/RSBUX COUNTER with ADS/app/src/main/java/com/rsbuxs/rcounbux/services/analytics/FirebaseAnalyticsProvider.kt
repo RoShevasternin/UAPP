@@ -16,12 +16,13 @@ class FirebaseAnalyticsProvider : AnalyticsProvider {
         const val UT_TIKTOK  = "UT_TIKTOK"
         const val UT_META    = "UT_META"
 
-        const val OPEN_HOME_SCREEN  = "OPEN_HOME_SCREEN"
-        const val HAS_CLICK_TO_PAID = "HAS_CLICK_TO_PAID"
+        const val OPEN_HOME_SCREEN     = "OPEN_HOME_SCREEN"
+        const val IR_HAS_CLICK_TO_PAID = "IR_HAS_CLICK_TO_PAID"
     }
 
     private object Param {
-        const val REFERRER = "referrer"
+        const val REFERRER      = "referrer"
+        const val IR_CLICK_TIME = "ir_click_time"
     }
 
     override fun openHomeScreen() {
@@ -39,8 +40,11 @@ class FirebaseAnalyticsProvider : AnalyticsProvider {
         fa.logEvent(event, bundle { putString(Param.REFERRER, referrer) })
     }
 
-    override fun hasClickToPAID(referrer: String) {
-        fa.logEvent(Event.HAS_CLICK_TO_PAID, bundle { putString(Param.REFERRER, referrer) })
+    override fun hasClick_ORGtoPAID(referrer: String, irClickTime: String) {
+        fa.logEvent(Event.IR_HAS_CLICK_TO_PAID, bundle {
+            putString(Param.REFERRER, referrer)
+            putString(Param.IR_CLICK_TIME, irClickTime)
+        })
     }
 
     // ------------------------------------------------------------------------

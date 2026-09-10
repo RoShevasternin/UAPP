@@ -1,5 +1,6 @@
 package com.treprosure.starbxup.game.screens.home.outfit
 
+import com.treprosure.starbxup.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.treprosure.starbxup.game.actors.layout.constraintLayout.AConstraintLayout
 import com.treprosure.starbxup.game.actors.panel.APanelTop
@@ -21,6 +22,9 @@ import com.treprosure.starbxup.game.utils.font.FontParameter
 import com.treprosure.starbxup.game.utils.gdxGame
 
 class ClothingScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "clothing_screen"
 
     // ------------------------------------------------------------------------
     // Font

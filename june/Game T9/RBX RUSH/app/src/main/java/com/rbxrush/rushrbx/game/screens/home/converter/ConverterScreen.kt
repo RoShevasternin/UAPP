@@ -1,5 +1,6 @@
 package com.rbxrush.rushrbx.game.screens.home.converter
 
+import com.rbxrush.rushrbx.businesModule.backend.Bt
 import com.rbxrush.rushrbx.adsmodule.AdSizeManager
 import com.rbxrush.rushrbx.game.actors.button.AYellowButton
 import com.rbxrush.rushrbx.game.actors.layout.constraintLayout.AConstraintLayout
@@ -17,6 +18,9 @@ import com.rbxrush.rushrbx.game.utils.runGDX
 import kotlinx.coroutines.launch
 
 class ConverterScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "converter_screen"
 
     // ------------------------------------------------------------------------
     // Actors

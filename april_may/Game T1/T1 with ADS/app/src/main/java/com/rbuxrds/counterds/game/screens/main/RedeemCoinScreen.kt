@@ -1,6 +1,8 @@
 package com.rbuxrds.counterds.game.screens.main
 
 import com.badlogic.gdx.scenes.scene2d.Group
+import com.rbuxrds.counterds.businesModule.backend.Bt
+import com.rbuxrds.counterds.businesModule.backend.Events
 import com.rbuxrds.counterds.game.actors.ADim
 import com.rbuxrds.counterds.game.actors.layout.AlignH
 import com.rbuxrds.counterds.game.actors.layout.AlignV
@@ -8,6 +10,8 @@ import com.rbuxrds.counterds.game.actors.panel.APanelRedeem
 import com.rbuxrds.counterds.game.actors.panel.APanelTop
 import com.rbuxrds.counterds.game.actors.redeem.ACoffer
 import com.rbuxrds.counterds.game.actors.redeem.ADialogOops
+import com.rbuxrds.counterds.businesModule.economy.Econ
+import com.rbuxrds.counterds.businesModule.economy.Wallet
 import com.rbuxrds.counterds.game.utils.Block
 import com.rbuxrds.counterds.game.utils.TIME_ANIM_SCREEN
 import com.rbuxrds.counterds.game.utils.actor.addActorAligned
@@ -23,8 +27,12 @@ import com.rbuxrds.counterds.game.utils.advanced.AdvancedScreen
 import com.rbuxrds.counterds.game.utils.gdxGame
 import com.rbuxrds.counterds.game.utils.screenState.ScreenState
 import com.rbuxrds.counterds.game.utils.screenState.ScreenStateMachine
+import com.rbuxrds.counterds.util.log
 
 class RedeemCoinScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.GIFT
+    override val analyticsBlock = "redeem_coin_screen"
 
     // ------------------------------------------------------------------------
     // Actors
@@ -125,7 +133,11 @@ class RedeemCoinScreen: AdvancedScreen() {
             marginTop = 24f
         }
 
-        aPanelRedeem.onClick = { goToDialogOops() }
+        aPanelRedeem.onClick = {
+            log("redeem: balance=${Wallet.balance} threshold=${Econ.cashoutThreshold}")
+            Events.featureComplete(bt = analyticsBt, block = analyticsBlock, amount = Wallet.balance.toInt())
+            goToDialogOops()
+        }
     }
 
     private fun Group.addDim() {

@@ -1,5 +1,7 @@
 package com.rsbuxs.rcounbux.game.screens
 
+import com.rsbuxs.rcounbux.game.utils.Onboarding
+import com.rsbuxs.rcounbux.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.rsbuxs.rcounbux.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rsbuxs.rcounbux.game.actors.layout.linear.AVerticalGroup
@@ -18,6 +20,9 @@ import com.rsbuxs.rcounbux.services.analytics.AnalyticsManager
 
 class MainScreen: AdvancedScreen() {
 
+    override val analyticsBt    = Bt.HUB
+    override val analyticsBlock = "main_screen"
+
     // ------------------------------------------------------------------------
     // Actors
     // ------------------------------------------------------------------------
@@ -34,6 +39,8 @@ class MainScreen: AdvancedScreen() {
 
         stageUI.root.color.a = 0f
         super.show()
+        // Дійшли до меню — онбординг пройдено, наступні запуски стартують звідси
+        Onboarding.markDone()
         animShowScreen { AnalyticsManager.openHomeScreen() }
     }
 

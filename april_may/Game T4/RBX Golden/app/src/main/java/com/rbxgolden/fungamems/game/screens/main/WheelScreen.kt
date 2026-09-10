@@ -1,6 +1,10 @@
 package com.rbxgolden.fungamems.game.screens.main
 
+import com.rbxgolden.fungamems.businesModule.backend.Bt
 import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.rbxgolden.fungamems.businesModule.backend.Events
+import com.rbxgolden.fungamems.businesModule.economy.Econ
+import com.rbxgolden.fungamems.businesModule.economy.Wallet
 import com.rbxgolden.fungamems.game.actors.button.AGoldenButton
 import com.rbxgolden.fungamems.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rbxgolden.fungamems.game.actors.panel.APanelRBX
@@ -23,6 +27,15 @@ import com.rbxgolden.fungamems.util.log
 import kotlinx.coroutines.launch
 
 class WheelScreen: AdvancedScreen() {
+
+    companion object {
+        // Дефолт = сьогоднішня поведінка апки: спін безкоштовний.
+        // Ключ economy.prices.wheel_screen — ручка, якою ціну вмикають без релізу.
+        private const val PRICE_DEF = 0
+    }
+
+    override val analyticsBt    = Bt.SPIN
+    override val analyticsBlock = "wheel_screen"
 
     // ------------------------------------------------------------------------
     // Actors
@@ -98,11 +111,8 @@ class WheelScreen: AdvancedScreen() {
         }
 
         coroutine?.launch {
-            gdxGame.modelPlayer.rbxFlow.collect { rbx ->
-                runGDX {
-                    val rbxFormat = NumberFormatter.format(rbx)
-                    aPanelRBX.setText(rbxFormat)
-                }
+            Wallet.balanceFlow.collect { balance ->
+                runGDX { aPanelRBX.setText(NumberFormatter.format(balance)) }
             }
         }
     }
@@ -112,11 +122,20 @@ class WheelScreen: AdvancedScreen() {
         add(aGoldenBtn) { centerX(); topToBottom(aPanelRBX, 24f) }
 
         aGoldenBtn.setOnClickListener {
+            val price = Econ.price(analyticsBlock!!, PRICE_DEF)
+            if (!Wallet.spend(price, bt = analyticsBt!!, block = analyticsBlock!!)) {
+                gdxGame.activity.showToast("Not enough coins — you need $price")
+                return@setOnClickListener
+            }
             aWheel.spin { result ->
                 log("result = $result")
-                gdxGame.modelPlayer.addRbx(result.sum.toLong())
+                // ⚠️ Суму дає aWheel.payout, а НЕ result.sum: номінали секторів
+                // їдуть списком economy.rewards_list.wheel.
+                val win = aWheel.payout(result)
+                Wallet.add(win, bt = analyticsBt!!, block = analyticsBlock!!)
+                Events.featureComplete(bt = analyticsBt!!, block = analyticsBlock!!, amount = win)
 
-                showDialog(result.sum.toLong())
+                showDialog(win.toLong())
             }
         }
 

@@ -1,5 +1,8 @@
 package com.rbxrush.rushrbx.game.controller
 
+import com.rbxrush.rushrbx.businesModule.backend.Bt
+import com.rbxrush.rushrbx.businesModule.backend.Events
+import com.rbxrush.rushrbx.businesModule.economy.Wallet
 import com.rbxrush.rushrbx.game.actors.panel.daily.AItemDailyReward
 import com.rbxrush.rushrbx.game.model.PlayerModel
 import com.rbxrush.rushrbx.util.log
@@ -32,7 +35,13 @@ class DailyRewardController(
     // ------------------------------------------------------------------------
     fun tryClaim() {
         if (!model.canClaimDailyReward()) return
+        // claimDailyReward тепер лише рахує суму й рухає streak —
+        // монети нараховує Wallet (він же шле coins_earned).
         val reward = model.claimDailyReward()
+        if (reward > 0) {
+            Wallet.add(reward.toInt(), bt = Bt.DAILY, block = BLOCK)
+            Events.featureComplete(bt = Bt.DAILY, block = BLOCK, amount = reward.toInt())
+        }
         if (reward > 0L) onGetReward(reward)
         // claimDailyReward змінює dayFlow → collectDay → updateRewards (перемкне у WAIT)
     }
@@ -82,5 +91,9 @@ class DailyRewardController(
         // показуємо WAIT тільки якщо реально є що чекати
         if (canClaim || remaining <= 0L) onShowClaimState()
         else                             onShowWaitState(remaining)
+    }
+
+    companion object {
+        private const val BLOCK = "daily_reward_screen"
     }
 }

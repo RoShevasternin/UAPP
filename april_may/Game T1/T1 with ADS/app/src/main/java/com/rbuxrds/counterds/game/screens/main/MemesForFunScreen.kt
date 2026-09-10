@@ -2,6 +2,7 @@ package com.rbuxrds.counterds.game.screens.main
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Group
+import com.rbuxrds.counterds.businesModule.backend.Bt
 import com.rbuxrds.counterds.game.actors.layout.AlignH
 import com.rbuxrds.counterds.game.actors.layout.AlignV
 import com.rbuxrds.counterds.game.actors.panel.APanelMemesForFun
@@ -17,6 +18,9 @@ import com.rbuxrds.counterds.game.utils.advanced.AdvancedScreen
 import com.rbuxrds.counterds.game.utils.gdxGame
 
 class MemesForFunScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "memes_for_fun_screen"
 
     // ------------------------------------------------------------------------
     // Actors

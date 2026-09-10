@@ -1,5 +1,6 @@
 package com.rbxrush.rushrbx.game.screens
 
+import com.rbxrush.rushrbx.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.rbxrush.rushrbx.adsmodule.AdSizeManager
 import com.rbxrush.rushrbx.game.actors.ATmpGroup
@@ -8,6 +9,7 @@ import com.rbxrush.rushrbx.game.actors.panel.APanelTop
 import com.rbxrush.rushrbx.game.actors.panel.APanelTopHome
 import com.rbxrush.rushrbx.game.actors.panel.home.APanelHome
 import com.rbxrush.rushrbx.game.utils.Block
+import com.rbxrush.rushrbx.game.utils.Onboarding
 import com.rbxrush.rushrbx.game.utils.TIME_ANIM_SCREEN
 import com.rbxrush.rushrbx.game.utils.actor.animDelay
 import com.rbxrush.rushrbx.game.utils.actor.animHide
@@ -20,6 +22,9 @@ import com.rbxrush.rushrbx.util.log
 import kotlinx.coroutines.launch
 
 class HomeScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.HUB
+    override val analyticsBlock = "home_screen"
 
     // ------------------------------------------------------------------------
     // Actors
@@ -36,6 +41,8 @@ class HomeScreen: AdvancedScreen() {
 
         stageUI.root.color.a = 0f
         super.show()
+        // Дійшли до меню — онбординг пройдено, наступні запуски стартують звідси
+        Onboarding.markDone()
         animShowScreen { AnalyticsManager.openHomeScreen() }
     }
 

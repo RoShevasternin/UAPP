@@ -13,9 +13,11 @@ import com.rbxgolden.fungamems.game.manager.MusicManager
 import com.rbxgolden.fungamems.game.manager.ParticleEffectManager
 import com.rbxgolden.fungamems.game.manager.SoundManager
 import com.rbxgolden.fungamems.game.manager.SpriteManager
+import com.rbxgolden.fungamems.businesModule.Biz
 import com.rbxgolden.fungamems.game.screens.select.Select_1_Screen
 import com.rbxgolden.fungamems.game.utils.Block
 import com.rbxgolden.fungamems.game.utils.HEIGHT_UI
+import com.rbxgolden.fungamems.game.utils.Onboarding
 import com.rbxgolden.fungamems.game.utils.TIME_ANIM_SCREEN
 import com.rbxgolden.fungamems.game.utils.WIDTH_UI
 import com.rbxgolden.fungamems.game.utils.actor.addActorAligned
@@ -205,15 +207,28 @@ class LoaderScreen : AdvancedScreen() {
         runGDX {
             gdxGame.activity.showBanner()
 
-            // App Open показ повністю в AppOpenManager — чекаємо onDone і навігуємо
-            gdxGame.activity.appOpenManager.showOnLoader(gdxGame.activity) {
-                runGDX { navigateToFirstScreen() }
-            }
+            // ЧЕРГА СТАРТУ: опт-ін → таб → гра. Кожен крок стартує лише за
+            // доповіддю попереднього. Опт-ін попереду навмисно: системний
+            // запит одноразовий, показ реклами відновлюваний.
+            // ⚠️ Перехід у гру має відбутись у ВСІХ гілках — своїх return сюди
+            // не додавати, інакше апка зависне на сплеші.
+            val act = gdxGame.activity
+            Biz.runStartupFlow(
+                activity = act,
+                requestPermission = { onResult -> act.requestPushPermission(onResult) },
+                openGateAndContinue = {
+                    act.appOpenManager.showOnLoader(act) {
+                        runGDX { navigateToFirstScreen() }
+                    }
+                },
+            )
         }
     }
 
     private fun navigateToFirstScreen() {
-        animHideScreen { gdxGame.navigationManager.navigate(Select_1_Screen::class.java.name) }
+        // Онбординг — лише при першому запуску; далі одразу меню
+        val first = if (Onboarding.isDone) MainScreen::class.java.name else Select_1_Screen::class.java.name
+        animHideScreen { gdxGame.navigationManager.navigate(first) }
     }
 
 

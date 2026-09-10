@@ -58,6 +58,7 @@ class NavigationManager(val game: GDXGame) {
         val noAdScreens = listOf(
             LoaderScreen::class.java.name,
             Select_1_Screen::class.java.name,
+            MainScreen::class.java.name,
         )
         if (toScreenName in noAdScreens) return@runGDX
 

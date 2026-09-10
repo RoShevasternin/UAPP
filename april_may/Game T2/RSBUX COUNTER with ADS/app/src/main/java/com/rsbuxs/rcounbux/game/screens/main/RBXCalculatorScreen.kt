@@ -1,5 +1,6 @@
 package com.rsbuxs.rcounbux.game.screens.main
 
+import com.rsbuxs.rcounbux.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.rsbuxs.rcounbux.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rsbuxs.rcounbux.game.actors.panel.APanelTop
@@ -13,6 +14,9 @@ import com.rsbuxs.rcounbux.game.utils.advanced.AdvancedScreen
 import com.rsbuxs.rcounbux.game.utils.gdxGame
 
 class RBXCalculatorScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "rbx_calculator_screen"
 
     // ------------------------------------------------------------------------
     // Actors

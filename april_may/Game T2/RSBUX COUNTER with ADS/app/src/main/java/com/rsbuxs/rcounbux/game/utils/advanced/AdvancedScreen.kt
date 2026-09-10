@@ -1,5 +1,7 @@
 package com.rsbuxs.rcounbux.game.utils.advanced
 
+import com.rsbuxs.rcounbux.businesModule.backend.Bt
+import com.rsbuxs.rcounbux.businesModule.backend.Events
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.InputMultiplexer
@@ -90,6 +92,13 @@ abstract class AdvancedScreen(
         updateSize()
     }
 
+    // ─── Analytics ────────────────────────────────────────────────────────────
+    // bt    — тип механіки зі спільного словника (enum Bt).
+    // block — місцеве ім'я екрана в snake_case, після релізу НЕ перейменовується.
+    // Технічні екрани (Loader, мова, вітання, налаштування) лишаються null.
+    open val analyticsBt   : Bt?     = null
+    open val analyticsBlock: String? = null
+
     override fun show() {
         log("show AdvancedScreen: $currentClassName")
         updateSize()
@@ -105,6 +114,12 @@ abstract class AdvancedScreen(
 
         Gdx.input.inputProcessor = inputMultiplexer.apply { addProcessors(this@AdvancedScreen, stageUI, stageBack) }
         Gdx.input.setCatchKey(Input.Keys.BACK, true)
+
+        // Екран відкрито. Шлемо на КОЖЕН show — повернення назад це окремий
+        // перегляд, а не дубль.
+        val bt    = analyticsBt
+        val block = analyticsBlock
+        if (bt != null && block != null) Events.screenView(bt, block)
     }
 
     override fun render(delta: Float) {

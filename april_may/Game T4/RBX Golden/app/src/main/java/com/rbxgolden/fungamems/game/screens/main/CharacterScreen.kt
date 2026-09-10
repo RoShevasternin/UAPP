@@ -1,5 +1,6 @@
 package com.rbxgolden.fungamems.game.screens.main
 
+import com.rbxgolden.fungamems.businesModule.backend.Bt
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
@@ -20,6 +21,9 @@ import com.rbxgolden.fungamems.game.utils.font.FontParameter
 import com.rbxgolden.fungamems.game.utils.gdxGame
 
 class CharacterScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "character_screen"
 
     private val maxIndex              = gdxGame.assetsAll.listCharacter.lastIndex
     private val currentCharacterIndex = GLOBAL_SELECTED_CHARACTER_INDEX.coerceIn(0, maxIndex)

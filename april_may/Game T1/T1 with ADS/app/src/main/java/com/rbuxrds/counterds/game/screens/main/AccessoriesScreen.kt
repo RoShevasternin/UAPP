@@ -2,6 +2,7 @@ package com.rbuxrds.counterds.game.screens.main
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Group
+import com.rbuxrds.counterds.businesModule.backend.Bt
 import com.rbuxrds.counterds.game.actors.accessoriesStep.AStepFace
 import com.rbuxrds.counterds.game.actors.accessoriesStep.AStepHead
 import com.rbuxrds.counterds.game.actors.accessoriesStep.AStepNeck
@@ -26,11 +27,14 @@ import com.rbuxrds.counterds.game.utils.wizardHelper.WizardStep
 
 class AccessoriesScreen: AdvancedScreen() {
 
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "accessories_screen"
+
     // ------------------------------------------------------------------------
     // Actors
     // ------------------------------------------------------------------------
 
-    private val aPanelTop  = APanelTop(this)
+    private val aPanelTop  = APanelTop(this, false)
 
     private val aStepSelect  = AStepSelect(this)
     private val aStepFace    = AStepFace(this)

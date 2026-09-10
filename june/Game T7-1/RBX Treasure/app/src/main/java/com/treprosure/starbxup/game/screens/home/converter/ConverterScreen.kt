@@ -1,5 +1,6 @@
 package com.treprosure.starbxup.game.screens.home.converter
 
+import com.treprosure.starbxup.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.treprosure.starbxup.game.actors.layout.constraintLayout.AConstraintLayout
 import com.treprosure.starbxup.game.actors.panel.APanelTop
@@ -15,6 +16,9 @@ import com.treprosure.starbxup.game.utils.gdxGame
 import com.treprosure.starbxup.game.utils.global.GLOBAL_SELECTED_CONVERTER_TYPE
 
 class ConverterScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "converter_screen"
 
     // ------------------------------------------------------------------------
     // Actors

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "81693149299",
+    "project_id": "t2-rsbux-counter",
+    "storage_bucket": "t2-rsbux-counter.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:81693149299:android:3485ca56aff012dbd6c206",
+        "android_client_info": {
+          "package_name": "com.rsbuxs.rcounbux"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXeKyvBkXZaDYGiDFoVCs_dmmXSENUlfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

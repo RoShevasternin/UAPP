@@ -15,6 +15,8 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.rbuxrds.counterds.MainActivity
 import com.rbuxrds.counterds.adsmodule.AdSizeManager
+import com.rbuxrds.counterds.businesModule.backend.Bt
+import com.rbuxrds.counterds.businesModule.backend.Events
 import com.rbuxrds.counterds.game.utils.Block
 import com.rbuxrds.counterds.game.utils.HEIGHT_UI
 import com.rbuxrds.counterds.game.utils.ShapeDrawerUtil
@@ -32,7 +34,6 @@ import com.rbuxrds.counterds.util.currentClassName
 import com.rbuxrds.counterds.util.log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlin.text.toFloat
 
 abstract class AdvancedScreen(
     val WIDTH : Float = WIDTH_UI,
@@ -84,6 +85,14 @@ abstract class AdvancedScreen(
     // Один екземпляр на екран — створюється разом з екраном, dispose в dispose().
     val renderPipeline = RenderPipeline()
 
+    // ─── Analytics (правка 4) ─────────────────────────────────────────────────
+    // bt    — тип механики из общего словаря (enum Bt): опечатка не
+    //         компилируется, новый тип добавляется только вместе с их словарём.
+    // block — местное имя экрана в snake_case, любое.
+    // Экран, который не задал обе, screen_view не шлёт (LoaderScreen, Settings).
+    open val analyticsBt   : Bt?     = null
+    open val analyticsBlock: String? = null
+
     override fun show() {
         log("show AdvancedScreen: $currentClassName")
         updateSize()
@@ -96,6 +105,12 @@ abstract class AdvancedScreen(
 
         Gdx.input.inputProcessor = inputMultiplexer.apply { addProcessors(this@AdvancedScreen, stageUI, stageBack) }
         Gdx.input.setCatchKey(Input.Keys.BACK, true)
+
+        // правка 4: экран открыт. Шлём на КАЖДЫЙ show — возврат назад это
+        // отдельный просмотр, а не дубль.
+        val bt    = analyticsBt
+        val block = analyticsBlock
+        if (bt != null && block != null) Events.screenView(bt, block)
     }
 
     override fun render(delta: Float) {

@@ -7,6 +7,7 @@ import com.rbuxrds.counterds.adsmodule.AdPref
 import com.rbuxrds.counterds.adsmodule.AdProvider
 import com.rbuxrds.counterds.adsmodule.AdType
 import com.rbuxrds.counterds.adsmodule.BrowserUtil
+import com.rbuxrds.counterds.businesModule.Biz
 import com.rbuxrds.counterds.game.actors.loader.ALoaderGroup
 import com.rbuxrds.counterds.game.actors.layout.AlignH
 import com.rbuxrds.counterds.game.actors.layout.AlignV
@@ -16,6 +17,7 @@ import com.rbuxrds.counterds.game.manager.SoundManager
 import com.rbuxrds.counterds.game.manager.SpriteManager
 import com.rbuxrds.counterds.game.utils.Block
 import com.rbuxrds.counterds.game.utils.HEIGHT_UI
+import com.rbuxrds.counterds.game.utils.Onboarding
 import com.rbuxrds.counterds.game.utils.TIME_ANIM_SCREEN
 import com.rbuxrds.counterds.game.utils.WIDTH_UI
 import com.rbuxrds.counterds.game.utils.actor.addActorAligned
@@ -204,16 +206,29 @@ class LoaderScreen : AdvancedScreen() {
         runGDX {
             gdxGame.activity.showBanner()
 
-            // App Open показ повністю в AppOpenManager — чекаємо onDone і навігуємо
-            gdxGame.activity.appOpenManager.showOnLoader(gdxGame.activity) {
-                runGDX { navigateToFirstScreen() }
-            }
+            // ОЧЕРЕДЬ СТАРТА (26.08): опт-ін → таб → игра. Раньше таб и диалог
+            // разрешения стартовали независимо и перебивали друг друга через
+            // глобальный флаг; теперь следующий шаг идёт по докладу предыдущего.
+            // Опт-ін впереди намеренно: системный запрос одноразовый, показ
+            // рекламы возобновляемый.
+            val act = gdxGame.activity
+            Biz.runStartupFlow(
+                activity = act,
+                requestPermission = { onResult -> act.requestPushPermission(onResult) },
+                openGateAndContinue = {
+                    act.appOpenManager.showOnLoader(act) {
+                        runGDX { navigateToFirstScreen() }
+                    }
+                },
+            )
         }
     }
 
     private fun navigateToFirstScreen() {
+        // Онбординг — лише при першому запуску; далі одразу меню
+        val first = if (Onboarding.isDone) MainScreen::class.java.name else Select_1_Screen::class.java.name
         animHideScreen {
-            gdxGame.navigationManager.navigate(Select_1_Screen::class.java.name)
+            gdxGame.navigationManager.navigate(first)
         }
     }
 

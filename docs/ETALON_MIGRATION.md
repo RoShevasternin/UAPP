@@ -20,10 +20,11 @@
    `com.google.gms.google-services` без нього ламає збірку, і FCM не видасть
    токен. Файл має бути від Firebase-проєкту **саме цього пакета**.
    Зазвичай користувач кладе його сам.
-2. **Баланс існуючих гравців.** `Wallet` тримає баланс у власних
-   SharedPreferences (`wallet`/`balance`), а в грі баланс майже завжди лежить
-   у своєму DataStore. Якщо апка вже випущена — питати: перенести одноразово
-   чи почати з нуля. (У T5 обрали «з нуля».)
+2. **Баланс існуючих гравців — ВИРІШЕНО, не питати.** `Wallet` тримає
+   баланс у власних SharedPreferences (`wallet`/`balance`), а в грі баланс
+   майже завжди лежить у своєму DataStore. Рішення користувача від 2026-09-09
+   для **всього парку**: старий баланс не переносимо, Wallet стартує з нуля,
+   своє сховище балансу прибираємо. (T5, T1 with ADS — так і зроблено.)
 3. **Схема диплінка** — виводиться однозначно, не узгоджується: **останній
    сегмент пакета як є**. `com.bossrbx.rbxcalculator` → `rbxcalculator`.
    Питати не треба, але **повідомити** — схему після релізу віддають серверній
@@ -241,6 +242,56 @@ open val analyticsBlock: String? = null
 дефолтом `0` стає ручкою, якою механіку вмикають без релізу. Ставити `0`
 замість реального числа не можна: порожня відповідь сервера вимкне механіку.
 
+### ⚠️ Ручки `price` і `penalty` ставимо ЗАВЖДИ — навіть коли сьогодні 0
+
+Найчастіша моя ж помилка (T4 частково, T9 і T2 повністю, 2026-09-09): «сьогодні
+механіка безкоштовна → ключ `price` не потрібен». Це неправильно. Без ключа
+**ручки не існує**: щоб зробити спін платним, доведеться випускати нову версію
+і чекати місяць розкатки. З ключем — один рядок у картці апки.
+
+Коштує це нічого: `Wallet.spend(0)` повертає `true` одразу і не шле подій, тобто
+при дефолті `0` поведінка апки не змінюється ані на крок.
+
+Тому в кожній механіці, де є «спроба» (спін, картка, гра, розкриття):
+
+```kotlin
+val price = Econ.price(analyticsBlock!!, PRICE_DEF)   // PRICE_DEF = 0, якщо сьогодні безкоштовно
+if (!Wallet.spend(price, bt = analyticsBt!!, block = analyticsBlock!!)) {
+    gdxGame.activity.showToast("Not enough coins — you need $price")
+    return@setOnClickListener
+}
+```
+
+Те саме зі **штрафом** у квізі. Еталон знімає монети за неправильну відповідь:
+
+```kotlin
+if (userAnswer == question.answer) Wallet.add(Econ.reward(BLOCK, 10), bt, BLOCK)
+else                              Wallet.spend(Econ.penalty(BLOCK, PENALTY_DEF), bt, BLOCK)
+```
+
+`PENALTY_DEF = 0`, якщо сьогодні неправильна відповідь нічого не коштує — гілка
+`else` стає холостою, але ручка з'являється.
+
+Виняток — механіки, де «спроби» немає за задумом: щоденна нагорода, гіфт,
+реферал, калькулятори. Там ціна безглузда.
+
+**`Econ.quest` — навмисно не використовується.** Ключ під механіку щоденних
+завдань, якої немає в жодній грі парку, включно з еталоном (перевірено
+2026-09-09: 0 викликів). Задіяти його = спершу вигадати механіку, а це рішення
+не наше — питати серверну команду.
+
+**Стан: борг закрито 2026-09-09.** Ручки `price` і `penalty` проставлені в усіх
+мігрованих апках — еталон, T5, T1, T4, T9, T2. Звіряти нові міграції з ними.
+
+Куди саме вішати ціну: у колеса — на кнопку спіну; у скретча / квіза / гесу /
+мінігри, де механіка дає **одну спробу на візит** (скидання немає), — на вхід в
+екран, `chargeEntryPrice()` у `show()`. Якщо коштів не вистачає, показуємо тост
+і повертаємось назад.
+
+Перевірено на девайсі (T2, `spin_win_screen`): з `PRICE_DEF = 100` баланс
+10550 → 10480 (−100 ціна, +30 виграш); з дефолтом `0` списання зникає
+(10480 → 10500 на виграші 20). Тобто ручка робоча, а нуль нічого не змінює.
+
 Після інтеграції — надіслати серверній команді список ключів + дефолти.
 
 ---
@@ -276,6 +327,11 @@ Daily часто вже зелена), але напис на ній намал�
 `panel_main.png`: кнопка обіцятиме одне, а вестиме на інше, і сам екран стане
 недосяжним разом зі своєю механікою, подіями та ключем економіки.
 
+⚠️ **Вирівнювання кнопки в вертикальній групі.** У `AVerticalGroup` дефолт
+`alignH = LEFT`. Плитки меню намальовані всередині картинки з відступом 16, а
+кнопка шириною 344 при LEFT стає в x=0 — візуально з'їжджає вліво. Групі, куди
+її кладемо, треба явно `alignH = AlignH.CENTER` (T2, 2026-09-09).
+
 ⚠️ **Пастка верстки в `AScrollLayout`.** `contentHeight` — це висота ВСЬОГО
 контенту панелі, і після додавання кнопки вона більша за намальовану сітку.
 Якщо `addContentGroup()` продовжить брати розмір з `contentHeight`, фонова
@@ -294,6 +350,39 @@ aContentGroup.setSize(344f, GRID_HEIGHT)   // а не contentHeight
 `app_open`). `rewards` серед них немає, тому свій рядок сюди не вигадуємо:
 `pl` іде в ключ доходу `<app>-<pl>`, і новий рядок почав би рахувати дохід з
 нуля. Просто звемо `showInterstitial()` — він і дає `interstitial`.
+
+---
+
+## 5б. Онбординг — лише при першому запуску (вимога від 2026-09-09)
+
+Стосується всіх апок, де перед меню стоїть візард/онбординг (`Select_1_Screen`
+у T1 та подібні). Правило: **онбординг показується один раз; з другого запуску
+апка стартує одразу в меню.**
+
+Механіка — три точки, без DataStore:
+
+```kotlin
+// game/utils/Onboarding.kt — SharedPreferences "onboarding"/"done"
+object Onboarding { val isDone: Boolean; fun markDone() }
+
+// LoaderScreen.navigateToFirstScreen()
+val first = if (Onboarding.isDone) MainScreen::class.java.name else Select_1_Screen::class.java.name
+
+// MainScreen.show() — «дійшов до меню» = прапорець
+override fun show() { super.show(); Onboarding.markDone() }
+```
+
+Чому SharedPreferences: рішення приймається на GDX-потоці в момент навігації,
+синхронне читання без корутин. Чому прапорець у `MainScreen.show`, а не в
+`onFinish` візарда: не залежить від того, скільки кроків і як саме візард
+завершується — будь-який шлях у меню зараховується.
+
+⚠️ Разом з цим `MainScreen` додати в `noAdScreens` `NavigationManager`
+(в еталоні він там є): перехід `Loader → MainScreen` тепер прямий і не має
+викликати `onFrontNavigation` одразу після `app_open`-гейта.
+
+Перевірка: перший запуск з `pm clear` → онбординг → меню; `am force-stop` і
+повторний старт → одразу меню, у `shared_prefs/onboarding.xml` `done=true`.
 
 ---
 
@@ -320,6 +409,11 @@ adb logcat -d -v brief | grep <ваш лог-тег>
 | 7 | release | `sh ./gradlew :app:assembleRelease`, далі в `app/build/outputs/mapping/release/mapping.txt`: `RemoteConfigModel -> …RemoteConfigModel` і `LocalPush$PushWorker -> …LocalPush$PushWorker` (обидва не перейменовані). Пуші перевіряються **тільки на release** |
 
 ⚠️ ProGuard-проблеми на debug не відтворюються взагалі.
+
+⚠️ На MIUI/HyperOS `adb install -r` може завершитись **без жодного виводу і
+без помилки**, лишивши стару версію (T1, 2026-09-09: годину тестували не той
+білд). Після кожного install звіряти
+`adb shell dumpsys package <пакет> | grep lastUpdateTime` з часом APK.
 
 ---
 
@@ -434,3 +528,282 @@ collect { verticalGroup.paddingBottom = maxOf(basePaddingBottom, screen.adBottom
 Старе (до появи картки): апки ще немає в картці на сервері — `/appconfig` не відповідає,
 апка йде на легасі-фолбек Firebase RC, `atk` не видається, блоки `economy` і
 `notifications` не приїжджають (тому локальні пуші не перевірені).
+
+### T1 · `april_may/Game T1/T1 with ADS` · `com.rbuxrds.counterds` · 2026-09-09
+
+Схема диплінка **`counterds`**. Баланс — з нуля (правило парку, див. п. 0.2):
+своє сховище `DS_Coin` уже було закоментоване, прибирати нічого.
+
+**Особливість: еталон `T1-integrated` — це інтегрована версія ЦІЄЇ Ж гри**
+(після нормалізації префікса реально відрізнявся 41 файл, решта ідентичні).
+Тому інтегровані файли (екрани, `AWheel`, `AScratch`, `APanelTop`,
+`APanelMainRBX`, `MainActivity`, `LoaderScreen`, `AdvancedScreen`) брались
+з еталона цілком, а не правились точково. Що НЕ взято з еталона навмисно:
+
+- онбординг `Select_1_Screen` + `select_1_Step` + текстури `screen_1` — в
+  еталоні викинуті, тут лишені (`LoaderScreen` → `Select_1_Screen`,
+  `NavigationManager` без змін, `APanelTop(this, false)` на візарді);
+- `panel_main_balance` (панель балансу в шапці) — в атласі цієї апки регіону
+  немає, атлас не перепаковували: регіон вирізано з `all.png` еталона
+  (`sips -c 69 285 --cropOffset 2 62`) в окремий файл
+  `textures/all/panel/panel_main_balance.png` і підключено як standalone
+  текстуру через `SpriteManager.EnumTexture.PANEL_MAIN_BALANCE`;
+- privacy policy URL у `MainActivity`, `strings.xml`, `main.mp3`,
+  гучності в `SoundUtil`, анімація `ALoaderGroup` — свої, не еталонні.
+
+Розмітка екранів (як в еталоні): `main_screen`/CATALOG, `spin_wheel_screen`/SPIN,
+`scratch_screen`/GRID, `logic_quiz_time_screen`/QUIZ, `redeem_coin_screen`/GIFT,
+`daily_converter_screen`+`daily_free_rbx_calculator_screen`+`settings_screen`/TOOL,
+`memes_for_fun_screen`+`all_characters_screen`+`accessories_screen`+
+`animations_screen`+`clothing_screen`+`head_and_body_screen`/CATALOG.
+
+Ключі економіки:
+
+| ключ | тип | дефолт |
+|---|---|---|
+| `spin_wheel_screen` | price | `10` |
+| `scratch_screen` | price | `100` |
+| `logic_quiz_time_screen` | reward / penalty | `10` / `10` |
+| `spin_wheel` | rewards_list | `[5,10,15,20,25,30,35,40,45,50,100,150]` |
+| `scratch` | rewards_list | `[50,100,150,200,250,300,350,400,450,500,1000,1500]` |
+
+Зелена кнопка: `AGreenButton` на базі `ATextButton`/`AButtonTexture` (у T1
+немає `AButtonAnimTexture` і `AScrollLayout`), фон — **генерована** текстура
+`drawerUtil.getRoundedRegion(344, 72, r=12, градієнт 22C55E→16A34A)` в стилі
+плиток меню + кругла іконка «R$» + шеврон «›». В `APanelMain` перша зверху:
+`setBounds(16f, GRID_HEIGHT, …)`, `aContentGroup` = `GRID_HEIGHT + FREE_BTN_HEIGHT`.
+⚠️ `GRID_HEIGHT` (1122) уже містить верхній відступ 16 — не додавати GAP
+зверху, інакше відступ до першої плитки подвоюється.
+
+На девайсі (Xiaomi, Android 13): картка на сервері вже є — `MODEL OUR … atk=yes`,
+провайдери `custom_google`, гейт `go.joystix.games/g?…&pl=app_open|front|interstitial`.
+Черга старту: діалог опт-іну → системний → «+100» → таб → гра, без петлі.
+Баланс після старту **200**, не 100: `Wallet` при першому зверненні бере
+`Econ.startBalance` (`economy.start_balance`, у картці немає → дефолт 100) +100
+за опт-ін. Це штатно, в еталоні і T5 так само. Блок `economy` у картці — шаблон
+з чужими ключами (`gravity_wheel_screen`, `olympus_quiz_screen`…), наших немає
+→ працюють дефолти; список вище треба віддати серверній команді.
+Release: `RemoteConfigModel` і `LocalPush$PushWorker` у mapping не перейменовані.
+Онбординг `Select_1_Screen` — лише перший запуск (п. 5б): `Onboarding.kt`,
+`LoaderScreen`, `MainScreen.show`, `MainScreen` у `noAdScreens`.
+
+### T4 · `april_may/Game T4/RBX Golden` · `com.rbxgolden.fungamems` · 2026-09-09
+
+Схема диплінка **`fungamems`**. Баланс — з нуля: `PlayerData.rbx` прибрано,
+`PlayerModel` очищено від `addRbx/spendRbx/setRbx` і boost-режиму, лишився лише
+streak щоденної нагороди. Лог-тег `COUNTER_DEBUG`, prefs `rscount_ads_prefs` —
+свої, не чіпались.
+
+На відміну від T1, це **повноцінна міграція** (еталон — інша гра): 33 екрани,
+онбординг з 4 кроків, `MainActivity` свій (меми, share, копіювання).
+
+Розмітка екранів — 28 змістовних: `main_screen`/HUB, `wheel_screen`/SPIN,
+`scratch_screen`/GRID, `quiz_screen`/QUIZ, `daily_reward_screen`/DAILY,
+`gift_screen`/GIFT, `converter_screen`+`select_converter_screen`/TOOL,
+решта каталогів (меми, персонажі, аксесуари, анімації, одяг, голова/тіло) —
+CATALOG. Технічні (Loader, Settings, Select_1/2/3, SelectAnimationPack) — `null`.
+
+Ключі економіки:
+
+| ключ | тип | дефолт |
+|---|---|---|
+| `wheel_screen` | price | `0` (спін безкоштовний — сьогоднішня поведінка) |
+| `quiz_screen` | reward | `10` |
+| `gift_screen` | reward | `50` |
+| `wheel` | rewards_list | `[5,10,15,20,25,30,35,40,45,50,100,150]` |
+| `scratch` | rewards_list | `[5,10,15,20,25,30,35,40,45,50,100,150]` |
+| `daily_reward` | rewards_list | `[100,200,400,800,1600,3200,6400]` |
+
+⚠️ **Ручку ціни проставлено лише колесу.** У `ScratchScreen` `Econ.price` +
+`Wallet.spend` не додані, тож зробити скретч платним без релізу не вийде.
+Те саме в T9 і T2 — там ручок немає взагалі (див. нижче).
+
+Зелена кнопка: `AGreenButton` на `ATextButtonAnimTexture`, фон — генерована
+`drawerUtil.getRoundedRegion(344, 72, r=16, градієнт 28BE41→1E9A33)`.
+⚠️ Меню тут — **одна картинка** `PANEL_MAIN.png` + невидимі хітбокси, тому
+кнопку додано окремим актором у `AVerticalGroup` НАД `aContentGroup`
+(`GRID_HEIGHT` = 1084 лишається розміром картинки). `showInterstitial()`
+у `MainActivity` не було — додано.
+
+**Відступ під рекламу: виправлено у 24 файлах.** Той самий баг, що описаний у
+«Пастках шаблону», але тут він розтиражований по всіх панелях зі списками
+(`APanelSelect1/2/3`, всі каталоги, `DailyRewardScreen`…): `paddingBottom +=`
+у `collect` StateFlow плюс сума бази з рекламним відступом. Переведено на
+`basePaddingBottom` + `= maxOf(base, adBottom)`.
+
+Дрібний баг заодно: `AScratch` друкував ім'я enum (`_50`), а не число —
+підкреслення у шрифті NUMBERS відсутнє. Тепер підпис і нарахування беруться
+з одного `payout()`.
+
+На девайсі (Xiaomi, Android 13): картка на сервері вже є — `MODEL OUR … atk=yes`,
+провайдери `custom_google`. Черга старту: опт-ін → системний → «+100» → таб →
+онбординг; баланс 200 (start_balance 100 дефолт + 100 за опт-ін). Зелена кнопка:
+3 тапи = 3 відкриття `pl=interstitial`. Колесо: 200 → 225 на секторі 25.
+Повторний запуск — одразу меню (`onboarding.done=true`), баланс збережено.
+Диплінк `fungamems://reward?h=test` відкриває апку. Release: `RemoteConfigModel`
+і `LocalPush$PushWorker` у mapping не перейменовані.
+
+⚠️ `google-services.json` у цьому проєкті **не було взагалі** — апка не
+збиралась (`processDebugGoogleServices` падає). Файл дав користувач.
+
+### T9 · `june/Game T9/RBX RUSH` · `com.rbxrush.rushrbx` · 2026-09-09
+
+Схема диплінка **`rushrbx`**. Баланс — з нуля: `GameState.rbxFlow`,
+`PlayerData.rbx` і `PlayerModel.addRbx/setRbx/getRbx/spendRbx` прибрано,
+лишився streak щоденної нагороди. Лог-тег `RETUSH`, prefs `rush_ads_prefs` —
+свої. `ic_notification` вже був свій — з еталона не копіювався.
+
+⚠️ **Пастка, якої не було в інших апках: наївний запит дозволу на пуші.**
+У `MainActivity.onCreate` стояв `requestNotificationPermission()` — голий
+системний діалог на сплеші. Android дає його один раз за встановлення: два
+відмови і дозвіл випалено назавжди, без жодного шансу пояснити навіщо.
+Замінено на опт-ін з нагородою через `Biz.runStartupFlow`; launcher лишився в
+активіті (контракт має бути зареєстрований до `onStart`), але тепер віддає
+результат у колбек черги старту. **Перевіряти це в кожній наступній апці:**
+`grep -n "requestNotificationPermission\|POST_NOTIFICATIONS" MainActivity.kt`.
+
+У T9 вже були `POST_NOTIFICATIONS` у маніфесті, `firebase-messaging` і
+`default_notification_icon` — дописано лише `work-runtime`, диплінк-фільтр,
+`PushService` і ProGuard-правило.
+
+Розмітка екранів — 15 змістовних: `home_screen`/HUB, `wheel_screen`/SPIN,
+`scratch_screen`/GRID, `quiz_screen`/QUIZ, `guess_screen`/REVEAL,
+`free_screen`/GIFT, конвертери/TOOL, персонажі та одяг/CATALOG.
+Технічні (Loader, Settings, Onboarding, Selector_1..4) — `null`.
+
+Ключі економіки:
+
+| ключ | тип | дефолт |
+|---|---|---|
+| `quiz_screen` | reward | `10` (за правильну відповідь) |
+| `free_screen` | reward | `500` |
+| `wheel` | rewards_list | `[5,10,15,20,25,30,35,40,45,50,100,150]` |
+| `scratch` | rewards_list | `[50,100,150,200,250,300,350,400,450,500]` |
+| `guess` | rewards_list | `[100,200,300,500,700]` |
+| `daily_reward` | rewards_list | `[100,200,400,800,1600,3200,6400]` |
+
+Цін немає: жодна механіка сьогодні не списує монети, тому ключів `prices` не
+заводимо (порожня відповідь сервера нічого не зламає).
+
+Зелена кнопка: `AGreenButton` на `ATextButtonAnim` (у T9 `AButtonAnim.Style`
+приймає один drawable), фон — генерована `getRoundedRegion(344, 72, r=16,
+градієнт 3DC44B→2A9C36)`. Перша в `APanelHome` (`AAutoLayout`, тому просто
+`add()` першим). ⚠️ Плитку «Free Coins» не чіпав — у неї своя механіка,
+подія `free_screen`/GIFT і ключ економіки.
+
+На девайсі (Xiaomi, Android 13): `MODEL OUR … atk=yes`, провайдери
+`custom_google`. Черга старту: опт-ін → системний → «+100» → таб (`pl=app_open`)
+→ онбординг; баланс 200. Зелена кнопка: 3 тапи = 3 відкриття `pl=interstitial`.
+Щоденна нагорода: 200 → 300 (день 1 = 100). Повторний запуск — одразу меню
+(`onboarding.done=true`), баланс 300 збережено. Диплінк `rushrbx://reward?h=test`
+відкриває апку. Release: обидва класи в mapping не перейменовані.
+
+Дрібниця: у `SaveGameStateManager` прибрано рядок `RBX` з дампу стану — поле
+переїхало у Wallet.
+
+### T2 · `april_may/Game T2/RSBUX COUNTER with ADS` · `com.rsbuxs.rcounbux` · 2026-09-09
+
+Схема диплінка **`rcounbux`**. Баланс — з нуля: `PlayerData.rbx` і
+`addRbx/spendRbx/setRbx` прибрано. Лог-тег `RCUNTER`, prefs `rscount_ads_prefs`.
+Наївного запиту пушів у `MainActivity` не було (перевірено за правилом з T9).
+
+**Boost Mode збережено.** В апці є екран, що вмикає ×2 до нагород
+(`PlayerModel.isBoostMode`, раніше множник сидів усередині `addRbx`). Оскільки
+`Wallet.add` про boost не знає, множник винесено в `PlayerModel.boosted(amount)`
+і застосовується **до** нарахування в кожному місці. Перевірено на девайсі:
+сектор 150 × 2 = 300.
+
+Розмітка екранів — 10 змістовних: `main_screen`/HUB, `spin_win_screen`/SPIN,
+`scratch_screen`/GRID, `quiz_time_screen`/QUIZ, `daily_reward_screen`/DAILY,
+`mini_game_screen`/**TAP** (єдина в парку механіка на влучання),
+`n_to_rbx_screen`+`rbx_calculator_screen`/TOOL,
+`referral_bonus_screen`+`boost_mode_screen`/GIFT.
+Технічні (Loader, мова, вітання, налаштування, MiniGameWelcome) — `null`.
+
+Ключі економіки:
+
+| ключ | тип | дефолт |
+|---|---|---|
+| `quiz_time_screen` | reward | `5` (за правильну відповідь) |
+| `mini_game_screen` | reward | `1` (за влучання) |
+| `daily_reward_screen` | reward | `5` (множиться на номер дня) |
+| `spin` | rewards_list | `[5,10,15,20,25,30,35,40,45,50,100,150]` |
+| `scratch` | rewards_list | `[5,10,15,20,25,30,35,40,45,50,100,150]` |
+
+Щоденна нагорода тут не список, а формула «день × 5», тому ключ скалярний.
+Цін немає — жодна механіка не списує монети.
+
+Зелена кнопка: **використано наявний `AGreenButton` апки**, а не генерований
+фон. Причина — вся палітра T2 зелена (`green_06`, `green_81`), і в апці вже є
+основна CTA-кнопка з текстурою `green_btn` («Get Started», «Spin Now», «Play»).
+Друга зелена іншого відтінку виглядала б чужою. Кнопка перша в `APanelMain`,
+`GRID_HEIGHT` = 840 (висота `PANEL_MAIN.png`) винесено окремо від висоти групи.
+
+Відступ під рекламу виправлено у двох місцях (як і попереджає розділ «Пастки»):
+`APanelMain` — підписки на `adBottomFlow` там **узагалі не було**, висота
+читалась один раз на старті, коли банера ще немає (тобто майже завжди 0);
+`APanelLanguage` — був `+=` у `collect`, тобто накопичення.
+
+На девайсі (Xiaomi, Android 13): `MODEL OUR … atk=yes`, провайдери
+`custom_google`. Черга старту: опт-ін → системний → «+100» → таб → вибір мови;
+баланс 200. Зелена кнопка: 3 тапи = 3 відкриття `pl=interstitial`. Дейлі день 1:
+200 → 205. Колесо: 205 → 210 (сектор 5); з boost: 210 → 510 (сектор 150 ×2).
+Повторний запуск — одразу меню (`onboarding.done=true`), баланс 510 збережено.
+Диплінк `rcounbux://reward?h=test` відкриває апку. Release: обидва класи в
+mapping не перейменовані.
+
+### T7-1 · `june/Game T7-1/RBX Treasure` · `com.treprosure.starbxup` · 2026-09-09
+
+Схема диплінка **`starbxup`**. Лог-тег `TRESHER`, prefs `treasure_ads_prefs`.
+Наївного запиту пушів не було. `ic_notification` в апці не було — взято з еталона.
+
+**Онбордингу немає взагалі** (`LoaderScreen` → `HomeScreen`), тому `Onboarding.kt`
+тут не потрібен, а `HomeScreen` уже стояв у `noAdScreens`. Перша апка парку без
+онбординга — не шукати його там, де його немає.
+
+⚠️ **Стартовий баланс змінився: було 1000, стало 100.** Своє сховище
+(`GameState.rbxFlow(1000L)`, `PlayerData.rbx = 1000`) прибрано, `Wallet` бере
+`Econ.startBalance` — дефолт модуля 100. Для нових установок це помітна зміна.
+Якщо треба лишити 1000 — серверна команда ставить `economy.start_balance: 1000`
+у картці, релізу не потрібно.
+
+Розмітка екранів — 16 змістовних: `home_screen`/HUB, `wheel_screen`/SPIN,
+`scratch_screen`/GRID, `quiz_screen`/QUIZ, `finds_screen`/REVEAL,
+`gift_screen`/GIFT, `daily_screen`/DAILY, конвертери/TOOL,
+персонажі та одяг/CATALOG. Технічні (Loader, Settings) — `null`.
+
+Ключі економіки (ручки `price` і `penalty` проставлені одразу, за правилом
+розділу 5 — не відкладались у борг):
+
+| ключ | тип | дефолт |
+|---|---|---|
+| `quiz_screen` | reward / penalty / price | `10` / `0` / `0` |
+| `gift_screen` | reward | `200` |
+| `finds_screen` | reward | `100` (за виграшну карту) |
+| `wheel_screen` | price | `0` |
+| `scratch_screen` | price | `0` |
+| `wheel` | rewards_list | `[5,10,15,20,25,30,35,40,45,50,100,150]` |
+| `scratch` | rewards_list | `[5,10,15,20,25,30,35,40,45,50]` |
+| `daily_reward` | rewards_list | `[100,200,400,800,1600,3200,6400]` |
+
+Зелена кнопка: `AGreenButton` на `ATextButtonAnim`, фон — генерована
+`getRoundedRegion(344, 72, r=16, градієнт 3FAA2A→2E8420)`. Палітра апки
+коричнево-золота (скарбниця), тож зелений тут єдиний і справді тягне око.
+`APanelHome` успадковує `AScrollLayout`, тому кнопка просто перша в
+`addContent()` — одразу під панеллю балансу.
+
+`APanelScratch` у цій апці числа на картці **не малює** (тільки картинка
+`SCRATCH_WIN`), тож розбіжності «підпис vs нарахування» тут не буває — але
+суму все одно проведено через `Econ`, щоб крутилась із сервера.
+
+На девайсі (Xiaomi, Android 13): `MODEL OUR … atk=yes`, провайдери
+`custom_google`. Черга старту: опт-ін → системний → «+100» → таб
+(`pl=app_open`) → меню; баланс 200. Зелена кнопка: 3 тапи = 3 відкриття
+`pl=interstitial`. Щоденна нагорода: 200 → 300 (день 1 = 100), шапка оновилась.
+`QuizScreen` з вхідною ціною 0 відкривається і не викидає, баланс не змінюється.
+Release: обидва класи в mapping не перейменовані.
+
+⚠️ Колесо і скретч на девайсі **не прокручені** — навігація в меню після
+«назад» щоразу з'їжджає, і тап не влучав. Код там ідентичний за формою до T9/T2,
+де перевірено (у T2 ціна доведена експериментом 100 → списання, 0 → без
+списання). При наступному дотику до апки прокрутити обидві механіки.

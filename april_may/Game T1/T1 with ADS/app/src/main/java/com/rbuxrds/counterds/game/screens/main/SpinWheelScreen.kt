@@ -1,12 +1,16 @@
 package com.rbuxrds.counterds.game.screens.main
 
 import com.badlogic.gdx.scenes.scene2d.Group
+import com.rbuxrds.counterds.businesModule.backend.Bt
+import com.rbuxrds.counterds.businesModule.backend.Events
+import com.rbuxrds.counterds.businesModule.economy.Wallet
 import com.rbuxrds.counterds.game.actors.AWheel
 import com.rbuxrds.counterds.game.actors.button.ABlueButton
 import com.rbuxrds.counterds.game.actors.layout.AlignH
 import com.rbuxrds.counterds.game.actors.layout.AlignV
 import com.rbuxrds.counterds.game.actors.panel.APanelRBX
 import com.rbuxrds.counterds.game.actors.panel.APanelTop
+import com.rbuxrds.counterds.businesModule.economy.Econ
 import com.rbuxrds.counterds.game.utils.Block
 import com.rbuxrds.counterds.game.utils.TIME_ANIM_SCREEN
 import com.rbuxrds.counterds.game.utils.actor.addActorAligned
@@ -19,6 +23,16 @@ import com.rbuxrds.counterds.game.utils.gdxGame
 import com.rbuxrds.counterds.util.log
 
 class SpinWheelScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.SPIN
+    override val analyticsBlock = "spin_wheel_screen"
+
+    companion object {
+        // Средний выигрыш сектора 44 — цена 10 держит механику выгодной
+        // (+34 за прокрутку). Ставить 50+ нельзя: колесо станет убыточным
+        // и превратится из награды в наказание.
+        private const val PRICE_DEF = 10
+    }
 
     // ------------------------------------------------------------------------
     // Actors
@@ -103,9 +117,24 @@ class SpinWheelScreen: AdvancedScreen() {
         aSpinNowBtn.y += adBannerUI //20f
 
         aSpinNowBtn.onClick = {
-            aWheel.spin { result ->
-                log("result = $result")
-                aPanelRBX.setResult(result.sum)
+            val price = Econ.price(analyticsBlock, PRICE_DEF)
+            when {
+                aWheel.isSpinning -> Unit
+
+                !Wallet.spend(price, bt = analyticsBt, block = analyticsBlock) -> gdxGame.activity.showToast("Not enough coins — you need $price")
+
+                else -> aWheel.spin { result ->
+                    log("result = $result")
+                    // ⚠️ Сумму даёт aWheel.payout, а НЕ result.sum: номиналы
+                    // секторов едут списком economy.rewards_list.spin_wheel.
+                    // Показываем и начисляем ОДНО И ТО ЖЕ число: разъехавшись,
+                    // они сделали бы из выигрыша обман.
+                    val win = aWheel.payout(result)
+                    aPanelRBX.setResult(win)
+                    Wallet.add(win, bt = analyticsBt, block = analyticsBlock)
+
+                    Events.featureComplete(bt = analyticsBt, block = analyticsBlock, amount = win)
+                }
             }
         }
 

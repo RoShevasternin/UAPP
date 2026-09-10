@@ -9,6 +9,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.rbxrush.rushrbx.adsmodule.AdConfig
 import com.rbxrush.rushrbx.adsmodule.AdPref
 import com.rbxrush.rushrbx.adsmodule.NavigationCounter
+import com.rbxrush.rushrbx.businesModule.Biz
 import com.rbxrush.rushrbx.util.NetworkUtils
 import com.rbxrush.rushrbx.util.log
 
@@ -24,6 +25,12 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
+
+        Biz.install(this, Biz.Config(
+            mainActivityClass   = MainActivity::class.java,
+            notificationIconRes = R.drawable.ic_notification,
+            appVersion          = BuildConfig.VERSION_NAME,
+        ))
 
         //FirebaseMessaging.getInstance().token.addOnSuccessListener { log("FCM token: $it") }
 

@@ -1,5 +1,6 @@
 package com.rbxgolden.fungamems.game.screens.main
 
+import com.rbxgolden.fungamems.businesModule.backend.Bt
 import com.rbxgolden.fungamems.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rbxgolden.fungamems.game.actors.panel.APanelGift
 import com.rbxgolden.fungamems.game.actors.panel.APanelTop
@@ -12,6 +13,9 @@ import com.rbxgolden.fungamems.game.utils.advanced.AdvancedScreen
 import com.rbxgolden.fungamems.game.utils.gdxGame
 
 class GiftScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.GIFT
+    override val analyticsBlock = "gift_screen"
 
     // ------------------------------------------------------------------------
     // Actors

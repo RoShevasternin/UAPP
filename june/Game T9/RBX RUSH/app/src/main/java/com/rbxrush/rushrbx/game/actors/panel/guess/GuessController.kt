@@ -1,5 +1,6 @@
 package com.rbxrush.rushrbx.game.actors.panel.guess
 
+import com.rbxrush.rushrbx.businesModule.economy.Econ
 import com.rbxrush.rushrbx.game.utils.actor.setOnTouchListener
 
 class GuessController(
@@ -13,7 +14,11 @@ class GuessController(
         private const val WIN_COUNT     = 3
 
         // можливі суми нагород для виграшної картки
-        private val REWARD_POOL = listOf(100L, 200L, 300L, 500L, 700L)
+        // Пул сум їде списком з конфігу — economy.rewards_list.guess.
+        // Дефолт = сьогоднішні числа; довжину звіряє сам Econ.
+        private val REWARD_POOL_DEF = intArrayOf(100, 200, 300, 500, 700)
+        private val REWARD_POOL: List<Long>
+            get() = Econ.rewardList("guess", REWARD_POOL_DEF).map { it.toLong() }
     }
 
     // ------------------------------------------------------------------------

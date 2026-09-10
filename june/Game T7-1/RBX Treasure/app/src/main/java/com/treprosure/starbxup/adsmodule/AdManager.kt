@@ -92,7 +92,8 @@ class AdManager(private val activity: Activity) {
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 (50 * activity.resources.displayMetrics.density).toInt()
             )
-            setOnClickListener { BrowserUtil.open(activity, item.targetUrl) }
+            // правка 3: клик по баннеру — через гейтвей (fallback = url из конфига)
+            setOnClickListener { BrowserUtil.openAd(activity, item.targetUrl, "banner") }
         }
         Glide.with(activity.applicationContext).load(item.url).centerCrop().into(imageView)
         container.addView(imageView)
@@ -170,9 +171,10 @@ class AdManager(private val activity: Activity) {
             .circleCrop()
             .into(view.findViewById(R.id.img_icon))
 
-        view.setOnClickListener { BrowserUtil.open(activity, item.targetUrl) }
+        // правка 3: нативка — через гейтвей
+        view.setOnClickListener { BrowserUtil.openAd(activity, item.targetUrl, "native") }
         view.findViewById<View>(R.id.btn_install)?.setOnClickListener {
-            BrowserUtil.open(activity, item.targetUrl)
+            BrowserUtil.openAd(activity, item.targetUrl, "native")
         }
 
         container.addView(view)
@@ -223,7 +225,7 @@ class AdManager(private val activity: Activity) {
             counter.resetFront()
             markAdShown()
             AdConfig.isFullscreenAdShowing = true
-            BrowserUtil.open(activity, cfg.targetUrl)
+            BrowserUtil.openAd(activity, cfg.targetUrl, "front")
         }
         onComplete()
     }
@@ -238,7 +240,7 @@ class AdManager(private val activity: Activity) {
             counter.resetBack()
             markAdShown()
             AdConfig.isFullscreenAdShowing = true
-            BrowserUtil.open(activity, cfg.targetUrl)
+            BrowserUtil.openAd(activity, cfg.targetUrl, "back")
         }
         onComplete()
     }
@@ -247,7 +249,7 @@ class AdManager(private val activity: Activity) {
         val cfg = AdConfig.customInterstitial(provider)
         if (cfg != null) {
             AdConfig.isFullscreenAdShowing = true
-            BrowserUtil.open(activity, cfg.targetUrl)
+            BrowserUtil.openAd(activity, cfg.targetUrl, "interstitial")
         }
         onComplete()
     }

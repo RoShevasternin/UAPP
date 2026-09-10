@@ -1,5 +1,6 @@
 package com.treprosure.starbxup.game.screens
 
+import com.treprosure.starbxup.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.treprosure.starbxup.adsmodule.AdSizeManager
 import com.treprosure.starbxup.game.actors.ATmpGroup
@@ -19,6 +20,9 @@ import com.treprosure.starbxup.services.analytics.AnalyticsManager
 import kotlinx.coroutines.launch
 
 class HomeScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.HUB
+    override val analyticsBlock = "home_screen"
 
     // ------------------------------------------------------------------------
     // Actors

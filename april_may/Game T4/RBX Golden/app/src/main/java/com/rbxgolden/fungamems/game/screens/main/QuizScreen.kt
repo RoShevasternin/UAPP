@@ -1,5 +1,7 @@
 package com.rbxgolden.fungamems.game.screens.main
 
+import com.rbxgolden.fungamems.businesModule.backend.Bt
+import com.rbxgolden.fungamems.businesModule.economy.Wallet
 import com.rbxgolden.fungamems.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rbxgolden.fungamems.game.actors.panel.APanelQuiz
 import com.rbxgolden.fungamems.game.actors.panel.APanelRBX
@@ -16,6 +18,9 @@ import com.rbxgolden.fungamems.game.utils.runGDX
 import kotlinx.coroutines.launch
 
 class QuizScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.QUIZ
+    override val analyticsBlock = "quiz_screen"
 
     // ------------------------------------------------------------------------
     // Actors
@@ -75,11 +80,8 @@ class QuizScreen: AdvancedScreen() {
         add(aPanelRBX) { endToEnd(margin = 16f); topToBottom(aPanelTop, 24f) }
 
         coroutine?.launch {
-            gdxGame.modelPlayer.rbxFlow.collect { rbx ->
-                runGDX {
-                    val rbxFormat = NumberFormatter.format(rbx)
-                    aPanelRBX.setText(rbxFormat)
-                }
+            Wallet.balanceFlow.collect { balance ->
+                runGDX { aPanelRBX.setText(NumberFormatter.format(balance)) }
             }
         }
     }

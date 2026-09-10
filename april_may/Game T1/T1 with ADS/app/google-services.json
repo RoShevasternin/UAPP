@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "897842084412",
+    "project_id": "t1-rbux-counter",
+    "storage_bucket": "t1-rbux-counter.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:897842084412:android:a1eff71f12241a2204e139",
+        "android_client_info": {
+          "package_name": "com.rbuxrds.counterds"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyKjRUIsCgIDTRKjBfO-aBhOHvH91Wrf4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -20,7 +20,10 @@
 **теки модулів копіюємо з еталона, а кроки на боці апки робимо за
 процедурою** — вона новіша за еталон і оновлюється з кожною міграцією.
 
-Мігровані апки (мають теку `businesModule`): еталон + `april_may/Game T5`.
+Мігровані апки (мають теку `businesModule`): еталон + `april_may/Game T5` +
+`april_may/Game T1/T1 with ADS` + `april_may/Game T4/RBX Golden` +
+`june/Game T9/RBX RUSH` + `april_may/Game T2/RSBUX COUNTER with ADS` +
+`june/Game T7-1/RBX Treasure`.
 
 ## Основне завдання по цьому репо
 

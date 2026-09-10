@@ -1,5 +1,6 @@
 package com.rbxrush.rushrbx.game.screens.home.outfit
 
+import com.rbxrush.rushrbx.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.rbxrush.rushrbx.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rbxrush.rushrbx.game.actors.panel.APanelTop
@@ -13,6 +14,9 @@ import com.rbxrush.rushrbx.game.utils.advanced.AdvancedScreen
 import com.rbxrush.rushrbx.game.utils.gdxGame
 
 class SelectOutfitScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "select_outfit_screen"
 
     // ------------------------------------------------------------------------
     // Actors

@@ -1,5 +1,6 @@
 package com.rsbuxs.rcounbux.game.screens.main
 
+import com.rsbuxs.rcounbux.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.rsbuxs.rcounbux.game.actors.layout.constraintLayout.AConstraintLayout
@@ -14,6 +15,9 @@ import com.rsbuxs.rcounbux.game.utils.advanced.AdvancedScreen
 import com.rsbuxs.rcounbux.game.utils.gdxGame
 
 class ReferralBonusScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.GIFT
+    override val analyticsBlock = "referral_bonus_screen"
 
     // ------------------------------------------------------------------------
     // Actors

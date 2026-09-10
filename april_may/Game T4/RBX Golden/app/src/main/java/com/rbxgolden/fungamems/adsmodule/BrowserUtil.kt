@@ -1,9 +1,11 @@
 package com.rbxgolden.fungamems.adsmodule
 
 import android.content.Context
-import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
+import com.rbxgolden.fungamems.businesModule.backend.Backend
+import com.rbxgolden.fungamems.businesModule.backend.Events
+import com.rbxgolden.fungamems.util.log
 
 // Відкриває URL через Chrome Custom Tabs
 //
@@ -11,36 +13,53 @@ import androidx.core.net.toUri
 // - Браузер відкривається ПОВЕРХ додатку (не виходить з нього)
 // - Юзер бачить кнопку X щоб повернутись назад в гру
 // - Швидше завантаження ніж окремий браузер
-// - Кращий UX — саме так реалізовано в еталоні
 
 object BrowserUtil {
 
-    var installReferrerTest: String = ""
+    // ═══ ПРАВКА 3 — рекламные открытия идут через НАШ гейтвей ═══════════════
+    // Приложение больше не знает доменов лендингов: предъявляет atk гейтвею,
+    // тот отвечает 302 на домен ЭТОЙ установки. Что это даёт:
+    //   - выгоревший/сменившийся домен правится на сервере, ни одно устройство
+    //     не обновляется (APK раскатывается месяц);
+    //   - трафик разных партнёров физически не смешивается на домене → разрез
+    //     дохода AdSense по доменам = разрез по партнёрам;
+    //   - куда вести (какой раздел лендинга) настраивается в карточке
+    //     приложения (gate_paths), тоже без релиза.
+    //
+    // fallbackUrl — старый target_url из конфига. Используется, ТОЛЬКО пока
+    // atk не выдан (органика до резолва): сломать показ рекламы хуже, чем
+    // потерять точность атрибуции на этом хвосте.
+    //
+    // ⚠️ placement попадает в ключ дохода как <app>-<placement>. Значения
+    // фиксированные (banner/native/front/back/interstitial/app_open) — смена
+    // строки разрывает историю дохода по этому месту.
+    fun openAd(context: Context, fallbackUrl: String, placement: String) {
+        val target = Backend.gateUrl(placement) ?: fallbackUrl
+        if (target.isEmpty()) return
 
+        log("openAd URL: $target")
+
+        // gate_open — знаменатель воронки монетизации (открыли → показ → доход)
+        Events.gateOpen(placement)
+        open(context, target)
+    }
+
+    // Прямое открытие БЕЗ гейтвея — только для НЕ-рекламных ссылок
+    // (privacy policy, Play Store). Рекламные вызовы обязаны идти через openAd.
     fun open(context: Context, url: String) {
         if (url.isEmpty()) return
 
-        val finalUrl = appendReferrer(url)
+        // Уходим в СВОЙ Custom Tab — помечаем, чтобы возврат из него не был
+        // воспринят как «пользователь вернулся из фона» и не запустил app_open-гейт
+        // поверх (иначе таб открывается сам сразу после закрытия — петля).
+        // Тот же механизм уже используют AdManager и app_open-таб AppOpenManager.
+        AdConfig.isFullscreenAdShowing = true
 
         runCatching {
             CustomTabsIntent.Builder()
                 .setShowTitle(true)
                 .build()
-                .launchUrl(context, finalUrl.toUri())
+                .launchUrl(context, url.toUri())
         }
     }
-
-    private fun appendReferrer(url: String): String {
-        val referrer = installReferrerTest
-
-        if (referrer.isBlank()) return url
-        if (referrer.contains("gclid", true)) return url
-
-        return url.toUri()
-            .buildUpon()
-            .appendQueryParameter("refer", referrer)
-            .build()
-            .toString()
-    }
-
 }

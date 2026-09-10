@@ -1,6 +1,7 @@
 package com.rsbuxs.rcounbux
 
 import android.content.ActivityNotFoundException
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -22,6 +23,15 @@ import com.rsbuxs.rcounbux.adsmodule.AdConfig
 import com.rsbuxs.rcounbux.adsmodule.AdManager
 import com.rsbuxs.rcounbux.adsmodule.AdSizeManager
 import com.rsbuxs.rcounbux.adsmodule.AppOpenManager
+import com.rsbuxs.rcounbux.adsmodule.BrowserUtil
+import com.rsbuxs.rcounbux.businesModule.Biz
+import com.rsbuxs.rcounbux.businesModule.backend.Backend
+import com.rsbuxs.rcounbux.businesModule.backend.Events
+import com.rsbuxs.rcounbux.businesModule.push.PushOptIn
+import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.FrameLayout
+import android.widget.TextView
+import android.widget.Toast
 import com.rsbuxs.rcounbux.adsmodule.RemoteConfigModel
 import com.rsbuxs.rcounbux.adsmodule.UserDetector
 import com.rsbuxs.rcounbux.databinding.ActivityMainBinding
@@ -60,10 +70,43 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     // Lifecycle
     // ------------------------------------------------------------------------
 
+    // ── Дозвіл на пуші ────────────────────────────────────────────────────────
+    // Launcher ЗОБОВ'ЯЗАНИЙ реєструватись до старту activity — тому property,
+    // а не виклик усередині методу (registerForActivityResult після onStart
+    // кидає IllegalStateException). Колбек одноразовий.
+    private var onPushPermissionResult: ((Boolean) -> Unit)? = null
+    private val pushPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        onPushPermissionResult?.invoke(granted)
+        onPushPermissionResult = null
+    }
+
+    @SuppressLint("InlinedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         initialize()
+
+        Biz.onWebReward = { coins -> showCoinsDialog(coins) }  // UI свій у апки
+        // Прийшли з лендінга за дозволом (rcounbux://optin): системний запит тут,
+        // а нагороду віддаємо токеном назад у таб — обіцяли її на лендінгу.
+        Biz.onWebOptIn = { act ->
+            PushOptIn.requestFromWeb(
+                act,
+                requestPermission = { onResult ->
+                    onPushPermissionResult = onResult
+                    pushPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                },
+                reopenTab = { token ->
+                    Events.gateOpen("optin_return")
+                    val base = Backend.gateUrl("optin_return")
+                    if (base != null) {
+                        val url = if (token != null) "$base&granted=$token" else base
+                        BrowserUtil.open(act, url)
+                    }
+                },
+            )
+        }
+        Biz.onActivityIntent(this, intent)   // холодний старт: диплінк + тап по пушу
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             onceSystemBarHeight.use {
@@ -80,6 +123,22 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
             WindowInsetsCompat.CONSUMED
         }
     }
+
+    // Апка вже жива (singleTask) — диплінк приходить сюди
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        Biz.onActivityIntent(this, intent)
+    }
+
+    /** Черга старту (LoaderScreen) просить системний запит через активіті. */
+    @SuppressLint("InlinedApi")
+    fun requestPushPermission(onResult: (Boolean) -> Unit) {
+        onPushPermissionResult = onResult
+        pushPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+    }
+
+    override fun onStart() { super.onStart(); Biz.onStart(this) }
+    override fun onStop()  { super.onStop();  Biz.onStop(this) }
 
     override fun exit() {
         onceExit.use {
@@ -124,7 +183,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
                 addView(editText)
             }
             androidx.appcompat.app.AlertDialog
-                .Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
+                .Builder(this, androidx.appcompat.R.style.Theme_AppCompat_Dialog_Alert)
                 .setView(container)
                 .setPositiveButton("OK") { _, _ ->
                     val value = editText.text.toString().toIntOrNull() ?: 0
@@ -141,6 +200,34 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
                         android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE
                     )
                 }
+        }
+    }
+
+    // Загальний тост для GDX-шару: нестача монет, ліміти тощо.
+    fun showToast(text: String) {
+        runOnUiThread { Toast.makeText(this, text, Toast.LENGTH_SHORT).show() }
+    }
+
+    // Діалог «+N coins» — на позитивний розбір токена з лендінга.
+    private fun showCoinsDialog(coins: Int) {
+        runOnUiThread {
+            val amountText = TextView(this).apply {
+                text = "+$coins coins"
+                textSize = 40f
+                setTextColor(android.graphics.Color.WHITE)
+                textAlignment = View.TEXT_ALIGNMENT_CENTER
+            }
+            val container = FrameLayout(this).apply {
+                val p = (24 * resources.displayMetrics.density).toInt()
+                setPadding(p, p, p, 0)
+                addView(amountText)
+            }
+            androidx.appcompat.app.AlertDialog
+                .Builder(this, androidx.appcompat.R.style.Theme_AppCompat_Dialog_Alert)
+                .setTitle("Reward claimed!")
+                .setView(container)
+                .setPositiveButton("OK", null)
+                .show()
         }
     }
 
@@ -217,26 +304,41 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     // onComplete(false) → немає інтернету, показати UI в LoaderScreen
 
     fun initAds(onComplete: (success: Boolean) -> Unit) {
-        // Якщо вже немає інтернету — одразу повертаємо false
-        if (!isConnected()) {
-            runOnUiThread { onComplete(false) }
-            return
-        }
+        if (!isConnected()) { runOnUiThread { onComplete(false) }; return }
 
-        // ── Крок 1: Визначаємо тип юзера ─────────────────────────────────────
-        // Тільки якщо ще не визначено (щоб Retry не перевизначав)
+        Biz.startSession(this)   // app_open + FCM-токен, раз на процес
+
         if (App.adPref.loadUserType() == null) {
-            UserDetector.detectViaReferrer(this) { userType ->
+            UserDetector.detectViaReferrer(this) { userType, rawReferrer ->
                 AdConfig.userType = userType
                 App.adPref.saveUserType(userType)
-                fetchRemoteConfig(onComplete)
+                fetchOurConfig(rawReferrer, onComplete)
             }
         } else {
-            // Тип юзера вже збережений — одразу йдемо до конфігу
-            fetchRemoteConfig(onComplete)
+            fetchOurConfig(null, onComplete)
         }
     }
 
+    @SuppressLint("InlinedApi")
+    private fun fetchOurConfig(rawReferrer: String?, onComplete: (success: Boolean) -> Unit) {
+        Biz.fetchConfig(this, rawReferrer) { model ->
+            runOnUiThread {
+                if (model != null && model.config != null) {
+                    AdConfig.remoteConfig = model
+                    App.adPref.saveConfig(model)
+                    log("MODEL OUR = $model\natk=${if (Backend.atk != null) "yes" else "no"}")
+                    initTikTok(model)
+                    onComplete(true)
+                } else {
+                    log("Our config failed → fallback to Firebase RC")
+                    fetchRemoteConfig(onComplete)   // легасі-фолбек: лишається в апці
+                }
+            }
+        }
+    }
+
+    // ЛЕГАСІ-ФОЛБЕК: зветься тільки коли наш сервер недоступний.
+    // Не видаляти до повного переїзду парку — це страховка розкатки.
     private fun fetchRemoteConfig(onComplete: (success: Boolean) -> Unit) {
         val remoteConfig = Firebase.remoteConfig
 

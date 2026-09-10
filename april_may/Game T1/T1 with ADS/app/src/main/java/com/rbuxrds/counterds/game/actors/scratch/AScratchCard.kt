@@ -41,7 +41,7 @@ class AScratchCard(
         VfxShaderCache.get("shader/scratch/scratchDrawFS.glsl", DRAW_VERT)
     }
     private val revealShader: ShaderProgram by lazy {
-        VfxShaderCache.get("shader/scratch/scratchRevealFS.glsl", VfxEffect.Companion.BATCH_VERT)
+        VfxShaderCache.get("shader/scratch/scratchRevealFS.glsl", VfxEffect.BATCH_VERT)
     }
 
     // ─── Grid-based відсоток ──────────────────────────────────────────────

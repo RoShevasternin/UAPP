@@ -1,5 +1,9 @@
 package com.treprosure.starbxup.game.screens.home
 
+import com.treprosure.starbxup.businesModule.backend.Events
+import com.treprosure.starbxup.businesModule.economy.Econ
+import com.treprosure.starbxup.businesModule.economy.Wallet
+import com.treprosure.starbxup.businesModule.backend.Bt
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.treprosure.starbxup.adsmodule.AdSizeManager
 import com.treprosure.starbxup.game.actors.button.AYellowButton
@@ -25,6 +29,11 @@ import com.treprosure.starbxup.util.log
 import kotlinx.coroutines.launch
 
 class WheelScreen: AdvancedScreen() {
+
+    companion object { private const val PRICE_DEF = 0 }
+
+    override val analyticsBt    = Bt.SPIN
+    override val analyticsBlock = "wheel_screen"
 
     // ------------------------------------------------------------------------
     // Overlay
@@ -113,12 +122,24 @@ class WheelScreen: AdvancedScreen() {
         add(aSpinBtn) { centerX(); bottomToBottom(margin = 16f) }
 
         aSpinBtn.setOnClickListener {
+            // Ціна спроби (economy.prices.wheel_screen). Дефолт 0 — спін
+            // безкоштовний сьогодні; це ручка, а не «вимкнено».
+            val price = Econ.price(analyticsBlock!!, PRICE_DEF)
+            if (!Wallet.spend(price, bt = analyticsBt!!, block = analyticsBlock!!)) {
+                gdxGame.activity.showToast("Not enough coins — you need $price")
+                return@setOnClickListener
+            }
+
             aSpinBtn.disable()
 
             aWheel.spin { result ->
                 log("result = $result")
                 aSpinBtn.enable()
-                gdxGame.modelPlayer.addRbx(result.sum)
+                // ⚠️ Суму дає aWheel.payout, а НЕ result.sum: номінали секторів
+                // їдуть списком economy.rewards_list.wheel.
+                val win = aWheel.payout(result)
+                Wallet.add(win.toInt(), bt = analyticsBt!!, block = analyticsBlock!!)
+                Events.featureComplete(bt = analyticsBt!!, block = analyticsBlock!!, amount = win.toInt())
 
                 aPopup.setReward(result.sum)
                 overlayManager.show(WheelScreen.Overlay.POPUP)

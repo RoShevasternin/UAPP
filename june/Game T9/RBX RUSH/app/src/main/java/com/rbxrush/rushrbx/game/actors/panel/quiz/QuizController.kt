@@ -1,8 +1,14 @@
 package com.rbxrush.rushrbx.game.actors.panel.quiz
 
+import com.rbxrush.rushrbx.businesModule.economy.Econ
+
 class QuizController(
     private val totalQuestions: Int  = 5,
-    private val reward        : Long = 10L,
+    // Дефолт 10 = сьогоднішня поведінка; ключ economy.rewards.quiz_screen
+    private val reward        : Long = Econ.reward("quiz_screen", 10).toLong(),
+    // Штраф за неправильну відповідь. Дефолт 0 — сьогодні помилка нічого не
+    // коштує; ключ economy.penalties.quiz_screen робить це ручкою.
+    private val penalty       : Long = Econ.penalty("quiz_screen", 0).toLong(),
 ) {
 
     // ------------------------------------------------------------------------
@@ -10,6 +16,7 @@ class QuizController(
     // ------------------------------------------------------------------------
     var onQuestion : (index: Int, text: String) -> Unit        = { _, _ -> }
     var onCorrect  : (reward: Long) -> Unit                    = {}
+    var onWrong    : (penalty: Long) -> Unit                   = {}
     var onFinished : (correct: Int, totalReward: Long) -> Unit = { _, _ -> }
     var onProgress : (current: Int, total: Int) -> Unit        = { _, _ -> }
 
@@ -44,6 +51,8 @@ class QuizController(
             correctCount++
             totalReward += reward
             onCorrect(reward)
+        } else {
+            onWrong(penalty)
         }
 
         currentIndex++

@@ -1,5 +1,6 @@
 package com.treprosure.starbxup.game.screens.home
 
+import com.treprosure.starbxup.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.treprosure.starbxup.game.actors.layout.constraintLayout.AConstraintLayout
@@ -21,6 +22,9 @@ import com.treprosure.starbxup.game.utils.gdxGame
 import com.treprosure.starbxup.game.utils.overlay.OverlayManager
 
 class DailyScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.DAILY
+    override val analyticsBlock = "daily_screen"
 
     // ------------------------------------------------------------------------
     // Overlay

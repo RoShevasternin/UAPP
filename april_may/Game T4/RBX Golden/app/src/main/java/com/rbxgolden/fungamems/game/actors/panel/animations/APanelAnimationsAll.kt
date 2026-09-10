@@ -18,6 +18,10 @@ import kotlinx.coroutines.launch
 
 class APanelAnimationsAll(override val screen: AdvancedScreen): AConstraintLayout(screen) {
 
+    // Рахується один раз; підписка на рекламу бере maxOf з ним, а не додає
+    private var basePaddingBottom = 0f
+
+
     // ------------------------------------------------------------------------
     // Actors
     // ------------------------------------------------------------------------
@@ -50,13 +54,20 @@ class APanelAnimationsAll(override val screen: AdvancedScreen): AConstraintLayou
 
         aVerticalGroup.addActor(aContentGroup)
 
-        val space = aScrollPane.height - contentH
-        if (space > 0) aVerticalGroup.paddingBottom += space
+        // Скільки треба добити знизу, щоб короткий контент заповнив ScrollPane
+        basePaddingBottom = (aScrollPane.height - contentH).coerceAtLeast(0f)
+        aVerticalGroup.paddingBottom = basePaddingBottom
 
+        // ⚠️ Два «не так», на які легко наступити:
+        // 1. Саме «=», а не «+=»: adBottomFlow це StateFlow — віддає поточне
+        //    значення одразу і далі КОЖНУ зміну; з «+=» відступ накопичувався б
+        //    (порожнеча між останнім елементом списку і банером росла).
+        // 2. maxOf, а не сума: base добиває короткий контент до висоти pane,
+        //    adBottom ховає його за рекламою — це ОДНА й та сама дірка знизу.
         coroutine?.launch {
             AdSizeManager.adBottomFlow.collect {
                 runGDX {
-                    if (screen.adBottomUI >= 0f) aVerticalGroup.paddingBottom += screen.adBottomUI
+                    aVerticalGroup.paddingBottom = maxOf(basePaddingBottom, screen.adBottomUI.coerceAtLeast(0f))
                     log("APanelMain adBottomUI = ${screen.adBottomUI} | banner = ${screen.safeBannerUI}")
                 }
             }

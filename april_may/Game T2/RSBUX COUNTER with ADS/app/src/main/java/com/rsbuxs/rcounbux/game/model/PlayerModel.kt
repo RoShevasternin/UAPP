@@ -1,5 +1,6 @@
 package com.rsbuxs.rcounbux.game.model
 
+import com.rsbuxs.rcounbux.businesModule.economy.Econ
 import com.rsbuxs.rcounbux.game.data.PlayerData
 import com.rsbuxs.rcounbux.game.dataStore.DS_Player
 import kotlinx.coroutines.CoroutineScope
@@ -28,40 +29,18 @@ class PlayerModel(
         get() = playerFlow.value
 
     // ------------------------------------------------------------------------
-    // RBX
+    // Баланс тут БІЛЬШЕ НЕ ЖИВЕ — тільки Wallet (businesModule/economy).
+    // Було: PlayerData.rbx + addRbx/spendRbx/setRbx. Своє сховище балансу і
+    // Wallet розходяться мовчки, тому джерело правди одне.
     // ------------------------------------------------------------------------
-    val rbxFlow: StateFlow<Long> =
-        playerFlow
-            .map { it.rbx }
-            .distinctUntilChanged()
-            .stateIn(scope, SharingStarted.Eagerly, currentPlayer.rbx)
-
-    val currentRbx: Long
-        get() = rbxFlow.value
-
-    fun addRbx(amount: Long) {
-        if (amount <= 0) return
-        val boosted = applyBoost(amount)
-        ds.update { data -> data.copy(rbx = data.rbx + boosted) }
-    }
-
-    fun spendRbx(amount: Long): Boolean {
-        if (amount <= 0) return false
-        if (currentRbx < amount) return false
-        ds.update { data -> data.copy(rbx = data.rbx - amount) }
-        return true
-    }
-
-    fun setRbx(amount: Long) {
-        ds.update { data -> data.copy(rbx = amount.coerceAtLeast(0L)) }
-    }
 
     // ------------------------------------------------------------------------
-    // Boost Mode
+    // Boost Mode — механіка апки (×2 до нагород), не сховище балансу.
+    // Лишається тут; множник застосовується ДО Wallet.add у місці нарахування.
     // ------------------------------------------------------------------------
     var isBoostMode: Boolean = false
 
-    private fun applyBoost(amount: Long): Long = if (isBoostMode) amount * 2 else amount
+    fun boosted(amount: Int): Int = if (isBoostMode) amount * 2 else amount
 
     // ------------------------------------------------------------------------
     // Daily Reward
@@ -116,9 +95,9 @@ class PlayerModel(
 
         if (!canClaimDailyReward()) return 0L
 
-        val reward = currentDailyRewardDay * 5L
-
-        addRbx(reward)
+        // Дефолт 5 за день = сьогоднішня поведінка (день × 5);
+        // ключ economy.rewards.daily_reward_screen. Нараховує Wallet у контролері.
+        val reward = boosted(currentDailyRewardDay * Econ.reward("daily_reward_screen", 5)).toLong()
 
         val nextDay =
             if (currentDailyRewardDay >= 7) 1

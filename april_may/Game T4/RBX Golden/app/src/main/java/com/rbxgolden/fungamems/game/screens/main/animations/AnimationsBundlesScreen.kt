@@ -1,5 +1,6 @@
 package com.rbxgolden.fungamems.game.screens.main.animations
 
+import com.rbxgolden.fungamems.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.rbxgolden.fungamems.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rbxgolden.fungamems.game.actors.panel.APanelTop
@@ -17,6 +18,9 @@ import com.rbxgolden.fungamems.game.utils.advanced.AdvancedScreen
 import com.rbxgolden.fungamems.game.utils.gdxGame
 
 class AnimationsBundlesScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "animations_bundles_screen"
 
     // ------------------------------------------------------------------------
     // Actors

@@ -2,7 +2,12 @@ package com.rbuxrds.counterds.game.screens.main
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Group
+import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.utils.Align
+import com.rbuxrds.counterds.businesModule.backend.Bt
+import com.rbuxrds.counterds.businesModule.backend.Events
+import com.rbuxrds.counterds.businesModule.economy.Wallet
+import com.rbuxrds.counterds.businesModule.economy.Econ
 import com.rbuxrds.counterds.game.actors.button.base.AButtonStyles
 import com.rbuxrds.counterds.game.actors.button.base.AButtonTexture
 import com.rbuxrds.counterds.game.actors.label.ALabel
@@ -18,12 +23,14 @@ import com.rbuxrds.counterds.game.utils.actor.addActorWithConstraints
 import com.rbuxrds.counterds.game.utils.actor.animDelay
 import com.rbuxrds.counterds.game.utils.actor.animHide
 import com.rbuxrds.counterds.game.utils.actor.animShow
-import com.rbuxrds.counterds.game.utils.actor.setOnClickListener
 import com.rbuxrds.counterds.game.utils.advanced.AdvancedScreen
 import com.rbuxrds.counterds.game.utils.font.FontParameter
 import com.rbuxrds.counterds.game.utils.gdxGame
 
 class LogicQuizTimeScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.QUIZ
+    override val analyticsBlock = "logic_quiz_time_screen"
 
     // ------------------------------------------------------------------------
     // Font
@@ -63,6 +70,15 @@ class LogicQuizTimeScreen: AdvancedScreen() {
     // Quiz state
     // ------------------------------------------------------------------------
     private var currentIndex = 0
+
+    // счёт верных ответов — уходит в feature_complete в конце прохождения
+    private var correctCount = 0
+
+    // БАГ БЕЗ ЭТОГО ФЛАГА: showQuestion(5) на последнем вопросе просто делал
+    // return, экран оставался с 5-м вопросом, а кнопки жили. Каждый следующий
+    // тап снова попадал в onAnswer с тем же currentIndex — бесконечная ферма
+    // ±10 монет и дубли feature_complete на каждый клик.
+    private var finished = false
     private val totalQuestions = QUIZ_QUESTIONS.size
 
     // ------------------------------------------------------------------------
@@ -176,7 +192,24 @@ class LogicQuizTimeScreen: AdvancedScreen() {
     // ------------------------------------------------------------------------
 
     private fun showQuestion(index: Int) {
-        if (index >= totalQuestions) return
+        if (index >= totalQuestions) {
+            if (finished) return          // страховка от повторного входа
+            finished = true
+
+            // Гасим кнопки: без этого экран остаётся «живым» после последнего
+            // вопроса и монеты фармятся кликами по мёртвому вопросу.
+            aTrueBtn.touchable  = Touchable.disabled
+            aFalseBtn.touchable = Touchable.disabled
+
+            // правка 4: цикл завершён, amount = число верных ответов.
+            // Это ЕДИНСТВЕННЫЙ сигнал «квиз реально прошли до конца» —
+            // без него в отчёте видно только что экран открывали.
+            // Флаг finished гарантирует РОВНО одно событие на прохождение.
+            Events.featureComplete(bt = analyticsBt, block = analyticsBlock, amount = correctCount)
+
+            gdxGame.activity.showToast("Quiz complete: $correctCount / $totalQuestions")
+            return
+        }
 
         currentIndex = index
         val question = QUIZ_QUESTIONS[index]
@@ -187,6 +220,24 @@ class LogicQuizTimeScreen: AdvancedScreen() {
     }
 
     private fun onAnswer(userAnswer: Boolean) {
+        // правка 5: квиз подключён к экономике — верный ответ = награда,
+        // неверный = штраф. Числа из конфига (economy.rewards/penalties),
+        // ключ = analyticsBlock, то есть "logic_quiz_time_screen" — ровно эту
+        // строку мы вписываем в карточку приложения на сервере; разойдётся с
+        // кодом — крутилка экономики будет крутить воздух.
+        // Дефолт 10/10 — канон парка (rbuxcounter: 10/-10).
+        // coins_earned/coins_spent шлёт сам Wallet; штраф через spend — при
+        // пустом балансе списания (и события) нет, в минус не уходим.
+        if (finished) return   // квиз пройден — клики больше не платят
+
+        QUIZ_QUESTIONS.getOrNull(currentIndex)?.let { q ->
+            if (userAnswer == q.answer) {
+                correctCount++
+                Wallet.add(Econ.reward(analyticsBlock, 10), bt = analyticsBt, block = analyticsBlock)
+            } else {
+                Wallet.spend(Econ.penalty(analyticsBlock, 10), bt = analyticsBt, block = analyticsBlock)
+            }
+        }
         showQuestion(currentIndex + 1)
     }
 

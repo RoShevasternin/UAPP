@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
+import com.rbxgolden.fungamems.businesModule.economy.Econ
 import com.rbxgolden.fungamems.game.utils.GameColor
 import com.rbxgolden.fungamems.game.utils.advanced.AdvancedGroup
 import com.rbxgolden.fungamems.game.utils.advanced.AdvancedScreen
@@ -31,8 +32,12 @@ class AScratch(override val screen: AdvancedScreen) : AdvancedGroup() {
     // ------------------------------------------------------------------------
     private var randomResult = Result.entries.random()
         set(value) {
-            aRewardLbl.setText(value.toString())
-            aTextLbl.setText("You win $value RBX!")
+            // payout, а не ім'я enum: підпис картки і нарахування зобов'язані
+            // бути ОДНИМ числом. Ім'я enum ще й друкується як «_50» —
+            // підкреслення у шрифті NUMBERS немає.
+            val win = payout(value)
+            aRewardLbl.setText(win.toString())
+            aTextLbl.setText("You win $win RBX!")
             field = value
         }
 
@@ -75,9 +80,19 @@ class AScratch(override val screen: AdvancedScreen) : AdvancedGroup() {
     // API
     // ------------------------------------------------------------------------
 
+    // Номінали карток їдуть СПИСКОМ з конфігу — economy.rewards_list.scratch.
+    // Одна точка на ОБА застосування: що намальовано на картці і що впало
+    // в гаманець. Два різні джерела числа = гравець бачить 150, отримує 50.
+    fun payout(result: Result): Int =
+        Econ.rewardList("scratch", DEFAULT_SUMS).getOrElse(result.ordinal) { result.sum }
+
     fun regenerateScratch() {
         aScratchCard.reset()
         randomResult = Result.entries.random()
+    }
+
+    companion object {
+        private val DEFAULT_SUMS = intArrayOf(5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100, 150)
     }
 
     enum class Result(val sum: Int) {

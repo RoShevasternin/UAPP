@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "981082215923",
+    "project_id": "t7-1-rbx-treasure",
+    "storage_bucket": "t7-1-rbx-treasure.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:981082215923:android:ec24ba0e421091b852ae86",
+        "android_client_info": {
+          "package_name": "com.treprosure.starbxup"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0y5cj5UZasURQQJJONNeAlHyGkpbhHKw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,6 @@
 package com.rsbuxs.rcounbux.game.actors.scratch
 
+import com.rsbuxs.rcounbux.businesModule.economy.Econ
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
@@ -66,6 +67,17 @@ class AScratch(override val screen: AdvancedScreen) : AdvancedGroup() {
     fun regenerateScratch() {
         aScratchCard.reset()
         randomResult = Result.entries.random()
+    }
+
+    // Номінали їдуть СПИСКОМ з конфігу — economy.rewards_list.scratch, порядок =
+    // порядок enum Result. Читаємо на кожен виклик: конфіг під'їжджає
+    // асинхронно. Довжину звіряє сам Econ — не збіглась, повернеться
+    // DEFAULT_SUMS (те, що НАМАЛЬОВАНО на текстурі).
+    fun payout(result: Result): Int =
+        Econ.rewardList("scratch", DEFAULT_SUMS).getOrElse(result.ordinal) { result.sum }
+
+    companion object {
+        private val DEFAULT_SUMS = intArrayOf(5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100, 150)
     }
 
     enum class Result(val sum: Int) {

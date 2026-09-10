@@ -1,5 +1,6 @@
 package com.rbxgolden.fungamems.game.screens
 
+import com.rbxgolden.fungamems.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.rbxgolden.fungamems.game.actors.ATmpGroup
 import com.rbxgolden.fungamems.game.actors.layout.constraintLayout.AConstraintLayout
@@ -7,6 +8,7 @@ import com.rbxgolden.fungamems.game.actors.panel.APanelMain
 import com.rbxgolden.fungamems.game.actors.panel.APanelTop
 import com.rbxgolden.fungamems.game.actors.panel.APanelTopMain
 import com.rbxgolden.fungamems.game.utils.Block
+import com.rbxgolden.fungamems.game.utils.Onboarding
 import com.rbxgolden.fungamems.game.utils.TIME_ANIM_SCREEN
 import com.rbxgolden.fungamems.game.utils.actor.animDelay
 import com.rbxgolden.fungamems.game.utils.actor.animHide
@@ -17,6 +19,9 @@ import com.rbxgolden.fungamems.game.utils.gdxGame
 import com.rbxgolden.fungamems.services.analytics.AnalyticsManager
 
 class MainScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.HUB
+    override val analyticsBlock = "main_screen"
 
     // ------------------------------------------------------------------------
     // Actors
@@ -34,6 +39,8 @@ class MainScreen: AdvancedScreen() {
 
         stageUI.root.color.a = 0f
         super.show()
+        // Дійшли до меню — онбординг пройдено, наступні запуски стартують звідси
+        Onboarding.markDone()
         animShowScreen { AnalyticsManager.openHomeScreen() }
     }
 

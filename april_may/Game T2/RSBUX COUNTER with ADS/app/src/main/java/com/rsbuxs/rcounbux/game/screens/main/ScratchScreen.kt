@@ -1,5 +1,9 @@
 package com.rsbuxs.rcounbux.game.screens.main
 
+import com.rsbuxs.rcounbux.businesModule.economy.Econ
+import com.rsbuxs.rcounbux.businesModule.backend.Events
+import com.rsbuxs.rcounbux.businesModule.economy.Wallet
+import com.rsbuxs.rcounbux.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.rsbuxs.rcounbux.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rsbuxs.rcounbux.game.actors.panel.APanelTop
@@ -14,6 +18,11 @@ import com.rsbuxs.rcounbux.game.utils.gdxGame
 import com.rsbuxs.rcounbux.util.log
 
 class ScratchScreen: AdvancedScreen() {
+
+    companion object { private const val PRICE_DEF = 0 }
+
+    override val analyticsBt    = Bt.GRID
+    override val analyticsBlock = "scratch_screen"
 
     // ------------------------------------------------------------------------
     // Actors
@@ -32,7 +41,22 @@ class ScratchScreen: AdvancedScreen() {
         stageUI.root.color.a = 0f
         super.show()
         animShowScreen()
+        chargeEntryPrice()
     }
+
+    // ── Ціна спроби ───────────────────────────────────────────────────────────
+    // Картка одна на візит (regenerateScratch ніде не зветься) — «спроба» це вхід.
+    // Дефолт 0: Wallet.spend(0) повертає true одразу і подій не шле — сьогодні
+    // поведінка не змінюється, але сервер може увімкнути ціну через
+    // economy.prices без релізу.
+    private fun chargeEntryPrice() {
+        val price = Econ.price(analyticsBlock!!, PRICE_DEF)
+        if (!Wallet.spend(price, bt = analyticsBt!!, block = analyticsBlock!!)) {
+            gdxGame.activity.showToast("Not enough coins — you need $price")
+            animHideScreen { gdxGame.navigationManager.back() }
+        }
+    }
+
 
     override fun hide() {
         super.hide()
@@ -81,7 +105,10 @@ class ScratchScreen: AdvancedScreen() {
 
         aScratch.onResult = { result ->
             log("aScratch result: $result")
-            gdxGame.modelPlayer.addRbx(result.sum.toLong())
+            // ⚠️ Суму дає aScratch.payout — рівно те число, що на стертій картці
+            val win = gdxGame.modelPlayer.boosted(aScratch.payout(result))
+            Wallet.add(win, bt = analyticsBt!!, block = analyticsBlock!!)
+            Events.featureComplete(bt = analyticsBt!!, block = analyticsBlock!!, amount = win)
         }
     }
 

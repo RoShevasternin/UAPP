@@ -1,6 +1,7 @@
 package com.rbuxrds.counterds.game.screens.main
 
 import com.badlogic.gdx.scenes.scene2d.Group
+import com.rbuxrds.counterds.businesModule.backend.Bt
 import com.rbuxrds.counterds.game.actors.ADim
 import com.rbuxrds.counterds.game.actors.daily.ADailyFreeRbxCalculatorInput
 import com.rbuxrds.counterds.game.actors.daily.ADailyFreeRbxCalculatorSelect
@@ -26,6 +27,9 @@ import com.rbuxrds.counterds.game.utils.screenState.ScreenState
 import com.rbuxrds.counterds.game.utils.screenState.ScreenStateMachine
 
 class DailyFreeRbxCalculatorScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "daily_free_rbx_calculator_screen"
 
     companion object {
         private var hasWin = false
@@ -175,6 +179,12 @@ class DailyFreeRbxCalculatorScreen: AdvancedScreen() {
 
         aInput.onCountNowClick = {
             val result = aInput.resultInput
+            // правка 5: сюда Wallet НЕ подключаем — result это ЧИСЛО ИЗ
+            // ПОЛЬЗОВАТЕЛЬСКОГО ВВОДА (bt=tool, витринный «выигрыш»
+            // калькулятора): начисление по вводу = свободная накрутка баланса.
+            // TODO(econ): block="daily_free_rbx_calculator" — если решим
+            // платить за использование утилиты, награда должна быть
+            // Econ.reward(block, N) с разовым дневным гейтом, не result.
             if (!hasWin && result > 0) {
                 goToResultWin(result)
                 hasWin = true

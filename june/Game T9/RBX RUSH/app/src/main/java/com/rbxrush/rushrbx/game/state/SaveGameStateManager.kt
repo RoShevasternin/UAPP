@@ -86,7 +86,6 @@ class SaveGameStateManager(
         ╔══════════════════════════════╗
         ║  GAME STATE LOADED
         ╠══════════════════════════════╣
-        ║  RBX        : ${data.rbx}
         ║  Daily Day  : ${data.dailyRewardDay}
         ║  Daily Time : ${data.dailyRewardTime}
         ╚══════════════════════════════╝
@@ -98,7 +97,6 @@ class SaveGameStateManager(
         ╔══════════════════════════════╗
         ║  GAME STATE SAVED
         ╠══════════════════════════════╣
-        ║  RBX        : ${data.rbx}
         ║  Daily Day  : ${data.dailyRewardDay}
         ║  Daily Time : ${data.dailyRewardTime}
         ╚══════════════════════════════╝

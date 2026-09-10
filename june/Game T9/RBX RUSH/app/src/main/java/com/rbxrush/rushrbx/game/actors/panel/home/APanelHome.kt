@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.utils.Align
 import com.rbxrush.rushrbx.game.actors.AScrollPane
+import com.rbxrush.rushrbx.game.actors.button.AGreenButton
 import com.rbxrush.rushrbx.game.actors.layout.autoLayout.AAutoLayout
 import com.rbxrush.rushrbx.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rbxrush.rushrbx.game.actors.panel.daily.APanelDaily
@@ -25,6 +26,7 @@ class APanelHome(screen: AdvancedScreen): AConstraintLayout(screen) {
     // ------------------------------------------------------------------------
     // Actors
     // ------------------------------------------------------------------------
+    private val aFreeRewardsBtn = AGreenButton(screen, "FREE R$ REWARDS")
     private val aConverterImg  = Image(gdxGame.assetsAll.listHomeContent[0])
     private val aDailyImg      = APanelDaily(screen)
     private val aPanel4        = APanel4(screen)
@@ -48,6 +50,7 @@ class APanelHome(screen: AdvancedScreen): AConstraintLayout(screen) {
         setupVerticalGroup()
 
         with(aVertical) {
+            addFreeRewardsBtn()
             addConverter()
             addDaily()
             addPanel4()
@@ -67,6 +70,20 @@ class APanelHome(screen: AdvancedScreen): AConstraintLayout(screen) {
 
     private fun setupVerticalGroup() {
         aVertical.width = width
+    }
+
+    // Головна дія екрана — першою в списку, над рештою плиток.
+    // Клік = наш лендінг: showInterstitial у custom-провайдері одразу відкриває
+    // таб (частотного гейта там немає, на відміну від front/back).
+    // ⚠️ Не перевішувати на лендінг наявну плитку Free Coins: у неї своя
+    // механіка, події та ключ економіки — екран став би недосяжним.
+    private fun AAutoLayout.addFreeRewardsBtn() {
+        aFreeRewardsBtn.setSize(344f, 72f)
+        add(aFreeRewardsBtn)
+
+        aFreeRewardsBtn.setOnClickListener {
+            gdxGame.activity.showInterstitial()
+        }
     }
 
     private fun AAutoLayout.addConverter() {

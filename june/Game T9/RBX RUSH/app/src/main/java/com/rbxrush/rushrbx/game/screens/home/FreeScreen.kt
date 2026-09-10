@@ -1,5 +1,8 @@
 package com.rbxrush.rushrbx.game.screens.home
 
+import com.rbxrush.rushrbx.businesModule.backend.Events
+import com.rbxrush.rushrbx.businesModule.economy.Wallet
+import com.rbxrush.rushrbx.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.rbxrush.rushrbx.game.actors.layout.constraintLayout.AConstraintLayout
@@ -21,6 +24,9 @@ import com.rbxrush.rushrbx.game.utils.gdxGame
 import com.rbxrush.rushrbx.game.utils.overlay.OverlayManager
 
 class FreeScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.GIFT
+    override val analyticsBlock = "free_screen"
 
     // ------------------------------------------------------------------------
     // Overlay
@@ -102,7 +108,8 @@ class FreeScreen: AdvancedScreen() {
 
         aPanelFree.onGetPrize = { prize ->
             gdxGame.activity.showInterstitial {
-                gdxGame.modelPlayer.addRbx(prize)
+                Wallet.add(prize.toInt(), bt = analyticsBt!!, block = analyticsBlock!!)
+                Events.featureComplete(bt = analyticsBt!!, block = analyticsBlock!!, amount = prize.toInt())
                 aPopup.setReward(prize)
                 overlayManager.show(Overlay.POPUP)
             }

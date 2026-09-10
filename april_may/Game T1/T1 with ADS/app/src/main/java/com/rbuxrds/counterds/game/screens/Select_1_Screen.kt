@@ -36,7 +36,7 @@ class Select_1_Screen: AdvancedScreen() {
     // Actors
     // ------------------------------------------------------------------------
 
-    private val aPanelTop  = APanelTop(this)
+    private val aPanelTop  = APanelTop(this, false)
     private val aNextBtn   = ABlueButton(this, "Next")
 
     private val aStepCloth = AStepCloth(this)

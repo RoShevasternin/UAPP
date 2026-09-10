@@ -15,6 +15,8 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.rbxgolden.fungamems.MainActivity
 import com.rbxgolden.fungamems.adsmodule.AdSizeManager
+import com.rbxgolden.fungamems.businesModule.backend.Bt
+import com.rbxgolden.fungamems.businesModule.backend.Events
 import com.rbxgolden.fungamems.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rbxgolden.fungamems.game.utils.Block
 import com.rbxgolden.fungamems.game.utils.HEIGHT_UI
@@ -86,6 +88,14 @@ abstract class AdvancedScreen(
 
     val rootConstraintLayout = AConstraintLayout(this)
 
+    // ─── Analytics ────────────────────────────────────────────────────────────
+    // bt    — тип механіки зі спільного словника (enum Bt): друкарська помилка
+    //         не компілюється, новий тип додається лише разом зі словником.
+    // block — місцеве ім'я екрана в snake_case, після релізу НЕ перейменовується.
+    // Екран, що не задав обидва, screen_view не шле (Loader, Settings, візард).
+    open val analyticsBt   : Bt?     = null
+    open val analyticsBlock: String? = null
+
     override fun resize(width: Int, height: Int) {
         updateSize()
     }
@@ -105,6 +115,12 @@ abstract class AdvancedScreen(
 
         Gdx.input.inputProcessor = inputMultiplexer.apply { addProcessors(this@AdvancedScreen, stageUI, stageBack) }
         Gdx.input.setCatchKey(Input.Keys.BACK, true)
+
+        // Екран відкрито. Шлемо на КОЖЕН show — повернення назад це окремий
+        // перегляд, а не дубль.
+        val bt    = analyticsBt
+        val block = analyticsBlock
+        if (bt != null && block != null) Events.screenView(bt, block)
     }
 
     override fun render(delta: Float) {

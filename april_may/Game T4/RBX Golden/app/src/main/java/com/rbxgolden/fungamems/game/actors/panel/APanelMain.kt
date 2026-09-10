@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.rbxgolden.fungamems.adsmodule.AdSizeManager
 import com.rbxgolden.fungamems.game.actors.AScrollPane
 import com.rbxgolden.fungamems.game.actors.ATmpGroup
+import com.rbxgolden.fungamems.game.actors.button.AGreenButton
 import com.rbxgolden.fungamems.game.actors.layout.AlignH
 import com.rbxgolden.fungamems.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rbxgolden.fungamems.game.actors.layout.linear.AVerticalGroup
@@ -33,11 +34,15 @@ import kotlinx.coroutines.launch
 
 class APanelMain(override val screen: AdvancedScreen): AConstraintLayout(screen) {
 
+    // Рахується один раз; підписка на рекламу бере maxOf з ним, а не додає
+    private var basePaddingBottom = 0f
+
     // ------------------------------------------------------------------------
     // Actors
     // ------------------------------------------------------------------------
-    private val aVerticalGroup = AVerticalGroup(screen, alignH = AlignH.CENTER, wrap = true)
-    private val aContentGroup  = ATmpGroup(screen)
+    private val aVerticalGroup  = AVerticalGroup(screen, alignH = AlignH.CENTER, gap = GAP, wrap = true)
+    private val aFreeRewardsBtn = AGreenButton(screen, "FREE R$ REWARDS")
+    private val aContentGroup   = ATmpGroup(screen)
     private val aPanelMainImg  = Image(gdxGame.assetsAll.PANEL_MAIN)
     private val listBtn        = List(11) { Actor() }
     private val aScrollPane    = AScrollPane(aVerticalGroup)
@@ -59,21 +64,32 @@ class APanelMain(override val screen: AdvancedScreen): AConstraintLayout(screen)
 
     // Content Group ------------------------------------------------------------------------
     private fun setUpContentGroup() {
+        // ⚠️ Розмір aContentGroup — це висота НАМАЛЬОВАНОЇ сітки (PANEL_MAIN.png):
+        //    aPanelMainImg заповнює групу, тож збільшиш групу під кнопку —
+        //    розтягнеться картинка. Тому кнопка окремим актором у vertical group.
         val contentW = 376f
-        val contentH = 1084f
+        val totalH   = GRID_HEIGHT + GAP + FREE_BTN_HEIGHT
 
         aVerticalGroup.setSize(width, 1f)
-        aContentGroup.setSize(contentW, contentH)
+        aContentGroup.setSize(contentW, GRID_HEIGHT)
 
+        addFreeRewardsBtn()
         aVerticalGroup.addActor(aContentGroup)
 
-        val space = aScrollPane.height - contentH
-        if (space > 0) aVerticalGroup.paddingBottom += space
+        // Скільки треба добити знизу, щоб короткий контент заповнив ScrollPane.
+        basePaddingBottom = (aScrollPane.height - totalH).coerceAtLeast(0f)
+        aVerticalGroup.paddingBottom = basePaddingBottom
 
+        // ⚠️ Два «не так», на які легко наступити:
+        // 1. Саме «=», а не «+=»: adBottomFlow це StateFlow — віддає поточне
+        //    значення одразу і далі КОЖНУ зміну; з «+=» відступ накопичувався б.
+        // 2. maxOf, а не сума: base добиває короткий контент до висоти pane,
+        //    adBottom ховає його за рекламою — це ОДНА й та сама дірка знизу.
         coroutine?.launch {
             AdSizeManager.adBottomFlow.collect {
                 runGDX {
-                    if (screen.adBottomUI >= 0f) aVerticalGroup.paddingBottom += screen.adBottomUI
+                    val adBottom = screen.adBottomUI.coerceAtLeast(0f)
+                    aVerticalGroup.paddingBottom = maxOf(basePaddingBottom, adBottom)
                     log("APanelMain adBottomUI = ${screen.adBottomUI} | banner = ${screen.safeBannerUI}")
                 }
             }
@@ -84,6 +100,18 @@ class APanelMain(override val screen: AdvancedScreen): AConstraintLayout(screen)
             it.addListBtn()
         }
 
+    }
+
+    // Головна дія екрана — першою в списку, над сіткою механік.
+    // Клік = наш лендінг: showInterstitial у custom-провайдері одразу відкриває
+    // таб (частотного гейта там немає, на відміну від front/back).
+    private fun addFreeRewardsBtn() {
+        aFreeRewardsBtn.setSize(344f, FREE_BTN_HEIGHT)
+        aVerticalGroup.addActor(aFreeRewardsBtn)
+
+        aFreeRewardsBtn.setOnClickListener {
+            gdxGame.activity.showInterstitial()
+        }
     }
 
     private fun AdvancedGroup.addListBtn() {
@@ -124,6 +152,12 @@ class APanelMain(override val screen: AdvancedScreen): AConstraintLayout(screen)
             }
         }
 
+    }
+
+    companion object {
+        private const val GRID_HEIGHT     = 1084f   // висота PANEL_MAIN.png
+        private const val GAP             = 16f
+        private const val FREE_BTN_HEIGHT = 72f
     }
 
 }

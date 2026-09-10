@@ -12,7 +12,7 @@ import com.rbuxrds.counterds.game.utils.advanced.AdvancedGroup
 import com.rbuxrds.counterds.game.utils.advanced.AdvancedScreen
 import com.rbuxrds.counterds.game.utils.font.FontParameter
 
-class APanelTop(override val screen: AdvancedScreen): AdvancedGroup() {
+class APanelTop(override val screen: AdvancedScreen, val isBalance: Boolean = true): AdvancedGroup() {
 
     // ------------------------------------------------------------------------
     // Font
@@ -27,6 +27,8 @@ class APanelTop(override val screen: AdvancedScreen): AdvancedGroup() {
     private val aBackBtn  = AButtonTexture(screen, AButtonStyles.BACK)
     private val aTitleLbl = ALabel(screen, "", Color.WHITE, parameter, screen.fontGenerator_InterTight_Bold)
 
+    private val aPanelMainRBX = APanelMainRBX(screen)
+
     // ------------------------------------------------------------------------
     // Callback
     // ------------------------------------------------------------------------
@@ -38,6 +40,7 @@ class APanelTop(override val screen: AdvancedScreen): AdvancedGroup() {
     override fun addActorsOnGroup() {
         addTitleLbl()
         addBackBtn()
+        if (isBalance) addPanelRBX()
     }
 
     // ------------------------------------------------------------------------
@@ -54,6 +57,12 @@ class APanelTop(override val screen: AdvancedScreen): AdvancedGroup() {
         aTitleLbl.setSize(90f, 24f)
         addActorAligned(aTitleLbl, AlignH.CENTER, AlignV.CENTER)
         aTitleLbl.setAlignment(Align.center)
+    }
+
+    private fun addPanelRBX() {
+        aPanelMainRBX.setSize(95f, 23f)
+        addActorAligned(aPanelMainRBX, AlignH.CENTER)
+        aPanelMainRBX.y = -9f
     }
 
     // ------------------------------------------------------------------------

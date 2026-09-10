@@ -2,6 +2,7 @@ package com.rbuxrds.counterds.game.screens.main
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Group
+import com.rbuxrds.counterds.businesModule.backend.Bt
 import com.rbuxrds.counterds.game.actors.ATmpGroup
 import com.rbuxrds.counterds.game.actors.daily.ADailyConverterItem
 import com.rbuxrds.counterds.game.actors.layout.AlignH
@@ -18,6 +19,9 @@ import com.rbuxrds.counterds.game.utils.advanced.AdvancedScreen
 import com.rbuxrds.counterds.game.utils.gdxGame
 
 class DailyConverterScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "daily_converter_screen"
 
     private val listTitle = listOf(
         "Daily Free Rbx Calculator",

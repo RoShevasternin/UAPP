@@ -1,11 +1,13 @@
 package com.rbuxrds.counterds.game.screens
 
 import com.badlogic.gdx.scenes.scene2d.Group
+import com.rbuxrds.counterds.businesModule.backend.Bt
 import com.rbuxrds.counterds.game.actors.layout.AlignH
 import com.rbuxrds.counterds.game.actors.layout.AlignV
 import com.rbuxrds.counterds.game.actors.panel.APanelMain
 import com.rbuxrds.counterds.game.actors.panel.APanelTop
 import com.rbuxrds.counterds.game.utils.Block
+import com.rbuxrds.counterds.game.utils.Onboarding
 import com.rbuxrds.counterds.game.utils.TIME_ANIM_SCREEN
 import com.rbuxrds.counterds.game.utils.actor.addActorAligned
 import com.rbuxrds.counterds.game.utils.actor.addActorWithConstraints
@@ -17,6 +19,15 @@ import com.rbuxrds.counterds.game.utils.gdxGame
 import com.rbuxrds.counterds.services.analytics.AnalyticsManager
 
 class MainScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "main_screen"
+
+    override fun show() {
+        super.show()
+        // Дійшли до меню — онбординг пройдено, наступні запуски стартують звідси
+        Onboarding.markDone()
+    }
 
     // ------------------------------------------------------------------------
     // Actors
@@ -69,6 +80,8 @@ class MainScreen: AdvancedScreen() {
             startToStartOf = this@addPanelMain
             endToEndOf     = this@addPanelMain
             topToBottomOf  = aPanelTop
+
+            marginTop = 15f
         }
     }
 

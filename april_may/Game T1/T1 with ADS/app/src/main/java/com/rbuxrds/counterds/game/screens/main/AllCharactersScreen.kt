@@ -2,6 +2,7 @@ package com.rbuxrds.counterds.game.screens.main
 
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
+import com.rbuxrds.counterds.businesModule.backend.Bt
 import com.rbuxrds.counterds.game.actors.AScrollPane
 import com.rbuxrds.counterds.game.actors.allCharacters.ACharacter
 import com.rbuxrds.counterds.game.actors.allCharacters.ACharacters
@@ -18,20 +19,21 @@ import com.rbuxrds.counterds.game.utils.actor.animHide
 import com.rbuxrds.counterds.game.utils.actor.animHideAndDisable
 import com.rbuxrds.counterds.game.utils.actor.animShow
 import com.rbuxrds.counterds.game.utils.actor.animShowAndEnable
-import com.rbuxrds.counterds.game.utils.actor.setSize
 import com.rbuxrds.counterds.game.utils.advanced.AdvancedScreen
 import com.rbuxrds.counterds.game.utils.gdxGame
 import com.rbuxrds.counterds.game.utils.screenState.ScreenState
 import com.rbuxrds.counterds.game.utils.screenState.ScreenStateMachine
-import com.rbuxrds.counterds.util.log
 
 class AllCharactersScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "all_characters_screen"
 
     // ------------------------------------------------------------------------
     // Actors
     // ------------------------------------------------------------------------
 
-    private val aPanelTop   = APanelTop(this)
+    private val aPanelTop   = APanelTop(this, false)
     private val aCharacters = ACharacters(this)
     private val aScrollPane = AScrollPane(aCharacters)
     private val aCharacter  = ACharacter(this)

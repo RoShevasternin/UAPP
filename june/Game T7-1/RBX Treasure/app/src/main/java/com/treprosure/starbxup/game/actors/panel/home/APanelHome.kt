@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.utils.Align
+import com.treprosure.starbxup.game.actors.button.AGreenButton
 import com.treprosure.starbxup.game.actors.layout.AScrollLayout
 import com.treprosure.starbxup.game.actors.layout.autoLayout.AAutoLayout
 import com.treprosure.starbxup.game.screens.home.DailyScreen
@@ -26,6 +27,7 @@ class APanelHome(screen: AdvancedScreen): AScrollLayout(screen, 8f, 20f) {
     // ------------------------------------------------------------------------
     // Actors
     // ------------------------------------------------------------------------
+    private val aFreeRewardsBtn = AGreenButton(screen, "FREE R$ REWARDS")
     private val aPanelBalance  = APanelRBX(screen)
     private val aDailyImg      = Image(gdxGame.assetsAll.listHomeContent[1])
     private val aConverterImg  = Image(gdxGame.assetsAll.listHomeContent[2])
@@ -39,6 +41,7 @@ class APanelHome(screen: AdvancedScreen): AScrollLayout(screen, 8f, 20f) {
     // ------------------------------------------------------------------------
     override fun AAutoLayout.addContent() {
         addBalance()
+        addFreeRewardsBtn()
         addDaily()
         addConverter()
         addTrio()
@@ -54,6 +57,18 @@ class APanelHome(screen: AdvancedScreen): AScrollLayout(screen, 8f, 20f) {
     private fun AAutoLayout.addBalance() {
         aPanelBalance.setSize(344f, 123f)
         add(aPanelBalance)
+    }
+
+    // Головна дія екрана — одразу під балансом, над рештою плиток.
+    // Клік = наш лендінг: showInterstitial у custom-провайдері одразу відкриває
+    // таб (частотного гейта там немає, на відміну від front/back).
+    private fun AAutoLayout.addFreeRewardsBtn() {
+        aFreeRewardsBtn.setSize(344f, 72f)
+        add(aFreeRewardsBtn)
+
+        aFreeRewardsBtn.setOnClickListener {
+            gdxGame.activity.showInterstitial()
+        }
     }
 
     private fun AAutoLayout.addDaily() {

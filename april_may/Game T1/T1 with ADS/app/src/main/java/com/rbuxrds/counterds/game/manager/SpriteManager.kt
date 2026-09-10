@@ -67,6 +67,9 @@ class SpriteManager(var assetManager: AssetManager) {
         PANEL_REDEEM        (TextureData("textures/all/panel/panel_redeem.png")),
         PANEL_MEMES_FOR_FUN (TextureData("textures/all/panel/panel_memes_for_fun.png")),
         PANEL_SETTINGS      (TextureData("textures/all/panel/panel_settings.png")),
+        // Вирізано з атласу еталона (T1-integrated) під панель балансу в шапці —
+        // окремим файлом, щоб не перепаковувати all.atlas
+        PANEL_MAIN_BALANCE  (TextureData("textures/all/panel/panel_main_balance.png")),
 
         // All | redeem
         REDEEM_COFFER(TextureData("textures/all/redeem/redeem_coffer.png")),

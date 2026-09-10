@@ -8,6 +8,7 @@ import com.google.firebase.analytics.analytics
 import com.treprosure.starbxup.adsmodule.AdConfig
 import com.treprosure.starbxup.adsmodule.AdPref
 import com.treprosure.starbxup.adsmodule.NavigationCounter
+import com.treprosure.starbxup.businesModule.Biz
 import com.treprosure.starbxup.util.NetworkUtils
 import com.treprosure.starbxup.util.log
 
@@ -23,6 +24,12 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
+
+        Biz.install(this, Biz.Config(
+            mainActivityClass   = MainActivity::class.java,
+            notificationIconRes = R.drawable.ic_notification,
+            appVersion          = BuildConfig.VERSION_NAME,
+        ))
 
         enableAnalyticsIfNoVpn()
 

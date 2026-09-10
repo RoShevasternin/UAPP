@@ -1,5 +1,7 @@
 package com.rsbuxs.rcounbux.game.screens
 
+import com.rsbuxs.rcounbux.businesModule.Biz
+import com.rsbuxs.rcounbux.game.utils.Onboarding
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.rsbuxs.rcounbux.adsmodule.AdConfig
 import com.rsbuxs.rcounbux.adsmodule.AdProvider
@@ -185,16 +187,29 @@ class LoaderScreen : AdvancedScreen() {
         runGDX {
             gdxGame.activity.showBanner()
 
-            // App Open показ повністю в AppOpenManager — чекаємо onDone і навігуємо
-            gdxGame.activity.appOpenManager.showOnLoader(gdxGame.activity) {
-                runGDX { navigateToFirstScreen() }
-            }
+            // ЧЕРГА СТАРТУ: опт-ін → таб → гра. Кожен крок стартує лише за
+            // доповіддю попереднього. Опт-ін попереду навмисно: системний запит
+            // одноразовий, показ реклами відновлюваний.
+            // ⚠️ Перехід у гру має відбутись у ВСІХ гілках — своїх return сюди
+            // не додавати, інакше апка зависне на сплеші.
+            val act = gdxGame.activity
+            Biz.runStartupFlow(
+                activity = act,
+                requestPermission = { onResult -> act.requestPushPermission(onResult) },
+                openGateAndContinue = {
+                    act.appOpenManager.showOnLoader(act) {
+                        runGDX { navigateToFirstScreen() }
+                    }
+                },
+            )
         }
     }
 
     private fun navigateToFirstScreen() {
+        // Онбординг (мова + вітання) — лише при першому запуску; далі одразу меню
+        val first = if (Onboarding.isDone) MainScreen::class.java.name else LanguageScreen::class.java.name
         animHideScreen {
-            gdxGame.navigationManager.navigate(LanguageScreen::class.java.name)
+            gdxGame.navigationManager.navigate(first)
         }
     }
 

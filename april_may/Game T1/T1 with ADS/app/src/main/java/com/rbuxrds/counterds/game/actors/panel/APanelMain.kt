@@ -3,6 +3,7 @@ package com.rbuxrds.counterds.game.actors.panel
 import com.badlogic.gdx.math.Rectangle
 import com.rbuxrds.counterds.game.actors.AScrollPane
 import com.rbuxrds.counterds.game.actors.ATmpGroup
+import com.rbuxrds.counterds.game.actors.button.AGreenButton
 import com.rbuxrds.counterds.game.actors.button.base.AButtonAnim
 import com.rbuxrds.counterds.game.actors.button.base.AButtonStyles
 import com.rbuxrds.counterds.game.screens.main.DailyConverterScreen
@@ -54,6 +55,7 @@ class APanelMain(override val screen: AdvancedScreen): AdvancedGroup() {
     // ------------------------------------------------------------------------
     // Actors
     // ------------------------------------------------------------------------
+    private val aFreeRewardsBtn = AGreenButton(screen, "FREE R$ REWARDS")
     private val aContentGroup  = ATmpGroup(screen)
     private val aScrollPane    = AScrollPane(aContentGroup)
     private val listBtn        = List(listData.size) { AButtonAnim(screen, listData[it].style) }
@@ -72,8 +74,24 @@ class APanelMain(override val screen: AdvancedScreen): AdvancedGroup() {
     // Add Actors
     // ------------------------------------------------------------------------
     private fun setUpContentGroup() {
-        aContentGroup.setSize(376f, 1122f)
+        // Сітка плиток займає GRID_HEIGHT (разом зі своїм верхнім відступом 16);
+        // зелена кнопка стоїть НАД нею, тому контент вищий рівно на FREE_BTN_HEIGHT.
+        // Плитки лишаються на своїх координатах (відлік від низу), кнопка — перша.
+        aContentGroup.setSize(376f, GRID_HEIGHT + FREE_BTN_HEIGHT)
+        aContentGroup.addFreeRewardsBtn()
         aContentGroup.addListBtn()
+    }
+
+    // Головна дія екрана — першою в списку, над сіткою механік.
+    // Клік = наш лендінг: showInterstitial у custom-провайдері одразу
+    // відкриває таб (частотного гейта там немає, на відміну від front/back).
+    private fun ATmpGroup.addFreeRewardsBtn() {
+        aFreeRewardsBtn.setBounds(16f, GRID_HEIGHT, 344f, FREE_BTN_HEIGHT)
+        addActor(aFreeRewardsBtn)
+
+        aFreeRewardsBtn.setOnClickListener {
+            gdxGame.activity.showInterstitial()
+        }
     }
 
     private fun ATmpGroup.addListBtn() {
@@ -88,6 +106,11 @@ class APanelMain(override val screen: AdvancedScreen): AdvancedGroup() {
                 }
             }
         }
+    }
+
+    companion object {
+        private const val GRID_HEIGHT     = 1122f  // сітка плиток + її верхній відступ 16
+        private const val FREE_BTN_HEIGHT = 72f
     }
 
 }

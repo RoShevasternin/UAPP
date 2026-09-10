@@ -1,5 +1,8 @@
 package com.rbxgolden.fungamems.game.actors.panel.dailyReward
 
+import com.rbxgolden.fungamems.businesModule.backend.Bt
+import com.rbxgolden.fungamems.businesModule.backend.Events
+import com.rbxgolden.fungamems.businesModule.economy.Wallet
 import com.rbxgolden.fungamems.game.model.PlayerModel
 import com.rbxgolden.fungamems.game.utils.actor.setOnTouchListener
 import kotlinx.coroutines.CoroutineScope
@@ -47,7 +50,13 @@ class DailyRewardController(
 
             item.setOnTouchListener {
                 if (day == model.currentDailyRewardDay && model.canClaimDailyReward()) {
+                    // claimDailyReward тепер лише рахує суму й рухає streak —
+                    // монети нараховує Wallet (він же шле coins_earned).
                     val reward = model.claimDailyReward()
+                    if (reward > 0) {
+                        Wallet.add(reward.toInt(), bt = Bt.DAILY, block = BLOCK)
+                        Events.featureComplete(bt = Bt.DAILY, block = BLOCK, amount = reward.toInt())
+                    }
                     onGetReward(reward)
                 }
             }
@@ -105,5 +114,9 @@ class DailyRewardController(
                 }
             }
         }
+    }
+
+    companion object {
+        private const val BLOCK = "daily_reward_screen"
     }
 }

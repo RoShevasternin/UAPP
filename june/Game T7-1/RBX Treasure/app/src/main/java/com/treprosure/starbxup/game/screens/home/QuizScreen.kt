@@ -1,5 +1,9 @@
 package com.treprosure.starbxup.game.screens.home
 
+import com.treprosure.starbxup.businesModule.backend.Events
+import com.treprosure.starbxup.businesModule.economy.Econ
+import com.treprosure.starbxup.businesModule.economy.Wallet
+import com.treprosure.starbxup.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.treprosure.starbxup.game.actors.layout.constraintLayout.AConstraintLayout
@@ -21,6 +25,11 @@ import com.treprosure.starbxup.game.utils.gdxGame
 import com.treprosure.starbxup.game.utils.overlay.OverlayManager
 
 class QuizScreen: AdvancedScreen() {
+
+    companion object { private const val PRICE_DEF = 0 }
+
+    override val analyticsBt    = Bt.QUIZ
+    override val analyticsBlock = "quiz_screen"
 
     // ------------------------------------------------------------------------
     // Overlay
@@ -59,7 +68,19 @@ class QuizScreen: AdvancedScreen() {
         stageUI.root.color.a = 0f
         super.show()
         animShowScreen()
+        chargeEntryPrice()
     }
+    // ── Ціна спроби ───────────────────────────────────────────────────────────
+    // Один прохід квізу на візит (controller.initialize при створенні) —
+    // «спроба» це вхід на екран. Дефолт 0: spend(0) віддає true одразу.
+    private fun chargeEntryPrice() {
+        val price = Econ.price(analyticsBlock!!, PRICE_DEF)
+        if (!Wallet.spend(price, bt = analyticsBt!!, block = analyticsBlock!!)) {
+            gdxGame.activity.showToast("Not enough coins — you need $price")
+            animHideScreen { gdxGame.navigationManager.back() }
+        }
+    }
+
 
     override fun hide() {
         super.hide()
@@ -102,8 +123,12 @@ class QuizScreen: AdvancedScreen() {
         aQuiz.setSize(344f, 359f)
         add(aQuiz) { centerX(); topToBottom(aPanelTop, margin = 50f) }
 
+        aQuiz.onWrong = { penalty ->
+            // spend не пускає баланс у мінус і при 0 нічого не робить
+            Wallet.spend(penalty.toInt(), bt = analyticsBt!!, block = analyticsBlock!!)
+        }
         aQuiz.onCorrect = { reward ->
-            gdxGame.modelPlayer.addRbx(reward)
+            Wallet.add(reward.toInt(), bt = analyticsBt!!, block = analyticsBlock!!)
         }
         aQuiz.onFinished = { _, totalReward ->
             aPopup.setReward(totalReward)

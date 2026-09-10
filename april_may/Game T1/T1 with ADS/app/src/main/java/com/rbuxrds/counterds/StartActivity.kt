@@ -16,7 +16,12 @@ class StartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
 
-        startActivity(Intent(this, MainActivity::class.java))
+        // правка 7: диплинк возврата (counterds://reward) приземляется сюда —
+        // пробрасываем data в MainActivity, обработка там (claimWebCoins)
+        startActivity(Intent(this, MainActivity::class.java).also {
+            it.data = intent?.data
+            intent?.extras?.let { e -> it.putExtras(e) }   // route/gate_pl з message.data
+        })
         finish()
     }
 

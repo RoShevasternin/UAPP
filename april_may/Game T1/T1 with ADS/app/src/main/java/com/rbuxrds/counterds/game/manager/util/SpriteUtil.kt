@@ -112,6 +112,7 @@ class SpriteUtil {
         val PANEL_REDEEM         = SpriteManager.EnumTexture.PANEL_REDEEM.data.texture
         val PANEL_MEMES_FOR_FUN  = SpriteManager.EnumTexture.PANEL_MEMES_FOR_FUN.data.texture
         val PANEL_SETTINGS       = SpriteManager.EnumTexture.PANEL_SETTINGS.data.texture
+        val PANEL_MAIN_BALANCE   = SpriteManager.EnumTexture.PANEL_MAIN_BALANCE.data.texture
 
         // ALL | redeem
         val REDEEM_COFFER       = SpriteManager.EnumTexture.REDEEM_COFFER.data.texture

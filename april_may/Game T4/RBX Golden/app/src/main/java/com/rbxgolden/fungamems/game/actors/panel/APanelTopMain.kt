@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.rbxgolden.fungamems.game.actors.button.base.AButtonAnim
 import com.rbxgolden.fungamems.game.actors.button.base.AButtonStyles
 import com.rbxgolden.fungamems.game.actors.layout.constraintLayout.AConstraintLayout
+import com.rbxgolden.fungamems.businesModule.economy.Wallet
 import com.rbxgolden.fungamems.game.screens.SettingsScreen
 import com.rbxgolden.fungamems.game.utils.NumberFormatter
 import com.rbxgolden.fungamems.game.utils.advanced.AdvancedScreen
@@ -58,9 +59,11 @@ class APanelTopMain(override val screen: AdvancedScreen): AConstraintLayout(scre
     // ------------------------------------------------------------------------
 
     private fun collectRBX() {
+        // ⚠️ StateFlow віддає значення в потоці ПІДПИСНИКА (тут Dispatchers.Default),
+        // тому оновлення сцени — тільки через runGDX.
         coroutine?.launch {
-            gdxGame.modelPlayer.rbxFlow.collect { rbx ->
-                runGDX { aPanelRBX.setText(NumberFormatter.format(rbx)) }
+            Wallet.balanceFlow.collect { balance ->
+                runGDX { aPanelRBX.setText(NumberFormatter.format(balance)) }
             }
         }
     }

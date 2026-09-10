@@ -1,5 +1,6 @@
 package com.rbxrush.rushrbx.game.screens.home.outfit
 
+import com.rbxrush.rushrbx.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.rbxrush.rushrbx.adsmodule.AdSizeManager
 import com.rbxrush.rushrbx.game.actors.layout.constraintLayout.AConstraintLayout
@@ -24,6 +25,9 @@ import com.rbxrush.rushrbx.game.utils.runGDX
 import kotlinx.coroutines.launch
 
 class AnimationsScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "animations_screen"
 
     // ------------------------------------------------------------------------
     // Font

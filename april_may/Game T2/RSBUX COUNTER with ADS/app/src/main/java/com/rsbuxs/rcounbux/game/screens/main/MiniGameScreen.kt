@@ -1,5 +1,8 @@
 package com.rsbuxs.rcounbux.game.screens.main
 
+import com.rsbuxs.rcounbux.businesModule.economy.Econ
+import com.rsbuxs.rcounbux.businesModule.economy.Wallet
+import com.rsbuxs.rcounbux.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.rsbuxs.rcounbux.game.actors.ATimer
@@ -23,6 +26,11 @@ import com.rsbuxs.rcounbux.game.utils.runGDX
 import kotlinx.coroutines.launch
 
 class MiniGameScreen: AdvancedScreen() {
+
+    companion object { private const val PRICE_DEF = 0 }
+
+    override val analyticsBt    = Bt.TAP
+    override val analyticsBlock = "mini_game_screen"
 
     // ------------------------------------------------------------------------
     // Actors
@@ -50,6 +58,15 @@ class MiniGameScreen: AdvancedScreen() {
 
         stageUI.root.color.a = 0f
         super.show()
+        // Ціна спроби (economy.prices.mini_game_screen): одна гра на візит,
+        // тому списуємо ПЕРЕД стартом таймера. Дефолт 0 — spend(0) віддає true
+        // одразу, сьогодні поведінка не змінюється.
+        val price = Econ.price(analyticsBlock!!, PRICE_DEF)
+        if (!Wallet.spend(price, bt = analyticsBt!!, block = analyticsBlock!!)) {
+            gdxGame.activity.showToast("Not enough coins — you need $price")
+            animShowScreen { animHideScreen { gdxGame.navigationManager.back() } }
+            return
+        }
         animShowScreen {
             aTimer.start(30)
             aMiniGame.start()
@@ -106,8 +123,11 @@ class MiniGameScreen: AdvancedScreen() {
         }
 
         aMiniGame.onHit = {
-            collectedRBX += 1
-            gdxGame.modelPlayer.addRbx(1)
+            // Дефолт 1 за влучання = сьогоднішня поведінка; ключ
+            // economy.rewards.mini_game_screen
+            val win = gdxGame.modelPlayer.boosted(Econ.reward(analyticsBlock!!, 1))
+            collectedRBX += win
+            Wallet.add(win, bt = analyticsBt!!, block = analyticsBlock!!)
         }
     }
 
@@ -119,7 +139,7 @@ class MiniGameScreen: AdvancedScreen() {
         }
 
         coroutine?.launch {
-            gdxGame.modelPlayer.rbxFlow.collect { rbx ->
+            Wallet.balanceFlow.collect { rbx ->
                 runGDX {
                     val rbxFormat = NumberFormatter.format(rbx)
                     aPanelRBX.setText(rbxFormat)

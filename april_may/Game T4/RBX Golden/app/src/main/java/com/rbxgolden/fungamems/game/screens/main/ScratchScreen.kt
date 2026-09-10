@@ -1,9 +1,13 @@
 package com.rbxgolden.fungamems.game.screens.main
 
+import com.rbxgolden.fungamems.businesModule.economy.Econ
+import com.rbxgolden.fungamems.businesModule.backend.Bt
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
+import com.rbxgolden.fungamems.businesModule.backend.Events
+import com.rbxgolden.fungamems.businesModule.economy.Wallet
 import com.rbxgolden.fungamems.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rbxgolden.fungamems.game.actors.panel.APanelRBX
 import com.rbxgolden.fungamems.game.actors.panel.APanelTop
@@ -27,6 +31,14 @@ import com.rbxgolden.fungamems.util.log
 import kotlinx.coroutines.launch
 
 class ScratchScreen: AdvancedScreen() {
+
+    companion object {
+        // Сьогодні скретч безкоштовний — 0 тут це РУЧКА, а не «вимкнено».
+        private const val PRICE_DEF = 0
+    }
+
+    override val analyticsBt    = Bt.GRID
+    override val analyticsBlock = "scratch_screen"
 
     private val text = "Scratch off the top layer of the card with your finger to reveal your prize!"
 
@@ -60,7 +72,22 @@ class ScratchScreen: AdvancedScreen() {
         stageUI.root.color.a = 0f
         super.show()
         animShowScreen()
+        chargeEntryPrice()
     }
+
+    // ── Ціна спроби ───────────────────────────────────────────────────────────
+    // Картка одна на візит (regenerateScratch ніде не зветься), тому «спроба» —
+    // це вхід на екран. Дефолт 0: Wallet.spend(0) повертає true одразу і подій
+    // не шле, тобто сьогодні поведінка не змінюється — але сервер може увімкнути
+    // ціну через economy.prices без релізу.
+    private fun chargeEntryPrice() {
+        val price = Econ.price(analyticsBlock!!, PRICE_DEF)
+        if (!Wallet.spend(price, bt = analyticsBt!!, block = analyticsBlock!!)) {
+            gdxGame.activity.showToast("Not enough coins — you need $price")
+            animHideScreen { gdxGame.navigationManager.back() }
+        }
+    }
+
 
 //    override fun hide() {
 //        super.hide()
@@ -105,9 +132,13 @@ class ScratchScreen: AdvancedScreen() {
 
         aScratch.onResult = { result ->
             log("aScratch result: $result")
-            gdxGame.modelPlayer.addRbx(result.sum.toLong())
+            // ⚠️ Суму дає aScratch.payout — рівно те число, що намальоване
+            // на стертій картці. coins_earned шле сам Wallet.
+            val win = aScratch.payout(result)
+            Wallet.add(win, bt = analyticsBt!!, block = analyticsBlock!!)
+            Events.featureComplete(bt = analyticsBt!!, block = analyticsBlock!!, amount = win)
 
-            showDialog(result.sum.toLong())
+            showDialog(win.toLong())
         }
     }
 
@@ -124,11 +155,8 @@ class ScratchScreen: AdvancedScreen() {
         add(aPanelRBX) { centerX(); topToBottom(aPanelRBX, 24f) }
 
         coroutine?.launch {
-            gdxGame.modelPlayer.rbxFlow.collect { rbx ->
-                runGDX {
-                    val rbxFormat = NumberFormatter.format(rbx)
-                    aPanelRBX.setText(rbxFormat)
-                }
+            Wallet.balanceFlow.collect { balance ->
+                runGDX { aPanelRBX.setText(NumberFormatter.format(balance)) }
             }
         }
     }

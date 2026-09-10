@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.utils.Align
+import com.rbuxrds.counterds.businesModule.economy.Econ
 import com.rbuxrds.counterds.game.utils.actor.addAndFillActor
 import com.rbuxrds.counterds.game.utils.actor.setBounds
 import com.rbuxrds.counterds.game.utils.advanced.AdvancedGroup
@@ -76,6 +77,16 @@ class AWheel(override val screen: AdvancedScreen) : AdvancedGroup() {
         return listItem.firstOrNull { degree in (it.segment.startAngle..it.segment.endAngle) }?.result ?: listItem.first().result
     }
 
+    // ВОЗВРАЩЕНО (правка 5, было потеряно при рефакторинге): номиналы секторов
+    // приезжают СПИСКОМ из конфига — economy.rewards_list.spin_wheel, порядок =
+    // порядок enum Result. Без этого экономику колеса нельзя крутить с сервера,
+    // а карточка приложения этот блок уже отдаёт.
+    // Читаем на каждый вызов, а не в поле: конфиг подъезжает асинхронно, поле
+    // поймало бы дефолты первого кадра. Длину сверяет сам Econ — не совпала,
+    // вернётся DEFAULT_SUMS (то, что нарисовано на текстуре колеса).
+    fun payout(result: Result): Int =
+        Econ.rewardList("spin_wheel", DEFAULT_SUMS).getOrElse(result.ordinal) { result.sum }
+
     data class Item(val result: Result, val segment: Segment)
 
     data class Segment(val startAngle: Float, val endAngle: Float)
@@ -93,6 +104,12 @@ class AWheel(override val screen: AdvancedScreen) : AdvancedGroup() {
         _50 (50),
         _100(100),
         _150(150),
+    }
+
+    companion object {
+        // Дефолт = зашитые номиналы, в порядке Result. Он же фолбэк, если блока
+        // rewards_list нет или длина в конфиге разъехалась.
+        private val DEFAULT_SUMS = intArrayOf(5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100, 150)
     }
 
 }

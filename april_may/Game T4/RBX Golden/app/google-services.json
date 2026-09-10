@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "929543957105",
+    "project_id": "t4-rbx-golden",
+    "storage_bucket": "t4-rbx-golden.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:929543957105:android:8c6ac3ed04ee9d3ba489d0",
+        "android_client_info": {
+          "package_name": "com.rbxgolden.fungamems"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeryIjsNgDuzkKICboCP8_BTuM7gWkkKw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
