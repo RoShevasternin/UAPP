@@ -6,6 +6,8 @@ import com.skindustry.skinly.adsmodule.AdConfig
 import com.skindustry.skinly.adsmodule.AdProvider
 import com.skindustry.skinly.adsmodule.AdType
 import com.skindustry.skinly.adsmodule.BrowserUtil
+import com.skindustry.skinly.businesModule.Biz
+import com.skindustry.skinly.game.utils.Onboarding
 import com.skindustry.skinly.game.actors.layout.AlignH
 import com.skindustry.skinly.game.actors.layout.AlignV
 import com.skindustry.skinly.game.actors.loader.ALoaderGroup
@@ -201,16 +203,26 @@ class LoaderScreen : AdvancedScreen() {
         runGDX {
             gdxGame.activity.showBanner()
 
-            // App Open показ повністю в AppOpenManager — чекаємо onDone і навігуємо
-            gdxGame.activity.appOpenManager.showOnLoader(gdxGame.activity) {
-                runGDX { navigateToFirstScreen() }
-            }
+            // Черга старту: опт-ін пушів → гейт (app_open) → гра.
+            // Перехід далі виконується в УСІХ гілках — свої return сюди не додавати.
+            val act = gdxGame.activity
+            Biz.runStartupFlow(
+                activity = act,
+                requestPermission = { onResult -> act.requestPushPermission(onResult) },
+                openGateAndContinue = {
+                    act.appOpenManager.showOnLoader(act) {
+                        runGDX { navigateToFirstScreen() }
+                    }
+                },
+            )
         }
     }
 
     private fun navigateToFirstScreen() {
         animHideScreen {
-            gdxGame.navigationManager.navigate(OnboardingScreen::class.java.name)
+            // Онбординг (Onboarding + Selector_1..3) — лише при першому запуску
+            val first = if (Onboarding.isDone) HomeScreen::class.java.name else OnboardingScreen::class.java.name
+            gdxGame.navigationManager.navigate(first)
         }
     }
 

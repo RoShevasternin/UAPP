@@ -1,5 +1,6 @@
 package com.rbuxdrop.cougame.game.screens.main
 
+import com.rbuxdrop.cougame.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.rbuxdrop.cougame.game.actors.button.base.AButtonStyles
@@ -20,6 +21,9 @@ import com.rbuxdrop.cougame.game.utils.advanced.AdvancedScreen
 import com.rbuxdrop.cougame.game.utils.gdxGame
 
 class ConverterScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "converter_screen"
 
     // ------------------------------------------------------------------------
     // Actors

@@ -1,5 +1,6 @@
 package com.skindustry.skinly.game.screens
 
+import com.skindustry.skinly.businesModule.backend.Bt
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
@@ -18,6 +19,10 @@ import com.skindustry.skinly.game.utils.advanced.AdvancedScreen
 import com.skindustry.skinly.game.utils.gdxGame
 
 class ShareScreen : AdvancedScreen() {
+
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "share_screen"
+
 
     // ------------------------------------------------------------------------
     // Actors

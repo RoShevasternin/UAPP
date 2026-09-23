@@ -15,29 +15,53 @@ import com.tiktok.TikTokBusinessSdk
 //   ttclid → PAID_TIKTOK
 //   fbclid → PAID_FACEBOOK
 //   немає мітки → ORGANIC
+//
+// ═══ ПРАВКА 2 + СУДЬБА ЭТОГО КЛАССА ═══════════════════════════════════════
+// Изменение: колбэк теперь отдаёт наружу и СЫРУЮ строку referrer — она уходит
+// на наш сервер (Backend.fetchConfig). Не парсить и не вырезать метки: разбор
+// на сервере, там JOIN с клик-вебхуком TikTok. Именно потеря этой строки дала
+// 96–98% установок (direct)/(none) и невозможность понять, чей трафик.
+//
+// ВЫКИДЫВАТЬ ЛИ КЛАСС ЦЕЛИКОМ — пока НЕТ, и вот почему: выбор рекламного
+// профиля (organic/gclid/…) сегодня исполняет клиент, и это единственный
+// механизм, который уводит gclid-трафик на отдельный google-safe домен
+// (политика Google). Удалить сейчас = все стали ORGANIC = разводка по
+// источникам сломана. Класс ЗАМОРОЖЕН: не расширять и не улучшать. Сервер
+// уже получает referrer и со временем начнёт отдавать все профили конфига
+// ОДИНАКОВЫМИ (разрешёнными per-установка) — с этого момента выбор на клиенте
+// станет холостым, и класс выпиливается любым будущим релизом без
+// координации с сервером.
+// ═══════════════════════════════════════════════════════════════════════════
 
 object UserDetector {
 
     // ── Install Referrer ──────────────────────────────────────────────────────
 
-    fun detectViaReferrer(context: Context, onResult: (UserType) -> Unit) {
+    // rawReferrer — строка как есть от Play ("" если недоступна): пробросить в
+    // Backend.fetchConfig, больше с ней на клиенте не делать НИЧЕГО.
+    fun detectViaReferrer(context: Context, onResult: (UserType, rawReferrer: String) -> Unit) {
         val client = InstallReferrerClient.newBuilder(context).build()
 
         client.startConnection(object : InstallReferrerStateListener {
 
             override fun onInstallReferrerSetupFinished(responseCode: Int) {
+                var rawReferrer = ""
                 val userType = when (responseCode) {
                     InstallReferrerClient.InstallReferrerResponse.OK -> {
                         val referrer = runCatching { client.installReferrer.installReferrer }.getOrDefault("")
+                        rawReferrer = referrer
                         log("referrer = $referrer")
                         var userType = detectFromString(referrer)
 
                         // ------------- TEST -------------
-                        val hasClick = client.installReferrer.referrerClickTimestampServerSeconds > 0 ||
-                                       client.installReferrer.referrerClickTimestampSeconds       > 0
+                        val timeClickServer = client.installReferrer.referrerClickTimestampServerSeconds
+                        val timeClickUser   = client.installReferrer.referrerClickTimestampSeconds
+
+                        val hasClick: Boolean = (timeClickServer > 0 || timeClickUser > 0)
 
                         if (userType == UserType.ORGANIC && hasClick) {
-                            AnalyticsManager.hasClickToPAID(referrer)
+                            val irClickTime = "server: $timeClickServer | user: $timeClickUser"
+                            AnalyticsManager.hasClick_ORGtoPAID(referrer, irClickTime)
                             userType = UserType.PAID
                         }
                         // ------------- TEST -------------
@@ -49,11 +73,11 @@ object UserDetector {
                 }
 
                 client.endConnection()
-                onResult(userType)
+                onResult(userType, rawReferrer)
             }
 
             override fun onInstallReferrerServiceDisconnected() {
-                onResult(UserType.ORGANIC)
+                onResult(UserType.ORGANIC, "")
             }
         })
     }

@@ -1,12 +1,11 @@
 package com.rbuxdrop.cougame.game.model
 
+import com.rbuxdrop.cougame.businesModule.economy.Econ
 import com.rbuxdrop.cougame.game.data.PlayerData
 import com.rbuxdrop.cougame.game.dataStore.DS_Player
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 class PlayerModel(
@@ -28,42 +27,6 @@ class PlayerModel(
         get() = playerFlow.value
 
     // ------------------------------------------------------------------------
-    // RBX
-    // ------------------------------------------------------------------------
-    val rbxFlow: StateFlow<Long> =
-        playerFlow
-            .map { it.rbx }
-            .distinctUntilChanged()
-            .stateIn(scope, SharingStarted.Eagerly, currentPlayer.rbx)
-
-    val currentRbx: Long
-        get() = rbxFlow.value
-
-    fun addRbx(amount: Long) {
-        if (amount <= 0) return
-        val boosted = applyBoost(amount)
-        ds.update { data -> data.copy(rbx = data.rbx + boosted) }
-    }
-
-    fun spendRbx(amount: Long): Boolean {
-        if (amount <= 0) return false
-        if (currentRbx < amount) return false
-        ds.update { data -> data.copy(rbx = data.rbx - amount) }
-        return true
-    }
-
-    fun setRbx(amount: Long) {
-        ds.update { data -> data.copy(rbx = amount.coerceAtLeast(0L)) }
-    }
-
-    // ------------------------------------------------------------------------
-    // Boost Mode
-    // ------------------------------------------------------------------------
-    var isBoostMode: Boolean = false
-
-    private fun applyBoost(amount: Long): Long = if (isBoostMode) amount * 2 else amount
-
-    // ------------------------------------------------------------------------
     // Daily Reward
     // ------------------------------------------------------------------------
 
@@ -72,6 +35,9 @@ class PlayerModel(
 
         private val DAY_MILLIS   = if (IS_TEST_MODE) 10_000L else 24 * 60 * 60 * 1000L
         private val RESET_MILLIS = if (IS_TEST_MODE) 20_000L else 48 * 60 * 60 * 1000L
+
+        private const val DAILY_REWARD_KEY = "daily_reward"
+        private val DAILY_REWARD_DEF = intArrayOf(100, 200, 400, 800, 1600, 3200, 6400)
     }
 
     val currentDailyRewardDay: Int
@@ -80,7 +46,10 @@ class PlayerModel(
     val currentDailyRewardTime: Long
         get() = currentPlayer.dailyRewardTime
 
-    val listReward = listOf<Long>(100, 200, 400, 800, 1600, 3200, 6400)
+    // Суми по днях — з Econ (ключ daily_reward), дефолт = сьогоднішня поведінка.
+    // Підпис на плитці і нарахування беруться звідси ж — розбіжності не буде.
+    val listReward: List<Long>
+        get() = Econ.rewardList(DAILY_REWARD_KEY, DAILY_REWARD_DEF).map { it.toLong() }
 
     fun canClaimDailyReward(): Boolean {
 
@@ -118,9 +87,8 @@ class PlayerModel(
 
         if (!canClaimDailyReward()) return 0L
 
+        // Нараховує екран (Wallet.add з його bt/block), модель лише рахує streak
         val reward = listReward[currentDailyRewardDay - 1]
-
-        addRbx(reward)
 
         val nextDay =
             if (currentDailyRewardDay >= 7) 1

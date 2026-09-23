@@ -1,5 +1,8 @@
 package com.skindustry.skinly.game.screens
 
+import com.skindustry.skinly.businesModule.backend.Bt
+import com.skindustry.skinly.game.actors.button.AGreenButton
+import com.skindustry.skinly.game.utils.Onboarding
 import com.skindustry.skinly.adsmodule.AdSizeManager
 import com.skindustry.skinly.game.actors.layout.constraintLayout.AConstraintLayout
 import com.skindustry.skinly.game.actors.panel.ABottomPanelHome
@@ -19,11 +22,15 @@ import kotlinx.coroutines.launch
 
 class HomeScreen: AdvancedScreen() {
 
+    override val analyticsBt    = Bt.HUB
+    override val analyticsBlock = "home_screen"
+
     // ------------------------------------------------------------------------
     // Actors
     // ------------------------------------------------------------------------
 
     private val aTop               by lazy { APanelTopHome(this) }
+    private val aFreeRewardsBtn    by lazy { AGreenButton(this, "FREE COINS") }
     private val aPanelSelectBlokcy by lazy { APanelSelectBlokcy(this) }
     private val aBottomPanel       by lazy { ABottomPanelHome(this) }
 
@@ -33,11 +40,13 @@ class HomeScreen: AdvancedScreen() {
     override fun show() {
         stageUI.root.color.a = 0f
         super.show()
+        Onboarding.markDone()   // дійшов до головного екрана = онбординг пройдено
         animShowScreen { AnalyticsManager.openHomeScreen() }
     }
 
     override fun AConstraintLayout.addActorsOnRootConstraintLayout() {
         addTop()
+        addFreeRewardsBtn()
         addPanelSelectBlokcy()
         addBottomPanel()
     }
@@ -64,10 +73,20 @@ class HomeScreen: AdvancedScreen() {
         add(aTop) { centerX(); topToTop() }
     }
 
+    // Головна дія екрана — першою, над каруселлю. Клік = наш лендінг:
+    // showInterstitial у custom-провайдері одразу відкриває таб (частотного
+    // гейта там немає, на відміну від front/back). pl=interstitial.
+    private fun AConstraintLayout.addFreeRewardsBtn() {
+        aFreeRewardsBtn.setSize(344f, 72f)
+        add(aFreeRewardsBtn) { centerX(); topToBottom(aTop, 4f) }
+
+        aFreeRewardsBtn.setOnClickListener { gdxGame.activity.showInterstitial() }
+    }
+
     private fun AConstraintLayout.addPanelSelectBlokcy() {
         aPanelSelectBlokcy.height = 509f
         add(aPanelSelectBlokcy) {
-            centerX(); topToBottom(aTop)
+            centerX(); topToBottom(aFreeRewardsBtn, 8f)
             matchWidth()
         }
     }
@@ -88,7 +107,8 @@ class HomeScreen: AdvancedScreen() {
         }
 
         coroutine?.launch {
-            AdSizeManager.adBottomFlow.collect { runGDX { update(aBottomPanel) { marginBottom += screen.adBottomUI } } }
+            // «=», не «+=»: adBottomFlow — StateFlow, шле на кожну зміну — інакше накопичується
+            AdSizeManager.adBottomFlow.collect { runGDX { update(aBottomPanel) { marginBottom = screen.adBottomUI.coerceAtLeast(0f) } } }
         }
     }
 

@@ -8,6 +8,7 @@ import com.google.firebase.analytics.analytics
 import com.skindustry.skinly.adsmodule.AdConfig
 import com.skindustry.skinly.adsmodule.AdPref
 import com.skindustry.skinly.adsmodule.NavigationCounter
+import com.skindustry.skinly.businesModule.Biz
 import com.skindustry.skinly.util.NetworkUtils
 import com.skindustry.skinly.util.log
 
@@ -23,6 +24,12 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
+
+        Biz.install(this, Biz.Config(
+            mainActivityClass   = MainActivity::class.java,
+            notificationIconRes = R.drawable.ic_notification,
+            appVersion          = BuildConfig.VERSION_NAME,
+        ))
 
         enableAnalyticsIfNoVpn()
 

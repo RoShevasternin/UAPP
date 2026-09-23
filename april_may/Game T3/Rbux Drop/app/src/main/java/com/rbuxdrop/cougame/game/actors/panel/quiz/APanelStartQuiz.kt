@@ -171,6 +171,12 @@ class APanelStartQuiz(override val screen: AdvancedScreen): AConstraintLayout(sc
     private val totalQuestions = QUIZ_QUESTIONS.size
 
     // ------------------------------------------------------------------------
+    // Callback — монети рахує екран (Wallet з його bt/block)
+    // ------------------------------------------------------------------------
+    var onAnswer: (isCorrect: Boolean) -> Unit = {}
+    var onFinish: () -> Unit = {}
+
+    // ------------------------------------------------------------------------
     // Lifecycle
     // ------------------------------------------------------------------------
     override fun addActorsOnGroup() {
@@ -232,6 +238,7 @@ class APanelStartQuiz(override val screen: AdvancedScreen): AConstraintLayout(sc
         if (index >= totalQuestions) {
             // finish quiz
             listAnswerBox.forEach { it.disable() }
+            onFinish()
             return
         }
 
@@ -253,9 +260,7 @@ class APanelStartQuiz(override val screen: AdvancedScreen): AConstraintLayout(sc
     private fun onAnswer(answerIndex: Int) {
         val question = QUIZ_QUESTIONS[currentIndex]
 
-        if (answerIndex == question.correctIndex) {
-            gdxGame.modelPlayer.addRbx(5)
-        }
+        onAnswer(answerIndex == question.correctIndex)
 
         showQuestion(currentIndex + 1)
     }

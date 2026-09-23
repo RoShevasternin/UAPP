@@ -1,5 +1,6 @@
 package com.rbuxdrop.cougame.game.screens.main
 
+import com.rbuxdrop.cougame.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.rbuxdrop.cougame.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rbuxdrop.cougame.game.actors.panel.APanelSelectConverter
@@ -14,6 +15,9 @@ import com.rbuxdrop.cougame.game.utils.advanced.AdvancedScreen
 import com.rbuxdrop.cougame.game.utils.gdxGame
 
 class SelectConverterScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "select_converter_screen"
 
     // ------------------------------------------------------------------------
     // Actors

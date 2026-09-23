@@ -15,6 +15,8 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.rbuxdrop.cougame.MainActivity
 import com.rbuxdrop.cougame.adsmodule.AdSizeManager
+import com.rbuxdrop.cougame.businesModule.backend.Bt
+import com.rbuxdrop.cougame.businesModule.backend.Events
 import com.rbuxdrop.cougame.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rbuxdrop.cougame.game.utils.Block
 import com.rbuxdrop.cougame.game.utils.HEIGHT_UI
@@ -86,6 +88,13 @@ abstract class AdvancedScreen(
 
     val rootConstraintLayout = AConstraintLayout(this)
 
+    // ─── Analytics ────────────────────────────────────────────────────────────
+    // bt    — тип механіки зі спільного словника (enum Bt): свій не вигадувати.
+    // block — локальне ім'я екрана в snake_case. ПІСЛЯ РЕЛІЗУ НЕ ПЕРЕЙМЕНОВУВАТИ.
+    // Екран, який не задав обидва, screen_view не шле (Loader, Language, Settings).
+    open val analyticsBt   : Bt?     = null
+    open val analyticsBlock: String? = null
+
     override fun resize(width: Int, height: Int) {
         updateSize()
     }
@@ -105,6 +114,11 @@ abstract class AdvancedScreen(
 
         Gdx.input.inputProcessor = inputMultiplexer.apply { addProcessors(this@AdvancedScreen, stageUI, stageBack) }
         Gdx.input.setCatchKey(Input.Keys.BACK, true)
+
+        // Шлемо на КОЖЕН show — повернення назад це окремий перегляд, а не дубль.
+        val bt    = analyticsBt
+        val block = analyticsBlock
+        if (bt != null && block != null) Events.screenView(bt, block)
     }
 
     override fun render(delta: Float) {

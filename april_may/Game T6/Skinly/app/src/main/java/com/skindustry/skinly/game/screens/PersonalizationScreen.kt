@@ -1,5 +1,9 @@
 package com.skindustry.skinly.game.screens
 
+import com.skindustry.skinly.businesModule.backend.Bt
+import com.skindustry.skinly.businesModule.backend.Events
+import com.skindustry.skinly.businesModule.economy.Econ
+import com.skindustry.skinly.businesModule.economy.Wallet
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.PixmapIO
@@ -40,6 +44,10 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class PersonalizationScreen : AdvancedScreen() {
+
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "personalization_screen"
+
 
     // ------------------------------------------------------------------------
     // Font
@@ -82,6 +90,9 @@ class PersonalizationScreen : AdvancedScreen() {
 
     // Переходи — викликаєш з будь-якого місця
     private fun goToUnlockPopup() {
+        // Центр вільної зони над рекламою: попап (398) вищий за старий, і з
+        // фіксованим bias його низ (Cancel) ховався під нативкою/банером
+        rootConstraintLayout.update(aPopupUnlock) { marginBottom = adBottomUI.coerceAtLeast(0f) }
         stateMachine.pushState(stateUnlockPopup)
     }
 
@@ -164,7 +175,8 @@ class PersonalizationScreen : AdvancedScreen() {
         }
 
         coroutine?.launch {
-            AdSizeManager.adBottomFlow.collect { runGDX { update(aBottomPanel) { marginBottom += screen.adBottomUI } } }
+            // «=», не «+=»: adBottomFlow — StateFlow, шле на кожну зміну — інакше накопичується
+            AdSizeManager.adBottomFlow.collect { runGDX { update(aBottomPanel) { marginBottom = screen.adBottomUI.coerceAtLeast(0f) } } }
         }
     }
 
@@ -262,8 +274,8 @@ class PersonalizationScreen : AdvancedScreen() {
     }
 
     private fun AConstraintLayout.addUnlockPopup() {
-        aPopupUnlock.setSize(344f, 334f)
-        add(aPopupUnlock) { center(); verticalBias = 0.7f }
+        aPopupUnlock.setSize(APopupUnlock.WIDTH, APopupUnlock.HEIGHT)
+        add(aPopupUnlock) { center() }
         aPopupUnlock.animHideAndDisable()
     }
 
@@ -290,11 +302,9 @@ class PersonalizationScreen : AdvancedScreen() {
         aPopupUnlock.add(popupBgImg!!) { centerX(); topToTop(margin = 110f) }
         aPopupUnlock.add(popupImg!!)   { center(popupBgImg!!) }
 
-        stateUnlockPopup.onWatch = {
-            gdxGame.activity.showInterstitial {
-                gdxGame.modelPlayer.unlockCardTexture(type, index)
-                panel.unlock(index)
-            }
+        bindUnlock {
+            gdxGame.modelPlayer.unlockCardTexture(type, index)
+            panel.unlock(index)
         }
 
         goToUnlockPopup()
@@ -317,14 +327,45 @@ class PersonalizationScreen : AdvancedScreen() {
         aPopupUnlock.add(popupBgImg!!) { centerX(); topToTop(margin = 110f) }
         aPopupUnlock.add(popupImg!!)   { center(popupBgImg!!) }
 
-        stateUnlockPopup.onWatch = {
-            gdxGame.activity.showInterstitial {
-                gdxGame.modelPlayer.unlockCardSticker(type, index)
-                panel.unlock(index)
-            }
+        bindUnlock {
+            gdxGame.modelPlayer.unlockCardSticker(type, index)
+            panel.unlock(index)
         }
 
         goToUnlockPopup()
+    }
+
+    // ------------------------------------------------------------------------
+    // Unlock: реклама або монети
+    // ------------------------------------------------------------------------
+    // Ціна з Econ (ключ = analyticsBlock): підпис на кнопці і списання — одне
+    // число. Wallet.spend сам відмовляє при нестачі і в мінус не йде.
+    private fun bindUnlock(unlock: () -> Unit) {
+        val price = Econ.price(analyticsBlock, UNLOCK_PRICE_DEF)
+        aPopupUnlock.setPrice(price)
+
+        stateUnlockPopup.onWatch = {
+            gdxGame.activity.showInterstitial {
+                unlock()
+                Events.featureComplete(bt = analyticsBt, block = analyticsBlock)
+            }
+        }
+        stateUnlockPopup.onCoins = {
+            if (Wallet.spend(price, bt = analyticsBt, block = analyticsBlock)) {
+                unlock()
+                Events.featureComplete(bt = analyticsBt, block = analyticsBlock, amount = price)
+                true
+            } else {
+                gdxGame.activity.showToast("Not enough coins — you need $price")
+                false
+            }
+        }
+    }
+
+    companion object {
+        // Ціна розблокування за монети (альтернатива рекламі). Сервер міняє
+        // через economy.prices без релізу.
+        private const val UNLOCK_PRICE_DEF = 100
     }
 
     // ------------------------------------------------------------------------

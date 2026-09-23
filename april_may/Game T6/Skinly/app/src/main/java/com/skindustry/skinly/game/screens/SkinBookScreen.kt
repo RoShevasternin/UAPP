@@ -1,5 +1,6 @@
 package com.skindustry.skinly.game.screens
 
+import com.skindustry.skinly.businesModule.backend.Bt
 import com.skindustry.skinly.adsmodule.AdSizeManager
 import com.skindustry.skinly.game.actors.AScrollPane
 import com.skindustry.skinly.game.actors.layout.autoLayout.AAutoLayout
@@ -19,6 +20,10 @@ import com.skindustry.skinly.util.log
 import kotlinx.coroutines.launch
 
 class SkinBookScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "skin_book_screen"
+
 
     // ------------------------------------------------------------------------
     // Actors
@@ -103,7 +108,8 @@ class SkinBookScreen: AdvancedScreen() {
         }
 
         coroutine?.launch {
-            AdSizeManager.adBottomFlow.collect { runGDX { update(aBottomPanel) { marginBottom += screen.adBottomUI } } }
+            // «=», не «+=»: adBottomFlow — StateFlow, шле на кожну зміну — інакше накопичується
+            AdSizeManager.adBottomFlow.collect { runGDX { update(aBottomPanel) { marginBottom = screen.adBottomUI.coerceAtLeast(0f) } } }
         }
     }
 

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "395022901797",
+    "project_id": "t6-skinly",
+    "storage_bucket": "t6-skinly.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:395022901797:android:5c8bbbfc25ae03cd9a15cc",
+        "android_client_info": {
+          "package_name": "com.skindustry.skinly"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBf0KLJNrC6Fel68FH9XwIdfP1iXwTJO1k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,6 @@
 package com.skindustry.skinly.game.actors.panel
 
+import com.skindustry.skinly.game.actors.coin.APanelBalance
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.skindustry.skinly.game.actors.button.base.AButtonAnim
 import com.skindustry.skinly.game.actors.button.base.AButtonStyles
@@ -15,6 +16,7 @@ class APanelTopHome(override val screen: AdvancedScreen): AConstraintLayout(scre
     // ------------------------------------------------------------------------
     private val aLogoImg     = Image(gdxGame.assetsAll.logo)
     private val aSettingsBtn = AButtonAnim(screen, AButtonStyles.Anim.SETTINGS)
+    private val aBalance     = APanelBalance(screen)
 
     // ------------------------------------------------------------------------
     // Lifecycle
@@ -22,6 +24,7 @@ class APanelTopHome(override val screen: AdvancedScreen): AConstraintLayout(scre
     override fun addActorsOnGroup() {
         addLogoImg()
         addSettingsBtn()
+        addBalance()
     }
 
     // ------------------------------------------------------------------------
@@ -30,6 +33,15 @@ class APanelTopHome(override val screen: AdvancedScreen): AConstraintLayout(scre
     private fun addLogoImg() {
         aLogoImg.setSize(124f, 47f)
         add(aLogoImg) { startToStart(margin = 12f); topToTop(margin = 6f) }
+    }
+
+    // Баланс монет — між логотипом і налаштуваннями, по центру кнопки налаштувань
+    private fun addBalance() {
+        aBalance.setSize(APanelBalance.W.toFloat(), APanelBalance.H.toFloat())
+        add(aBalance) {
+            endToStart(aSettingsBtn, 12f)
+            topToTop(aSettingsBtn); bottomToBottom(aSettingsBtn)
+        }
     }
 
     private fun addSettingsBtn() {

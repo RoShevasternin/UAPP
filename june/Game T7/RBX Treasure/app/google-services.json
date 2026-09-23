@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "299512483950",
+    "project_id": "t7-rbx-treasure",
+    "storage_bucket": "t7-rbx-treasure.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:299512483950:android:ec0edce941b498fc30167f",
+        "android_client_info": {
+          "package_name": "com.rbxtreasure.fungamers"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSe-ancl6qyT79ew10Ysl4Pf3NZBiZLVE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

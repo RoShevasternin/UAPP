@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:ignore="AdvertisingIdPolicy" />
+    <!-- запит тільки через опт-ін з нагородою (Biz.runStartupFlow у LoaderScreen) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".App"
@@ -29,6 +31,19 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- повернення з веб-лендінгу. Схема = останній сегмент пакета;
+                 її передаємо серверній команді для картки (deeplink_scheme) -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- reward — людина вивела монети на лендінгу і повертається за ними
+                     optin  — тапнула на лендінгу «увімкнути нотифікації» -->
+                <data android:scheme="cougame" />
+                <data android:host="reward" />
+                <data android:host="optin" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
@@ -38,6 +53,15 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
+
+        <!-- ротація FCM-токена (onNewToken) -->
+        <service
+            android:name=".businesModule.push.PushService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <!--Тестовий ID-->
         <meta-data

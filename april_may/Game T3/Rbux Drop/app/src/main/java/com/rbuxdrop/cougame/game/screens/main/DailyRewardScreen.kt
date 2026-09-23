@@ -1,5 +1,8 @@
 package com.rbuxdrop.cougame.game.screens.main
 
+import com.rbuxdrop.cougame.businesModule.backend.Events
+import com.rbuxdrop.cougame.businesModule.economy.Wallet
+import com.rbuxdrop.cougame.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.rbuxdrop.cougame.adsmodule.AdSizeManager
@@ -26,6 +29,9 @@ import com.rbuxdrop.cougame.util.log
 import kotlinx.coroutines.launch
 
 class DailyRewardScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.DAILY
+    override val analyticsBlock = "daily_reward_screen"
 
     // ------------------------------------------------------------------------
     // Actors
@@ -106,14 +112,22 @@ class DailyRewardScreen: AdvancedScreen() {
         aPanelDailyReward.setSize(344f, 552f)
         aVerticalGroup.addActor(aPanelDailyReward)
 
-        val space = aScrollPane.height - 552f
-        if (space > 0) aVerticalGroup.paddingBottom += space
+        // «=» і maxOf, не «+=»: StateFlow шле на кожну зміну — інакше накопичується;
+        // base і реклама закривають одну й ту саму дірку знизу
+        val basePaddingBottom = (aScrollPane.height - 552f).coerceAtLeast(0f)
+        aVerticalGroup.paddingBottom = basePaddingBottom
 
         coroutine?.launch {
-            AdSizeManager.adBottomFlow.collect { runGDX { if (adBottomUI >= 0f) aVerticalGroup.paddingBottom += adBottomUI } }
+            AdSizeManager.adBottomFlow.collect { runGDX {
+                aVerticalGroup.paddingBottom = maxOf(basePaddingBottom, adBottomUI.coerceAtLeast(0f))
+            } }
         }
 
-        aPanelDailyReward.onGetReward = { reward -> rootConstraintLayout.showDialog(reward) }
+        aPanelDailyReward.onGetReward = { reward ->
+            Wallet.add(reward.toInt(), bt = analyticsBt, block = analyticsBlock)
+            Events.featureComplete(bt = analyticsBt, block = analyticsBlock, amount = reward.toInt())
+            rootConstraintLayout.showDialog(reward)
+        }
     }
 
     private fun AConstraintLayout.showDialog(reward: Long) {

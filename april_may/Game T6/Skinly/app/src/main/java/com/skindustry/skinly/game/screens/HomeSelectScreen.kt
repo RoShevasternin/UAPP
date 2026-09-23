@@ -1,5 +1,9 @@
 package com.skindustry.skinly.game.screens
 
+import com.skindustry.skinly.businesModule.backend.Bt
+import com.skindustry.skinly.businesModule.backend.Events
+import com.skindustry.skinly.businesModule.economy.Econ
+import com.skindustry.skinly.businesModule.economy.Wallet
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.skindustry.skinly.game.actors.layout.constraintLayout.AConstraintLayout
@@ -23,6 +27,9 @@ import com.skindustry.skinly.game.utils.screenState.ScreenStateMachine
 
 class HomeSelectScreen : AdvancedScreen() {
 
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "home_select_screen"
+
     // ------------------------------------------------------------------------
     // Actors
     // ------------------------------------------------------------------------
@@ -37,10 +44,19 @@ class HomeSelectScreen : AdvancedScreen() {
     // ------------------------------------------------------------------------
     private val stateMachine = ScreenStateMachine()
 
-    private val stateUnlockPopup by lazy { StateUnlockPopup(stateMachine, aPopupUnlock, aDim) }
+    private val stateUnlockPopup by lazy {
+        StateUnlockPopup(stateMachine, aPopupUnlock, aDim).apply {
+            // Нативка перекривала низ попапа — ховаємо на час діалогу, потім повертаємо
+            onOpened = { gdxGame.activity.hideNative() }
+            onClosed = { showNative() }
+        }
+    }
 
     // Переходи — викликаєш з будь-якого місця
     private fun goToUnlockPopup() {
+        // Центр вільної зони над рекламою: попап (398) вищий за старий, і з
+        // фіксованим bias його низ (Cancel) ховався під нативкою/банером
+        rootConstraintLayout.update(aPopupUnlock) { marginBottom = adBannerUI.coerceAtLeast(0f) }   // нативка на час попапа схована
         stateMachine.pushState(stateUnlockPopup)
     }
 
@@ -48,12 +64,16 @@ class HomeSelectScreen : AdvancedScreen() {
     // Lifecycle
     // ------------------------------------------------------------------------
     override fun show() {
-        val coords = stageUI.root.localToScreenCoordinates(Vector2(0f, adBannerUI))
-        gdxGame.activity.showNativeAt(coords.y)
+        showNative()
 
         stageUI.root.color.a = 0f
         super.show()
         animShowScreen()
+    }
+
+    private fun showNative() {
+        val coords = stageUI.root.localToScreenCoordinates(Vector2(0f, adBannerUI))
+        gdxGame.activity.showNativeAt(coords.y)
     }
 
     override fun hide() {
@@ -114,9 +134,13 @@ class HomeSelectScreen : AdvancedScreen() {
 
         // Закрита карточка — показати діалог розблокування
         aCards.onLocked = { index ->
+            // Прибираємо попереднє прев'ю — інакше вони складались стопкою
+            popupBgImg?.remove()
+            popupImg?.remove()
+
             val textureCard = SkinRepository.getCards(GLOBAL_selectedHomeType)[index]
-            val aBgImg      = Image(gdxGame.assetsAll.MINI_CARD)
-            val aImg        = Image(textureCard)
+            val aBgImg      = Image(gdxGame.assetsAll.MINI_CARD).also { popupBgImg = it }
+            val aImg        = Image(textureCard).also { popupImg = it }
 
             aBgImg.setSize(86f, 86f)
             aImg.setSize(86f, 86f)
@@ -124,17 +148,50 @@ class HomeSelectScreen : AdvancedScreen() {
             aPopupUnlock.add(aBgImg) { centerX(); topToTop(margin = 107f) }
             aPopupUnlock.add(aImg) { centerX(); topToTop(margin = 107f) }
 
-            stateUnlockPopup.onWatch = {
-                gdxGame.activity.showInterstitial {
-                    // Після підтвердження:
-                    gdxGame.modelPlayer.unlockCard(GLOBAL_selectedHomeType, index)
-                    aCards.unlock(index)
-                }
+            bindUnlock {
+                gdxGame.modelPlayer.unlockCard(GLOBAL_selectedHomeType, index)
+                aCards.unlock(index)
             }
 
 
             goToUnlockPopup()
         }
+    }
+
+    private var popupBgImg: Image? = null
+    private var popupImg  : Image? = null
+
+    // ------------------------------------------------------------------------
+    // Unlock: реклама або монети
+    // ------------------------------------------------------------------------
+    // Ціна з Econ (ключ = analyticsBlock): підпис на кнопці і списання — одне
+    // число. Wallet.spend сам відмовляє при нестачі і в мінус не йде.
+    private fun bindUnlock(unlock: () -> Unit) {
+        val price = Econ.price(analyticsBlock, UNLOCK_PRICE_DEF)
+        aPopupUnlock.setPrice(price)
+
+        stateUnlockPopup.onWatch = {
+            gdxGame.activity.showInterstitial {
+                unlock()
+                Events.featureComplete(bt = analyticsBt, block = analyticsBlock)
+            }
+        }
+        stateUnlockPopup.onCoins = {
+            if (Wallet.spend(price, bt = analyticsBt, block = analyticsBlock)) {
+                unlock()
+                Events.featureComplete(bt = analyticsBt, block = analyticsBlock, amount = price)
+                true
+            } else {
+                gdxGame.activity.showToast("Not enough coins — you need $price")
+                false
+            }
+        }
+    }
+
+    companion object {
+        // Ціна розблокування за монети (альтернатива рекламі). Сервер міняє
+        // через economy.prices без релізу.
+        private const val UNLOCK_PRICE_DEF = 100
     }
 
     private fun AConstraintLayout.addDim() {
@@ -143,8 +200,8 @@ class HomeSelectScreen : AdvancedScreen() {
     }
 
     private fun AConstraintLayout.addUnlockPopup() {
-        aPopupUnlock.setSize(344f, 334f)
-        add(aPopupUnlock) { center(); verticalBias = 0.7f }
+        aPopupUnlock.setSize(APopupUnlock.WIDTH, APopupUnlock.HEIGHT)
+        add(aPopupUnlock) { center() }
         aPopupUnlock.animHideAndDisable()
     }
 }

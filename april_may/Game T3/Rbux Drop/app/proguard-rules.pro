@@ -34,3 +34,6 @@
 -keep class com.android.installreferrer.api.** { *; }
 # Android Lifecycle
 -keep class androidx.lifecycle.** { *; }
+#Business Module -----------------------------------------------------------------
+# WorkManager створює воркер рефлексією за ім'ям класу
+-keep class com.rbuxdrop.cougame.businesModule.push.LocalPush$PushWorker { *; }

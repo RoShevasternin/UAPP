@@ -56,12 +56,13 @@ class APanelLanguage(override val screen: AdvancedScreen): AConstraintLayout(scr
         aVerticalGroup.addUpContentGroup()
         aVerticalGroup.addDoneBtn()
 
-        aVerticalGroup.paddingBottom = 20f
+        aVerticalGroup.paddingBottom = BASE_PADDING_BOTTOM
 
+        // «=» і maxOf, не «+=»: StateFlow шле на кожну зміну — інакше накопичується
         coroutine?.launch {
             AdSizeManager.adBottomFlow.collect {
                 runGDX {
-                    if (screen.adBottomUI >= 0f) aVerticalGroup.paddingBottom += screen.adBottomUI
+                    aVerticalGroup.paddingBottom = maxOf(BASE_PADDING_BOTTOM, screen.adBottomUI.coerceAtLeast(0f))
                     log("APanelLanguage adBottomUI = ${screen.adBottomUI} | banner = ${screen.adBannerUI}")
                 }
             }
@@ -110,6 +111,10 @@ class APanelLanguage(override val screen: AdvancedScreen): AConstraintLayout(scr
         aDoneBtn.setOnClickListener {
             screen.animHideScreen { gdxGame.navigationManager.navigate(OnboardingScreen::class.java.name, LanguageScreen::class.java.name) }
         }
+    }
+
+    companion object {
+        private const val BASE_PADDING_BOTTOM = 20f
     }
 
 }

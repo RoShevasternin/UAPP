@@ -1,5 +1,6 @@
 package com.rbuxdrop.cougame.game.actors.panel.flip
 
+import com.rbuxdrop.cougame.businesModule.economy.Econ
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
@@ -25,23 +26,25 @@ class APanelFlip(override val screen: AdvancedScreen): AConstraintLayout(screen)
     // ------------------------------------------------------------------------
     // Fields
     // ------------------------------------------------------------------------
-    private var randomResult = Result.entries.random()
+    // Сума з Econ (ключ "flip_card"); підпис на звороті картки і нарахування —
+    // з одного значення.
+    private var payout = randomPayout()
         set(value) {
-            aPanelFlipResult.setReward(value.sum.toLong())
+            aPanelFlipResult.setReward(value.toLong())
             field = value
         }
 
     // ------------------------------------------------------------------------
     // Callback
     // ------------------------------------------------------------------------
-    var onFlip: (Long) -> Unit = {}
+    var onFlip: (win: Int) -> Unit = {}
 
     // ------------------------------------------------------------------------
     // Lifecycle
     // ------------------------------------------------------------------------
     override fun addActorsOnGroup() {
         children.forEach { it.disable() }
-        randomResult = Result.entries.random()
+        payout = randomPayout()
 
         aPanelFlipResult.scaleX    = 0f
         aPanelFlipResult.isVisible = false
@@ -53,23 +56,15 @@ class APanelFlip(override val screen: AdvancedScreen): AConstraintLayout(screen)
         setOnClickListener {
             disable()
             flipCard()
-            onFlip(randomResult.sum.toLong())
+            onFlip(payout)
         }
     }
 
-    enum class Result(val sum: Int) {
-        _5  (5),
-        _10 (10),
-        _15 (15),
-        _20 (20),
-        _25 (25),
-        _30 (30),
-        _35 (35),
-        _40 (40),
-        _45 (45),
-        _50 (50),
-        _100(100),
-        _150(150),
+    private fun randomPayout(): Int = Econ.rewardList(REWARDS_KEY, FLIP_DEF).random()
+
+    companion object {
+        private const val REWARDS_KEY = "flip_card"
+        private val FLIP_DEF = intArrayOf(5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100, 150)
     }
 
     private fun flipCard() {

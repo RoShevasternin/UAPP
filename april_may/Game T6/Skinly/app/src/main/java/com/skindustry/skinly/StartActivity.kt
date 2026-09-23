@@ -16,7 +16,12 @@ class StartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
 
-        startActivity(Intent(this, MainActivity::class.java))
+        // диплінк повернення (skinly://reward|optin) і extras пуша приземляються
+        // сюди — прокидаємо в MainActivity, обробка там (Biz.onActivityIntent)
+        startActivity(Intent(this, MainActivity::class.java).also {
+            it.data = intent?.data
+            intent?.extras?.let { e -> it.putExtras(e) }
+        })
         finish()
     }
 

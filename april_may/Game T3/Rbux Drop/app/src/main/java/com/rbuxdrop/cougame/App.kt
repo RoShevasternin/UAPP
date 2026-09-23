@@ -8,6 +8,7 @@ import com.google.firebase.analytics.analytics
 import com.rbuxdrop.cougame.adsmodule.AdConfig
 import com.rbuxdrop.cougame.adsmodule.AdPref
 import com.rbuxdrop.cougame.adsmodule.NavigationCounter
+import com.rbuxdrop.cougame.businesModule.Biz
 import com.rbuxdrop.cougame.util.NetworkUtils
 import com.rbuxdrop.cougame.util.log
 
@@ -23,6 +24,12 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
+
+        Biz.install(this, Biz.Config(
+            mainActivityClass   = MainActivity::class.java,
+            notificationIconRes = R.drawable.ic_notification,
+            appVersion          = BuildConfig.VERSION_NAME,
+        ))
 
         enableAnalyticsIfNoVpn()
 

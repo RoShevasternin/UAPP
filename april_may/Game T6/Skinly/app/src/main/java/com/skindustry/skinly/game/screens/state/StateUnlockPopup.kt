@@ -15,9 +15,17 @@ class StateUnlockPopup(
 ) : ScreenState(context) {
 
     var onWatch : (() -> Unit)? = null
+    // true — розблоковано (монети списано), закриваємо; false — не вистачило, лишаємо
+    var onCoins : (() -> Boolean)? = null
     var onCancel: (() -> Unit)? = null
 
+    // Хуки відкриття/закриття — екрани з нативкою ховають її на час попапа:
+    // нативка — Android-view поверх GDX і інакше перекриває низ діалогу
+    var onOpened: (() -> Unit)? = null
+    var onClosed: (() -> Unit)? = null
+
     override fun onEnter() {
+        onOpened?.invoke()
         dim.animShowAndEnable()
         popup.animShowAndEnable()
 
@@ -26,6 +34,9 @@ class StateUnlockPopup(
 
             context.dismiss()  // закриваємо діалог
             onWatch?.invoke()   // показуємо рекламу
+        }
+        popup.onCoins = {
+            if (onCoins?.invoke() == true) context.dismiss()
         }
         popup.onCancel = {
             context.dismiss()
@@ -36,5 +47,6 @@ class StateUnlockPopup(
     override fun onExit() {
         dim.animHideAndDisable()
         popup.animHideAndDisable()
+        onClosed?.invoke()
     }
 }

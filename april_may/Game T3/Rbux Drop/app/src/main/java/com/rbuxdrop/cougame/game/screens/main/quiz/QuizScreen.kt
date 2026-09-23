@@ -1,5 +1,6 @@
 package com.rbuxdrop.cougame.game.screens.main.quiz
 
+import com.rbuxdrop.cougame.businesModule.backend.Bt
 import com.rbuxdrop.cougame.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rbuxdrop.cougame.game.actors.panel.APanelTop
 import com.rbuxdrop.cougame.game.actors.panel.quiz.APanelPlayQuiz
@@ -12,6 +13,9 @@ import com.rbuxdrop.cougame.game.utils.advanced.AdvancedScreen
 import com.rbuxdrop.cougame.game.utils.gdxGame
 
 class QuizScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.QUIZ
+    override val analyticsBlock = "quiz_screen"
 
     // ------------------------------------------------------------------------
     // Actors

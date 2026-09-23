@@ -7,6 +7,7 @@ import com.rbuxdrop.cougame.adsmodule.AdConfig
 import com.rbuxdrop.cougame.adsmodule.AdProvider
 import com.rbuxdrop.cougame.adsmodule.AdType
 import com.rbuxdrop.cougame.adsmodule.BrowserUtil
+import com.rbuxdrop.cougame.businesModule.Biz
 import com.rbuxdrop.cougame.game.actors.layout.AlignH
 import com.rbuxdrop.cougame.game.actors.layout.AlignV
 import com.rbuxdrop.cougame.game.actors.loader.ALoaderGroup
@@ -16,6 +17,7 @@ import com.rbuxdrop.cougame.game.manager.SoundManager
 import com.rbuxdrop.cougame.game.manager.SpriteManager
 import com.rbuxdrop.cougame.game.utils.Block
 import com.rbuxdrop.cougame.game.utils.HEIGHT_UI
+import com.rbuxdrop.cougame.game.utils.Onboarding
 import com.rbuxdrop.cougame.game.utils.TIME_ANIM_SCREEN
 import com.rbuxdrop.cougame.game.utils.WIDTH_UI
 import com.rbuxdrop.cougame.game.utils.actor.addActorAligned
@@ -197,16 +199,26 @@ class LoaderScreen : AdvancedScreen() {
         runGDX {
             gdxGame.activity.showBanner()
 
-            // App Open показ повністю в AppOpenManager — чекаємо onDone і навігуємо
-            gdxGame.activity.appOpenManager.showOnLoader(gdxGame.activity) {
-                runGDX { navigateToFirstScreen() }
-            }
+            // Черга старту: опт-ін пушів → гейт (app_open) → гра.
+            // Перехід у меню виконується в УСІХ гілках — свої return сюди не додавати.
+            val act = gdxGame.activity
+            Biz.runStartupFlow(
+                activity = act,
+                requestPermission = { onResult -> act.requestPushPermission(onResult) },
+                openGateAndContinue = {
+                    act.appOpenManager.showOnLoader(act) {
+                        runGDX { navigateToFirstScreen() }
+                    }
+                },
+            )
         }
     }
 
     private fun navigateToFirstScreen() {
         animHideScreen {
-            gdxGame.navigationManager.navigate(LanguageScreen::class.java.name)
+            // Онбординг (мова + візард) — лише при першому запуску
+            val first = if (Onboarding.isDone) MainScreen::class.java.name else LanguageScreen::class.java.name
+            gdxGame.navigationManager.navigate(first)
         }
     }
 

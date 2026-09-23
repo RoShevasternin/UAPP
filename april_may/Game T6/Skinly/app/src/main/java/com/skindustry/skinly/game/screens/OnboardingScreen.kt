@@ -76,7 +76,7 @@ class OnboardingScreen: AdvancedScreen() {
 
     private fun AConstraintLayout.addNextBtn() {
         aNextBtn.setSize(344f, 56f)
-        add(aNextBtn) { centerX(); bottomToBottom(margin = 24f) }
+        add(aNextBtn) { centerX(); bottomToBottom(margin = NEXT_MARGIN_BOTTOM) }
 
         aNextBtn.setOnClickListener {
             if (currentIndex == maxIndex) {
@@ -88,11 +88,16 @@ class OnboardingScreen: AdvancedScreen() {
             if ((currentIndex + 1) <= maxIndex) currentIndex++
         }
 
+        // «=», не «+=»: adBottomFlow — StateFlow, шле на кожну зміну — інакше накопичується
         coroutine?.launch {
-            AdSizeManager.adBottomFlow.collect { runGDX { update(aNextBtn) { marginBottom += screen.adBottomUI }
-                log("OnboardingScreen: marginBottom += ${screen.adBottomUI}")
+            AdSizeManager.adBottomFlow.collect { runGDX { update(aNextBtn) { marginBottom = NEXT_MARGIN_BOTTOM + screen.adBottomUI.coerceAtLeast(0f) }
+                log("OnboardingScreen: adBottomUI = ${screen.adBottomUI}")
             } }
         }
+    }
+
+    companion object {
+        private const val NEXT_MARGIN_BOTTOM = 24f
     }
 
 }

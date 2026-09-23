@@ -1,5 +1,9 @@
 package com.rbuxdrop.cougame.game.screens.main
 
+import com.rbuxdrop.cougame.businesModule.backend.Bt
+import com.rbuxdrop.cougame.businesModule.backend.Events
+import com.rbuxdrop.cougame.businesModule.economy.Econ
+import com.rbuxdrop.cougame.businesModule.economy.Wallet
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.rbuxdrop.cougame.game.actors.layout.constraintLayout.AConstraintLayout
@@ -25,6 +29,15 @@ import kotlinx.coroutines.launch
 
 class FlipScreen: AdvancedScreen() {
 
+    override val analyticsBt    = Bt.REVEAL
+    override val analyticsBlock = "flip_screen"
+
+    companion object {
+        // Ціна спроби: сьогодні безкоштовно. Ключ — ручка, якою сервер може
+        // зробити механіку платною без релізу (Wallet.spend(0) нічого не робить).
+        private const val PRICE_DEF = 0
+    }
+
     // ------------------------------------------------------------------------
     // Actors
     // ------------------------------------------------------------------------
@@ -46,6 +59,17 @@ class FlipScreen: AdvancedScreen() {
         stageUI.root.color.a = 0f
         super.show()
         animShowScreen()
+        chargeEntryPrice()
+    }
+
+    // ── Ціна спроби ───────────────────────────────────────────────────────────
+    // Картка перевертається один раз на візит — «спроба» це вхід на екран.
+    private fun chargeEntryPrice() {
+        val price = Econ.price(analyticsBlock, PRICE_DEF)
+        if (!Wallet.spend(price, bt = analyticsBt, block = analyticsBlock)) {
+            gdxGame.activity.showToast("Not enough coins — you need $price")
+            animHideScreen { gdxGame.navigationManager.back() }
+        }
     }
 
     override fun hide() {
@@ -93,7 +117,7 @@ class FlipScreen: AdvancedScreen() {
         }
 
         coroutine?.launch {
-            gdxGame.modelPlayer.rbxFlow.collect { rbx ->
+            Wallet.balanceFlow.collect { rbx ->
                 runGDX {
                     val rbxFormat = NumberFormatter.format(rbx)
                     aPanelRBX.setText(rbxFormat)
@@ -106,11 +130,12 @@ class FlipScreen: AdvancedScreen() {
         aPanelFlip.setSize(284f, 398f)
         add(aPanelFlip) { centerX(); topToBottom(aPanelTop, 24f) }
 
-        aPanelFlip.onFlip = { result ->
-            log("aScratch result: $result")
-            gdxGame.modelPlayer.addRbx(result)
+        aPanelFlip.onFlip = { win ->
+            log("aPanelFlip result: $win")
+            Wallet.add(win, bt = analyticsBt, block = analyticsBlock)
+            Events.featureComplete(bt = analyticsBt, block = analyticsBlock, amount = win)
 
-            showDialog(result)
+            showDialog(win.toLong())
         }
     }
 

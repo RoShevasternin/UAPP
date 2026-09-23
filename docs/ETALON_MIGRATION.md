@@ -225,6 +225,24 @@ open val analyticsBlock: String? = null
 - `Events.coinsEarned/coinsSpent` поруч **не звати** — Wallet шле сам;
 - списання **тільки** `spend()` (сам відмовляє при нестачі, у мінус не йде).
 
+### ⚠️ Прибрав поле з `PlayerData` — `ignoreUnknownKeys` обов'язково
+
+`DataStoreJsonUtil` шаблону декодує строгим `Json`. Поле `rbx`, прибране з
+`PlayerData`, лишається в збереженні кожного живого юзера — і на оновленні
+`Json.decodeFromString` кидає `JsonDecodingException: unknown key 'rbx'` у
+корутині → **краш на кожному старті, апка не відкривається взагалі**
+(відтворено на девайсі, T3, 2026-09-23). На тестах не видно, бо ми завжди
+робимо `pm clear`.
+
+У `DataStoreJsonUtil` — один спільний `Json { ignoreUnknownKeys = true }` для
+decode/encode і `runCatching` навколо decode (зіпсоване збереження → дефолт, а не
+краш). Перевірка: встановити апку, підкласти в
+`files/datastore/DATA_STORE.preferences_pb` старий JSON з `rbx` (через
+`run-as`), запустити.
+
+⚠️ **T5, T1, T4, T9, T2, T7-1 мігровані БЕЗ цього фіксу** (перевірено grep'ом
+2026-09-23: `ignoreUnknownKeys` — 0 входжень). Бекпорт — окремим рішенням.
+
 ### Числа — тільки `Econ`
 
 | що | ключ | приклад |
@@ -386,6 +404,16 @@ override fun show() { super.show(); Onboarding.markDone() }
 
 ---
 
+## 5в. Нативка в меню — прибрати (вимога від 2026-09-23)
+
+На екрані меню (`MainScreen`/`HomeScreen`) нативну рекламу **не показуємо**:
+прибрати `showNativeAt` у `show()` і `hideNative` у `hide()` меню. Вона закриває
+пів сітки механік. Банер лишається, на інших екранах нативка як була.
+Відступ списку (`adBottomFlow` = banner + native) перераховується сам: інші
+екрани обнуляють `nativeHeightPx` у своєму `hide()`.
+
+---
+
 ## 6. Перевірка (обов'язково на девайсі)
 
 ```bash
@@ -409,6 +437,13 @@ adb logcat -d -v brief | grep <ваш лог-тег>
 | 7 | release | `sh ./gradlew :app:assembleRelease`, далі в `app/build/outputs/mapping/release/mapping.txt`: `RemoteConfigModel -> …RemoteConfigModel` і `LocalPush$PushWorker -> …LocalPush$PushWorker` (обидва не перейменовані). Пуші перевіряються **тільки на release** |
 
 ⚠️ ProGuard-проблеми на debug не відтворюються взагалі.
+
+⚠️ Redmi 10C (MIUI, 4 ГБ): діалог «Встановити через USB» вбиває low memory
+killer, поки Play Store у фоні оновлює апки, — install падає з
+`USER_RESTRICTED` без діалогу. А **оновлення поверх (`-r`) MIUI після першої
+відмови відхиляє автоматично** — ставиться лише чиста інсталяція
+(`adb uninstall` → `adb install`). Кнопку «Встановити» тиснути за bounds з
+`uiautomator dump`, не наосліп.
 
 ⚠️ На MIUI/HyperOS `adb install -r` може завершитись **без жодного виводу і
 без помилки**, лишивши стару версію (T1, 2026-09-09: годину тестували не той
@@ -476,6 +511,22 @@ collect { verticalGroup.paddingBottom = maxOf(basePaddingBottom, screen.adBottom
 двигають прив'язані до низу панелі (`marginBottom += adBottom` у
 `QuizGameScreen`): там сума з базовим відступом правильна, але `+=` у
 `collect` так само накопичується — має бути `marginBottom = БАЗА + adBottom`.
+
+**Нативка перекриває GDX-діалоги.** Нативка — Android-view поверх GDX, тож
+будь-який попап на екрані з нативкою, що сягає низу екрана, ховається під нею
+(T6, попап розблокування). Рішення: на час попапа `hideNative()`, після
+закриття — знову `showNativeAt`, а сам попап центрувати над банером
+(`marginBottom = adBannerUI`). Фіксований `verticalBias` не рятує: висота
+нативки в UI-одиницях залежить від екрана.
+
+**`ACheckBoxGroup`: повторний вибір того ж боксу глушив колбек.** `check()`
+ставив `isInvokeCheckBlock = true`, а потім `group.onChecked(this)` робив
+`uncheck(invokeBlock = false)` на ЦЬОМУ Ж боксі — прапорець злітав у false, і
+`onCheckBlock` не викликався. У квізі (бокси відповідей перевикористовуються між
+питаннями) це означає: відповідь на тій самій позиції, що й у попередньому
+питанні, позначається, але не зараховується — квіз застрягає. Фікс (T3): у
+`check()` спершу група, потім прапорець; у `onChecked` не знімати вибір, якщо
+це той самий бокс.
 
 ---
 
@@ -807,3 +858,124 @@ Release: обидва класи в mapping не перейменовані.
 «назад» щоразу з'їжджає, і тап не влучав. Код там ідентичний за формою до T9/T2,
 де перевірено (у T2 ціна доведена експериментом 100 → списання, 0 → без
 списання). При наступному дотику до апки прокрутити обидві механіки.
+
+### T3 · `april_may/Game T3/Rbux Drop` · `com.rbuxdrop.cougame` · 2026-09-23
+
+Схема диплінка **`cougame`**. Лог-тег `COUNTER`, prefs `rscount_ads_prefs`.
+Баланс — з нуля: `PlayerData.rbx` і `PlayerModel.rbxFlow/addRbx/spendRbx/setRbx`
+прибрано разом з мертвим boost (екрана boost у T3 немає). Наївного запиту
+пушів не було. `ic_notification` взято з еталона.
+
+**Разом з міграцією — оновлення тулчейну:** Gradle 9.6.1 → 9.7.1, AGP 9.3.1 →
+9.4.1, Kotlin (serialization plugin) 2.4.10 → 2.4.20, firebase-bom 34.16.0 →
+34.19.0, play-services-ads 25.4.0 → 25.5.0, appcompat 1.7.1 → 1.8.0,
+navigation 2.9.8 → 2.10.1, TikTok SDK 1.6.1 → 1.7.1. Решта вже була на
+останніх стабільних. Збирається чисто, TikTok 1.7.1 без змін API.
+
+⚠️ **Знайдено й виправлено краш на оновленні** (див. розділ 5,
+`ignoreUnknownKeys`): відтворено на девайсі зі збереженням старої версії
+`{"rbx":250,"dailyRewardDay":2,…}` → після фіксу серія дейлі збереглась.
+
+Розмітка екранів — 10 змістовних: `main_screen`/HUB, `wheel_screen`/SPIN,
+`scratch_screen`/GRID, `flip_screen`/REVEAL, `quiz_screen`+`quiz_start_screen`/QUIZ,
+`daily_reward_screen`/DAILY, `select_converter_screen`+`converter_screen`/TOOL,
+`tips_screen`+`tips_selected_screen`/CATALOG. Технічні (Loader, Language,
+Onboarding, Settings, QuizHow) — `null`.
+
+Ключі економіки:
+
+| ключ | тип | дефолт |
+|---|---|---|
+| `wheel_screen` | price | `0` (на кнопку спіну) |
+| `scratch_screen` | price | `0` (на вхід) |
+| `flip_screen` | price | `0` (на вхід) |
+| `quiz_start_screen` | price / reward / penalty | `0` / `5` / `0` |
+| `wheel` | rewards_list | `[5,10,15,20,25,30,35,40,45,50,100,150]` |
+| `scratch` | rewards_list | `[5,10,15,20,25,30,35,40,45,50,100,150]` |
+| `flip_card` | rewards_list | `[5,10,15,20,25,30,35,40,45,50,100,150]` |
+| `daily_reward` | rewards_list | `[100,200,400,800,1600,3200,6400]` |
+
+⚠️ **Картка на сервері — шаблон з чужими ключами, і два з них збіглись з
+нашими:** `prices.scratch_screen: 100` (вхід у скретч реально списав 100) і
+`rewards_list.scratch` `[0,0,0,50,…,210]` тієї ж довжини 12 (скретч платить за
+ним). Ручки працюють, але значення випадкові — картку треба заповнити таблицею
+вище.
+
+Зелена кнопка: `AGreenButton` на `ATextButtonTexture` (у T3 немає
+`AButtonAnimTexture`/`FontFactory`), фон — `getRoundedRegion(344, 72, r=16,
+22C55E→16A34A)`, натиснутий стан темніший, іконка «R$» і шеврон на `ALabel`.
+Меню — одна картинка `PANEL_MAIN` (654) + хітбокси, тому кнопка окремим актором
+у `AVerticalGroup(alignH = CENTER)` над сіткою. Нативку з меню прибрано (5в).
+
+Дрібні баги заодно: `AScratch` друкував ім'я enum (`_50`) — тепер `payout()`;
+відступ під рекламу `+=` → `maxOf` у `APanelMain`, `APanelLanguage`,
+`DailyRewardScreen`; `ACheckBoxGroup` (квіз застрягав, див. «Пастки»).
+
+На девайсі (Redmi 10C, Android 13): `MODEL OUR … atk=yes`, провайдери
+`custom_google`. Черга старту: опт-ін (заголовок один) → системний → +100 → таб
+(`pl=app_open`) → мова → онбординг → меню, петлі немає; баланс 200. Зелена
+кнопка: 3 тапи = 3 `pl=interstitial`. Банер — `pl=banner`, навігація —
+`front`/`back`. Колесо 200 → 220 (сектор 20 під стрілкою). Скретч −100 (ціна з
+картки) +50. Фліп +45. Квіз 4/4 → +20, відповіді на однаковій позиції
+зараховуються. Дейлі день 2 → +200. Повторний запуск — одразу меню
+(`onboarding.done=true`), баланс збережено. Диплінк `cougame://reward?h=test`
+відкриває апку, баланс не змінює. Release: обидва класи в mapping не
+перейменовані (APK непідписаний — signing config у проєкті немає, пуші на
+release не перевірені).
+
+### T6 · `april_may/Game T6/Skinly` · `com.skindustry.skinly` · 2026-09-23
+
+Схема диплінка **`skinly`**. Лог-тег `SKINER`, prefs `skinly_prefs`. Наївного
+запиту пушів не було. `ic_notification` взято з еталона. Тулчейн оновлено так
+само, як у T3 (Gradle 9.7.1, AGP 9.4.1, Kotlin 2.4.20 …).
+
+**Інший тип гри: редактор скінів без валюти.** Картки (одяг, текстури, стікери)
+розблоковувались лише за рекламу. Рішення користувача (2026-09-23): **монети як
+альтернатива рекламі**. Баланс (`APanelBalance` на `Wallet.balanceFlow`) — у
+шапці Home; у попапі розблокування — друга кнопка «Unlock for N coins».
+`PlayerData` не чіпали (балансу там не було), але `ignoreUnknownKeys` у
+`DataStoreJsonUtil` додано про запас.
+
+Попап: PNG 344×334 з намальованими «Watch Ad»/«Cancel» подовжено вниз на 64 —
+кнопка монет лягає на намальований Cancel, Cancel переїхав на білу смугу
+знизу; під PNG — біла закруглена підкладка, щоб не було вирізів на стику.
+Нативку на час попапа ховаємо (див. «Пастки»).
+
+Розмітка екранів: `home_screen`/HUB, `home_select_screen`/CATALOG,
+`skin_book_screen`/CATALOG, `personalization_screen`/TOOL, `share_screen`/TOOL.
+Технічні (Loader, Onboarding, Selector_1..3, Settings) — `null`.
+
+Ключі економіки:
+
+| ключ | тип | дефолт |
+|---|---|---|
+| `home_select_screen` | price | `100` (розблокування одягу за монети) |
+| `personalization_screen` | price | `100` (текстура / стікер за монети) |
+
+`featureComplete` — на кожне розблокування (за рекламу без amount, за монети з
+amount = ціна).
+
+Зелена кнопка «**FREE COINS**» (валюта тут монети, не R$) — на
+`ATextButtonAnimTexture`, над каруселлю Home, `pl=interstitial`. Нативки на Home
+і не було.
+
+Онбординг (Onboarding → Selector_1..3) — лише перший запуск. `HomeScreen` у
+`noAdScreens` НЕ додано: Home ↔ SkinBook перемикаються нижньою панеллю, і там
+front-реклама потрібна. Замість цього рекламу пропускаємо тільки для
+`Loader → Home` (`fromScreenName == null`).
+
+Заодно: накопичення відступу `+=` у `collect` — 8 місць (Onboarding,
+Selector_1..3, Home, SkinBook, Personalization, `AScrollLayout`);
+`ACheckBoxGroup` — той самий фікс, що в T3; прев'ю в попапі `HomeSelectScreen`
+складалися стопкою — тепер попереднє прибирається.
+
+На девайсі (Redmi 10C, Android 13): `MODEL OUR … atk=yes`. Черга старту:
+опт-ін → системний → +100 → таб (`pl=app_open`) → онбординг → Home; з «Later»
+теж доходить до гри. Зелена кнопка: 3 тапи = 3 `pl=interstitial`. Розблокування
+за монети 200 → 100 → 0, третя спроба — тост «Not enough coins», попап лишається.
+За рекламу — таб `pl=interstitial`, після закриття картка відкрита. Стан
+зберігається (`unlockedTShirt`, `unlockedTextureSolid`). Повторний запуск —
+одразу Home. Диплінк `skinly://reward?h=test` відкриває апку. Release: обидва
+класи в mapping не перейменовані (APK непідписаний, пуші на release не
+перевірені).
+

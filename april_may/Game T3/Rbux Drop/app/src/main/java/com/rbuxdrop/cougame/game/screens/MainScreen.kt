@@ -1,6 +1,7 @@
 package com.rbuxdrop.cougame.game.screens
 
-import com.badlogic.gdx.math.Vector2
+import com.rbuxdrop.cougame.businesModule.backend.Bt
+import com.rbuxdrop.cougame.game.utils.Onboarding
 import com.rbuxdrop.cougame.game.actors.ATmpGroup
 import com.rbuxdrop.cougame.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rbuxdrop.cougame.game.actors.panel.APanelMain
@@ -16,6 +17,9 @@ import com.rbuxdrop.cougame.services.analytics.AnalyticsManager
 
 class MainScreen: AdvancedScreen() {
 
+    override val analyticsBt    = Bt.HUB
+    override val analyticsBlock = "main_screen"
+
     // ------------------------------------------------------------------------
     // Actors
     // ------------------------------------------------------------------------
@@ -26,18 +30,13 @@ class MainScreen: AdvancedScreen() {
     // ------------------------------------------------------------------------
     // Lifecycle
     // ------------------------------------------------------------------------
+    // Нативки в меню немає навмисно: вона перекриває плитки механік
+    // (рішення користувача). Банер лишається.
     override fun show() {
-        val coords = stageUI.root.localToScreenCoordinates(Vector2(0f, adBannerUI))
-        gdxGame.activity.showNativeAt(coords.y)
-
         stageUI.root.color.a = 0f
         super.show()
+        Onboarding.markDone()   // дійшов до меню = онбординг пройдено
         animShowScreen { AnalyticsManager.openHomeScreen() }
-    }
-
-    override fun hide() {
-        super.hide()
-        gdxGame.activity.hideNative()
     }
 
     override fun AConstraintLayout.addActorsOnRootConstraintLayout() {

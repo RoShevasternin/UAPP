@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.utils.Align
+import com.rbuxdrop.cougame.businesModule.economy.Econ
 import com.rbuxdrop.cougame.game.utils.advanced.AdvancedGroup
 import com.rbuxdrop.cougame.game.utils.advanced.AdvancedScreen
 import com.rbuxdrop.cougame.game.utils.gdxGame
@@ -19,21 +20,24 @@ class AWheel(override val screen: AdvancedScreen) : AdvancedGroup() {
     var isSpinning = false
         private set
 
+    // Сектори за годинниковою, починаючи з верхнього (-15°..15°).
+    // Значення — ІНДЕКС у списку сум (WHEEL_DEF), а не сума: суми приходять з
+    // Econ (ключ "wheel"), і і підпис, і нарахування беруться з одного payout().
     private val listItem = listOf(
-        Item(Result._20,   Segment(-15f,          15f)),
-        Item(Result._25,   Segment(15 * 1f,       15 + 30f * 1f)),
-        Item(Result._30,   Segment(15 + 30 * 1f,  15 + 30f * 2f)),
-        Item(Result._35,   Segment(15 + 30 * 2f,  15 + 30f * 3f)),
-        Item(Result._40,   Segment(15 + 30 * 3f,  15 + 30f * 4f)),
-        Item(Result._45,   Segment(15 + 30 * 4f,  15 + 30f * 5f)),
-        Item(Result._50,   Segment(15 + 30 * 5f,  15 + 30f * 6f)),
-        Item(Result._100,  Segment(15 + 30 * 6f,  15 + 30f * 7f)),
-        Item(Result._150,  Segment(15 + 30 * 7f,  15 + 30f * 8f)),
-        Item(Result._5,    Segment(15 + 30 * 8f,  15 + 30f * 9f)),
-        Item(Result._10,   Segment(15 + 30 * 9f,  15 + 30f * 10f)),
-        Item(Result._15,   Segment(15 + 30 * 10f, 15 + 30f * 11f)),
+        Item(3,  Segment(-15f,          15f)),          // 20
+        Item(4,  Segment(15 * 1f,       15 + 30f * 1f)),  // 25
+        Item(5,  Segment(15 + 30 * 1f,  15 + 30f * 2f)),  // 30
+        Item(6,  Segment(15 + 30 * 2f,  15 + 30f * 3f)),  // 35
+        Item(7,  Segment(15 + 30 * 3f,  15 + 30f * 4f)),  // 40
+        Item(8,  Segment(15 + 30 * 4f,  15 + 30f * 5f)),  // 45
+        Item(9,  Segment(15 + 30 * 5f,  15 + 30f * 6f)),  // 50
+        Item(10, Segment(15 + 30 * 6f,  15 + 30f * 7f)),  // 100
+        Item(11, Segment(15 + 30 * 7f,  15 + 30f * 8f)),  // 150
+        Item(0,  Segment(15 + 30 * 8f,  15 + 30f * 9f)),  // 5
+        Item(1,  Segment(15 + 30 * 9f,  15 + 30f * 10f)), // 10
+        Item(2,  Segment(15 + 30 * 10f, 15 + 30f * 11f)), // 15
 
-        Item(Result._20,   Segment(15 + 30f * 11f, 360f)), // Дублюємо 1 для 345..360
+        Item(3,  Segment(15 + 30f * 11f, 360f)), // Дублюємо 1 для 345..360
     )
 
     override fun addActorsOnGroup() {
@@ -47,7 +51,7 @@ class AWheel(override val screen: AdvancedScreen) : AdvancedGroup() {
 
     // Logic -------------------------------------------------------------------------
 
-    fun spin(blockResult: (winItem: Result) -> Unit) {
+    fun spin(blockResult: (win: Int) -> Unit) {
         if (isSpinning) return
 
         isSpinning = true
@@ -61,36 +65,29 @@ class AWheel(override val screen: AdvancedScreen) : AdvancedGroup() {
                 Actions.run {
                     val degree = (aWheelImg.rotation.roundToInt().absoluteValue) % 360f
 
-                    calculateWinningSegment(degree).also { result ->
-                        isSpinning = false
-                        blockResult(result)
-                    }
+                    val index = calculateWinningSegment(degree)
+                    isSpinning = false
+                    blockResult(payout(index))
                 }
             )
         )
     }
 
-    private fun calculateWinningSegment(degree: Float): Result {
-        return listItem.firstOrNull { degree in (it.segment.startAngle..it.segment.endAngle) }?.result ?: listItem.first().result
+    private fun calculateWinningSegment(degree: Float): Int {
+        return listItem.firstOrNull { degree in (it.segment.startAngle..it.segment.endAngle) }?.index ?: listItem.first().index
     }
 
-    data class Item(val result: Result, val segment: Segment)
+    // Єдине джерело суми сектора
+    private fun payout(index: Int): Int = Econ.rewardList(REWARDS_KEY, WHEEL_DEF)[index]
+
+    data class Item(val index: Int, val segment: Segment)
 
     data class Segment(val startAngle: Float, val endAngle: Float)
 
-    enum class Result(val sum: Int) {
-        _5  (5),
-        _10 (10),
-        _15 (15),
-        _20 (20),
-        _25 (25),
-        _30 (30),
-        _35 (35),
-        _40 (40),
-        _45 (45),
-        _50 (50),
-        _100(100),
-        _150(150),
+    companion object {
+        private const val REWARDS_KEY = "wheel"
+        // Суми, як намальовано на колесі (WHEEL в атласі)
+        private val WHEEL_DEF = intArrayOf(5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100, 150)
     }
 
 }

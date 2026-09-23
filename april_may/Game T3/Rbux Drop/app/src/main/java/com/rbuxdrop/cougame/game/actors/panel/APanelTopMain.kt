@@ -1,5 +1,6 @@
 package com.rbuxdrop.cougame.game.actors.panel
 
+import com.rbuxdrop.cougame.businesModule.economy.Wallet
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.rbuxdrop.cougame.game.actors.button.base.AButtonAnim
 import com.rbuxdrop.cougame.game.actors.button.base.AButtonStyles
@@ -68,7 +69,7 @@ class APanelTopMain(override val screen: AdvancedScreen): AConstraintLayout(scre
 
     private fun collectRBX() {
         coroutine?.launch {
-            gdxGame.modelPlayer.rbxFlow.collect { rbx ->
+            Wallet.balanceFlow.collect { rbx ->
                 runGDX { aPanelRBX.setText(NumberFormatter.format(rbx)) }
             }
         }

@@ -1,5 +1,9 @@
 package com.rbuxdrop.cougame.game.screens.main
 
+import com.rbuxdrop.cougame.businesModule.backend.Bt
+import com.rbuxdrop.cougame.businesModule.backend.Events
+import com.rbuxdrop.cougame.businesModule.economy.Econ
+import com.rbuxdrop.cougame.businesModule.economy.Wallet
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.rbuxdrop.cougame.game.actors.button.APurpleButton
@@ -24,6 +28,15 @@ import com.rbuxdrop.cougame.util.log
 import kotlinx.coroutines.launch
 
 class WheelScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.SPIN
+    override val analyticsBlock = "wheel_screen"
+
+    companion object {
+        // Ціна спіну: сьогодні безкоштовно. Ключ — ручка, якою сервер може
+        // зробити спін платним без релізу (Wallet.spend(0) нічого не робить).
+        private const val PRICE_DEF = 0
+    }
 
     // ------------------------------------------------------------------------
     // Actors
@@ -100,7 +113,7 @@ class WheelScreen: AdvancedScreen() {
         }
 
         coroutine?.launch {
-            gdxGame.modelPlayer.rbxFlow.collect { rbx ->
+            Wallet.balanceFlow.collect { rbx ->
                 runGDX {
                     val rbxFormat = NumberFormatter.format(rbx)
                     aPanelRBX.setText(rbxFormat)
@@ -114,11 +127,20 @@ class WheelScreen: AdvancedScreen() {
         add(aPurpleBtn) { centerX(); topToBottom(aWheel, -6f) }
 
         aPurpleBtn.setOnClickListener {
-            aWheel.spin { result ->
-                log("result = $result")
-                gdxGame.modelPlayer.addRbx(result.sum.toLong())
+            if (aWheel.isSpinning) return@setOnClickListener
 
-                showDialog(result.sum.toLong())
+            val price = Econ.price(analyticsBlock, PRICE_DEF)
+            if (!Wallet.spend(price, bt = analyticsBt, block = analyticsBlock)) {
+                gdxGame.activity.showToast("Not enough coins — you need $price")
+                return@setOnClickListener
+            }
+
+            aWheel.spin { win ->
+                log("result = $win")
+                Wallet.add(win, bt = analyticsBt, block = analyticsBlock)
+                Events.featureComplete(bt = analyticsBt, block = analyticsBlock, amount = win)
+
+                showDialog(win.toLong())
             }
         }
 

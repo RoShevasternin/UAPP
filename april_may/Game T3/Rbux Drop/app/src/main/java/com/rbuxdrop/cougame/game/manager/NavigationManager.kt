@@ -38,6 +38,9 @@ class NavigationManager(val game: GDXGame) {
         val noAdScreens = listOf(
             LoaderScreen::class.java.name,
             LanguageScreen::class.java.name,
+            // Loader → MainScreen прямий (онбординг пройдено) — не бити
+            // onFrontNavigation одразу після app_open-гейта
+            MainScreen::class.java.name,
         )
         if (toScreenName in noAdScreens) return@runGDX
 

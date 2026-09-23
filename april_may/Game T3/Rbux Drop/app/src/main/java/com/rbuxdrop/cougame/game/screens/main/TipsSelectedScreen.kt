@@ -1,5 +1,6 @@
 package com.rbuxdrop.cougame.game.screens.main
 
+import com.rbuxdrop.cougame.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.ui.Image
@@ -21,6 +22,9 @@ import com.rbuxdrop.cougame.game.utils.gdxGame
 import com.rbuxdrop.cougame.util.log
 
 class TipsSelectedScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "tips_selected_screen"
 
     // ------------------------------------------------------------------------
     // Actors

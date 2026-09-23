@@ -1,5 +1,6 @@
 package com.rbuxdrop.cougame.game.actors.panel.scratch
 
+import com.rbuxdrop.cougame.businesModule.economy.Econ
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
@@ -27,9 +28,11 @@ class AScratch(override val screen: AdvancedScreen) : AdvancedGroup() {
     // ------------------------------------------------------------------------
     // Fields
     // ------------------------------------------------------------------------
-    private var randomResult = Result.entries.random()
+    // Суми з Econ (ключ "scratch"); підпис і нарахування — з одного payout,
+    // тож на картці написано рівно те, що впаде на баланс.
+    private var payout = randomPayout()
         set(value) {
-            aResultLbl.setText(value.toString())
+            aResultLbl.setText(resultText(value))
             field = value
         }
 
@@ -37,14 +40,14 @@ class AScratch(override val screen: AdvancedScreen) : AdvancedGroup() {
     // Actors
     // ------------------------------------------------------------------------
     private val aResultImg   = Image(gdxGame.assetsAll.PANEL_SCRATCH_RESULT)
-    private val aResultLbl   = ALabel(screen, "You win $randomResult RBX!", GameColor.purple_3D, parameter24, screen.fontGenerator_Bold)
+    private val aResultLbl   = ALabel(screen, resultText(payout), GameColor.purple_3D, parameter24, screen.fontGenerator_Bold)
     private val aScratchCard = AScratchCard(screen, TextureRegionDrawable(gdxGame.assetsAll.PANEL_SCRATCH), scratchRadius = 0.06f)
     private val aBottomLbl   = ALabel(screen, "Scratch & WIN!", GameColor.gary_7F, parameter16, screen.fontGenerator_Medium)
 
     // ------------------------------------------------------------------------
     // Callback
     // ------------------------------------------------------------------------
-    var onResult: (result: Result) -> Unit = {}
+    var onResult: (win: Int) -> Unit = {}
 
     // ------------------------------------------------------------------------
     // Lifecycle
@@ -63,7 +66,7 @@ class AScratch(override val screen: AdvancedScreen) : AdvancedGroup() {
 
         val oneTimeResult = OneTime()
         aScratchCard.onScratched = { percent -> if (percent > 85) {
-            oneTimeResult.use { onResult(randomResult) }
+            oneTimeResult.use { onResult(payout) }
         } }
     }
 
@@ -73,22 +76,16 @@ class AScratch(override val screen: AdvancedScreen) : AdvancedGroup() {
 
     fun regenerateScratch() {
         aScratchCard.reset()
-        randomResult = Result.entries.random()
+        payout = randomPayout()
     }
 
-    enum class Result(val sum: Int) {
-        _5  (5),
-        _10 (10),
-        _15 (15),
-        _20 (20),
-        _25 (25),
-        _30 (30),
-        _35 (35),
-        _40 (40),
-        _45 (45),
-        _50 (50),
-        _100(100),
-        _150(150),
+    private fun resultText(win: Int) = "You win $win RBX!"
+
+    private fun randomPayout(): Int = Econ.rewardList(REWARDS_KEY, SCRATCH_DEF).random()
+
+    companion object {
+        private const val REWARDS_KEY = "scratch"
+        private val SCRATCH_DEF = intArrayOf(5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100, 150)
     }
 
 }

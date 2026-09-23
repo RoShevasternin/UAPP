@@ -122,16 +122,17 @@ class Selector_3_Screen: AdvancedScreen() {
 
     private fun AConstraintLayout.addNextBtn() {
         aNextBtn.setSize(344f, 56f)
-        add(aNextBtn) { centerX(); bottomToBottom(margin = 24f) }
+        add(aNextBtn) { centerX(); bottomToBottom(margin = NEXT_MARGIN_BOTTOM) }
 
         aNextBtn.disable()
         aNextBtn.setOnClickListener {
             animHideScreen { gdxGame.navigationManager.navigate(HomeScreen::class.java.name, Selector_3_Screen::class.java.name) }
         }
 
+        // «=», не «+=»: adBottomFlow — StateFlow, шле на кожну зміну — інакше накопичується
         coroutine?.launch {
-            AdSizeManager.adBottomFlow.collect { runGDX { update(aNextBtn) { marginBottom += screen.adBottomUI }
-                log("OnboardingScreen: marginBottom += ${screen.adBottomUI}")
+            AdSizeManager.adBottomFlow.collect { runGDX { update(aNextBtn) { marginBottom = NEXT_MARGIN_BOTTOM + screen.adBottomUI.coerceAtLeast(0f) }
+                log("Selector_3_Screen: adBottomUI = ${screen.adBottomUI}")
             } }
         }
     }
@@ -140,6 +141,10 @@ class Selector_3_Screen: AdvancedScreen() {
         aSelectedLbl.setSize(344f, 22f)
         add(aSelectedLbl) { centerX(); bottomToTop(aNextBtn, 24f) }
         aSelectedLbl.setAlignment(Align.center)
+    }
+
+    companion object {
+        private const val NEXT_MARGIN_BOTTOM = 24f
     }
 
 }

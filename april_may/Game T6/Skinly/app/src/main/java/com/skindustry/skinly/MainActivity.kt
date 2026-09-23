@@ -1,5 +1,6 @@
 package com.skindustry.skinly
 
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -7,6 +8,11 @@ import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
+import android.widget.FrameLayout
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
@@ -22,8 +28,13 @@ import com.skindustry.skinly.adsmodule.AdConfig
 import com.skindustry.skinly.adsmodule.AdManager
 import com.skindustry.skinly.adsmodule.AdSizeManager
 import com.skindustry.skinly.adsmodule.AppOpenManager
+import com.skindustry.skinly.adsmodule.BrowserUtil
 import com.skindustry.skinly.adsmodule.RemoteConfigModel
 import com.skindustry.skinly.adsmodule.UserDetector
+import com.skindustry.skinly.businesModule.Biz
+import com.skindustry.skinly.businesModule.backend.Backend
+import com.skindustry.skinly.businesModule.backend.Events
+import com.skindustry.skinly.businesModule.push.PushOptIn
 import com.skindustry.skinly.databinding.ActivityMainBinding
 import com.skindustry.skinly.services.tiktok.TikTokManager
 import com.skindustry.skinly.util.OneTime
@@ -34,6 +45,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
+import kotlin.time.Duration.Companion.milliseconds
 
 class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
 
@@ -51,6 +63,16 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
 
     val windowInsetsController by lazy { WindowCompat.getInsetsController(window, window.decorView) }
 
+    // ── Дозвіл на пуші ────────────────────────────────────────────────────────
+    // Launcher мусить бути зареєстрований до старту активіті — тому property
+    // (registerForActivityResult після onStart кидає IllegalStateException).
+    // Колбек одноразовий: ставиться перед launch() і скидається після.
+    private var onPushPermissionResult: ((Boolean) -> Unit)? = null
+    private val pushPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        onPushPermissionResult?.invoke(granted)
+        onPushPermissionResult = null
+    }
+
     // ------------------------------------------------------------------------
     // Ad система
     // ------------------------------------------------------------------------
@@ -67,10 +89,35 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     // Lifecycle
     // ------------------------------------------------------------------------
 
+    @SuppressLint("InlinedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         initialize()
+
+        Biz.onWebReward = { coins -> showCoinsDialog(coins) }
+        // Прийшли з лендінга за дозволом (skinly://optin): системний запит тут,
+        // а нагороду віддаємо токеном назад у таб — її обіцяли на лендінгу.
+        Biz.onWebOptIn = { act ->
+            PushOptIn.requestFromWeb(
+                act,
+                requestPermission = { onResult ->
+                    onPushPermissionResult = onResult
+                    pushPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                },
+                reopenTab = { token ->
+                    // gate_open шлемо руками: URL будуємо самі (треба дописати
+                    // &granted=), а BrowserUtil.openAd цього не вміє.
+                    Events.gateOpen("optin_return")
+                    val base = Backend.gateUrl("optin_return")
+                    if (base != null) {
+                        val url = if (token != null) "$base&granted=$token" else base
+                        BrowserUtil.open(act, url)
+                    }
+                },
+            )
+        }
+        Biz.onActivityIntent(this, intent)   // холодний старт
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             onceSystemBarHeight.use {
@@ -88,12 +135,29 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         }
     }
 
+    // живий процес (singleTask) — диплінк приходить сюди
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        Biz.onActivityIntent(this, intent)
+    }
+
+    /** Черга старту (LoaderScreen) просить системний запит через активіті:
+     *  launcher має бути зареєстрований до onStart, тому живе тут. */
+    @SuppressLint("InlinedApi")
+    fun requestPushPermission(onResult: (Boolean) -> Unit) {
+        onPushPermissionResult = onResult
+        pushPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+    }
+
+    override fun onStart() { super.onStart(); Biz.onStart(this) }
+    override fun onStop()  { super.onStop();  Biz.onStop(this) }
+
     override fun exit() {
         onceExit.use {
             log("exit")
             coroutine.launch(Dispatchers.Main) {
                 finishAndRemoveTask()
-                delay(100)
+                delay(100.milliseconds)
                 exitProcess(0)
             }
         }
@@ -176,6 +240,42 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         }
     }
 
+    // Спільний тост для GDX-шару: нестача монет тощо.
+    // runOnUiThread обов'язковий — зветься з render-потоку LibGDX.
+    fun showToast(text: String) {
+        runOnUiThread {
+            Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // Діалог «+N coins» після повернення з лендінга. suppressAppOpen знімаємо
+    // при БУДЬ-ЯКОМУ закритті, включно зі свайпом і «назад».
+    private fun showCoinsDialog(coins: Int) {
+        runOnUiThread {
+            val amountText = TextView(this).apply {
+                text = "+$coins coins"
+                textSize = 40f
+                setTextColor(android.graphics.Color.WHITE)
+                textAlignment = View.TEXT_ALIGNMENT_CENTER
+            }
+
+            val container = FrameLayout(this).apply {
+                val padding = (24 * resources.displayMetrics.density).toInt()
+                setPadding(padding, padding, padding, 0)
+                addView(amountText)
+            }
+
+            AdConfig.suppressAppOpenUntilMs = System.currentTimeMillis() + 30_000
+
+            AlertDialog.Builder(this, androidx.appcompat.R.style.Theme_AppCompat_Dialog_Alert)
+                .setTitle("Reward claimed!")
+                .setView(container)
+                .setPositiveButton("OK", null)
+                .setOnDismissListener { AdConfig.suppressAppOpenUntilMs = 0L }
+                .show()
+        }
+    }
+
     // ------------------------------------------------------------------------
     // Business Logic
     // ------------------------------------------------------------------------
@@ -188,26 +288,41 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     // onComplete(false) → немає інтернету, показати UI в LoaderScreen
 
     fun initAds(onComplete: (success: Boolean) -> Unit) {
-        // Якщо вже немає інтернету — одразу повертаємо false
-        if (!isConnected()) {
-            runOnUiThread { onComplete(false) }
-            return
-        }
+        if (!isConnected()) { runOnUiThread { onComplete(false) }; return }
 
-        // ── Крок 1: Визначаємо тип юзера ─────────────────────────────────────
-        // Тільки якщо ще не визначено (щоб Retry не перевизначав)
+        Biz.startSession(this)   // app_open + FCM-токен, раз на процес
+
         if (App.adPref.loadUserType() == null) {
-            UserDetector.detectViaReferrer(this) { userType ->
+            UserDetector.detectViaReferrer(this) { userType, rawReferrer ->
                 AdConfig.userType = userType
                 App.adPref.saveUserType(userType)
-                fetchRemoteConfig(onComplete)
+                fetchOurConfig(rawReferrer, onComplete)
             }
         } else {
-            // Тип юзера вже збережений — одразу йдемо до конфігу
-            fetchRemoteConfig(onComplete)
+            fetchOurConfig(null, onComplete)
         }
     }
 
+    // rawReferrer іде на сервер голим — не парсити, не чистити
+    private fun fetchOurConfig(rawReferrer: String?, onComplete: (success: Boolean) -> Unit) {
+        Biz.fetchConfig(this, rawReferrer) { model ->
+            runOnUiThread {
+                if (model != null && model.config != null) {
+                    AdConfig.remoteConfig = model
+                    App.adPref.saveConfig(model)
+                    log("MODEL OUR = $model\natk=${if (Backend.atk != null) "yes" else "no"}")
+                    initTikTok(model)
+                    onComplete(true)
+                } else {
+                    log("Our config failed → fallback to Firebase RC")
+                    fetchRemoteConfig(onComplete)
+                }
+            }
+        }
+    }
+
+    // ЛЕГАСІ-ФОЛБЕК: тільки коли наш сервер недоступний.
+    // Не видаляти до повного переїзду парку — це страховка розкатки.
     private fun fetchRemoteConfig(onComplete: (success: Boolean) -> Unit) {
         val remoteConfig = Firebase.remoteConfig
 
