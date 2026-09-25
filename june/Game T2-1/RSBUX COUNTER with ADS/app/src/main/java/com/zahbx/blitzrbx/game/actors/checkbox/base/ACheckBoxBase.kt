@@ -105,8 +105,11 @@ abstract class ACheckBoxBase(
     // Check / Uncheck / Toggle
     // ------------------------------------------------------------------------
     fun check(invokeBlock: Boolean = true) {
+        // Спершу група (вона знімає попередній вибір через uncheck(false)),
+        // і лише потім прапорець — інакше повторний вибір того ж боксу скидав
+        // його в false і колбек не спрацьовував (квіз застрягав на питанні).
+        checkBoxGroup?.onChecked(this)
         isInvokeCheckBlock = invokeBlock
-        checkBoxGroup?.onChecked(this)  // ← тепер група сама керує станом
         checkFlow.value = true
         onChecked()
     }

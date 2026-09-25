@@ -1,5 +1,6 @@
 package com.rbxtreasure.fungamers.game.actors.panel.scratch
 
+import com.rbxtreasure.fungamers.businesModule.economy.Econ
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.rbxtreasure.fungamers.game.utils.advanced.AdvancedGroup
@@ -42,7 +43,9 @@ class APanelScratch(override val screen: AdvancedScreen) : AdvancedGroup() {
         val oneTime = OneTime()
         aScratchCard.onScratched = { percent ->
             if (percent > 85) {
-                oneTime.use { onResult(Result.entries.random().sum) }
+                // Номінали їдуть списком economy.rewards_list.scratch,
+                // порядок = порядок enum Result.
+                oneTime.use { onResult(payout(Result.entries.random())) }
             }
         }
 
@@ -51,6 +54,13 @@ class APanelScratch(override val screen: AdvancedScreen) : AdvancedGroup() {
     // ------------------------------------------------------------------------
     // Data
     // ------------------------------------------------------------------------
+
+    fun payout(result: Result): Long =
+        Econ.rewardList("scratch", DEFAULT_SUMS).getOrElse(result.ordinal) { result.sum.toInt() }.toLong()
+
+    companion object {
+        private val DEFAULT_SUMS = intArrayOf(5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
+    }
 
     enum class Result(val sum: Long) {
         _5  (5),

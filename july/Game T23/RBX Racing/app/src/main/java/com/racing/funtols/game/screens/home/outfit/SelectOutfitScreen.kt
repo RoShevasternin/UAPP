@@ -1,5 +1,6 @@
 package com.racing.funtols.game.screens.home.outfit
 
+import com.racing.funtols.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.racing.funtols.game.actors.panel.outfit.APanelSelectOutfit
 import com.racing.funtols.game.actors.layout.constraintLayout.AConstraintLayout
@@ -12,6 +13,9 @@ import com.racing.funtols.game.utils.advanced.AdvancedScreen
 import com.racing.funtols.game.utils.gdxGame
 
 class SelectOutfitScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "select_outfit_screen"
 
     // ------------------------------------------------------------------------
     // Actors

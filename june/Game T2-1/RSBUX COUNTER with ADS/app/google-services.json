@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "978689013034",
+    "project_id": "t2-1-rbx-blitz",
+    "storage_bucket": "t2-1-rbx-blitz.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:978689013034:android:efe320c21d9c4f3c825a53",
+        "android_client_info": {
+          "package_name": "com.zahbx.blitzrbx"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeqk-xv3-r9XJ8Jhi9oXz3V8WtYV7J6lI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

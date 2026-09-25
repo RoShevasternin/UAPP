@@ -23,7 +23,7 @@ class ACheckBoxGroup {
 
     // Internal — викликається з ACheckBoxBase
     internal fun onChecked(checkBox: ACheckBoxBase) {
-        currentCheckedCheckBox?.uncheck(invokeBlock = false)
+        if (currentCheckedCheckBox !== checkBox) currentCheckedCheckBox?.uncheck(invokeBlock = false)
         currentCheckedCheckBox = checkBox
     }
 }

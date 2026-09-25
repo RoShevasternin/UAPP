@@ -1,5 +1,8 @@
 package com.zahbx.blitzrbx.game.actors.panel.quiz
 
+import com.zahbx.blitzrbx.businesModule.backend.Bt
+import com.zahbx.blitzrbx.businesModule.economy.Econ
+import com.zahbx.blitzrbx.businesModule.economy.Wallet
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
@@ -140,10 +143,22 @@ class APanelQuiz(override val screen: AdvancedScreen): AConstraintLayout(screen)
         if (currentIndex >= totalQuestions) return
 
         if (userAnswer == QUIZ_QUESTIONS[currentIndex].answer) {
-            gdxGame.modelPlayer.addRbx(5)
+            // Дефолт 5 = сьогоднішня поведінка; ключ economy.rewards.quiz_time_screen
+            val win = gdxGame.modelPlayer.boosted(Econ.reward(BLOCK, 5))
+            Wallet.add(win, bt = Bt.QUIZ, block = BLOCK)
+        } else {
+            // Штраф з конфігу (economy.penalties.quiz_time_screen). Дефолт 0 —
+            // гілка холоста, але ручка є. boost на штраф НЕ поширюється.
+            Wallet.spend(Econ.penalty(BLOCK, PENALTY_DEF), bt = Bt.QUIZ, block = BLOCK)
         }
 
         showQuestion(currentIndex + 1)
     }
 
+
+    companion object {
+        // Той самий рядок, що analyticsBlock у QuizTimeScreen
+        private const val BLOCK = "quiz_time_screen"
+        private const val PENALTY_DEF = 0
+    }
 }

@@ -1,5 +1,7 @@
 package com.sakurbx.fungambx.game.screens
 
+import com.sakurbx.fungambx.businesModule.Biz
+import com.sakurbx.fungambx.game.utils.Onboarding
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.sakurbx.fungambx.game.actors.layout.AlignH
 import com.sakurbx.fungambx.game.actors.layout.AlignV
@@ -202,15 +204,28 @@ class LoaderScreen : AdvancedScreen() {
         runGDX {
             gdxGame.activity.showBanner()
 
-            // App Open показ повністю в AppOpenManager — чекаємо onDone і навігуємо
-            gdxGame.activity.appOpenManager.showOnLoader(gdxGame.activity) {
-                runGDX { navigateToFirstScreen() }
-            }
+            // ЧЕРГА СТАРТУ: опт-ін → таб → гра. Кожен крок стартує лише за
+            // доповіддю попереднього. Опт-ін попереду навмисно: системний запит
+            // одноразовий, показ реклами відновлюваний.
+            // ⚠️ Перехід у гру має відбутись у ВСІХ гілках — своїх return сюди
+            // не додавати, інакше апка зависне на сплеші.
+            val act = gdxGame.activity
+            Biz.runStartupFlow(
+                activity = act,
+                requestPermission = { onResult -> act.requestPushPermission(onResult) },
+                openGateAndContinue = {
+                    act.appOpenManager.showOnLoader(act) {
+                        runGDX { navigateToFirstScreen() }
+                    }
+                },
+            )
         }
     }
 
     private fun navigateToFirstScreen() {
-        animHideScreen { gdxGame.navigationManager.navigate(OnboardingScreen::class.java.name) }
+        // Онбординг — лише при першому запуску; далі одразу меню
+        val first = if (Onboarding.isDone) HomeScreen::class.java.name else OnboardingScreen::class.java.name
+        animHideScreen { gdxGame.navigationManager.navigate(first) }
     }
 
 }

@@ -1,5 +1,6 @@
 package com.racing.funtols.game.actors.panel
 
+import com.racing.funtols.businesModule.economy.Wallet
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.racing.funtols.game.actors.label.AMsdfLabel
 import com.racing.funtols.game.actors.layout.constraintLayout.AConstraintLayout
@@ -44,8 +45,10 @@ class APanelRBX(override val screen: AdvancedScreen): AConstraintLayout(screen) 
         add(aLbl) { endToEnd(margin = 24f); bottomToBottom(margin = 6f) }
 
         coroutine?.launch {
-            gdxGame.modelPlayer.rbxFlow.collect { rbx ->
-                runGDX { setText(NumberFormatter.format(rbx)) }
+            // ⚠️ StateFlow віддає значення в потоці ПІДПИСНИКА — сцену чіпаємо
+            // тільки через runGDX.
+            Wallet.balanceFlow.collect { balance ->
+                runGDX { setText(NumberFormatter.format(balance)) }
             }
         }
     }

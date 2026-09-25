@@ -1,5 +1,9 @@
 package com.rbxtreasure.fungamers.game.screens.home
 
+import com.rbxtreasure.fungamers.businesModule.backend.Events
+import com.rbxtreasure.fungamers.businesModule.economy.Econ
+import com.rbxtreasure.fungamers.businesModule.economy.Wallet
+import com.rbxtreasure.fungamers.businesModule.backend.Bt
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.rbxtreasure.fungamers.adsmodule.AdSizeManager
 import com.rbxtreasure.fungamers.game.actors.button.AYellowButton
@@ -25,6 +29,11 @@ import com.rbxtreasure.fungamers.util.log
 import kotlinx.coroutines.launch
 
 class WheelScreen: AdvancedScreen() {
+
+    companion object { private const val PRICE_DEF = 0 }
+
+    override val analyticsBt    = Bt.SPIN
+    override val analyticsBlock = "wheel_screen"
 
     // ------------------------------------------------------------------------
     // Overlay
@@ -113,20 +122,33 @@ class WheelScreen: AdvancedScreen() {
         add(aSpinBtn) { centerX(); bottomToBottom(margin = 16f) }
 
         aSpinBtn.setOnClickListener {
+            // Ціна спроби (economy.prices.wheel_screen). Дефолт 0 — спін
+            // безкоштовний сьогодні; це ручка, а не «вимкнено».
+            val price = Econ.price(analyticsBlock!!, PRICE_DEF)
+            if (!Wallet.spend(price, bt = analyticsBt!!, block = analyticsBlock!!)) {
+                gdxGame.activity.showToast("Not enough coins — you need $price")
+                return@setOnClickListener
+            }
+
             aSpinBtn.disable()
 
             aWheel.spin { result ->
                 log("result = $result")
                 aSpinBtn.enable()
-                gdxGame.modelPlayer.addRbx(result.sum)
+                // ⚠️ Суму дає aWheel.payout, а НЕ result.sum: номінали секторів
+                // їдуть списком economy.rewards_list.wheel.
+                val win = aWheel.payout(result)
+                Wallet.add(win.toInt(), bt = analyticsBt!!, block = analyticsBlock!!)
+                Events.featureComplete(bt = analyticsBt!!, block = analyticsBlock!!, amount = win.toInt())
 
                 aPopup.setReward(result.sum)
                 overlayManager.show(WheelScreen.Overlay.POPUP)
             }
         }
 
+        // «=», не «+=»: adBottomFlow — StateFlow, шле на кожну зміну — інакше накопичується
         coroutine?.launch {
-            AdSizeManager.adBottomFlow.collect { runGDX { update(aSpinBtn) { marginBottom += screen.adBottomUI } } }
+            AdSizeManager.adBottomFlow.collect { runGDX { update(aSpinBtn) { marginBottom = 16f + screen.adBottomUI.coerceAtLeast(0f) } } }
         }
 
     }

@@ -1,5 +1,9 @@
 package com.sakurbx.fungambx.game.screens.home
 
+import com.sakurbx.fungambx.businesModule.economy.Econ
+import com.sakurbx.fungambx.businesModule.backend.Events
+import com.sakurbx.fungambx.businesModule.economy.Wallet
+import com.sakurbx.fungambx.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
@@ -26,6 +30,11 @@ import com.sakurbx.fungambx.game.utils.runGDX
 import kotlinx.coroutines.launch
 
 class GuessScreen: AdvancedScreen() {
+
+    companion object { private const val PRICE_DEF = 0 }
+
+    override val analyticsBt    = Bt.REVEAL
+    override val analyticsBlock = "guess_screen"
 
     // ------------------------------------------------------------------------
     // Overlay
@@ -63,6 +72,20 @@ class GuessScreen: AdvancedScreen() {
 
         super.show()
         animShowScreen()
+        chargeEntryPrice()
+    }
+
+    // ── Ціна спроби ───────────────────────────────────────────────────────────
+    // Одна гра на візит (controller.initialize при створенні), тому «спроба» — вхід.
+    // Дефолт 0: Wallet.spend(0) повертає true одразу і подій не шле — сьогодні
+    // поведінка не змінюється, але сервер може увімкнути ціну через
+    // economy.prices без релізу.
+    private fun chargeEntryPrice() {
+        val price = Econ.price(analyticsBlock!!, PRICE_DEF)
+        if (!Wallet.spend(price, bt = analyticsBt!!, block = analyticsBlock!!)) {
+            gdxGame.activity.showToast("Not enough coins — you need $price")
+            animHideScreen { gdxGame.navigationManager.back() }
+        }
     }
 
     override fun AConstraintLayout.addActorsOnRootConstraintLayout() {
@@ -111,7 +134,8 @@ class GuessScreen: AdvancedScreen() {
             gdxGame.activity.showInterstitial { aPanelQuess.addFreePicks() }
         }
 
-        coroutine?.launch { AdSizeManager.adBottomFlow.collect { runGDX { update(aGetFreeBtn) { marginBottom += screen.adBottomUI } } } }
+        // «=», не «+=»: adBottomFlow — StateFlow, шле на кожну зміну — інакше накопичується
+        coroutine?.launch { AdSizeManager.adBottomFlow.collect { runGDX { update(aGetFreeBtn) { marginBottom = 32f + screen.adBottomUI.coerceAtLeast(0f) } } } }
 
     }
 
@@ -120,9 +144,10 @@ class GuessScreen: AdvancedScreen() {
         add(aPanelQuess) { centerX(); topToBottom(aPanelTop); bottomToTop(aGetFreeBtn) }
 
         aPanelQuess.onReward = { reward ->
-            gdxGame.modelPlayer.addRbx(reward)
+            Wallet.add(reward.toInt(), bt = analyticsBt!!, block = analyticsBlock!!)
         }
-        aPanelQuess.onResult = { _, reward ->
+        aPanelQuess.onResult = { wins, reward ->
+            Events.featureComplete(bt = analyticsBt!!, block = analyticsBlock!!, amount = wins)
             aPopup.setReward(reward)
             overlayManager.show(Overlay.POPUP)
         }

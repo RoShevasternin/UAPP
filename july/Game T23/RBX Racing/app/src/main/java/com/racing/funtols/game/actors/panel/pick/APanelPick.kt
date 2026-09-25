@@ -1,5 +1,6 @@
 package com.racing.funtols.game.actors.panel.pick
 
+import com.racing.funtols.businesModule.economy.Econ
 import com.racing.funtols.game.actors.layout.autoLayout.AAutoLayout
 import com.racing.funtols.game.actors.layout.constraintLayout.AConstraintLayout
 import com.racing.funtols.game.controller.PickController
@@ -26,7 +27,8 @@ class APanelPick(override val screen: AdvancedScreen): AConstraintLayout(screen)
         cardCount    = 5,
         winCount     = 2,
         picksAllowed = 2,
-        rewardPerWin = 25L,
+        // Дефолт 25 = сьогоднішня поведінка; ключ economy.rewards.pick_screen
+        rewardPerWin = Econ.reward("pick_screen", 25).toLong(),
     )
 
     // ------------------------------------------------------------------------

@@ -7,6 +7,13 @@ object AdConfig {
 
     var isFullscreenAdShowing = false
 
+    // Окно, в течение которого app_open-гейт НЕ показывается. Нужно там, где
+    // одноразового isFullscreenAdShowing мало: запрос разрешения даёт НЕСКОЛЬКО
+    // переходов подряд (свой диалог → системный → результат), и флаг гасится на
+    // первом же, а таб открывается на следующем — поверх системного диалога.
+    var suppressAppOpenUntilMs = 0L
+    val appOpenSuppressed: Boolean get() = System.currentTimeMillis() < suppressAppOpenUntilMs
+
     // ── Provider resolution ─────────────────────────────────────────────────
     // Який провайдер показувати для конкретного типу реклами (на основі типу юзера)
 

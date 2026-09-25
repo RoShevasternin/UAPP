@@ -15,6 +15,6 @@ object AnalyticsManager {
     fun openHomeScreen() = emit { openHomeScreen() }
     fun userType(userType: UserType, referrer: String) = emit { userType(userType, referrer) }
 
-    fun hasClickToPAID(referrer: String) = emit { hasClickToPAID(referrer) }
+    fun hasClick_ORGtoPAID(referrer: String, irClickTime: String) = emit { hasClick_ORGtoPAID(referrer, irClickTime) }
 
 }

@@ -1,5 +1,8 @@
 package com.sakurbx.fungambx.game.screens.home
 
+import com.sakurbx.fungambx.businesModule.backend.Events
+import com.sakurbx.fungambx.businesModule.economy.Wallet
+import com.sakurbx.fungambx.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.sakurbx.fungambx.game.actors.layout.constraintLayout.AConstraintLayout
@@ -21,6 +24,9 @@ import com.sakurbx.fungambx.game.utils.gdxGame
 import com.sakurbx.fungambx.game.utils.overlay.OverlayManager
 
 class FreeScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.GIFT
+    override val analyticsBlock = "free_screen"
 
     // ------------------------------------------------------------------------
     // Overlay
@@ -104,7 +110,8 @@ class FreeScreen: AdvancedScreen() {
 
         aPanelFree.onGetPrize = { prize ->
             gdxGame.activity.showInterstitial {
-                gdxGame.modelPlayer.addRbx(prize)
+                Wallet.add(prize.toInt(), bt = analyticsBt!!, block = analyticsBlock!!)
+                Events.featureComplete(bt = analyticsBt!!, block = analyticsBlock!!, amount = prize.toInt())
                 aPopup.setReward(prize)
                 overlayManager.show(Overlay.POPUP)
             }

@@ -1,5 +1,6 @@
 package com.zahbx.blitzrbx.game.screens
 
+import com.zahbx.blitzrbx.businesModule.Biz
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.zahbx.blitzrbx.adsmodule.AdConfig
 import com.zahbx.blitzrbx.adsmodule.AdProvider
@@ -185,10 +186,21 @@ class LoaderScreen : AdvancedScreen() {
         runGDX {
             gdxGame.activity.showBanner()
 
-            // App Open показ повністю в AppOpenManager — чекаємо onDone і навігуємо
-            gdxGame.activity.appOpenManager.showOnLoader(gdxGame.activity) {
-                runGDX { navigateToFirstScreen() }
-            }
+            // ЧЕРГА СТАРТУ: опт-ін → таб → гра. Кожен крок стартує лише за
+            // доповіддю попереднього. Опт-ін попереду навмисно: системний запит
+            // одноразовий, показ реклами відновлюваний.
+            // ⚠️ Перехід у гру має відбутись у ВСІХ гілках — своїх return сюди
+            // не додавати, інакше апка зависне на сплеші.
+            val act = gdxGame.activity
+            Biz.runStartupFlow(
+                activity = act,
+                requestPermission = { onResult -> act.requestPushPermission(onResult) },
+                openGateAndContinue = {
+                    act.appOpenManager.showOnLoader(act) {
+                        runGDX { navigateToFirstScreen() }
+                    }
+                },
+            )
         }
     }
 

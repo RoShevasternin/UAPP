@@ -1,5 +1,6 @@
 package com.sakurbx.fungambx.game.screens.home.outfit
 
+import com.sakurbx.fungambx.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.sakurbx.fungambx.game.actors.layout.constraintLayout.AConstraintLayout
 import com.sakurbx.fungambx.game.actors.panel.APanelTop
@@ -13,6 +14,9 @@ import com.sakurbx.fungambx.game.utils.advanced.AdvancedScreen
 import com.sakurbx.fungambx.game.utils.gdxGame
 
 class SelectOutfitScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "select_outfit_screen"
 
     // ------------------------------------------------------------------------
     // Actors

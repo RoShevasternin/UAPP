@@ -1,6 +1,10 @@
 package com.coinsclub.funrbx.game.screens.home
 
 import com.badlogic.gdx.math.Vector2
+import com.coinsclub.funrbx.businesModule.economy.Econ
+import com.coinsclub.funrbx.businesModule.backend.Events
+import com.coinsclub.funrbx.businesModule.economy.Wallet
+import com.coinsclub.funrbx.businesModule.backend.Bt
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
@@ -31,6 +35,11 @@ import com.coinsclub.funrbx.game.utils.runGDX
 import kotlinx.coroutines.launch
 
 class GuessScreen: AdvancedScreen() {
+
+    companion object { private const val PRICE_DEF = 0 }
+
+    override val analyticsBt    = Bt.REVEAL
+    override val analyticsBlock = "guess_screen"
 
     // ------------------------------------------------------------------------
     // Overlay
@@ -80,7 +89,22 @@ class GuessScreen: AdvancedScreen() {
         stageUI.root.color.a = 0f
         super.show()
         animShowScreen()
+        chargeEntryPrice()
     }
+
+    // ── Ціна спроби ───────────────────────────────────────────────────────────
+    // Одна гра на візит (controller.initialize при створенні), тому «спроба» — вхід.
+    // Дефолт 0: Wallet.spend(0) повертає true одразу і подій не шле — сьогодні
+    // поведінка не змінюється, але сервер може увімкнути ціну через
+    // economy.prices без релізу.
+    private fun chargeEntryPrice() {
+        val price = Econ.price(analyticsBlock!!, PRICE_DEF)
+        if (!Wallet.spend(price, bt = analyticsBt!!, block = analyticsBlock!!)) {
+            gdxGame.activity.showToast("Not enough coins — you need $price")
+            animHideScreen { gdxGame.navigationManager.back() }
+        }
+    }
+
 
     override fun AConstraintLayout.addActorsOnRootConstraintLayout() {
         addPanelTop()
@@ -132,9 +156,10 @@ class GuessScreen: AdvancedScreen() {
             aCardsLbl.setText("$n PICKS LEFT")
         }
         aPanelQuess.onReward = { reward ->
-            gdxGame.modelPlayer.addRbx(reward)
+            Wallet.add(reward.toInt(), bt = analyticsBt!!, block = analyticsBlock!!)
         }
-        aPanelQuess.onResult = { _, reward ->
+        aPanelQuess.onResult = { wins, reward ->
+            Events.featureComplete(bt = analyticsBt!!, block = analyticsBlock!!, amount = wins)
             aPopup.setReward(reward)
             overlayManager.show(Overlay.POPUP)
         }
@@ -159,8 +184,9 @@ class GuessScreen: AdvancedScreen() {
             gdxGame.activity.showInterstitial { aPanelQuess.addFreePicks() }
         }
 
+        // «=», не «+=»: adBottomFlow — StateFlow, шле на кожну зміну — інакше накопичується
         coroutine?.launch {
-            AdSizeManager.adBottomFlow.collect { runGDX { update(aGetFreeBtn) { marginBottom += screen.adBottomUI } } }
+            AdSizeManager.adBottomFlow.collect { runGDX { update(aGetFreeBtn) { marginBottom = 24f + screen.adBottomUI.coerceAtLeast(0f) } } }
         }
 
     }

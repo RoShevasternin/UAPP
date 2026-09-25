@@ -85,7 +85,8 @@ class Selector_4_Screen: AdvancedScreen() {
         aBottomImg.height = 115f
         add(aBottomImg) { centerX(); bottomToBottom(); matchWidth() }
 
-        coroutine?.launch { AdSizeManager.adBottomFlow.collect { runGDX { update(aBottomImg) { marginBottom += screen.adBottomUI } } } }
+        // «=», не «+=»: adBottomFlow — StateFlow, шле на кожну зміну — інакше накопичується
+        coroutine?.launch { AdSizeManager.adBottomFlow.collect { runGDX { update(aBottomImg) { marginBottom = screen.adBottomUI.coerceAtLeast(0f) } } } }
     }
 
     private fun AConstraintLayout.addContinueBtn() {

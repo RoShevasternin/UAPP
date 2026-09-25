@@ -1,5 +1,8 @@
 package com.racing.funtols.game.controller
 
+import com.racing.funtols.businesModule.backend.Bt
+import com.racing.funtols.businesModule.backend.Events
+import com.racing.funtols.businesModule.economy.Wallet
 import com.racing.funtols.game.actors.panel.daily.AItemDailyReward
 import com.racing.funtols.game.model.PlayerModel
 import kotlinx.coroutines.CoroutineScope
@@ -31,7 +34,13 @@ class DailyRewardController(
     // ------------------------------------------------------------------------
     fun tryClaim() {
         if (!model.canClaimDailyReward()) return
+        // claimDailyReward тепер лише рахує суму й рухає streak —
+        // монети нараховує Wallet (він же шле coins_earned).
         val reward = model.claimDailyReward()
+        if (reward > 0) {
+            Wallet.add(reward.toInt(), bt = Bt.DAILY, block = BLOCK)
+            Events.featureComplete(bt = Bt.DAILY, block = BLOCK, amount = reward.toInt())
+        }
         if (reward > 0L) onGetReward(reward)
     }
 
@@ -69,5 +78,9 @@ class DailyRewardController(
         // показуємо WAIT тільки якщо реально є що чекати
         if (canClaim || remaining <= 0L) onShowClaimState()
         else                             onShowWaitState(remaining)
+    }
+
+    companion object {
+        private const val BLOCK = "daily_reward_screen"
     }
 }

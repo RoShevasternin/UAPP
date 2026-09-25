@@ -1,5 +1,6 @@
 package com.sakurbx.fungambx.game.model
 
+import com.sakurbx.fungambx.businesModule.economy.Econ
 import com.sakurbx.fungambx.game.state.GameState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
@@ -14,23 +15,18 @@ class PlayerModel(
         private val DAY_MILLIS   = if (IS_TEST_MODE) 10_000L else 24 * 60 * 60 * 1000L
         private val RESET_MILLIS = if (IS_TEST_MODE) 60_000L else 48 * 60 * 60 * 1000L
 
-        val LIST_REWARD  = listOf<Long>(100, 200, 400, 800, 1600, 3200, 6400)
+        // Суми днів їдуть списком з конфігу — economy.rewards_list.daily_reward.
+        // Дефолт = сьогоднішні числа; довжину звіряє сам Econ.
+        private val DEFAULT_DAILY = intArrayOf(100, 200, 400, 800, 1600, 3200, 6400)
+        val LIST_REWARD: List<Long>
+            get() = Econ.rewardList("daily_reward", DEFAULT_DAILY).map { it.toLong() }
     }
 
     // ------------------------------------------------------------------------
-    // RBX
+    // Баланс тут БІЛЬШЕ НЕ ЖИВЕ — тільки Wallet (businesModule/economy).
+    // Було: GameState.rbxFlow + addRbx/setRbx/getRbx/spendRbx. Своє сховище
+    // балансу і Wallet розходяться мовчки, тому джерело правди одне.
     // ------------------------------------------------------------------------
-    val rbxFlow: StateFlow<Long> = gameState.rbxFlow
-
-    fun addRbx(amount: Long)     { gameState.rbxFlow.value += amount }
-    fun setRbx(amount: Long)     { gameState.rbxFlow.value  = amount }
-    fun getRbx(): Long           = gameState.rbxFlow.value
-
-    fun spendRbx(amount: Long): Boolean {
-        if (gameState.rbxFlow.value < amount) return false
-        gameState.rbxFlow.value -= amount
-        return true
-    }
 
     // ------------------------------------------------------------------------
     // Daily Reward
@@ -57,8 +53,6 @@ class PlayerModel(
 
         val day    = gameState.dailyRewardDayFlow.value
         val reward = LIST_REWARD[day - 1]
-
-        addRbx(reward)
 
         gameState.dailyRewardTimeFlow.value = System.currentTimeMillis()   // ← СПЕРШУ час
         gameState.dailyRewardDayFlow.value  = if (day >= 7) 1 else day + 1 // ← потім день (тригерить collect)

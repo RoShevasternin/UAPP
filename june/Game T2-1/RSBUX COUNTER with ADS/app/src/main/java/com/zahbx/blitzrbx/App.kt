@@ -8,6 +8,7 @@ import com.google.firebase.analytics.analytics
 import com.zahbx.blitzrbx.adsmodule.AdConfig
 import com.zahbx.blitzrbx.adsmodule.AdPref
 import com.zahbx.blitzrbx.adsmodule.NavigationCounter
+import com.zahbx.blitzrbx.businesModule.Biz
 import com.zahbx.blitzrbx.util.NetworkUtils
 import com.zahbx.blitzrbx.util.log
 
@@ -23,6 +24,12 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
+
+        Biz.install(this, Biz.Config(
+            mainActivityClass   = MainActivity::class.java,
+            notificationIconRes = R.drawable.ic_notification,
+            appVersion          = BuildConfig.VERSION_NAME,
+        ))
 
         enableAnalyticsIfNoVpn()
 

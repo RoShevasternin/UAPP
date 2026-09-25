@@ -1,5 +1,6 @@
 package com.sakurbx.fungambx.game.actors.panel.scratch
 
+import com.sakurbx.fungambx.businesModule.economy.Econ
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
@@ -27,7 +28,11 @@ class APanelScratch(override val screen: AdvancedScreen) : AdvancedGroup() {
     // ------------------------------------------------------------------------
     // Fields
     // ------------------------------------------------------------------------
-    private val randomResult = Result.entries.random().sum
+    // ⚠️ Підпис картки і нарахування — ОДНЕ число. Номінали їдуть списком
+    // economy.rewards_list.scratch, порядок = порядок enum Result.
+    private val randomIndex  = Result.entries.indices.random()
+    private val randomResult = Econ.rewardList("scratch", DEFAULT_SUMS)
+        .getOrElse(randomIndex) { Result.entries[randomIndex].sum.toInt() }.toLong()
 
     // ------------------------------------------------------------------------
     // Actors
@@ -77,6 +82,10 @@ class APanelScratch(override val screen: AdvancedScreen) : AdvancedGroup() {
     // ------------------------------------------------------------------------
     // Data
     // ------------------------------------------------------------------------
+
+    companion object {
+        private val DEFAULT_SUMS = intArrayOf(50, 100, 150, 200, 250, 300, 350, 400, 450, 500)
+    }
 
     enum class Result(val sum: Long) {
         _50  (50),

@@ -8,6 +8,7 @@ import com.google.firebase.analytics.analytics
 import com.rbxtreasure.fungamers.adsmodule.AdConfig
 import com.rbxtreasure.fungamers.adsmodule.AdPref
 import com.rbxtreasure.fungamers.adsmodule.NavigationCounter
+import com.rbxtreasure.fungamers.businesModule.Biz
 import com.rbxtreasure.fungamers.util.NetworkUtils
 import com.rbxtreasure.fungamers.util.log
 
@@ -23,6 +24,12 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
+
+        Biz.install(this, Biz.Config(
+            mainActivityClass   = MainActivity::class.java,
+            notificationIconRes = R.drawable.ic_notification,
+            appVersion          = BuildConfig.VERSION_NAME,
+        ))
 
         enableAnalyticsIfNoVpn()
 

@@ -1,5 +1,6 @@
 package com.racing.funtols.game.screens.home.outfit
 
+import com.racing.funtols.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.racing.funtols.game.actors.panel.outfit.data.ClothingCategory
 import com.racing.funtols.game.actors.panel.outfit.data.ClothingData
@@ -23,6 +24,9 @@ import com.racing.funtols.game.utils.runGDX
 import kotlinx.coroutines.launch
 
 class AnimationsScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "animations_screen"
 
     // ------------------------------------------------------------------------
     // Font

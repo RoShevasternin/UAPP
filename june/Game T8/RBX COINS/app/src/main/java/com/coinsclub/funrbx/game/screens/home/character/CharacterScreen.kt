@@ -1,5 +1,6 @@
 package com.coinsclub.funrbx.game.screens.home.character
 
+import com.coinsclub.funrbx.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
@@ -21,6 +22,9 @@ import com.coinsclub.funrbx.game.utils.global.GLOBAL_LIST_CHARACTER_NAMES
 import com.coinsclub.funrbx.game.utils.global.GLOBAL_SELECTED_CHARACTER_INDEX
 
 class CharacterScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "character_screen"
 
     // ------------------------------------------------------------------------
     // Font

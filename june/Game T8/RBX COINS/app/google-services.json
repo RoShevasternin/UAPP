@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "59049809779",
+    "project_id": "t8-rbx-coins",
+    "storage_bucket": "t8-rbx-coins.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:59049809779:android:b890f75a1b6b2bfc9f5706",
+        "android_client_info": {
+          "package_name": "com.coinsclub.funrbx"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7S10ucNnOOyh6V4HlYyXE4uJPeqw3g9I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

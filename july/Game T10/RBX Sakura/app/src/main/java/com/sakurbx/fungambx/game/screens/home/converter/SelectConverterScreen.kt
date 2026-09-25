@@ -1,5 +1,6 @@
 package com.sakurbx.fungambx.game.screens.home.converter
 
+import com.sakurbx.fungambx.businesModule.backend.Bt
 import com.sakurbx.fungambx.game.actors.layout.constraintLayout.AConstraintLayout
 import com.sakurbx.fungambx.game.actors.panel.APanelTop
 import com.sakurbx.fungambx.game.actors.panel.converter.APanelSelectConverter
@@ -12,6 +13,9 @@ import com.sakurbx.fungambx.game.utils.advanced.AdvancedScreen
 import com.sakurbx.fungambx.game.utils.gdxGame
 
 class SelectConverterScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "select_converter_screen"
 
     // ------------------------------------------------------------------------
     // Actors

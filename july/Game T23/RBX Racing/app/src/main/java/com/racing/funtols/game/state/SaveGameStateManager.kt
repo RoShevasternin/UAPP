@@ -13,6 +13,11 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
 
+// ⚠️ ignoreUnknownKeys обов'язковий: PlayerData.rbx прибрано (баланс у Wallet),
+//    але поле лишається в збереженні живих юзерів. Строгий Json кидає виняток у
+//    корутині → краш на КОЖНОМУ старті після оновлення.
+private val playerJson = Json { ignoreUnknownKeys = true }
+
 class SaveGameStateManager(
     private val gameState  : GameState,
     private val scope      : CoroutineScope
@@ -29,11 +34,12 @@ class SaveGameStateManager(
     fun load() {
         scope.launch(Dispatchers.IO) {
             val raw  = dataStore.get()
-            val data = if (raw != null) {
-                Json.decodeFromString(PlayerData.serializer(), raw)
-            } else {
-                PlayerData() // ← дефолтні значення з PlayerData
-            }
+            // Зіпсоване збереження не має вбивати апку — беремо дефолт
+            val data = raw
+                ?.let { runCatching { playerJson.decodeFromString(PlayerData.serializer(), it) }
+                    .onFailure { e -> log("SaveGameStateManager: decode failed, using default: $e") }
+                    .getOrNull() }
+                ?: PlayerData() // ← дефолтні значення з PlayerData
             gameState.loadFrom(data)
             logLoad(data)
         }
@@ -47,7 +53,7 @@ class SaveGameStateManager(
         scope.launch(Dispatchers.IO) {
             mutex.withLock {
                 val data = gameState.toPlayerData()
-                val json = Json.encodeToString(PlayerData.serializer(), data)
+                val json = playerJson.encodeToString(PlayerData.serializer(), data)
                 dataStore.update { json }
                 logSave(data)
             }
@@ -65,7 +71,7 @@ class SaveGameStateManager(
                 delay(intervalSec * 1000L)
                 mutex.withLock {
                     val data = gameState.toPlayerData()
-                    val json = Json.encodeToString(PlayerData.serializer(), data)
+                    val json = playerJson.encodeToString(PlayerData.serializer(), data)
                     dataStore.update { json }
                     log("SaveGameStateManager: auto-save ✓")
                 }
@@ -87,7 +93,6 @@ class SaveGameStateManager(
         ╔══════════════════════════════╗
         ║  GAME STATE LOADED
         ╠══════════════════════════════╣
-        ║  RBX        : ${data.rbx}
         ║  Daily Day  : ${data.dailyRewardDay}
         ║  Daily Time : ${data.dailyRewardTime}
         ╚══════════════════════════════╝
@@ -99,7 +104,6 @@ class SaveGameStateManager(
         ╔══════════════════════════════╗
         ║  GAME STATE SAVED
         ╠══════════════════════════════╣
-        ║  RBX        : ${data.rbx}
         ║  Daily Day  : ${data.dailyRewardDay}
         ║  Daily Time : ${data.dailyRewardTime}
         ╚══════════════════════════════╝

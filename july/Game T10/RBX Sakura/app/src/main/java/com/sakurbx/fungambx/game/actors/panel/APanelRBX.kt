@@ -1,5 +1,6 @@
 package com.sakurbx.fungambx.game.actors.panel
 
+import com.sakurbx.fungambx.businesModule.economy.Wallet
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.sakurbx.fungambx.game.actors.layout.constraintLayout.AConstraintLayout
@@ -53,8 +54,10 @@ class APanelRBX(override val screen: AdvancedScreen): AConstraintLayout(screen) 
         add(aLbl) { startToEnd(aIcon, 3f); centerY() }
 
         coroutine?.launch {
-            gdxGame.modelPlayer.rbxFlow.collect { rbx ->
-                runGDX { setText(NumberFormatter.format(rbx)) }
+            // ⚠️ StateFlow віддає значення в потоці ПІДПИСНИКА — сцену чіпаємо
+            // тільки через runGDX.
+            Wallet.balanceFlow.collect { balance ->
+                runGDX { setText(NumberFormatter.format(balance)) }
             }
         }
     }

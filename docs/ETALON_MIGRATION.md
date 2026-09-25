@@ -234,8 +234,14 @@ open val analyticsBlock: String? = null
 (відтворено на девайсі, T3, 2026-09-23). На тестах не видно, бо ми завжди
 робимо `pm clear`.
 
-У `DataStoreJsonUtil` — один спільний `Json { ignoreUnknownKeys = true }` для
-decode/encode і `runCatching` навколо decode (зіпсоване збереження → дефолт, а не
+⚠️ **Де саме читається збереження — залежить від шаблону.** У шаблонах з
+`GameState` (T6, T7, T7-1, …) `PlayerData` декодує **`SaveGameStateManager.load()`**,
+а не `DataStoreJsonUtil` — фікс в одному місці іншого не рятує (T7, 2026-09-23:
+виправив `DataStoreJsonUtil`, а краш лишився). Перевіряти:
+`grep -rn "Json.decodeFromString" app/src/main/java | grep -v businesModule`.
+
+У знайденому місці — `Json { ignoreUnknownKeys = true }` для decode/encode і
+`runCatching` навколо decode (зіпсоване збереження → дефолт, а не
 краш). Перевірка: встановити апку, підкласти в
 `files/datastore/DATA_STORE.preferences_pb` старий JSON з `rbx` (через
 `run-as`), запустити.
@@ -933,8 +939,9 @@ release не перевірені).
 розблоковувались лише за рекламу. Рішення користувача (2026-09-23): **монети як
 альтернатива рекламі**. Баланс (`APanelBalance` на `Wallet.balanceFlow`) — у
 шапці Home; у попапі розблокування — друга кнопка «Unlock for N coins».
-`PlayerData` не чіпали (балансу там не було), але `ignoreUnknownKeys` у
-`DataStoreJsonUtil` додано про запас.
+`PlayerData` не чіпали (балансу там не було), але `ignoreUnknownKeys` додано про
+запас — і в `DataStoreJsonUtil`, і в `SaveGameStateManager` (саме він тут читає
+`PlayerData`; спершу фікс стояв лише в першому — виправлено разом з T7).
 
 Попап: PNG 344×334 з намальованими «Watch Ad»/«Cancel» подовжено вниз на 64 —
 кнопка монет лягає на намальований Cancel, Cancel переїхав на білу смугу
@@ -979,3 +986,253 @@ Selector_1..3, Home, SkinBook, Personalization, `AScrollLayout`);
 класи в mapping не перейменовані (APK непідписаний, пуші на release не
 перевірені).
 
+### T7 · `june/Game T7/RBX Treasure` · `com.rbxtreasure.fungamers` · 2026-09-23
+
+Схема диплінка **`fungamers`**. Лог-тег `TRESHER`, prefs `treasure_ads_prefs`.
+Тулчейн — як у T3/T6.
+
+**Це та сама гра, що T7-1, але окрема апка** (інший пакет, своя графіка, свій
+privacy URL). Після нормалізації пакета T7 збігався з T7-1 **до міграції** у 156
+файлах; відмінності — онбординг (`OnboardingScreen` + `Selector_1..4`, у T7-1 його
+немає), `SpriteManager`/`SpriteUtil`/`SoundUtil`/`Constants`, `NavigationManager`,
+privacy URL у `MainActivity`. Тому, як з T1: усі файли, де T7 == T7-1-до-міграції,
+взято з мігрованого T7-1 (55 файлів, з `businesModule`), `MainActivity` і
+`LoaderScreen` — з T7-1 з точковими правками, решту своїх не чіпали. Розмітка
+екранів і ключі економіки — як у T7-1 (див. вище).
+
+Поверх T7-1 — те, що з'явилось після його міграції:
+- ⚠️ **краш на оновленні відтворено і виправлено** у `SaveGameStateManager`
+  (`PlayerData.rbx` прибрано ще в T7-1): збереження `{"rbx":1500,…}` → після
+  фіксу серія дейлі «день 2» збереглась;
+- онбординг лише при першому запуску (`Onboarding.kt`, `HomeScreen.show`);
+  реклама пропускається тільки на `Loader → Home`;
+- нативку з Home прибрано (5в);
+- `+=` відступу — 8 місць (у т.ч. `FindsScreen`/`WheelScreen`, скопійовані з
+  T7-1 — **у T7-1 цей баг досі є**), `AScrollLayout`;
+- `ACheckBoxGroup`.
+
+На девайсі (Redmi 10C, Android 13): `MODEL OUR … atk=yes`. Черга старту:
+опт-ін → системний → +100 → таб (`pl=app_open`) → онбординг (4 сторінки +
+4 селектори) → Home; баланс 200 (старі 1500 не переносимо — правило парку).
+Зелена кнопка: 3 тапи = 3 `pl=interstitial`. Дейлі день 2: +200. Колесо: +45,
+під стрілкою 45 (у T7-1 не було перевірено). Скретч: вхід безкоштовний, +25.
+Повторний запуск — одразу Home (`onboarding.done=true`), баланс 470 збережено.
+Диплінк `fungamers://reward?h=test` відкриває апку. Release: обидва класи в
+mapping не перейменовані (APK непідписаний).
+
+Дрібниця, не чіпав: на екранах колеса і скретча намальовано «Try your luck for
+300 RBX» / «all for just 450 RBX», хоча ціни спроби дефолтні 0 — текст з
+дизайну, був і до міграції.
+
+### T8 · `june/Game T8/RBX COINS` · `com.coinsclub.funrbx` · 2026-09-23
+
+Схема диплінка **`funrbx`**. Лог-тег `COINS_DEBUS`, prefs `coins_ads_prefs`.
+Тулчейн — як у T3/T6/T7.
+
+**Той самий шаблон, що T9 (RBX RUSH), але своя гра:** своя графіка, інший
+набір панелей Home, інші суми. З T9-до-міграції (коміт `31a8138`) збігалося 97
+файлів. Тому міграцію T9 перенесено **трибічним злиттям** (`git merge-file`:
+T8 × T9-до × T9-після): 24 файли взято цілком, 18 злились самі, 11 конфліктів
+розібрано руками. Спосіб варто повторювати для апок на спільному шаблоні:
+всі рішення вже мігрованої апки приїжджають, а своє апки не губиться.
+
+Що в конфліктах вирішено на користь **T8** (дефолт = сьогоднішня поведінка):
+- квіз: нагорода росте з номером питання (10/20/30/40/50) → список
+  `rewards_list.quiz`, а не скаляр 10 з T9; у T8 намальовані ті самі +10…+50;
+- guess: одна сума 250 за виграшну картку → `rewards.guess_screen` = 250
+  (у T9 був пул 100…700);
+- free: 300 → `rewards.free_screen` = 300 (у T9 — 500);
+- скретч: `[50…500]`; колесо — `[5…150]` (як у T9);
+- на Home лишено свою плашку балансу `APanelRBX`, зелена кнопка — одразу під нею.
+
+Наївного запиту пушів тут не було; `requestPushPermission` з T9 приїхав разом з
+імпортами (`Manifest`, `Build`, `ContextCompat`, `PackageManager` — дописано).
+`AGreenButton` з T9 посилався на шрифти Fredoka, яких у T8 немає →
+`fontGenerator_LuckiestGuy_Regular`.
+
+Поверх T9 (з'явилось після його міграції): фікс крашу на оновленні у
+`SaveGameStateManager` і `DataStoreJsonUtil` (відтворено: збереження
+`{"rbx":1500,…}` читається, серія дейлі «день 2» лишилась), нативку з Home
+прибрано, `+=` відступу — 14 місць, `ACheckBoxGroup`. `HomeScreen` у T8 вже був
+у `noAdScreens` — лишено.
+
+Ключі економіки:
+
+| ключ | тип | дефолт |
+|---|---|---|
+| `wheel_screen` / `scratch_screen` | price | `0` |
+| `quiz` | rewards_list | `[10,20,30,40,50]` |
+| `quiz_screen` | penalty | `0` |
+| `guess_screen` | reward / price | `250` / `0` (ціна на вхід) |
+| `free_screen` | reward | `300` |
+| `wheel` | rewards_list | `[5,10,15,20,25,30,35,40,45,50,100,150]` |
+| `scratch` | rewards_list | `[50,100,150,200,250,300,350,400,450,500]` |
+| `daily_reward` | rewards_list | `[100,200,400,800,1600,3200,6400]` |
+
+На девайсі (Redmi 10C, Android 13): `MODEL OUR … atk=yes`. Черга старту:
+опт-ін → системний → +100 → таб → онбординг (3 сторінки + 4 селектори) → Home;
+баланс 200. Зелена кнопка: 3 × `pl=interstitial`. Дейлі день 2: +200, шапка
+оновилась, пішов таймер. Колесо +5 — під стрілкою 5. Скретч +500. Квіз +10, +20.
+Повторний запуск — одразу Home, баланс 935 збережено. Диплінк
+`funrbx://reward?h=test` відкриває апку. Release: обидва класи в mapping не
+перейменовані (APK непідписаний).
+
+Не чіпав: «for 300 RBX» / «for just 450 RBX» на колесі й скретчі — з дизайну,
+ціни спроби дефолтні 0.
+
+### T2-1 · `june/Game T2-1/RSBUX COUNTER with ADS` · `com.zahbx.blitzrbx` · 2026-09-23
+
+Схема диплінка **`blitzrbx`**. Лог-тег `RCUNTER`, prefs `rscount_ads_prefs`
+(ті самі, що в T2 — це різні апки, конфлікту немає). Тулчейн — як у T3/T6/T7/T8.
+
+**Двійник T2** з іншою графікою («RBX BLITZ»): з T2-до-міграції (`158457c`)
+збігалося 124 файли. Міграцію T2 перенесено трибічним злиттям, як у T8: 38 файлів
+взято цілком, 3 злились самі, 2 конфлікти. Розмітка екранів, ключі економіки
+(`quiz_time_screen`, `mini_game_screen`, `daily_reward_screen`, `spin`, `scratch`),
+Boost Mode, зелена кнопка на текстурі `green_btn`, `maxOf`-відступи — усе з T2.
+
+Відмінності від T2, збережені:
+- **онбордингу немає**: `Loader → MainScreen` одразу, мова — лише з Settings.
+  `Onboarding.kt` з T2 прибрано (був би мертвий), `LanguageScreen` у `noAdScreens`
+  не додано — туди заходять з налаштувань, реклама там доречна;
+- `versionCode 2 / 2.0.0` і своя конфігурація мініфікації (debug теж
+  `isMinifyEnabled = true`) — не чіпав.
+
+Поверх T2: фікс крашу на оновленні (`DataStoreJsonUtil`; відтворювано на
+збереженні `{"rbx":1500,…}` — читається, серія «день 2» лишилась), нативку з
+меню прибрано, `ACheckBoxGroup`.
+
+На девайсі (Redmi 10C, Android 13): `MODEL OUR … atk=yes`. Черга старту:
+опт-ін → системний → +100 → таб → меню; баланс 200. Зелена кнопка: 3 ×
+`pl=interstitial`. Дейлі день 2: +10 (день × 5). Колесо +30 — під стрілкою 30,
+шапка оновилась. Квіз +5. Повторний запуск — меню, баланс 245 збережено. Диплінк
+`blitzrbx://reward?h=test` відкриває апку. Release: обидва класи в mapping не
+перейменовані (APK непідписаний).
+
+
+### T10 · `july/Game T10/RBX Sakura` · `com.sakurbx.fungambx` · 2026-09-24
+
+Схема диплінка **`fungambx`**. Лог-тег `SKAKURA`, prefs `rush_ads_prefs` (ім'я
+лишилось від шаблону T9 — своє, не чіпав). Наївного запиту пушів не було.
+`ic_notification` взято з еталона. `google-services.json` поклав користувач
+(пакет збігається). Тулчейн — як у T3/T6/T7/T8/T2-1.
+
+**Ще одна гра на шаблоні T9/T8** («сакура»: рожева палітра, свої суми). З
+T9-до-міграції збігалося 96 файлів, з T8-до — 93. Донор — **T8** (у ньому вже
+всі пізніші фікси: краш на оновленні, `ACheckBoxGroup`, `maxOf`/`=`-відступи,
+нативка з меню), трибічне злиття як у журналі T8. Але верстка T10 відрізняється
+сильніше, ніж у T8↔T9, тому частину файлів **не зливав, а правив вручну поверх
+своєї версії**: `HomeScreen`, `APanelHome`, `APanelFree`, `GuessScreen`, 4
+селектори, `OnboardingScreen` (конфлікти там — не зміст міграції, а різна
+розкладка). `QuizController` узято з мігрованого **T9** (T10 == T9-до байт у
+байт; у T8 квіз зі зростаючою нагородою, тут — фіксовані 10).
+
+⚠️ **Колесо — 15 номіналів, а не 12.** Enum `AWheel.Result` у T10 має ще
+`_500/_125/_250`, тож `DEFAULT_SUMS` з T8 (`[5…150]`, 12 шт.) тут не годився —
+виправлено на 15 значень у порядку enum. Звіряти `DEFAULT_SUMS` з enum у кожній
+апці на цьому шаблоні: розбіжність довжини тиха (Econ просто бере дефолт).
+
+Відмінності від T8, збережені:
+- баланс — у верхній панелі (`APanelTopHome` → `APanelRBX`), а не в списку
+  меню; `APanelRBX` переведено на `Wallet.balanceFlow`;
+- зелена кнопка перша в `APanelHome` (над Daily), шрифт `Kedebideri_ExtraBold`
+  (Luckiest Guy у T10 немає); зелений — єдиний на рожевому меню;
+- онбординг сам кличе `onFrontNavigation()` на кожну сторінку — так було до
+  міграції, не чіпав.
+
+⚠️ **Стартовий баланс змінився: було 1000, стало 100** (`GameState.rbxFlow(1000L)`
+прибрано). Як у T7-1 — якщо треба 1000, це `economy.start_balance` у картці.
+
+Діалоги `showInput` і `showCoinsDialog` — з `suppressAppOpenUntilMs` (як у T3).
+
+Розмітка екранів — 15 змістовних: `home_screen`/HUB, `wheel_screen`/SPIN,
+`scratch_screen`/GRID, `quiz_screen`/QUIZ, `guess_screen`/REVEAL,
+`free_screen`/GIFT, `daily_reward_screen`/DAILY (з контролера, без екрана),
+конвертери/TOOL, персонажі та одяг/CATALOG. Технічні (Loader, Settings,
+Onboarding, Selector_1..4) — `null`.
+
+Ключі економіки:
+
+| ключ | тип | дефолт |
+|---|---|---|
+| `wheel_screen` / `scratch_screen` / `guess_screen` | price | `0` |
+| `quiz_screen` | price / reward / penalty | `0` / `10` / `0` |
+| `guess_screen` | reward | `100` (за виграшну картку) |
+| `free_screen` | reward | `200` |
+| `wheel` | rewards_list | `[5,10,15,20,25,30,35,40,45,50,100,150,500,125,250]` |
+| `scratch` | rewards_list | `[50,100,150,200,250,300,350,400,450,500]` |
+| `daily_reward` | rewards_list | `[100,200,400,800,1600,3200,6400]` |
+
+На девайсі (Redmi 10C, Android 13): `MODEL OUR … atk=yes`, провайдери
+`custom_google`. Черга старту: опт-ін (заголовок один) → системний → +100 → таб
+(`pl=app_open`) → онбординг (3 сторінки + 4 селектори) → Home; баланс 200.
+Зелена кнопка: 3 × `pl=interstitial`. Дейлі день 1: +100. Колесо +100 — під
+стрілкою 100. Скретч +350 (вхід безкоштовний). Квіз 4/7 → +40. Guesser +100.
+Free +200 (`pl=interstitial`). Повторний запуск — одразу Home
+(`onboarding.done=true`), баланс 1090 збережено, зайвого `front` після
+`app_open` немає. Диплінк `fungambx://reward?h=test` відкриває апку. Краш на
+оновленні: збереження `{"rbx":1500,…}` читається, серія «день 2» лишилась.
+Release: обидва класи в mapping не перейменовані (APK непідписаний).
+
+### T23 · `july/Game T23/RBX Racing` · `com.racing.funtols` · 2026-09-24
+
+Схема диплінка **`funtols`**. Лог-тег `GONKA`, prefs `ads_prefs`. `ic_notification`,
+`POST_NOTIFICATIONS`, `firebase-messaging` і `default_notification_icon` у T23 уже
+були свої — дописано лише `work-runtime`, диплінк-фільтр, `PushService`, ProGuard.
+`google-services.json` у проєкті не було — узято з `july/Game T23/T23.zip`
+(пакет і Firebase-проєкт `t23-rbx-racing` збігаються). Тулчейн — як у T10.
+
+⚠️ **Наївний запит пушів** (`requestNotificationPermission()` в `onCreate`, як у
+T9) — прибрано, запит тепер лише з черги старту.
+
+**Своя гра на каркасі T9-родини, але з іншими механіками і MSDF-шрифтами.** З
+T8/T9/T10-до збігалося лише ~48 файлів із 172, найближча за кодом T28 (94) — ще
+не мігрована. Тому злиття з T8 взято лише там, де воно чисте (`StartActivity`,
+`ACheckBox*`, `ShapeDrawerUtil`, `DailyRewardController`, `NavigationManager`,
+`CharacterScreen`, `SaveGameStateManager`, `AdvancedScreen`); `MainActivity` і
+`App` — трибічно з **T10** (4 конфлікти, лише імпорти й блок дозволу); решта —
+вручну. Відступи під рекламу в T23 від початку `= база + adBottom` — `+=` немає.
+`DataStoreJsonUtil` у T23 немає — `PlayerData` читає лише `SaveGameStateManager`.
+
+Монети йшли через один `APopup` (спільний для всіх механік) → там тепер
+`Wallet.add` + `featureComplete` з `bt/block` екрана-власника (`screen.analyticsBt`).
+Зелена кнопка — своя `AGreenButton` на `ATextButtonAnim` + MSDF
+(`TitilliumWeb_BoldItalic`, як заголовки гри); ⚠️ гліфа `›` в MSDF-атласах
+немає — шеврон `>`.
+
+Pick / Plate / TurboMatch — **багато раундів за візит** (`newGame()` після
+нагороди), тому ціна (`chargeRound()`) знімається на вході І перед кожним
+наступним раундом, а не лише на вході, як у скретчі T8.
+
+⚠️ **Стартовий баланс був 10 000, став 100** (`GameState.rbxFlow(10_000L)`
+прибрано). Якщо треба лишити — `economy.start_balance` у картці.
+
+Розмітка екранів — 11 змістовних: `home_screen`/HUB, `turbo_match_screen`/REVEAL
+(мемо-пари), `pick_screen`/REVEAL (каністри), `plate_screen`/GRID (пазл-таблички),
+`boost_screen`/GIFT (нагорода за рекламу), `daily_reward_screen`/DAILY (з
+контролера), `converter_screen`/TOOL, персонажі та одяг/CATALOG. Технічні
+(Loader, Settings, Onboarding, Selector_1..4) — `null`.
+
+Ключі економіки:
+
+| ключ | тип | дефолт |
+|---|---|---|
+| `turbo_match_screen` | price / reward | `0` / `20` |
+| `plate_screen` | price / reward | `0` / `30` |
+| `pick_screen` | price / reward | `0` / `25` (за кожну виграшну каністру, 0–2 шт.) |
+| `boost_screen` | reward | `50` |
+| `daily_reward` | rewards_list | `[100,200,300,400,500,600,700]` |
+
+Не чіпав: «25 RBX» на картинці виграшної каністри і «free 50 RBX» на Boost —
+намальовані в текстурах; якщо сервер змінить суму, напис розійдеться.
+
+На девайсі (Redmi 10C, Android 13): `MODEL OUR … atk=yes`, провайдери
+`custom_google`. Черга старту з **«Later»**: без системного запиту → таб
+(`pl=app_open`) → онбординг (3 + 4 селектори) → Home, баланс 100. Повторний опт-ін
+на наступному запуску: «GET 100» → системний → +100. Зелена кнопка: 3 ×
+`pl=interstitial`. Дейлі +100. Turbo Match +20, новий раунд стартує. Pick: 0 / 25 /
+25 / 0 → +50. Boost +50 (`pl=interstitial`). Plate +30. Повторний запуск — одразу
+Home (`onboarding.done=true`), баланс збережено. Диплінк `funtols://reward?h=test`
+відкриває апку. Краш на оновленні: збереження `{"rbx":10000,…}` читається, серія
+«день 2» лишилась. Release: обидва класи в mapping не перейменовані (APK
+непідписаний).

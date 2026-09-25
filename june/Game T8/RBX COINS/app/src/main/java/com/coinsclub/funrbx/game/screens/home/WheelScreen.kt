@@ -1,5 +1,9 @@
 package com.coinsclub.funrbx.game.screens.home
 
+import com.coinsclub.funrbx.businesModule.economy.Econ
+import com.coinsclub.funrbx.businesModule.backend.Events
+import com.coinsclub.funrbx.businesModule.economy.Wallet
+import com.coinsclub.funrbx.businesModule.backend.Bt
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.coinsclub.funrbx.adsmodule.AdSizeManager
 import com.coinsclub.funrbx.game.actors.button.AYellowButton
@@ -25,6 +29,11 @@ import com.coinsclub.funrbx.util.log
 import kotlinx.coroutines.launch
 
 class WheelScreen: AdvancedScreen() {
+
+    companion object { private const val PRICE_DEF = 0 }
+
+    override val analyticsBt    = Bt.SPIN
+    override val analyticsBlock = "wheel_screen"
 
     // ------------------------------------------------------------------------
     // Overlay
@@ -113,20 +122,34 @@ class WheelScreen: AdvancedScreen() {
         add(aSpinBtn) { centerX(); bottomToBottom(margin = 30f) }
 
         aSpinBtn.setOnClickListener {
+            // Ціна спроби з конфігу. Дефолт 0 = спін безкоштовний сьогодні;
+            // ключ economy.prices.wheel_screen — ручка без релізу.
+            val price = Econ.price(analyticsBlock!!, PRICE_DEF)
+            if (!Wallet.spend(price, bt = analyticsBt!!, block = analyticsBlock!!)) {
+                gdxGame.activity.showToast("Not enough coins — you need $price")
+                return@setOnClickListener
+            }
+
             aSpinBtn.disable()
 
             aWheel.spin { result ->
                 log("result = $result")
                 aSpinBtn.enable()
-                gdxGame.modelPlayer.addRbx(result.sum)
+                // ⚠️ Суму дає aWheel.payout, а НЕ result.sum: номінали секторів
+                // їдуть списком economy.rewards_list.wheel. Показуємо й нараховуємо
+                // ОДНЕ число. coins_earned шле сам Wallet.
+                val win = aWheel.payout(result)
+                Wallet.add(win.toInt(), bt = analyticsBt!!, block = analyticsBlock!!)
+                Events.featureComplete(bt = analyticsBt!!, block = analyticsBlock!!, amount = win.toInt())
 
-                aPopup.setReward(result.sum)
+                aPopup.setReward(win)
                 overlayManager.show(Overlay.POPUP)
             }
         }
 
+        // «=», не «+=»: adBottomFlow — StateFlow, шле на кожну зміну — інакше накопичується
         coroutine?.launch {
-            AdSizeManager.adBottomFlow.collect { runGDX { update(aSpinBtn) { marginBottom += screen.adBottomUI } } }
+            AdSizeManager.adBottomFlow.collect { runGDX { update(aSpinBtn) { marginBottom = 30f + screen.adBottomUI.coerceAtLeast(0f) } } }
         }
 
     }

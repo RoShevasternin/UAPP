@@ -1,5 +1,9 @@
 package com.sakurbx.fungambx.game.screens.home
 
+import com.sakurbx.fungambx.businesModule.economy.Econ
+import com.sakurbx.fungambx.businesModule.backend.Events
+import com.sakurbx.fungambx.businesModule.economy.Wallet
+import com.sakurbx.fungambx.businesModule.backend.Bt
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.sakurbx.fungambx.game.actors.layout.constraintLayout.AConstraintLayout
 import com.sakurbx.fungambx.game.actors.panel.APanelTop
@@ -20,6 +24,11 @@ import com.sakurbx.fungambx.game.utils.gdxGame
 import com.sakurbx.fungambx.game.utils.overlay.OverlayManager
 
 class QuizScreen: AdvancedScreen() {
+
+    companion object { private const val PRICE_DEF = 0 }
+
+    override val analyticsBt    = Bt.QUIZ
+    override val analyticsBlock = "quiz_screen"
 
     // ------------------------------------------------------------------------
     // Overlay
@@ -55,7 +64,22 @@ class QuizScreen: AdvancedScreen() {
 
         super.show()
         animShowScreen()
+        chargeEntryPrice()
     }
+
+    // ── Ціна спроби ───────────────────────────────────────────────────────────
+    // Один прохід квізу на візит (aQuiz.initialize при створенні) — «спроба» це вхід.
+    // Дефолт 0: Wallet.spend(0) повертає true одразу і подій не шле — сьогодні
+    // поведінка не змінюється, але сервер може увімкнути ціну через
+    // economy.prices без релізу.
+    private fun chargeEntryPrice() {
+        val price = Econ.price(analyticsBlock!!, PRICE_DEF)
+        if (!Wallet.spend(price, bt = analyticsBt!!, block = analyticsBlock!!)) {
+            gdxGame.activity.showToast("Not enough coins — you need $price")
+            animHideScreen { gdxGame.navigationManager.back() }
+        }
+    }
+
 
     override fun AConstraintLayout.addActorsOnRootConstraintLayout() {
         addPanelTop()
@@ -94,9 +118,15 @@ class QuizScreen: AdvancedScreen() {
         add(aQuiz) { centerX(); topToBottom(aPanelTop); bottomToBottom(); verticalBias = 0.63f }
 
         aQuiz.onCorrect = { reward ->
-            gdxGame.modelPlayer.addRbx(reward)
+            Wallet.add(reward.toInt(), bt = analyticsBt!!, block = analyticsBlock!!)
         }
-        aQuiz.onFinished = { _, totalReward ->
+        aQuiz.onWrong = { penalty ->
+            // spend не пускає баланс у мінус і при 0 нічого не робить
+            Wallet.spend(penalty.toInt(), bt = analyticsBt!!, block = analyticsBlock!!)
+        }
+        aQuiz.onFinished = { correct, totalReward ->
+            // Ігровий цикл завершено, amount = число правильних відповідей
+            Events.featureComplete(bt = analyticsBt!!, block = analyticsBlock!!, amount = correct)
             aPopup.setReward(totalReward)
             overlayManager.show(Overlay.POPUP)
         }

@@ -1,10 +1,12 @@
 package com.racing.funtols.game.screens
 
+import com.racing.funtols.businesModule.backend.Bt
 import com.racing.funtols.adsmodule.AdSizeManager
 import com.racing.funtols.game.actors.layout.constraintLayout.AConstraintLayout
 import com.racing.funtols.game.actors.panel.APanelTopHome
 import com.racing.funtols.game.actors.panel.home.APanelHome
 import com.racing.funtols.game.utils.Block
+import com.racing.funtols.game.utils.Onboarding
 import com.racing.funtols.game.utils.TIME_ANIM_SCREEN
 import com.racing.funtols.game.utils.actor.animHide
 import com.racing.funtols.game.utils.actor.animShow
@@ -14,6 +16,9 @@ import com.racing.funtols.services.analytics.AnalyticsManager
 import kotlinx.coroutines.launch
 
 class HomeScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.HUB
+    override val analyticsBlock = "home_screen"
 
     // ------------------------------------------------------------------------
     // Actors
@@ -28,6 +33,8 @@ class HomeScreen: AdvancedScreen() {
         rootConstraintLayout.color.a = 0f
 
         super.show()
+        // Дійшли до меню — онбординг пройдено, наступні запуски стартують звідси
+        Onboarding.markDone()
         animShowScreen { AnalyticsManager.openHomeScreen() }
     }
 

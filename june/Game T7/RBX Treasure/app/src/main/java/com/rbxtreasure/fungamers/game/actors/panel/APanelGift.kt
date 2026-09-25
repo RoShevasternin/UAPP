@@ -1,5 +1,6 @@
 package com.rbxtreasure.fungamers.game.actors.panel
 
+import com.rbxtreasure.fungamers.businesModule.economy.Econ
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
@@ -17,7 +18,9 @@ import com.rbxtreasure.fungamers.game.utils.gdxGame
 class APanelGift(override val screen: AdvancedScreen): AConstraintLayout(screen) {
 
     companion object {
-        private const val REWARD = 200L
+        // Дефолт 200 = сьогоднішня поведінка; ключ economy.rewards.gift_screen
+        private const val REWARD_DEF = 200
+        private val REWARD: Long get() = Econ.reward("gift_screen", REWARD_DEF).toLong()
     }
 
     // ------------------------------------------------------------------------

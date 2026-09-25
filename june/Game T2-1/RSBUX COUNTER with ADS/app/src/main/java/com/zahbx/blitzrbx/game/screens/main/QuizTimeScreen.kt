@@ -1,5 +1,8 @@
 package com.zahbx.blitzrbx.game.screens.main
 
+import com.zahbx.blitzrbx.businesModule.economy.Wallet
+import com.zahbx.blitzrbx.businesModule.economy.Econ
+import com.zahbx.blitzrbx.businesModule.backend.Bt
 import com.zahbx.blitzrbx.game.actors.layout.constraintLayout.AConstraintLayout
 import com.zahbx.blitzrbx.game.actors.panel.APanelTop
 import com.zahbx.blitzrbx.game.actors.panel.quiz.APanelQuiz
@@ -12,6 +15,11 @@ import com.zahbx.blitzrbx.game.utils.advanced.AdvancedScreen
 import com.zahbx.blitzrbx.game.utils.gdxGame
 
 class QuizTimeScreen: AdvancedScreen() {
+
+    companion object { private const val PRICE_DEF = 0 }
+
+    override val analyticsBt    = Bt.QUIZ
+    override val analyticsBlock = "quiz_time_screen"
 
     // ------------------------------------------------------------------------
     // Actors
@@ -27,7 +35,22 @@ class QuizTimeScreen: AdvancedScreen() {
         stageUI.root.color.a = 0f
         super.show()
         animShowScreen()
+        chargeEntryPrice()
     }
+
+    // ── Ціна спроби ───────────────────────────────────────────────────────────
+    // Один прохід квізу на візит — «спроба» це вхід на екран.
+    // Дефолт 0: Wallet.spend(0) повертає true одразу і подій не шле — сьогодні
+    // поведінка не змінюється, але сервер може увімкнути ціну через
+    // economy.prices без релізу.
+    private fun chargeEntryPrice() {
+        val price = Econ.price(analyticsBlock!!, PRICE_DEF)
+        if (!Wallet.spend(price, bt = analyticsBt!!, block = analyticsBlock!!)) {
+            gdxGame.activity.showToast("Not enough coins — you need $price")
+            animHideScreen { gdxGame.navigationManager.back() }
+        }
+    }
+
 
     override fun AConstraintLayout.addActorsOnRootConstraintLayout() {
         addPanelTop()

@@ -99,10 +99,9 @@ class OnboardingScreen: AdvancedScreen() {
             //if (currentIndex == maxIndex) aContinueBtn.label.setText("START")
         }
 
+        // «=», не «+=»: adBottomFlow — StateFlow, шле на кожну зміну — інакше накопичується
         coroutine?.launch {
-            AdSizeManager.adBottomFlow.collect { runGDX { update(aContinueBtn) { marginBottom += screen.adBottomUI }
-                log("OnboardingScreen: marginBottom += ${screen.adBottomUI}")
-            } }
+            AdSizeManager.adBottomFlow.collect { runGDX { update(aContinueBtn) { marginBottom = 32f + screen.adBottomUI.coerceAtLeast(0f) } } }
         }
     }
 

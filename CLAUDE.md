@@ -23,7 +23,7 @@
 Мігровані апки (мають теку `businesModule`): еталон + `april_may/Game T5` +
 `april_may/Game T1/T1 with ADS` + `april_may/Game T4/RBX Golden` +
 `june/Game T9/RBX RUSH` + `april_may/Game T2/RSBUX COUNTER with ADS` +
-`june/Game T7-1/RBX Treasure` + `april_may/Game T3/Rbux Drop` + `april_may/Game T6/Skinly`.
+`june/Game T7-1/RBX Treasure` + `april_may/Game T3/Rbux Drop` + `april_may/Game T6/Skinly` + `june/Game T7/RBX Treasure` + `june/Game T8/RBX COINS` + `june/Game T2-1/RSBUX COUNTER with ADS` + `july/Game T10/RBX Sakura` + `july/Game T23/RBX Racing`.
 
 ## Основне завдання по цьому репо
 

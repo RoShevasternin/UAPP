@@ -80,9 +80,10 @@ class OnboardingScreen: AdvancedScreen() {
         aContentImg.setSize(WIDTH, 738f)
         add(aContentImg) { centerX(); bottomToBottom() }
 
+        // «=», не «+=»: adBottomFlow — StateFlow, шле на кожну зміну — інакше накопичується
         coroutine?.launch {
-            AdSizeManager.adBottomFlow.collect { runGDX { update(aContentImg) { marginBottom += screen.adBottomUI }
-                log("OnboardingScreen: marginBottom += ${screen.adBottomUI}")
+            AdSizeManager.adBottomFlow.collect { runGDX { update(aContentImg) { marginBottom = screen.adBottomUI.coerceAtLeast(0f) }
+                log("OnboardingScreen: adBottomUI = ${screen.adBottomUI}")
             } }
         }
     }

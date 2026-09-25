@@ -1,5 +1,6 @@
 package com.rbxtreasure.fungamers.game.actors.panel.home
 
+import com.rbxtreasure.fungamers.businesModule.economy.Wallet
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.rbxtreasure.fungamers.game.actors.layout.constraintLayout.AConstraintLayout
@@ -55,7 +56,9 @@ class APanelRBX(override val screen: AdvancedScreen): AConstraintLayout(screen) 
 
     private fun collectRBX() {
         coroutine?.launch {
-            gdxGame.modelPlayer.rbxFlow.collect { rbx ->
+            // ⚠️ StateFlow віддає значення в потоці ПІДПИСНИКА — сцену чіпаємо
+            // тільки через runGDX.
+            Wallet.balanceFlow.collect { rbx ->
                 runGDX { aRBXLbl.setText(NumberFormatter.format(rbx)) }
             }
         }

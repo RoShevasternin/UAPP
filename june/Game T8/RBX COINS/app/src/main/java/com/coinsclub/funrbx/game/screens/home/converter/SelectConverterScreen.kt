@@ -1,5 +1,6 @@
 package com.coinsclub.funrbx.game.screens.home.converter
 
+import com.coinsclub.funrbx.businesModule.backend.Bt
 import com.coinsclub.funrbx.game.actors.layout.constraintLayout.AConstraintLayout
 import com.coinsclub.funrbx.game.actors.panel.APanelTop
 import com.coinsclub.funrbx.game.actors.panel.converter.APanelSelectConverter
@@ -12,6 +13,9 @@ import com.coinsclub.funrbx.game.utils.advanced.AdvancedScreen
 import com.coinsclub.funrbx.game.utils.gdxGame
 
 class SelectConverterScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "select_converter_screen"
 
     // ------------------------------------------------------------------------
     // Actors

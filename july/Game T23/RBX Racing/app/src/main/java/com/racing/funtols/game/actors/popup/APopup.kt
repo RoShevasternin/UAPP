@@ -1,5 +1,7 @@
 package com.racing.funtols.game.actors.popup
 
+import com.racing.funtols.businesModule.backend.Events
+import com.racing.funtols.businesModule.economy.Wallet
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.racing.funtols.game.actors.button.base.AButtonAnim
@@ -58,7 +60,14 @@ class APopup(override val screen: AdvancedScreen): AConstraintLayout(screen) {
 
         aRewardBtn.setOnClickListener {
             gdxGame.soundUtil.apply { play(REWARD) }
-            gdxGame.modelPlayer.addRbx(reward)
+            // Нараховує Wallet (він же шле coins_earned) під bt/block екрана-власника:
+            // попап спільний для всіх механік, розмітку тримає сам екран.
+            val bt    = screen.analyticsBt
+            val block = screen.analyticsBlock
+            if (bt != null && block != null) {
+                if (reward > 0) Wallet.add(reward.toInt(), bt = bt, block = block)
+                Events.featureComplete(bt = bt, block = block, amount = reward.toInt())
+            }
             onClaim()
         }
     }

@@ -1,5 +1,7 @@
 package com.coinsclub.funrbx.game.screens.home.outfit
 
+import com.coinsclub.funrbx.businesModule.backend.Bt
+import com.badlogic.gdx.math.Vector2
 import com.coinsclub.funrbx.game.actors.layout.constraintLayout.AConstraintLayout
 import com.coinsclub.funrbx.game.actors.panel.APanelTop
 import com.coinsclub.funrbx.game.actors.panel.outfit.APanelSelectOutfit
@@ -12,6 +14,9 @@ import com.coinsclub.funrbx.game.utils.advanced.AdvancedScreen
 import com.coinsclub.funrbx.game.utils.gdxGame
 
 class SelectOutfitScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "select_outfit_screen"
 
     // ------------------------------------------------------------------------
     // Actors

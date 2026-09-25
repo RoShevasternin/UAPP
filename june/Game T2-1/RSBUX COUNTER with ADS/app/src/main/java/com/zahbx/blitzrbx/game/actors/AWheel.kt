@@ -1,5 +1,6 @@
 package com.zahbx.blitzrbx.game.actors
 
+import com.zahbx.blitzrbx.businesModule.economy.Econ
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
@@ -77,6 +78,17 @@ class AWheel(override val screen: AdvancedScreen) : AdvancedGroup() {
     data class Item(val result: Result, val segment: Segment)
 
     data class Segment(val startAngle: Float, val endAngle: Float)
+
+    // Номінали їдуть СПИСКОМ з конфігу — economy.rewards_list.spin, порядок =
+    // порядок enum Result. Читаємо на кожен виклик: конфіг під'їжджає
+    // асинхронно. Довжину звіряє сам Econ — не збіглась, повернеться
+    // DEFAULT_SUMS (те, що НАМАЛЬОВАНО на текстурі).
+    fun payout(result: Result): Int =
+        Econ.rewardList("spin", DEFAULT_SUMS).getOrElse(result.ordinal) { result.sum }
+
+    companion object {
+        private val DEFAULT_SUMS = intArrayOf(5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100, 150)
+    }
 
     enum class Result(val sum: Int) {
         _5  (5),

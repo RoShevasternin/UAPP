@@ -1,5 +1,6 @@
 package com.rbxtreasure.fungamers.game.screens.home
 
+import com.rbxtreasure.fungamers.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.rbxtreasure.fungamers.game.actors.layout.constraintLayout.AConstraintLayout
@@ -21,6 +22,9 @@ import com.rbxtreasure.fungamers.game.utils.gdxGame
 import com.rbxtreasure.fungamers.game.utils.overlay.OverlayManager
 
 class DailyScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.DAILY
+    override val analyticsBlock = "daily_screen"
 
     // ------------------------------------------------------------------------
     // Overlay

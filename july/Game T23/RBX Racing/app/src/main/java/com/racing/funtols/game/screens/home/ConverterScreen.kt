@@ -1,5 +1,6 @@
 package com.racing.funtols.game.screens.home
 
+import com.racing.funtols.businesModule.backend.Bt
 import com.racing.funtols.adsmodule.AdSizeManager
 import com.racing.funtols.game.actors.button.ARedButton
 import com.racing.funtols.game.actors.layout.constraintLayout.AConstraintLayout
@@ -14,6 +15,9 @@ import com.racing.funtols.game.utils.runGDX
 import kotlinx.coroutines.launch
 
 class ConverterScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "converter_screen"
 
     // ------------------------------------------------------------------------
     // Actors

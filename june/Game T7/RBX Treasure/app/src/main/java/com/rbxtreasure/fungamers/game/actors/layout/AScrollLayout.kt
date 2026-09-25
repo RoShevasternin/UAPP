@@ -32,12 +32,16 @@ abstract class AScrollLayout(
         verticalGroup.setSize(width, height)
         verticalGroup.minH = height
 
-        // Підписка на зміни висоти реклами
+        // Підписка на зміни висоти реклами.
+        // ⚠️ «=» і maxOf, не «+=»: adBottomFlow — StateFlow (шле на КОЖНУ зміну,
+        //    з «+=» відступ накопичувався), а базовий відступ і реклама закривають
+        //    одну й ту саму дірку знизу. База — те, що задав addContent().
+        var basePaddingBottom: Float? = null
         coroutine?.launch {
             AdSizeManager.adBottomFlow.collect {
                 runGDX {
-                    val adBottom = screen.adBottomUI.coerceAtLeast(0f)
-                    if (adBottom > 0f) verticalGroup.paddingBottom += adBottom
+                    val base = basePaddingBottom ?: verticalGroup.paddingBottom.also { basePaddingBottom = it }
+                    verticalGroup.paddingBottom = maxOf(base, screen.adBottomUI.coerceAtLeast(0f))
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.sakurbx.fungambx.game.screens.home.character
 
+import com.sakurbx.fungambx.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
@@ -22,6 +23,9 @@ import com.sakurbx.fungambx.game.utils.global.GLOBAL_LIST_CHARACTER_NAMES
 import com.sakurbx.fungambx.game.utils.global.GLOBAL_SELECTED_CHARACTER_INDEX
 
 class CharacterScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "character_screen"
 
     // ------------------------------------------------------------------------
     // Font

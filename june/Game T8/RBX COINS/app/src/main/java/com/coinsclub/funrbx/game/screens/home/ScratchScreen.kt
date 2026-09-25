@@ -1,5 +1,9 @@
 package com.coinsclub.funrbx.game.screens.home
 
+import com.coinsclub.funrbx.businesModule.economy.Econ
+import com.coinsclub.funrbx.businesModule.backend.Events
+import com.coinsclub.funrbx.businesModule.economy.Wallet
+import com.coinsclub.funrbx.businesModule.backend.Bt
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.coinsclub.funrbx.adsmodule.AdSizeManager
 import com.coinsclub.funrbx.game.actors.layout.constraintLayout.AConstraintLayout
@@ -24,6 +28,11 @@ import com.coinsclub.funrbx.util.log
 import kotlinx.coroutines.launch
 
 class ScratchScreen: AdvancedScreen() {
+
+    companion object { private const val PRICE_DEF = 0 }
+
+    override val analyticsBt    = Bt.GRID
+    override val analyticsBlock = "scratch_screen"
 
     // ------------------------------------------------------------------------
     // Overlay
@@ -60,7 +69,22 @@ class ScratchScreen: AdvancedScreen() {
         stageUI.root.color.a = 0f
         super.show()
         animShowScreen()
+        chargeEntryPrice()
     }
+
+    // ── Ціна спроби ───────────────────────────────────────────────────────────
+    // Картка одна на візит (скидання немає), тому «спроба» — це вхід на екран.
+    // Дефолт 0: Wallet.spend(0) повертає true одразу і подій не шле — сьогодні
+    // поведінка не змінюється, але сервер може увімкнути ціну через
+    // economy.prices без релізу.
+    private fun chargeEntryPrice() {
+        val price = Econ.price(analyticsBlock!!, PRICE_DEF)
+        if (!Wallet.spend(price, bt = analyticsBt!!, block = analyticsBlock!!)) {
+            gdxGame.activity.showToast("Not enough coins — you need $price")
+            animHideScreen { gdxGame.navigationManager.back() }
+        }
+    }
+
 
     override fun AConstraintLayout.addActorsOnRootConstraintLayout() {
         addPanelTop()
@@ -105,7 +129,9 @@ class ScratchScreen: AdvancedScreen() {
         add(aScratch) { centerX(); topToBottom(aDesc, 16f)}
 
         aScratch.onResult = {
-            gdxGame.modelPlayer.addRbx(it)
+            // it — рівно те число, що намальоване на стертій картці (з Econ)
+            Wallet.add(it.toInt(), bt = analyticsBt!!, block = analyticsBlock!!)
+            Events.featureComplete(bt = analyticsBt!!, block = analyticsBlock!!, amount = it.toInt())
             aPopup.setReward(it)
             overlayManager.show(Overlay.POPUP)
         }

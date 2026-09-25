@@ -8,6 +8,7 @@ import com.google.firebase.analytics.analytics
 import com.sakurbx.fungambx.adsmodule.AdConfig
 import com.sakurbx.fungambx.adsmodule.AdPref
 import com.sakurbx.fungambx.adsmodule.NavigationCounter
+import com.sakurbx.fungambx.businesModule.Biz
 import com.sakurbx.fungambx.util.NetworkUtils
 import com.sakurbx.fungambx.util.log
 
@@ -23,6 +24,14 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
+
+        Biz.install(this, Biz.Config(
+            mainActivityClass   = MainActivity::class.java,
+            notificationIconRes = R.drawable.ic_notification,
+            appVersion          = BuildConfig.VERSION_NAME,
+        ))
+
+        //FirebaseMessaging.getInstance().token.addOnSuccessListener { log("FCM token: $it") }
 
         enableAnalyticsIfNoVpn()
 

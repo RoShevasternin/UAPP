@@ -1,5 +1,6 @@
 package com.rbxtreasure.fungamers.game.screens.home.converter
 
+import com.rbxtreasure.fungamers.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.rbxtreasure.fungamers.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rbxtreasure.fungamers.game.actors.panel.APanelTop
@@ -14,6 +15,9 @@ import com.rbxtreasure.fungamers.game.utils.advanced.AdvancedScreen
 import com.rbxtreasure.fungamers.game.utils.gdxGame
 
 class SelectConverterScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "select_converter_screen"
 
     // ------------------------------------------------------------------------
     // Actors

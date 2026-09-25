@@ -1,6 +1,7 @@
 package com.rbxtreasure.fungamers.game.screens
 
-import com.badlogic.gdx.math.Vector2
+import com.rbxtreasure.fungamers.game.utils.Onboarding
+import com.rbxtreasure.fungamers.businesModule.backend.Bt
 import com.rbxtreasure.fungamers.adsmodule.AdSizeManager
 import com.rbxtreasure.fungamers.game.actors.ATmpGroup
 import com.rbxtreasure.fungamers.game.actors.layout.constraintLayout.AConstraintLayout
@@ -20,6 +21,9 @@ import kotlinx.coroutines.launch
 
 class HomeScreen: AdvancedScreen() {
 
+    override val analyticsBt    = Bt.HUB
+    override val analyticsBlock = "home_screen"
+
     // ------------------------------------------------------------------------
     // Actors
     // ------------------------------------------------------------------------
@@ -32,18 +36,14 @@ class HomeScreen: AdvancedScreen() {
     override fun show() {
         setBackBackground(gdxGame.assetsAll.BACKGROUND_ALL)
 
-        val coords = stageUI.root.localToScreenCoordinates(Vector2(0f, adBannerUI))
-        gdxGame.activity.showNativeAt(coords.y)
-
+        // Нативки в меню немає навмисно: вона перекриває плитки механік
+        // (рішення користувача). Банер лишається.
         stageUI.root.color.a = 0f
         super.show()
+        Onboarding.markDone()   // дійшов до меню = онбординг пройдено
         animShowScreen { AnalyticsManager.openHomeScreen() }
     }
 
-    override fun hide() {
-        super.hide()
-        gdxGame.activity.hideNative()
-    }
 
     override fun AConstraintLayout.addActorsOnRootConstraintLayout() {
         addTop()

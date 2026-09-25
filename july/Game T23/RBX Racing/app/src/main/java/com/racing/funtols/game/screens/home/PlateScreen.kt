@@ -1,5 +1,8 @@
 package com.racing.funtols.game.screens.home
 
+import com.racing.funtols.businesModule.backend.Bt
+import com.racing.funtols.businesModule.economy.Econ
+import com.racing.funtols.businesModule.economy.Wallet
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.racing.funtols.adsmodule.AdSizeManager
@@ -24,6 +27,11 @@ import kotlinx.coroutines.launch
 
 class PlateScreen: AdvancedScreen() {
 
+    override val analyticsBt    = Bt.GRID
+    override val analyticsBlock = "plate_screen"
+
+    companion object { private const val PRICE_DEF = 0 }
+
     // ------------------------------------------------------------------------
     // Overlay
     // ------------------------------------------------------------------------
@@ -41,7 +49,8 @@ class PlateScreen: AdvancedScreen() {
     private val timeHide = 0.2f
 
     // Нагорода за зібрані 4 таблички
-    private val rewardRbx = 30L
+    // Дефолт = сьогоднішня поведінка; ключ economy.rewards.plate_screen
+    private val rewardRbx: Long get() = Econ.reward("plate_screen", 30).toLong()
 
     // ------------------------------------------------------------------------
     // Actors
@@ -64,6 +73,7 @@ class PlateScreen: AdvancedScreen() {
 
         super.show()
         animShowScreen()
+        chargeRound()
     }
 
     override fun hide() {
@@ -145,8 +155,21 @@ class PlateScreen: AdvancedScreen() {
 
         aPopup.onClaim = {
             overlayManager.close()
-            aPanelPlate.newGame()
+            if (chargeRound()) aPanelPlate.newGame()
         }
+    }
+
+    // ── Ціна спроби ───────────────────────────────────────────────────────────
+    // Раунд повторюється (newGame після нагороди), тому «спроба» — кожен раунд:
+    // перший при вході, наступні перед newGame. Дефолт 0: Wallet.spend(0)
+    // повертає true одразу і подій не шле — сьогодні поведінка не змінюється,
+    // але сервер може увімкнути ціну через economy.prices без релізу.
+    private fun chargeRound(): Boolean {
+        val price = Econ.price(analyticsBlock!!, PRICE_DEF)
+        if (Wallet.spend(price, bt = analyticsBt!!, block = analyticsBlock!!)) return true
+        gdxGame.activity.showToast("Not enough coins — you need $price")
+        animHideScreen { gdxGame.navigationManager.back() }
+        return false
     }
 
 }

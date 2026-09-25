@@ -1,8 +1,16 @@
 package com.coinsclub.funrbx.game.actors.panel.quiz
 
+import com.coinsclub.funrbx.businesModule.economy.Econ
+
 class QuizController(
-    private val totalQuestions: Int = 5,
-    private val rewardForIndex: (index: Int) -> Long = { (it + 1) * 10L },  // 1→10, 2→20...
+    private val totalQuestions: Int  = 5,
+    // Нагорода росте з номером питання (1→10, 2→20 …) — сьогоднішня поведінка T8.
+    // Суми їдуть списком economy.rewards_list.quiz; довжину звіряє сам Econ
+    // (не збіглась → дефолт APK), тож список = рівно totalQuestions значень.
+    private val rewards       : IntArray = Econ.rewardList("quiz", IntArray(totalQuestions) { (it + 1) * 10 }),
+    // Штраф за неправильну відповідь. Дефолт 0 — сьогодні помилка нічого не
+    // коштує; ключ economy.penalties.quiz_screen робить це ручкою.
+    private val penalty       : Long = Econ.penalty("quiz_screen", 0).toLong(),
 ) {
 
     // ------------------------------------------------------------------------
@@ -10,6 +18,7 @@ class QuizController(
     // ------------------------------------------------------------------------
     var onQuestion : (index: Int, text: String) -> Unit        = { _, _ -> }
     var onCorrect  : (reward: Long) -> Unit                    = {}
+    var onWrong    : (penalty: Long) -> Unit                   = {}
     var onFinished : (correct: Int, totalReward: Long) -> Unit = { _, _ -> }
     var onAnswered : (index: Int, correct: Boolean) -> Unit    = { _, _ -> }
 
@@ -43,9 +52,11 @@ class QuizController(
         val correct = value == questions[currentIndex].answer
         if (correct) {
             correctCount++
-            val reward = rewardForIndex(currentIndex)   // ← нагорода за номер питання
+            val reward = rewards[currentIndex].toLong()   // ← нагорода за номер питання
             totalReward += reward
             onCorrect(reward)
+        } else {
+            onWrong(penalty)
         }
 
         onAnswered(currentIndex, correct)

@@ -1,5 +1,6 @@
 package com.rbxtreasure.fungamers.game.screens.home.outfit
 
+import com.rbxtreasure.fungamers.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.rbxtreasure.fungamers.game.actors.layout.constraintLayout.AConstraintLayout
 import com.rbxtreasure.fungamers.game.actors.panel.APanelTop
@@ -27,6 +28,9 @@ import com.rbxtreasure.fungamers.game.utils.font.FontParameter
 import com.rbxtreasure.fungamers.game.utils.gdxGame
 
 class HeadScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "head_screen"
 
     // ------------------------------------------------------------------------
     // Font

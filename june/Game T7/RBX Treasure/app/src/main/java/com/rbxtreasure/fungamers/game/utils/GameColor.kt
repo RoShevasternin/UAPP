@@ -13,6 +13,9 @@ object GameColor {
     val yellow_DDA334 : Color = Color.valueOf("DDA334")
     val gray_3B3937   : Color = Color.valueOf("3B3937")
     val green_3FAA2A  : Color = Color.valueOf("3FAA2A")
+    val green_2E8420  : Color = Color.valueOf("2E8420")   // FREE-кнопка, низ градієнта
+
+    val white_22 : Color = Color.WHITE.cpy().apply { a = 0.22f }
     val black_0E0F0E  : Color = Color.valueOf("0E0F0E")
 
     val white_25: Color = Color.WHITE.cpy().apply { a = 0.25f }

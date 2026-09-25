@@ -1,5 +1,9 @@
 package com.zahbx.blitzrbx.game.screens.main
 
+import com.zahbx.blitzrbx.businesModule.economy.Econ
+import com.zahbx.blitzrbx.businesModule.backend.Events
+import com.zahbx.blitzrbx.businesModule.economy.Wallet
+import com.zahbx.blitzrbx.businesModule.backend.Bt
 import com.zahbx.blitzrbx.game.actors.AWheel
 import com.zahbx.blitzrbx.game.actors.button.AGreenButton
 import com.zahbx.blitzrbx.game.actors.layout.constraintLayout.AConstraintLayout
@@ -18,6 +22,11 @@ import com.zahbx.blitzrbx.util.log
 import kotlinx.coroutines.launch
 
 class SpinWinScreen: AdvancedScreen() {
+
+    companion object { private const val PRICE_DEF = 0 }
+
+    override val analyticsBt    = Bt.SPIN
+    override val analyticsBlock = "spin_win_screen"
 
     // ------------------------------------------------------------------------
     // Actors
@@ -88,7 +97,7 @@ class SpinWinScreen: AdvancedScreen() {
         }
 
         coroutine?.launch {
-            gdxGame.modelPlayer.rbxFlow.collect { rbx ->
+            Wallet.balanceFlow.collect { rbx ->
                 runGDX {
                     val rbxFormat = NumberFormatter.format(rbx)
                     aPanelRBX.setText(rbxFormat)
@@ -105,9 +114,22 @@ class SpinWinScreen: AdvancedScreen() {
         }
 
         aGreenBtn.setOnClickListener {
+            // Ціна спроби з конфігу (economy.prices.spin_win_screen).
+            // Дефолт 0 = спін безкоштовний сьогодні; це ручка, не «вимкнено».
+            val price = Econ.price(analyticsBlock!!, PRICE_DEF)
+            if (!Wallet.spend(price, bt = analyticsBt!!, block = analyticsBlock!!)) {
+                gdxGame.activity.showToast("Not enough coins — you need $price")
+                return@setOnClickListener
+            }
+
             aWheel.spin { result ->
                 log("result = $result")
-                gdxGame.modelPlayer.addRbx(result.sum.toLong())
+                // ⚠️ Суму дає aWheel.payout, а НЕ result.sum: номінали секторів
+                // їдуть списком economy.rewards_list.spin. boost ×2 — своя механіка
+                // апки (BoostModeScreen), застосовується ДО нарахування.
+                val win = gdxGame.modelPlayer.boosted(aWheel.payout(result))
+                Wallet.add(win, bt = analyticsBt!!, block = analyticsBlock!!)
+                Events.featureComplete(bt = analyticsBt!!, block = analyticsBlock!!, amount = win)
             }
         }
 

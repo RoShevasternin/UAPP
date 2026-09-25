@@ -9,7 +9,7 @@ class TikTokAnalyticsProvider : AnalyticsProvider {
     override fun openHomeScreen() = track(EventName.UNLOCK_ACHIEVEMENT)
     override fun userType(userType: UserType, referrer: String) {}
 
-    override fun hasClickToPAID(referrer: String) {}
+    override fun hasClick_ORGtoPAID(referrer: String, irClickTime: String) {}
 
     // ------------------------------------------------------------------------
     // Helper

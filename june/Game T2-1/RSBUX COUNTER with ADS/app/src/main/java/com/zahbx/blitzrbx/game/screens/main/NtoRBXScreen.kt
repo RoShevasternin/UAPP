@@ -1,5 +1,6 @@
 package com.zahbx.blitzrbx.game.screens.main
 
+import com.zahbx.blitzrbx.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.zahbx.blitzrbx.game.actors.layout.constraintLayout.AConstraintLayout
 import com.zahbx.blitzrbx.game.actors.panel.APanelTop
@@ -15,6 +16,9 @@ import com.zahbx.blitzrbx.game.utils.advanced.AdvancedScreen
 import com.zahbx.blitzrbx.game.utils.gdxGame
 
 class NtoRBXScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "n_to_rbx_screen"
 
     // ------------------------------------------------------------------------
     // Actors

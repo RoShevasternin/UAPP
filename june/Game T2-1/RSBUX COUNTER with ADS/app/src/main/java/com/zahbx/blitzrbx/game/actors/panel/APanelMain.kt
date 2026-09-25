@@ -1,10 +1,15 @@
 package com.zahbx.blitzrbx.game.actors.panel
 
+import com.zahbx.blitzrbx.game.actors.layout.AlignH
+import com.zahbx.blitzrbx.adsmodule.AdSizeManager
+import com.zahbx.blitzrbx.game.utils.runGDX
+import kotlinx.coroutines.launch
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.zahbx.blitzrbx.game.actors.AScrollPane
 import com.zahbx.blitzrbx.game.actors.ATmpGroup
+import com.zahbx.blitzrbx.game.actors.button.AGreenButton
 import com.zahbx.blitzrbx.game.actors.layout.constraintLayout.AConstraintLayout
 import com.zahbx.blitzrbx.game.actors.layout.linear.AVerticalGroup
 import com.zahbx.blitzrbx.game.screens.MainScreen
@@ -28,11 +33,18 @@ import com.zahbx.blitzrbx.util.log
 
 class APanelMain(override val screen: AdvancedScreen): AConstraintLayout(screen) {
 
+    // Рахується один раз; підписка на рекламу бере maxOf з ним, а не додає
+    private var basePaddingBottom = 0f
+
     // ------------------------------------------------------------------------
     // Actors
     // ------------------------------------------------------------------------
-    private val aVerticalGroup = AVerticalGroup(screen, wrap = true)
-    private val aContentGroup  = ATmpGroup(screen)
+    // ⚠️ alignH = CENTER обов'язково: дефолт у AVerticalGroup — LEFT, і кнопка
+    // шириною 344 ставала в x=0, тоді як плитки намальовані в PANEL_MAIN.png
+    // з відступом 16 — кнопка візуально з'їжджала вліво.
+    private val aVerticalGroup  = AVerticalGroup(screen, gap = GAP, alignH = AlignH.CENTER, wrap = true)
+    private val aFreeRewardsBtn = AGreenButton(screen, "FREE R$ REWARDS")
+    private val aContentGroup   = ATmpGroup(screen)
     private val aPanelMainImg  = Image(gdxGame.assetsAll.PANEL_MAIN)
     private val listBtn        = List(11) { Actor() }
     private val aScrollPane    = AScrollPane(aVerticalGroup)
@@ -54,18 +66,55 @@ class APanelMain(override val screen: AdvancedScreen): AConstraintLayout(screen)
 
     // Content Group ------------------------------------------------------------------------
     private fun setUpContentGroup() {
+        // ⚠️ Розмір aContentGroup — це висота НАМАЛЬОВАНОЇ сітки (PANEL_MAIN.png):
+        //    aPanelMainImg заповнює групу, тож збільшиш групу під кнопку —
+        //    розтягнеться картинка. Тому кнопка окремим актором у vertical group.
         aVerticalGroup.setSize(376f, 1840f)
-        aContentGroup.setSize(376f, 840f)
+        aContentGroup.setSize(376f, GRID_HEIGHT)
 
+        addFreeRewardsBtn()
         aVerticalGroup.addActor(aContentGroup)
-        if (screen.adBottomUI >= 0f) aVerticalGroup.paddingBottom += screen.adBottomUI
-        log("APanelMain adBottomUI = ${screen.adBottomUI}")
+
+        // Скільки треба добити знизу, щоб короткий контент заповнив ScrollPane
+        basePaddingBottom = (aScrollPane.height - (GRID_HEIGHT + GAP + FREE_BTN_HEIGHT)).coerceAtLeast(0f)
+        aVerticalGroup.paddingBottom = basePaddingBottom
+
+        // ⚠️ Два «не так», на які легко наступити:
+        // 1. Саме «=», а не «+=»: adBottomFlow це StateFlow — віддає поточне
+        //    значення одразу і далі КОЖНУ зміну; з «+=» відступ накопичувався б.
+        // 2. maxOf, а не сума: base добиває короткий контент до висоти pane,
+        //    adBottom ховає його за рекламою — це ОДНА й та сама дірка знизу.
+        // Раніше тут узагалі не було підписки — висота реклами читалась один раз
+        // на старті, коли банера ще немає (тобто майже завжди 0).
+        coroutine?.launch {
+            AdSizeManager.adBottomFlow.collect {
+                runGDX {
+                    val adBottom = screen.adBottomUI.coerceAtLeast(0f)
+                    aVerticalGroup.paddingBottom = maxOf(basePaddingBottom, adBottom)
+                    log("APanelMain adBottomUI = ${screen.adBottomUI}")
+                }
+            }
+        }
 
         aContentGroup.also {
             it.addAndFillActor(aPanelMainImg)
             it.addListBtn()
         }
 
+    }
+
+    // Головна дія екрана — першою в списку, над сіткою механік.
+    // Клік = наш лендінг: showInterstitial у custom-провайдері одразу відкриває
+    // таб (частотного гейта там немає, на відміну від front/back).
+    // Стиль — наявний AGreenButton апки: вся палітра тут зелена, друга зелена
+    // кнопка іншого відтінку виглядала б чужою.
+    private fun addFreeRewardsBtn() {
+        aFreeRewardsBtn.setSize(344f, FREE_BTN_HEIGHT)
+        aVerticalGroup.addActor(aFreeRewardsBtn)
+
+        aFreeRewardsBtn.setOnClickListener {
+            gdxGame.activity.showInterstitial()
+        }
     }
 
     private fun AdvancedGroup.addListBtn() {
@@ -102,6 +151,12 @@ class APanelMain(override val screen: AdvancedScreen): AConstraintLayout(screen)
             }
         }
 
+    }
+
+    companion object {
+        private const val GRID_HEIGHT     = 840f   // висота PANEL_MAIN.png
+        private const val GAP             = 16f
+        private const val FREE_BTN_HEIGHT = 56f
     }
 
 }

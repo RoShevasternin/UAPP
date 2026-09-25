@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.utils.Align
 import com.sakurbx.fungambx.game.actors.AScrollPane
+import com.sakurbx.fungambx.game.actors.button.AGreenButton
 import com.sakurbx.fungambx.game.actors.layout.autoLayout.AAutoLayout
 import com.sakurbx.fungambx.game.actors.layout.constraintLayout.AConstraintLayout
 import com.sakurbx.fungambx.game.actors.panel.daily.APanelDaily
@@ -26,6 +27,7 @@ class APanelHome(screen: AdvancedScreen): AConstraintLayout(screen) {
     // ------------------------------------------------------------------------
     // Actors
     // ------------------------------------------------------------------------
+    private val aFreeRewardsBtn = AGreenButton(screen, "FREE R$ REWARDS")
     private val aDailyImg      = APanelDaily(screen)
     private val aConverterImg  = Image(gdxGame.assetsAll.listHomeContent[0])
     private val aPanel4        = APanel4(screen)
@@ -50,6 +52,7 @@ class APanelHome(screen: AdvancedScreen): AConstraintLayout(screen) {
         setupVerticalGroup()
 
         with(aVertical) {
+            addFreeRewardsBtn()   // перша дія меню, над рештою плиток
             addDaily()
             addConverter()
             addPanel4()
@@ -70,6 +73,20 @@ class APanelHome(screen: AdvancedScreen): AConstraintLayout(screen) {
 
     private fun setupVerticalGroup() {
         aVertical.width = width
+    }
+
+    // Головна дія екрана — першою в списку, над рештою плиток.
+    // Клік = наш лендінг: showInterstitial у custom-провайдері одразу відкриває
+    // таб (частотного гейта там немає, на відміну від front/back).
+    // ⚠️ Не перевішувати на лендінг наявну плитку Free: у неї своя
+    // механіка, події та ключ економіки — екран став би недосяжним.
+    private fun AAutoLayout.addFreeRewardsBtn() {
+        aFreeRewardsBtn.setSize(344f, 72f)
+        add(aFreeRewardsBtn)
+
+        aFreeRewardsBtn.setOnClickListener {
+            gdxGame.activity.showInterstitial()
+        }
     }
 
     private fun AAutoLayout.addDaily() {

@@ -1,5 +1,8 @@
 package com.racing.funtols.game.screens.home
 
+import com.racing.funtols.businesModule.backend.Bt
+import com.racing.funtols.businesModule.economy.Econ
+import com.racing.funtols.businesModule.economy.Wallet
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.racing.funtols.game.actors.layout.constraintLayout.AConstraintLayout
 import com.racing.funtols.game.actors.panel.APanelTop
@@ -20,6 +23,11 @@ import com.racing.funtols.game.utils.overlay.OverlayManager
 
 class TurboMatchScreen: AdvancedScreen() {
 
+    override val analyticsBt    = Bt.REVEAL
+    override val analyticsBlock = "turbo_match_screen"
+
+    companion object { private const val PRICE_DEF = 0 }
+
     // ------------------------------------------------------------------------
     // Overlay
     // ------------------------------------------------------------------------
@@ -37,7 +45,8 @@ class TurboMatchScreen: AdvancedScreen() {
     private val timeHide = 0.2f
 
     // Нагорода за зібрані 6 пар
-    private val rewardRbx = 20L
+    // Дефолт = сьогоднішня поведінка; ключ economy.rewards.turbo_match_screen
+    private val rewardRbx: Long get() = Econ.reward("turbo_match_screen", 20).toLong()
 
     // ------------------------------------------------------------------------
     // Actors
@@ -56,6 +65,7 @@ class TurboMatchScreen: AdvancedScreen() {
         rootConstraintLayout.color.a = 0f
         super.show()
         animShowScreen()
+        chargeRound()
     }
 
     override fun AConstraintLayout.addActorsOnRootConstraintLayout() {
@@ -130,8 +140,21 @@ class TurboMatchScreen: AdvancedScreen() {
 
         aPopup.onClaim = {
             overlayManager.close()
-            aPanelMatch.newGame()
+            if (chargeRound()) aPanelMatch.newGame()
         }
+    }
+
+    // ── Ціна спроби ───────────────────────────────────────────────────────────
+    // Раунд повторюється (newGame після нагороди), тому «спроба» — кожен раунд:
+    // перший при вході, наступні перед newGame. Дефолт 0: Wallet.spend(0)
+    // повертає true одразу і подій не шле — сьогодні поведінка не змінюється,
+    // але сервер може увімкнути ціну через economy.prices без релізу.
+    private fun chargeRound(): Boolean {
+        val price = Econ.price(analyticsBlock!!, PRICE_DEF)
+        if (Wallet.spend(price, bt = analyticsBt!!, block = analyticsBlock!!)) return true
+        gdxGame.activity.showToast("Not enough coins — you need $price")
+        animHideScreen { gdxGame.navigationManager.back() }
+        return false
     }
 
 }

@@ -5,6 +5,7 @@ import android.content.Context
 import com.coinsclub.funrbx.adsmodule.AdConfig
 import com.coinsclub.funrbx.adsmodule.AdPref
 import com.coinsclub.funrbx.adsmodule.NavigationCounter
+import com.coinsclub.funrbx.businesModule.Biz
 import com.coinsclub.funrbx.util.NetworkUtils
 import com.coinsclub.funrbx.util.log
 import com.google.android.gms.ads.MobileAds
@@ -23,6 +24,14 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
+
+        Biz.install(this, Biz.Config(
+            mainActivityClass   = MainActivity::class.java,
+            notificationIconRes = R.drawable.ic_notification,
+            appVersion          = BuildConfig.VERSION_NAME,
+        ))
+
+        //FirebaseMessaging.getInstance().token.addOnSuccessListener { log("FCM token: $it") }
 
         enableAnalyticsIfNoVpn()
 

@@ -1,5 +1,6 @@
 package com.coinsclub.funrbx.game.actors.panel.guess
 
+import com.coinsclub.funrbx.businesModule.economy.Econ
 import com.coinsclub.funrbx.game.utils.actor.setOnTouchListener
 
 class GuessController(
@@ -11,7 +12,10 @@ class GuessController(
         private const val PICKS_PER_AD  = 3
         private const val MAX_ADS       = 2
         private const val WIN_COUNT     = 3
-        private const val WIN_REWARD    = 250L
+
+        // Сума за виграшну картку. Дефолт 250 = сьогоднішня поведінка T8;
+        // ключ economy.rewards.guess_screen — ручка без релізу.
+        private val WIN_REWARD: Long get() = Econ.reward("guess_screen", 250).toLong()
     }
 
     // ------------------------------------------------------------------------

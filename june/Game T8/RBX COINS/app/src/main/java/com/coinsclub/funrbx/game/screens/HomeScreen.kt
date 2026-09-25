@@ -1,6 +1,6 @@
 package com.coinsclub.funrbx.game.screens
 
-import com.badlogic.gdx.math.Vector2
+import com.coinsclub.funrbx.businesModule.backend.Bt
 import com.coinsclub.funrbx.adsmodule.AdSizeManager
 import com.coinsclub.funrbx.game.actors.ATmpGroup
 import com.coinsclub.funrbx.game.actors.layout.constraintLayout.AConstraintLayout
@@ -8,6 +8,7 @@ import com.coinsclub.funrbx.game.actors.panel.APanelTop
 import com.coinsclub.funrbx.game.actors.panel.APanelTopHome
 import com.coinsclub.funrbx.game.actors.panel.home.APanelHome
 import com.coinsclub.funrbx.game.utils.Block
+import com.coinsclub.funrbx.game.utils.Onboarding
 import com.coinsclub.funrbx.game.utils.TIME_ANIM_SCREEN
 import com.coinsclub.funrbx.game.utils.actor.animDelay
 import com.coinsclub.funrbx.game.utils.actor.animHide
@@ -21,6 +22,9 @@ import kotlinx.coroutines.launch
 
 class HomeScreen: AdvancedScreen() {
 
+    override val analyticsBt    = Bt.HUB
+    override val analyticsBlock = "home_screen"
+
     // ------------------------------------------------------------------------
     // Actors
     // ------------------------------------------------------------------------
@@ -33,17 +37,13 @@ class HomeScreen: AdvancedScreen() {
     override fun show() {
         setBackBackground(gdxGame.assetsAll.BACKGROUND_ALL)
 
-        val coords = stageUI.root.localToScreenCoordinates(Vector2(0f, adBannerUI))
-        gdxGame.activity.showNativeAt(coords.y)
-
+        // Нативки в меню немає навмисно: вона перекриває плитки механік
+        // (рішення користувача). Банер лишається.
         stageUI.root.color.a = 0f
         super.show()
+        // Дійшли до меню — онбординг пройдено, наступні запуски стартують звідси
+        Onboarding.markDone()
         animShowScreen { AnalyticsManager.openHomeScreen() }
-    }
-
-    override fun hide() {
-        super.hide()
-        gdxGame.activity.hideNative()
     }
 
     override fun AConstraintLayout.addActorsOnRootConstraintLayout() {
@@ -77,7 +77,8 @@ class HomeScreen: AdvancedScreen() {
         aPanelHome.width = 344f
         add(aPanelHome) { centerX(); topToBottom(aTop); bottomToBottom(); matchHeight() }
 
-        coroutine?.launch { AdSizeManager.adBottomFlow.collect { runGDX { update(aPanelHome) { marginBottom += screen.adBottomUI } } } }
+        // «=», не «+=»: adBottomFlow — StateFlow, шле на кожну зміну — інакше накопичується
+        coroutine?.launch { AdSizeManager.adBottomFlow.collect { runGDX { update(aPanelHome) { marginBottom = screen.adBottomUI.coerceAtLeast(0f) } } } }
     }
 
 }

@@ -1,5 +1,7 @@
 package com.racing.funtols.game.screens.home
 
+import com.racing.funtols.businesModule.backend.Bt
+import com.racing.funtols.businesModule.economy.Econ
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.racing.funtols.game.actors.button.base.AButtonAnim
@@ -21,6 +23,9 @@ import com.racing.funtols.game.utils.gdxGame
 import com.racing.funtols.game.utils.overlay.OverlayManager
 
 class BoostScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.GIFT
+    override val analyticsBlock = "boost_screen"
 
     // ------------------------------------------------------------------------
     // Overlay
@@ -108,7 +113,8 @@ class BoostScreen: AdvancedScreen() {
 
         aRewardBtn.setOnClickListener {
             gdxGame.activity.showInterstitial {
-                aPopup.setReward(50)
+                // Дефолт 50 = сьогоднішня поведінка; ключ economy.rewards.boost_screen
+                aPopup.setReward(Econ.reward(analyticsBlock!!, 50).toLong())
                 overlayManager.show(Overlay.POPUP)
             }
         }

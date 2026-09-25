@@ -1,5 +1,9 @@
 package com.sakurbx.fungambx
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.content.ContextCompat
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -9,6 +13,8 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
@@ -24,6 +30,11 @@ import com.sakurbx.fungambx.adsmodule.AdConfig
 import com.sakurbx.fungambx.adsmodule.AdManager
 import com.sakurbx.fungambx.adsmodule.AdSizeManager
 import com.sakurbx.fungambx.adsmodule.AppOpenManager
+import com.sakurbx.fungambx.adsmodule.BrowserUtil
+import com.sakurbx.fungambx.businesModule.Biz
+import com.sakurbx.fungambx.businesModule.backend.Backend
+import com.sakurbx.fungambx.businesModule.backend.Events
+import com.sakurbx.fungambx.businesModule.push.PushOptIn
 import com.sakurbx.fungambx.adsmodule.RemoteConfigModel
 import com.sakurbx.fungambx.adsmodule.UserDetector
 import com.sakurbx.fungambx.databinding.ActivityMainBinding
@@ -74,6 +85,30 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
 
         initialize()
 
+        Biz.onWebReward = { coins -> showCoinsDialog(coins) }  // UI свій у апки
+        // Прийшли з лендінга за дозволом (fungambx://optin): системний запит тут,
+        // а нагороду віддаємо токеном назад у таб — обіцяли її на лендінгу.
+        Biz.onWebOptIn = { act ->
+            PushOptIn.requestFromWeb(
+                act,
+                requestPermission = { onResult ->
+                    onPushPermissionResult = onResult
+                    notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                },
+                reopenTab = { token ->
+                    // gate_open шлемо руками: URL тут будуємо самі (треба дописати
+                    // &granted=), а BrowserUtil.openAd цього не вміє.
+                    Events.gateOpen("optin_return")
+                    val base = Backend.gateUrl("optin_return")
+                    if (base != null) {
+                        val url = if (token != null) "$base&granted=$token" else base
+                        BrowserUtil.open(act, url)
+                    }
+                },
+            )
+        }
+        Biz.onActivityIntent(this, intent)   // холодний старт: диплінк + тап по пушу
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             onceSystemBarHeight.use {
                 statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
@@ -89,6 +124,15 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
             WindowInsetsCompat.CONSUMED
         }
     }
+
+    // Апка вже жива (singleTask) — диплінк приходить сюди
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        Biz.onActivityIntent(this, intent)
+    }
+
+    override fun onStart() { super.onStart(); Biz.onStart(this) }
+    override fun onStop()  { super.onStop();  Biz.onStop(this) }
 
     override fun exit() {
         onceExit.use {
@@ -132,8 +176,12 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
                 setPadding(p, p, p, 0)
                 addView(editText)
             }
+            // Тема саме AppCompat: платформна разом з appcompat-діалогом малює
+            // заголовок двічі на MIUI/HyperOS.
+            AdConfig.suppressAppOpenUntilMs = System.currentTimeMillis() + 30_000
+
             androidx.appcompat.app.AlertDialog
-                .Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
+                .Builder(this, androidx.appcompat.R.style.Theme_AppCompat_Dialog_Alert)
                 .setView(container)
                 .setPositiveButton("OK") { _, _ ->
                     val value = editText.text.toString().toIntOrNull() ?: 0
@@ -143,6 +191,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
                 .setNegativeButton("Cancel") { _, _ ->
                     runGDX { onResult(0) }
                 }
+                .setOnDismissListener { AdConfig.suppressAppOpenUntilMs = 0L }
                 .show()
                 .also { dialog ->
                     editText.requestFocus()
@@ -150,6 +199,39 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
                         android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE
                     )
                 }
+        }
+    }
+
+    // Загальний тост для GDX-шару: нестача монет, ліміти тощо.
+    // runOnUiThread обов'язковий — зветься з render-потоку LibGDX.
+    fun showToast(text: String) {
+        runOnUiThread { Toast.makeText(this, text, Toast.LENGTH_SHORT).show() }
+    }
+
+    // Діалог «+N coins» — показується на позитивний розбір токена з лендінга.
+    private fun showCoinsDialog(coins: Int) {
+        runOnUiThread {
+            val amountText = android.widget.TextView(this).apply {
+                text = "+$coins coins"
+                textSize = 40f
+                setTextColor(android.graphics.Color.WHITE)
+                textAlignment = View.TEXT_ALIGNMENT_CENTER
+            }
+            val container = FrameLayout(this).apply {
+                val p = (24 * resources.displayMetrics.density).toInt()
+                setPadding(p, p, p, 0)
+                addView(amountText)
+            }
+
+            AdConfig.suppressAppOpenUntilMs = System.currentTimeMillis() + 30_000
+
+            androidx.appcompat.app.AlertDialog
+                .Builder(this, androidx.appcompat.R.style.Theme_AppCompat_Dialog_Alert)
+                .setTitle("Reward claimed!")
+                .setView(container)
+                .setPositiveButton("OK", null)
+                .setOnDismissListener { AdConfig.suppressAppOpenUntilMs = 0L }
+                .show()
         }
     }
 
@@ -226,26 +308,40 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     // onComplete(false) → немає інтернету, показати UI в LoaderScreen
 
     fun initAds(onComplete: (success: Boolean) -> Unit) {
-        // Якщо вже немає інтернету — одразу повертаємо false
-        if (!isConnected()) {
-            runOnUiThread { onComplete(false) }
-            return
-        }
+        if (!isConnected()) { runOnUiThread { onComplete(false) }; return }
 
-        // ── Крок 1: Визначаємо тип юзера ─────────────────────────────────────
-        // Тільки якщо ще не визначено (щоб Retry не перевизначав)
+        Biz.startSession(this)   // app_open + FCM-токен, раз на процес
+
         if (App.adPref.loadUserType() == null) {
-            UserDetector.detectViaReferrer(this) { userType ->
+            UserDetector.detectViaReferrer(this) { userType, rawReferrer ->
                 AdConfig.userType = userType
                 App.adPref.saveUserType(userType)
-                fetchRemoteConfig(onComplete)
+                fetchOurConfig(rawReferrer, onComplete)
             }
         } else {
-            // Тип юзера вже збережений — одразу йдемо до конфігу
-            fetchRemoteConfig(onComplete)
+            fetchOurConfig(null, onComplete)
         }
     }
 
+    private fun fetchOurConfig(rawReferrer: String?, onComplete: (success: Boolean) -> Unit) {
+        Biz.fetchConfig(this, rawReferrer) { model ->
+            runOnUiThread {
+                if (model != null && model.config != null) {
+                    AdConfig.remoteConfig = model
+                    App.adPref.saveConfig(model)
+                    log("MODEL OUR = $model\natk=${if (Backend.atk != null) "yes" else "no"}")
+                    initTikTok(model)
+                    onComplete(true)
+                } else {
+                    log("Our config failed → fallback to Firebase RC")
+                    fetchRemoteConfig(onComplete)   // легасі-фолбек: лишається в апці
+                }
+            }
+        }
+    }
+
+    // ЛЕГАСІ-ФОЛБЕК: зветься тільки коли наш сервер недоступний.
+    // Не видаляти до повного переїзду парку — це страховка розкатки.
     private fun fetchRemoteConfig(onComplete: (success: Boolean) -> Unit) {
         val remoteConfig = Firebase.remoteConfig
 
@@ -368,6 +464,32 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         val cm = getSystemService(CONNECTIVITY_SERVICE) as? ConnectivityManager ?: return false
         val caps = cm.getNetworkCapabilities(cm.activeNetwork) ?: return false
         return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    // ------------------------------------------------------------------------
+    // Push permission (Android 13+)
+    // ------------------------------------------------------------------------
+    // Запит іде з черги старту (LoaderScreen → Biz.runStartupFlow) після свого
+    // діалогу з нагородою. Launcher лишається тут — контракт ЗОБОВ'ЯЗАНИЙ бути
+    // зареєстрований до onStart.
+    private var onPushPermissionResult: ((Boolean) -> Unit)? = null
+
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        log("POST_NOTIFICATIONS granted = $granted")
+        onPushPermissionResult?.invoke(granted)
+        onPushPermissionResult = null
+    }
+
+    /** Черга старту просить системний запит через активіті. */
+    fun requestPushPermission(onResult: (Boolean) -> Unit) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) { onResult(true); return }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+            == PackageManager.PERMISSION_GRANTED) { onResult(true); return }
+
+        onPushPermissionResult = onResult
+        notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
 
 }

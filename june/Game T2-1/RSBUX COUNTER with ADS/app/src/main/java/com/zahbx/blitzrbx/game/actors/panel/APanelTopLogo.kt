@@ -1,5 +1,6 @@
 package com.zahbx.blitzrbx.game.actors.panel
 
+import com.zahbx.blitzrbx.businesModule.economy.Wallet
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.zahbx.blitzrbx.game.actors.layout.constraintLayout.AConstraintLayout
 import com.zahbx.blitzrbx.game.utils.NumberFormatter
@@ -43,7 +44,9 @@ class APanelTopLogo(override val screen: AdvancedScreen): AConstraintLayout(scre
         }
 
         coroutine?.launch {
-            gdxGame.modelPlayer.rbxFlow.collect { rbx ->
+            // ⚠️ StateFlow віддає значення в потоці ПІДПИСНИКА — сцену чіпаємо
+            // тільки через runGDX.
+            Wallet.balanceFlow.collect { rbx ->
                 runGDX {
                     val rbxFormat = NumberFormatter.format(rbx)
                     aPanelRBX.setText(rbxFormat)

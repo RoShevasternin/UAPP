@@ -1,5 +1,8 @@
 package com.zahbx.blitzrbx.game.actors.panel.dailyReward
 
+import com.zahbx.blitzrbx.businesModule.backend.Bt
+import com.zahbx.blitzrbx.businesModule.backend.Events
+import com.zahbx.blitzrbx.businesModule.economy.Wallet
 import com.zahbx.blitzrbx.game.model.PlayerModel
 import com.zahbx.blitzrbx.game.utils.actor.setOnClickListener
 import kotlinx.coroutines.CoroutineScope
@@ -50,7 +53,13 @@ class DailyRewardController(
                     model.canClaimDailyReward()
                 ) {
 
-                    model.claimDailyReward()
+                    // claimDailyReward тепер лише рахує суму й рухає streak —
+                    // монети нараховує Wallet (він же шле coins_earned).
+                    val reward = model.claimDailyReward()
+                    if (reward > 0) {
+                        Wallet.add(reward.toInt(), bt = Bt.DAILY, block = BLOCK)
+                        Events.featureComplete(bt = Bt.DAILY, block = BLOCK, amount = reward.toInt())
+                    }
                 }
             }
         }
@@ -107,5 +116,9 @@ class DailyRewardController(
                 }
             }
         }
+    }
+
+    companion object {
+        private const val BLOCK = "daily_reward_screen"
     }
 }

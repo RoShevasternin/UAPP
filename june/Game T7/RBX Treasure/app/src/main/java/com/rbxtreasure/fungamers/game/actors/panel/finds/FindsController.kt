@@ -1,5 +1,7 @@
 package com.rbxtreasure.fungamers.game.actors.panel.finds
 
+import com.rbxtreasure.fungamers.businesModule.economy.Econ
+
 import com.rbxtreasure.fungamers.game.utils.actor.setOnTouchListener
 
 class FindsController(
@@ -11,7 +13,9 @@ class FindsController(
         private const val PICKS_PER_AD  = 3
         private const val MAX_ADS       = 2
         private const val WIN_COUNT     = 3
-        private const val WIN_REWARD    = 100L
+        // Дефолт 100 = сьогоднішня поведінка; ключ economy.rewards.finds_screen
+        private const val WIN_REWARD_DEF = 100
+        private val WIN_REWARD: Long get() = Econ.reward("finds_screen", WIN_REWARD_DEF).toLong()
     }
 
     // ------------------------------------------------------------------------

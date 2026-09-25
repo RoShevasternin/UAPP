@@ -1,5 +1,6 @@
 package com.racing.funtols.game.screens.home.character
 
+import com.racing.funtols.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.racing.funtols.game.actors.panel.character.APanelSelectCharacter
 import com.racing.funtols.adsmodule.AdSizeManager
@@ -16,6 +17,9 @@ import com.racing.funtols.game.utils.runGDX
 import kotlinx.coroutines.launch
 
 class SelectCharactersScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "select_characters_screen"
 
     // ------------------------------------------------------------------------
     // Actors

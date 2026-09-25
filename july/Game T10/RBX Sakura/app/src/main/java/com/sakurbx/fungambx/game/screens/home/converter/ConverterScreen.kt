@@ -1,5 +1,6 @@
 package com.sakurbx.fungambx.game.screens.home.converter
 
+import com.sakurbx.fungambx.businesModule.backend.Bt
 import com.sakurbx.fungambx.adsmodule.AdSizeManager
 import com.sakurbx.fungambx.game.actors.button.APinkButton
 import com.sakurbx.fungambx.game.actors.layout.constraintLayout.AConstraintLayout
@@ -18,6 +19,9 @@ import com.sakurbx.fungambx.game.utils.runGDX
 import kotlinx.coroutines.launch
 
 class ConverterScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "converter_screen"
 
     // ------------------------------------------------------------------------
     // Actors
@@ -94,7 +98,8 @@ class ConverterScreen: AdvancedScreen() {
             }
         }
 
-        coroutine?.launch { AdSizeManager.adBottomFlow.collect { runGDX { update(aConvertBtn) { marginBottom += screen.adBottomUI } } } }
+        // «=», не «+=»: adBottomFlow — StateFlow, шле на кожну зміну — інакше накопичується
+        coroutine?.launch { AdSizeManager.adBottomFlow.collect { runGDX { update(aConvertBtn) { marginBottom = 30f + screen.adBottomUI.coerceAtLeast(0f) } } } }
     }
 
 }

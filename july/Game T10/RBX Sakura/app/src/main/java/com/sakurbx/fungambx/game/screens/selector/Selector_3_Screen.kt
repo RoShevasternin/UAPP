@@ -83,7 +83,8 @@ class Selector_3_Screen: AdvancedScreen() {
         aContinueBtn.setSize(344f, 57f)
         add(aContinueBtn) { centerX(); bottomToBottom(margin = 32f) }
 
-        coroutine?.launch { AdSizeManager.adBottomFlow.collect { runGDX { update(aContinueBtn) { marginBottom += screen.adBottomUI } } } }
+        // «=», не «+=»: adBottomFlow — StateFlow, шле на кожну зміну — інакше накопичується
+        coroutine?.launch { AdSizeManager.adBottomFlow.collect { runGDX { update(aContinueBtn) { marginBottom = 32f + screen.adBottomUI.coerceAtLeast(0f) } } } }
 
         aContinueBtn.setOnClickListener { animHideScreen { gdxGame.navigationManager.navigate(Selector_4_Screen::class.java.name, Selector_3_Screen::class.java.name) } }
     }

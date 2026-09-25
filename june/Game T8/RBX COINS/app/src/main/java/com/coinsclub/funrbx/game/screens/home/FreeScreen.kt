@@ -1,5 +1,8 @@
 package com.coinsclub.funrbx.game.screens.home
 
+import com.coinsclub.funrbx.businesModule.backend.Events
+import com.coinsclub.funrbx.businesModule.economy.Wallet
+import com.coinsclub.funrbx.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.coinsclub.funrbx.game.actors.layout.constraintLayout.AConstraintLayout
@@ -21,6 +24,9 @@ import com.coinsclub.funrbx.game.utils.gdxGame
 import com.coinsclub.funrbx.game.utils.overlay.OverlayManager
 
 class FreeScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.GIFT
+    override val analyticsBlock = "free_screen"
 
     // ------------------------------------------------------------------------
     // Overlay
@@ -104,7 +110,8 @@ class FreeScreen: AdvancedScreen() {
 
         aPanelFree.onGetPrize = { prize ->
             gdxGame.activity.showInterstitial {
-                gdxGame.modelPlayer.addRbx(prize)
+                Wallet.add(prize.toInt(), bt = analyticsBt!!, block = analyticsBlock!!)
+                Events.featureComplete(bt = analyticsBt!!, block = analyticsBlock!!, amount = prize.toInt())
                 aPopup.setReward(prize)
                 overlayManager.show(Overlay.POPUP)
             }

@@ -12,6 +12,11 @@ import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 
+// ⚠️ ignoreUnknownKeys обов'язковий: поле, прибране з data-класу (PlayerData.rbx
+//    переїхав у Wallet), лишається в збереженні живих юзерів. Строгий Json на
+//    ньому кидає виняток у корутині → краш на КОЖНОМУ старті після оновлення.
+private val json = Json { ignoreUnknownKeys = true }
+
 abstract class DataStoreJsonUtil<T>(
     protected val serializer  : KSerializer<T>,
     protected val deserializer: DeserializationStrategy<T>
@@ -28,7 +33,7 @@ abstract class DataStoreJsonUtil<T>(
 
     open fun initialize() {
         /*coroutine.launch(Dispatchers.IO) {
-            dataStore.get()?.let { value -> flow.update { Json.decodeFromString(deserializer, value) } }
+            dataStore.get()?.let { value -> flow.update { json.decodeFromString(deserializer, value) } }
             log("Store $simpleName = ${flow.value}")
         }*/
 
@@ -37,9 +42,10 @@ abstract class DataStoreJsonUtil<T>(
             val raw = dataStore.get()
 
             if (raw != null) {
-                val decoded = Json.decodeFromString(deserializer, raw)
-                flow.value = decoded
-                logInit(decoded)
+                // Зіпсоване збереження не має вбивати апку — лишаємо дефолт
+                runCatching { json.decodeFromString(deserializer, raw) }
+                    .onSuccess { decoded -> flow.value = decoded; logInit(decoded) }
+                    .onFailure { log("[$simpleName] INIT → decode failed, using default: $it") }
             } else {
                 log("[$simpleName] INIT → No saved data, using default")
                 logInit(flow.value)
@@ -52,7 +58,7 @@ abstract class DataStoreJsonUtil<T>(
             flow.update { block(flow.value) }
 
             log("Store $simpleName update = ${flow.value}")
-            dataStore.update { Json.encodeToString(serializer, flow.value) }
+            dataStore.update { json.encodeToString(serializer, flow.value) }
         }*/
 
         coroutine.launch(Dispatchers.IO) {
@@ -61,7 +67,7 @@ abstract class DataStoreJsonUtil<T>(
                 val newValue = block(oldValue)
 
                 flow.value = newValue
-                dataStore.update { Json.encodeToString(serializer, newValue) }
+                dataStore.update { json.encodeToString(serializer, newValue) }
 
                 logUpdate(oldValue, newValue)
             }

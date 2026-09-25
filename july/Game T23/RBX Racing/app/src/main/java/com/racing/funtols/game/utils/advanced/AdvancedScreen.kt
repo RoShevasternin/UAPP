@@ -14,6 +14,8 @@ import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.racing.funtols.MainActivity
 import com.racing.funtols.adsmodule.AdSizeManager
+import com.racing.funtols.businesModule.backend.Bt
+import com.racing.funtols.businesModule.backend.Events
 import com.racing.funtols.game.actors.layout.constraintLayout.AConstraintLayout
 import com.racing.funtols.game.utils.Block
 import com.racing.funtols.game.utils.HEIGHT_UI
@@ -83,6 +85,14 @@ abstract class AdvancedScreen(
         updateSize()
     }
 
+    // ─── Analytics ────────────────────────────────────────────────────────────
+    // bt    — тип механіки зі спільного словника (enum Bt): друкарська помилка
+    //         не компілюється, свій елемент не вигадувати.
+    // block — місцеве ім'я екрана в snake_case, після релізу НЕ перейменовується.
+    // Технічні екрани (Loader, Settings, онбординг) лишаються null і подій не шлють.
+    open val analyticsBt   : Bt?     = null
+    open val analyticsBlock: String? = null
+
     override fun show() {
         log("show AdvancedScreen: $currentClassName")
         updateSize()
@@ -97,6 +107,12 @@ abstract class AdvancedScreen(
 
         Gdx.input.inputProcessor = inputMultiplexer.apply { addProcessors(this@AdvancedScreen, stageUI) }
         Gdx.input.setCatchKey(Input.Keys.BACK, true)
+
+        // Екран відкрито. Шлемо на КОЖЕН show — повернення назад це окремий
+        // перегляд, а не дубль.
+        val bt    = analyticsBt
+        val block = analyticsBlock
+        if (bt != null && block != null) Events.screenView(bt, block)
     }
 
     override fun render(delta: Float) {

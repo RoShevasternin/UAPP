@@ -1,6 +1,6 @@
 package com.zahbx.blitzrbx.game.screens
 
-import com.badlogic.gdx.math.Vector2
+import com.zahbx.blitzrbx.businesModule.backend.Bt
 import com.zahbx.blitzrbx.game.actors.layout.constraintLayout.AConstraintLayout
 import com.zahbx.blitzrbx.game.actors.layout.linear.AVerticalGroup
 import com.zahbx.blitzrbx.game.actors.panel.APanelMain
@@ -18,6 +18,9 @@ import com.zahbx.blitzrbx.services.analytics.AnalyticsManager
 
 class MainScreen: AdvancedScreen() {
 
+    override val analyticsBt    = Bt.HUB
+    override val analyticsBlock = "main_screen"
+
     // ------------------------------------------------------------------------
     // Actors
     // ------------------------------------------------------------------------
@@ -29,18 +32,13 @@ class MainScreen: AdvancedScreen() {
     // Lifecycle
     // ------------------------------------------------------------------------
     override fun show() {
-        val coords = stageUI.root.localToScreenCoordinates(Vector2(0f, adBannerUI))
-        gdxGame.activity.showNativeAt(coords.y)
-
+        // Нативки в меню немає навмисно: вона перекриває плитки механік
+        // (рішення користувача). Банер лишається.
         stageUI.root.color.a = 0f
         super.show()
         animShowScreen { AnalyticsManager.openHomeScreen() }
     }
 
-    override fun hide() {
-        super.hide()
-        gdxGame.activity.hideNative()
-    }
 
     override fun AConstraintLayout.addActorsOnRootConstraintLayout() {
         addPanelTopLogo()

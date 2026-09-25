@@ -58,10 +58,12 @@ class APanelLanguage(override val screen: AdvancedScreen): AConstraintLayout(scr
         aVerticalGroup.addUpContentGroup()
         aVerticalGroup.addDoneBtn()
 
+        // ⚠️ «=», а не «+=»: adBottomFlow це StateFlow — з «+=» відступ
+        // накопичувався б з кожною емісією (порожнеча під списком росла).
         coroutine?.launch {
             AdSizeManager.adBottomFlow.collect { runGDX {
-                if (screen.adBottomUI >= 0f) aVerticalGroup.paddingBottom += screen.adBottomUI
-                log("APanelMain adBottomUI = ${screen.adBottomUI}")
+                aVerticalGroup.paddingBottom = screen.adBottomUI.coerceAtLeast(0f)
+                log("APanelLanguage adBottomUI = ${screen.adBottomUI}")
             } }
         }
 

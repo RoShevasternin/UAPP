@@ -1,5 +1,6 @@
 package com.coinsclub.funrbx.game.actors.panel
 
+import com.coinsclub.funrbx.businesModule.economy.Econ
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
@@ -17,7 +18,9 @@ import com.coinsclub.funrbx.game.utils.gdxGame
 class APanelFree(override val screen: AdvancedScreen): AConstraintLayout(screen) {
 
     companion object {
-        private const val REWARD = 300L
+        // Дефолт = сьогоднішня поведінка апки; ключ economy.rewards.free_screen
+        private const val REWARD_DEF = 300
+        private val REWARD: Long get() = Econ.reward("free_screen", REWARD_DEF).toLong()
     }
 
     // ------------------------------------------------------------------------

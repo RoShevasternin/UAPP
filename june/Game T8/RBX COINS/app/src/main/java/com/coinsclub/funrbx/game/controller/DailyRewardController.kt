@@ -1,5 +1,8 @@
 package com.coinsclub.funrbx.game.controller
 
+import com.coinsclub.funrbx.businesModule.backend.Bt
+import com.coinsclub.funrbx.businesModule.backend.Events
+import com.coinsclub.funrbx.businesModule.economy.Wallet
 import com.coinsclub.funrbx.game.actors.panel.daily.AItemDailyReward
 import com.coinsclub.funrbx.game.model.PlayerModel
 import com.coinsclub.funrbx.util.log
@@ -32,7 +35,13 @@ class DailyRewardController(
     // ------------------------------------------------------------------------
     fun tryClaim() {
         if (!model.canClaimDailyReward()) return
+        // claimDailyReward тепер лише рахує суму й рухає streak —
+        // монети нараховує Wallet (він же шле coins_earned).
         val reward = model.claimDailyReward()
+        if (reward > 0) {
+            Wallet.add(reward.toInt(), bt = Bt.DAILY, block = BLOCK)
+            Events.featureComplete(bt = Bt.DAILY, block = BLOCK, amount = reward.toInt())
+        }
         if (reward > 0L) onGetReward(reward)
         // claimDailyReward змінює dayFlow → collectDay → updateRewards (перемкне у WAIT)
     }
@@ -82,5 +91,9 @@ class DailyRewardController(
         // показуємо WAIT тільки якщо реально є що чекати
         if (canClaim || remaining <= 0L) onShowClaimState()
         else                             onShowWaitState(remaining)
+    }
+
+    companion object {
+        private const val BLOCK = "daily_reward_screen"
     }
 }

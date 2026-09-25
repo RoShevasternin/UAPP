@@ -1,5 +1,6 @@
 package com.zahbx.blitzrbx.game.screens.main
 
+import com.zahbx.blitzrbx.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.ui.Image
@@ -17,6 +18,9 @@ import com.zahbx.blitzrbx.game.utils.advanced.AdvancedScreen
 import com.zahbx.blitzrbx.game.utils.gdxGame
 
 class BoostModeScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.GIFT
+    override val analyticsBlock = "boost_mode_screen"
 
     // ------------------------------------------------------------------------
     // Actors

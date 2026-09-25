@@ -1,5 +1,8 @@
 package com.rbxtreasure.fungamers.game.actors.panel.daily
 
+import com.rbxtreasure.fungamers.businesModule.backend.Bt
+import com.rbxtreasure.fungamers.businesModule.backend.Events
+import com.rbxtreasure.fungamers.businesModule.economy.Wallet
 import com.rbxtreasure.fungamers.game.model.PlayerModel
 import com.rbxtreasure.fungamers.game.utils.actor.setOnTouchListener
 import kotlinx.coroutines.CoroutineScope
@@ -46,6 +49,10 @@ class DailyRewardController(
             item.setOnTouchListener {
                 if (day == model.dailyRewardDayFlow.value && model.canClaimDailyReward()) {
                     val reward = model.claimDailyReward()
+        if (reward > 0) {
+            Wallet.add(reward.toInt(), bt = Bt.DAILY, block = BLOCK)
+            Events.featureComplete(bt = Bt.DAILY, block = BLOCK, amount = reward.toInt())
+        }
                     onGetReward(reward)
                 }
             }
@@ -75,5 +82,9 @@ class DailyRewardController(
                 else -> item.setState(AItemDailyReward.DailyRewardState.LOCKED)
             }
         }
+    }
+
+    companion object {
+        private const val BLOCK = "daily_screen"
     }
 }

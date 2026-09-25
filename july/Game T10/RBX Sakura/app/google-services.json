@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1096441981058",
+    "project_id": "t10-rbx-sakura",
+    "storage_bucket": "t10-rbx-sakura.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1096441981058:android:5f8b5e72a5ef0d4df8ac9b",
+        "android_client_info": {
+          "package_name": "com.sakurbx.fungambx"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtHa4zhbXhS_RF3lg83ANNT1knd-EJkQc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

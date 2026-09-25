@@ -52,6 +52,11 @@ class NavigationManager(val game: GDXGame) {
         )
         if (toScreenName in noAdScreens) return@runGDX
 
+        // Loader → Home напряму (онбординг пройдено) — не бити onFrontNavigation
+        // одразу після app_open-гейта. Звичайні переходи на Home рекламу лишають:
+        // там fromScreenName заданий.
+        if (toScreenName == HomeScreen::class.java.name && fromScreenName == null) return@runGDX
+
         gdxGame.activity.onFrontNavigation()
     }
 

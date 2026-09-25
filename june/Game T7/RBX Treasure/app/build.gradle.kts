@@ -13,8 +13,8 @@ android {
         applicationId = "com.rbxtreasure.fungamers"
         minSdk = 24
         targetSdk = 37
-        versionCode = 3
-        versionName = "3.0.0"
+        versionCode = 4
+        versionName = "4.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -70,10 +70,10 @@ dependencies {
 
     // AndroidX ------------------------------------------------------------------------
     implementation("androidx.core:core-ktx:1.19.0")
-    implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("androidx.appcompat:appcompat:1.8.0")
     implementation("androidx.activity:activity-ktx:1.13.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.2")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.9.8")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.10.1")
     implementation("androidx.datastore:datastore-preferences:1.2.1")
 
     // LibGDX ------------------------------------------------------------------------
@@ -96,12 +96,13 @@ dependencies {
     // Business Logic ------------------------------------------------------------------------
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:34.16.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.19.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-config")
+    implementation("com.google.firebase:firebase-messaging")
 
     // TikTok
-    implementation("com.github.tiktok:tiktok-business-android-sdk:1.6.1")
+    implementation("com.github.tiktok:tiktok-business-android-sdk:1.7.1")
 
     // Billing
     implementation("com.android.billingclient:billing-ktx:9.1.0")
@@ -110,7 +111,7 @@ dependencies {
     implementation("com.android.installreferrer:installreferrer:2.2")
 
     // AdMob
-    implementation("com.google.android.gms:play-services-ads:25.4.0")
+    implementation("com.google.android.gms:play-services-ads:25.5.0")
 
     // Gson (парсинг JSON з Firebase)
     implementation("com.google.code.gson:gson:2.14.0")
@@ -123,6 +124,9 @@ dependencies {
 
     // Glide (завантаження картинок для кастомної реклами)
     implementation("com.github.bumptech.glide:glide:5.0.9")
+
+    // WorkManager (локальні пуші businesModule)
+    implementation("androidx.work:work-runtime-ktx:2.11.2")
 }
 
 tasks.register("copyAndroidNatives") {

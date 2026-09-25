@@ -1,5 +1,8 @@
 package com.rbxtreasure.fungamers.game.screens.home
 
+import com.rbxtreasure.fungamers.businesModule.backend.Events
+import com.rbxtreasure.fungamers.businesModule.economy.Wallet
+import com.rbxtreasure.fungamers.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.rbxtreasure.fungamers.game.actors.layout.constraintLayout.AConstraintLayout
@@ -21,6 +24,9 @@ import com.rbxtreasure.fungamers.game.utils.gdxGame
 import com.rbxtreasure.fungamers.game.utils.overlay.OverlayManager
 
 class GiftScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.GIFT
+    override val analyticsBlock = "gift_screen"
 
     // ------------------------------------------------------------------------
     // Overlay
@@ -104,7 +110,8 @@ class GiftScreen: AdvancedScreen() {
 
         aGift.onClaim = { reward ->
             gdxGame.activity.showInterstitial {
-                gdxGame.modelPlayer.addRbx(reward)
+                Wallet.add(reward.toInt(), bt = analyticsBt!!, block = analyticsBlock!!)
+                Events.featureComplete(bt = analyticsBt!!, block = analyticsBlock!!, amount = reward.toInt())
                 aPopup.setReward(reward)
                 overlayManager.show(Overlay.POPUP)
             }

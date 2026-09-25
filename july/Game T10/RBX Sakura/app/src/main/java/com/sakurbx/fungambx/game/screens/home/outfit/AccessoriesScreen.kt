@@ -1,5 +1,6 @@
 package com.sakurbx.fungambx.game.screens.home.outfit
 
+import com.sakurbx.fungambx.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.sakurbx.fungambx.adsmodule.AdSizeManager
 import com.sakurbx.fungambx.game.actors.layout.constraintLayout.AConstraintLayout
@@ -27,6 +28,8 @@ import kotlinx.coroutines.launch
 
 class AccessoriesScreen: AdvancedScreen() {
 
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "accessories_screen"
 
     // ------------------------------------------------------------------------
     // Font
@@ -133,7 +136,8 @@ class AccessoriesScreen: AdvancedScreen() {
         aPanelOutfit.width = 344f
         add(aPanelOutfit) { centerX(); topToBottom(aPanelFilter, 16f); bottomToBottom(); matchHeight() }
 
-        coroutine?.launch { AdSizeManager.adBottomFlow.collect { runGDX { update(aPanelOutfit) { marginBottom += screen.adBottomUI } } } }
+        // «=», не «+=»: adBottomFlow — StateFlow, шле на кожну зміну — інакше накопичується
+        coroutine?.launch { AdSizeManager.adBottomFlow.collect { runGDX { update(aPanelOutfit) { marginBottom = screen.adBottomUI.coerceAtLeast(0f) } } } }
     }
 
 }

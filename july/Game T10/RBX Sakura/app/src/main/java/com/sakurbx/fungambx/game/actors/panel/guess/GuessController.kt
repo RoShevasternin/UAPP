@@ -1,5 +1,6 @@
 package com.sakurbx.fungambx.game.actors.panel.guess
 
+import com.sakurbx.fungambx.businesModule.economy.Econ
 import com.sakurbx.fungambx.game.utils.actor.setOnTouchListener
 
 class GuessController(
@@ -12,8 +13,10 @@ class GuessController(
         private const val MAX_ADS       = 2
         private const val WIN_COUNT     = 3
 
-        // можливі суми нагород для виграшної картки
-        private val REWARD_POOL = listOf(100L)
+        // Сума за виграшну картку. Дефолт 100 = сьогоднішня поведінка апки
+        // (пул з одного значення); ключ economy.rewards.guess_screen — ручка без релізу.
+        private const val WIN_REWARD_DEF = 100
+        private val WIN_REWARD: Long get() = Econ.reward("guess_screen", WIN_REWARD_DEF).toLong()
     }
 
     // ------------------------------------------------------------------------
@@ -43,7 +46,7 @@ class GuessController(
         // випадкові виграшні картки + випадкова сума кожній
         winRewards.clear()
         items.indices.shuffled().take(WIN_COUNT).forEach { index ->
-            winRewards[index] = REWARD_POOL.random()
+            winRewards[index] = WIN_REWARD
         }
 
         revealed.clear()

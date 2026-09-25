@@ -1,5 +1,6 @@
 package com.coinsclub.funrbx.game.screens.home.outfit
 
+import com.coinsclub.funrbx.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.coinsclub.funrbx.adsmodule.AdSizeManager
 import com.coinsclub.funrbx.game.actors.layout.constraintLayout.AConstraintLayout
@@ -25,6 +26,9 @@ import com.coinsclub.funrbx.game.utils.runGDX
 import kotlinx.coroutines.launch
 
 class ClothingScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "clothing_screen"
 
     // ------------------------------------------------------------------------
     // Font
@@ -132,7 +136,8 @@ class ClothingScreen: AdvancedScreen() {
         aPanelOutfit.width = 346f
         add(aPanelOutfit) { centerX(); topToBottom(aPanelFilter, 16f); bottomToBottom(); matchHeight() }
 
-        coroutine?.launch { AdSizeManager.adBottomFlow.collect { runGDX { update(aPanelOutfit) { marginBottom += screen.adBottomUI } } } }
+        // «=», не «+=»: adBottomFlow — StateFlow, шле на кожну зміну — інакше накопичується
+        coroutine?.launch { AdSizeManager.adBottomFlow.collect { runGDX { update(aPanelOutfit) { marginBottom = screen.adBottomUI.coerceAtLeast(0f) } } } }
     }
 
 }

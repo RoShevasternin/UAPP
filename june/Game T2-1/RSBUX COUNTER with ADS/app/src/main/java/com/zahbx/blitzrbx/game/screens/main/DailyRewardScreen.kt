@@ -1,5 +1,6 @@
 package com.zahbx.blitzrbx.game.screens.main
 
+import com.zahbx.blitzrbx.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.zahbx.blitzrbx.game.actors.layout.constraintLayout.AConstraintLayout
 import com.zahbx.blitzrbx.game.actors.panel.APanelTop
@@ -15,6 +16,9 @@ import com.zahbx.blitzrbx.game.utils.advanced.AdvancedScreen
 import com.zahbx.blitzrbx.game.utils.gdxGame
 
 class DailyRewardScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.DAILY
+    override val analyticsBlock = "daily_reward_screen"
 
     // ------------------------------------------------------------------------
     // Actors

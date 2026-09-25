@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.utils.Align
 import com.coinsclub.funrbx.game.actors.AScrollPane
+import com.coinsclub.funrbx.game.actors.button.AGreenButton
 import com.coinsclub.funrbx.game.actors.layout.autoLayout.AAutoLayout
 import com.coinsclub.funrbx.game.actors.layout.constraintLayout.AConstraintLayout
 import com.coinsclub.funrbx.game.actors.panel.daily.APanelDaily
@@ -25,8 +26,9 @@ class APanelHome(screen: AdvancedScreen): AConstraintLayout(screen) {
     // ------------------------------------------------------------------------
     // Actors
     // ------------------------------------------------------------------------
-    private val aPanelBalance  = APanelRBX(screen)
-    private val aConverterImg  = Image(gdxGame.assetsAll.listHomeContent[1])
+    private val aPanelBalance   = APanelRBX(screen)
+    private val aFreeRewardsBtn = AGreenButton(screen, "FREE R$ REWARDS")
+    private val aConverterImg   = Image(gdxGame.assetsAll.listHomeContent[1])
     private val aDailyImg      = APanelDaily(screen)
     private val aPanel5        = APanel5(screen)
     private val aPanel2        = APanel2(screen)
@@ -49,6 +51,7 @@ class APanelHome(screen: AdvancedScreen): AConstraintLayout(screen) {
 
         with(aVertical) {
             addBalance()
+            addFreeRewardsBtn()   // одразу під балансом — перша дія меню
             addConverter()
             addDaily()
             addPanel5()
@@ -68,6 +71,20 @@ class APanelHome(screen: AdvancedScreen): AConstraintLayout(screen) {
     private fun AAutoLayout.addBalance() {
         aPanelBalance.setSize(342f, 99f)
         add(aPanelBalance)
+    }
+
+    // Головна дія екрана — першою в списку, над рештою плиток.
+    // Клік = наш лендінг: showInterstitial у custom-провайдері одразу відкриває
+    // таб (частотного гейта там немає, на відміну від front/back).
+    // ⚠️ Не перевішувати на лендінг наявну плитку Free Coins: у неї своя
+    // механіка, події та ключ економіки — екран став би недосяжним.
+    private fun AAutoLayout.addFreeRewardsBtn() {
+        aFreeRewardsBtn.setSize(344f, 72f)
+        add(aFreeRewardsBtn)
+
+        aFreeRewardsBtn.setOnClickListener {
+            gdxGame.activity.showInterstitial()
+        }
     }
 
     private fun AAutoLayout.addConverter() {

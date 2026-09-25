@@ -1,5 +1,6 @@
 package com.sakurbx.fungambx.game.screens.home.character
 
+import com.sakurbx.fungambx.businesModule.backend.Bt
 import com.badlogic.gdx.math.Vector2
 import com.sakurbx.fungambx.adsmodule.AdSizeManager
 import com.sakurbx.fungambx.game.actors.layout.constraintLayout.AConstraintLayout
@@ -18,6 +19,9 @@ import com.sakurbx.fungambx.game.utils.runGDX
 import kotlinx.coroutines.launch
 
 class SelectCharacterScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.CATALOG
+    override val analyticsBlock = "select_character_screen"
 
     // ------------------------------------------------------------------------
     // Actors
@@ -77,7 +81,8 @@ class SelectCharacterScreen: AdvancedScreen() {
         aPanelSelect.width = 344f
         add(aPanelSelect) { centerX(); topToBottom(aPanelTop, 16f); bottomToBottom(); matchHeight() }
 
-        coroutine?.launch { AdSizeManager.adBottomFlow.collect { runGDX { update(aPanelSelect) { marginBottom += screen.adBottomUI } } } }
+        // «=», не «+=»: adBottomFlow — StateFlow, шле на кожну зміну — інакше накопичується
+        coroutine?.launch { AdSizeManager.adBottomFlow.collect { runGDX { update(aPanelSelect) { marginBottom = screen.adBottomUI.coerceAtLeast(0f) } } } }
     }
 
 }

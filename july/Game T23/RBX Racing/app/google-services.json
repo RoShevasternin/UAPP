@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "599268311354",
+    "project_id": "t23-rbx-racing",
+    "storage_bucket": "t23-rbx-racing.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599268311354:android:1c4d0f67ced9e554409003",
+        "android_client_info": {
+          "package_name": "com.racing.funtols"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKatwXf4bgn9e-cb_QvTAG6xGiYCZ1B1M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

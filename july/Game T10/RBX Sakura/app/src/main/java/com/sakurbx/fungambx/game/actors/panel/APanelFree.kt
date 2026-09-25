@@ -1,5 +1,6 @@
 package com.sakurbx.fungambx.game.actors.panel
 
+import com.sakurbx.fungambx.businesModule.economy.Econ
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
@@ -11,6 +12,11 @@ import com.sakurbx.fungambx.game.utils.advanced.AdvancedScreen
 import com.sakurbx.fungambx.game.utils.gdxGame
 
 class APanelFree(override val screen: AdvancedScreen): AConstraintLayout(screen) {
+
+    companion object {
+        // Дефолт = сьогоднішня поведінка апки; ключ economy.rewards.free_screen
+        private const val REWARD_DEF = 200
+    }
 
     // ------------------------------------------------------------------------
     // Actors
@@ -60,7 +66,7 @@ class APanelFree(override val screen: AdvancedScreen): AConstraintLayout(screen)
 
         aRewardBtn.setOnClickListener {
             gdxGame.soundUtil.apply { play(REWARD) }
-            onGetPrize(200)
+            onGetPrize(Econ.reward("free_screen", REWARD_DEF).toLong())
         }
     }
 

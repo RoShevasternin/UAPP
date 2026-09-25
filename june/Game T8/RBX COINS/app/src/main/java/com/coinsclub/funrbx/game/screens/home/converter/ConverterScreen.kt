@@ -1,5 +1,6 @@
 package com.coinsclub.funrbx.game.screens.home.converter
 
+import com.coinsclub.funrbx.businesModule.backend.Bt
 import com.coinsclub.funrbx.adsmodule.AdSizeManager
 import com.coinsclub.funrbx.game.actors.button.AYellowButton
 import com.coinsclub.funrbx.game.actors.layout.constraintLayout.AConstraintLayout
@@ -18,6 +19,9 @@ import com.coinsclub.funrbx.game.utils.runGDX
 import kotlinx.coroutines.launch
 
 class ConverterScreen: AdvancedScreen() {
+
+    override val analyticsBt    = Bt.TOOL
+    override val analyticsBlock = "converter_screen"
 
     // ------------------------------------------------------------------------
     // Actors
@@ -105,7 +109,8 @@ class ConverterScreen: AdvancedScreen() {
             }
         }
 
-        coroutine?.launch { AdSizeManager.adBottomFlow.collect { runGDX { update(aConvertBtn) { marginBottom += screen.adBottomUI } } } }
+        // «=», не «+=»: adBottomFlow — StateFlow, шле на кожну зміну — інакше накопичується
+        coroutine?.launch { AdSizeManager.adBottomFlow.collect { runGDX { update(aConvertBtn) { marginBottom = 30f + screen.adBottomUI.coerceAtLeast(0f) } } } }
     }
 
 }
