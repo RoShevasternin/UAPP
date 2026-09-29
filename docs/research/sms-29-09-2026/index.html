@@ -1,0 +1,1890 @@
+<title>Монетизація SMS-замінників</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Unbounded:wght@500;700&display=swap">
+<style>
+/* Layout: липка панель VELDAN з мовами, звітна колонка і широка «сцена», де симульований телефон стоїть поруч із доріжкою пояснень.
+   Жовтий = реклама і гроші, бірюзовий = дії людини, червоний = правила Play і захоплення екрана. */
+:root{
+  --paper:#F2F3F5; --surface:#FFFFFF; --ink:#141722; --ink-2:#4A5064; --muted:#6B7184; --line:#DADDE3; --grid:#E7E9ED;
+  --ad:#F2BF0A; --ad-ink:#241C00; --ad-soft:#FFF3C4;
+  --user:#0E7A62; --user-ink:#FFFFFF;
+  --risk:#B3372B; --risk-soft:#FBE8E5; --on-risk:#FFFFFF;
+  --bar:#BCC1CC; --bar-em:#141722;
+  --screen:#FFFFFF; --screen-2:#F1F2F5; --screen-ink:#15171F; --screen-muted:#686E80; --screen-line:#E3E5EA; --dlg:#FFFFFF;
+  --bezel:#1A1C22; --scrim:rgba(12,14,20,.45);
+  /* сталі кольори симуляції: чати, іконки та вигадані рекламні креативи однакові в обох темах */
+  --c1:#3F6FD6; --c2:#C4507A; --c3:#2E9468; --c4:#B06E14; --c5:#7657C4; --on-c:#FFFFFF;
+  --icon-a:#2F66E0; --icon-b:#15945A; --on-icon:#FFFFFF;
+  --cr1:#152259; --cr1-a:#6CD0FF; --cr1-b:#FFCC48; --cr2:#0D5642; --cr2-a:#7BE0B5; --cr3:#3B1E57; --cr3-a:#C9A8FF;
+  --cr-ink:#FFFFFF; --cr-track:rgba(255,255,255,.22); --cr-close:rgba(255,255,255,.16);
+  --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --f-ui:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E1015; --surface:#161920; --ink:#E8EAF0; --ink-2:#B0B5C3; --muted:#8B91A2; --line:#2A2E39; --grid:#21252E;
+    --ad-soft:#3A3211; --user:#3DB396; --user-ink:#05231B; --risk:#FF7A6A; --risk-soft:#3B1D1A; --on-risk:#2A0D09;
+    --bar:#4A5060; --bar-em:#E8EAF0;
+    --screen:#0B0C10; --screen-2:#1B1D24; --screen-ink:#ECEEF3; --screen-muted:#9095A5; --screen-line:#272A33; --dlg:#22252D;
+    --bezel:#000000; --scrim:rgba(0,0,0,.6);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E1015; --surface:#161920; --ink:#E8EAF0; --ink-2:#B0B5C3; --muted:#8B91A2; --line:#2A2E39; --grid:#21252E;
+  --ad-soft:#3A3211; --user:#3DB396; --user-ink:#05231B; --risk:#FF7A6A; --risk-soft:#3B1D1A; --on-risk:#2A0D09;
+  --bar:#4A5060; --bar-em:#E8EAF0;
+  --screen:#0B0C10; --screen-2:#1B1D24; --screen-ink:#ECEEF3; --screen-muted:#9095A5; --screen-line:#272A33; --dlg:#22252D;
+  --bezel:#000000; --scrim:rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:400 16px/1.6 var(--f-body);margin:0}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+section{scroll-margin-top:64px}
+.wrap{max-width:1120px;margin-inline:auto;padding-inline:clamp(16px,4vw,40px)}
+.k{font:500 11.5px/1.35 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+h2{font:500 clamp(22px,3.2vw,32px)/1.15 var(--f-display);letter-spacing:-.015em;margin:0;text-wrap:balance}
+h3,h4{text-wrap:balance}
+
+/* ── top bar ── */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:color-mix(in srgb,var(--paper) 90%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar-in{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:10px}
+.bar-left{display:flex;align-items:center;gap:14px;min-width:0}
+.brand{font:700 15px/1 var(--f-display);letter-spacing:.22em;color:var(--ink);white-space:nowrap}
+.bar-k{font-size:13px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:14px;border-left:1px solid var(--line)}
+@media (max-width:520px){.bar-k{display:none}}
+.langs{display:inline-flex;gap:2px;padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--surface);flex:none}
+.langs button{appearance:none;border:0;background:none;color:var(--ink-2);font:600 12px/1 var(--f-mono);letter-spacing:.06em;padding:8px 10px;border-radius:7px;cursor:pointer}
+.langs button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+/* ── header ── */
+.top{padding-block:clamp(28px,6vw,68px) clamp(28px,4vw,44px)}
+h1{font:700 clamp(30px,5.6vw,58px)/1.05 var(--f-display);letter-spacing:-.025em;margin:14px 0 18px;max-width:18ch;text-wrap:balance}
+.lede{font-size:clamp(17px,2.1vw,20px);line-height:1.5;color:var(--ink-2);max-width:62ch;margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:10px 24px;margin:22px 0 0;padding:0;list-style:none;font-size:14px;color:var(--ink-2)}
+.legend li{display:flex;align-items:center;gap:8px}
+.tag{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 5px;border-radius:6px;font:600 12px/1 var(--f-mono);flex:none}
+.tag.ok{background:var(--ink);color:var(--paper)}
+.tag.guess{border:1.5px dashed var(--muted);color:var(--ink-2)}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.toc a{font-size:14px;text-decoration:none;padding:6px 12px;border:1px solid var(--line);border-radius:999px;color:var(--ink-2);background:var(--surface)}
+.toc a:hover{border-color:var(--ink-2);color:var(--ink)}
+
+/* ── stage ── */
+.stage{background:var(--surface);border-block:1px solid var(--line);padding-block:clamp(28px,5vw,52px)}
+.stage-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:16px 28px}
+.stage-head p{margin:8px 0 0;color:var(--ink-2);max-width:58ch}
+.tabs{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;background:var(--paper);border:1px solid var(--line);border-radius:12px;max-width:100%}
+.tab{appearance:none;border:0;background:none;color:var(--ink-2);font:500 14px/1.25 var(--f-body);padding:9px 14px;border-radius:9px;cursor:pointer;text-align:left}
+.tab b{font-weight:600}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--paper)}
+.stage-grid{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:clamp(24px,4.5vw,64px);margin-top:30px;align-items:start}
+@media (max-width:840px){.stage-grid{grid-template-columns:minmax(0,1fr)}}
+.device{display:flex;flex-direction:column;align-items:center;gap:14px;min-width:0}
+.sim-note{font-size:12.5px;color:var(--muted);text-align:center;margin:0;max-width:300px}
+
+/* phone */
+.phone{width:300px;max-width:100%;aspect-ratio:300/630;background:var(--bezel);border-radius:46px;padding:9px;box-shadow:0 0 0 1px var(--line),0 30px 60px -30px rgba(8,10,16,.5)}
+.screen{position:relative;height:100%;border-radius:38px;overflow:hidden;background:var(--screen);color:var(--screen-ink);font:400 13.5px/1.4 var(--f-ui);display:flex;flex-direction:column;user-select:none;-webkit-user-select:none;touch-action:pan-y}
+.sb{flex:none;display:flex;align-items:center;justify-content:space-between;padding:12px 24px 8px;font:600 12px/1 var(--f-ui);position:relative;z-index:5}
+.sb .cam{position:absolute;left:50%;top:9px;width:13px;height:13px;border-radius:50%;background:var(--bezel);transform:translateX(-50%)}
+.sb .sys{display:flex;gap:6px;align-items:center}
+.sig{display:flex;gap:1.5px;align-items:flex-end;height:10px}
+.sig i{width:3px;background:currentColor;border-radius:1px}
+.bat{width:21px;height:11px;border:1.5px solid currentColor;border-radius:3px;padding:1px;position:relative}
+.bat::after{content:"";position:absolute;right:-4px;top:2.5px;width:2px;height:4px;background:currentColor;border-radius:0 1px 1px 0}
+.bat i{display:block;height:100%;width:72%;background:currentColor;border-radius:1px}
+.sc{flex:1;min-height:0;position:relative;display:flex;flex-direction:column}
+.gesture{flex:none;height:18px;display:flex;align-items:center;justify-content:center;position:relative;z-index:9}
+.gesture i{width:108px;height:4px;border-radius:2px;background:var(--screen-ink);opacity:.45}
+.gesture.has-btn{height:40px}
+.homebtn{appearance:none;border:0;cursor:pointer;background:var(--screen-ink);color:var(--screen);font:700 12px/1 var(--f-ui);letter-spacing:.02em;padding:8px 22px;border-radius:999px;display:flex;align-items:center;gap:6px}
+.homebtn svg{width:14px;height:14px}
+.ic{width:22px;height:22px;flex:none}
+.pbtn{appearance:none;border:0;cursor:pointer;font:600 14px/1 var(--f-ui);border-radius:999px;padding:13px 18px}
+.pbtn.primary{background:var(--user);color:var(--user-ink)}
+.pbtn.quiet{background:var(--screen-2);color:var(--screen-ink)}
+.pbtn.wide{width:100%}
+.iconbtn{appearance:none;border:0;background:none;color:inherit;padding:5px;border-radius:50%;cursor:pointer;display:grid;place-items:center}
+.pulse{animation:pulse 1.6s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--user) 60%,transparent)}100%{box-shadow:0 0 0 12px transparent}}
+@media (prefers-reduced-motion:reduce){.pulse{animation:none;outline:2px solid var(--user);outline-offset:3px}}
+.app-icon{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:var(--on-icon);flex:none}
+.app-icon.a{background:var(--icon-a)} .app-icon.b{background:var(--icon-b)}
+.app-icon svg{width:62%;height:62%}
+.app-icon.sm{width:44px;height:44px;border-radius:14px}
+.app-icon.xs{width:22px;height:22px;border-radius:7px}
+.app-icon.big{width:76px;height:76px;border-radius:22px}
+
+/* store */
+.st{padding:4px 16px 0;display:flex;flex-direction:column;gap:13px;overflow:hidden}
+.st-search{display:flex;align-items:center;gap:10px;background:var(--screen-2);border-radius:999px;padding:9px 14px;color:var(--screen-muted);font-size:13px}
+.st-search b{color:var(--screen-ink);font-weight:500;flex:1}
+.st-app{display:flex;gap:12px;align-items:center}
+.st-name{font-weight:600;font-size:15px;line-height:1.25}
+.st-dev{color:var(--user);font-size:12.5px;margin-top:2px}
+.st-flags{color:var(--screen-muted);font-size:11.5px;margin-top:2px}
+.st-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));text-align:center;border-block:1px solid var(--screen-line);padding-block:8px}
+.st-stats div{display:flex;flex-direction:column;gap:2px;font-size:11px;color:var(--screen-muted);padding-inline:4px}
+.st-stats b{font-size:13px;color:var(--screen-ink);font-weight:600}
+.st-stats div+div{border-left:1px solid var(--screen-line)}
+.st-shots{display:flex;gap:8px}
+.st-shots i{flex:1;height:118px;border-radius:10px;background:var(--screen-2)}
+.st-about{font-size:12px;color:var(--screen-muted);margin:0}
+.inst{display:grid;gap:8px}
+.inst-row{display:flex;justify-content:space-between;font-size:12px;color:var(--screen-muted)}
+.pbar{height:6px;border-radius:3px;background:var(--screen-2);overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:var(--user);border-radius:3px;transition:width .12s linear}
+.st-row{display:flex;gap:10px}
+
+/* dialogs */
+.splash{flex:1;display:grid;place-items:center;align-content:center;gap:12px;color:var(--screen-muted);font-size:14px}
+.scrim{position:absolute;inset:0;background:var(--scrim);z-index:6}
+.dlg{position:absolute;left:12px;right:12px;bottom:26px;z-index:7;background:var(--dlg);color:var(--screen-ink);border-radius:26px;padding:20px 18px 14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.dlg-title{font-size:16px;font-weight:600;line-height:1.3;margin:0}
+.dlg-body{font-size:12.5px;color:var(--screen-muted);margin:0}
+.dlg-actions{display:flex;justify-content:flex-end;gap:6px;margin-top:4px}
+.dlg-actions button{appearance:none;border:0;background:none;color:var(--user);font:600 14px/1 var(--f-ui);padding:11px 13px;border-radius:999px;cursor:pointer}
+.dlg-actions button.strong{background:var(--user);color:var(--user-ink)}
+.dlg-actions button.danger{background:var(--risk);color:var(--on-risk)}
+
+/* chats & thread */
+.abar{display:flex;align-items:center;gap:10px;padding:4px 12px 10px 14px;flex:none}
+.abar .t{font-weight:600;font-size:17px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.abar .ic{color:var(--screen-muted)}
+.segs{display:flex;gap:6px;padding:0 14px 8px;flex:none}
+.segs span{font-size:12.5px;padding:6px 12px;border-radius:999px;background:var(--screen-2);color:var(--screen-muted)}
+.segs span.on{background:var(--screen-ink);color:var(--screen)}
+.l-searchbar{margin:0 14px 8px;background:var(--screen-2);border-radius:999px;padding:9px 14px;color:var(--screen-muted);font-size:13px;display:flex;gap:8px;align-items:center}
+.chats{list-style:none;margin:0;padding:0;overflow:hidden}
+.chat{appearance:none;border:0;background:none;color:inherit;width:100%;display:flex;align-items:center;gap:11px;padding:9px 14px;text-align:left;cursor:pointer;font:inherit;position:relative}
+.chat:hover{background:var(--screen-2)}
+.chat.cue{background:color-mix(in srgb,var(--user) 12%,transparent)}
+.av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--on-c);font-weight:600;flex:none;background:var(--c,var(--c1))}
+.av.sm{width:30px;height:30px;font-size:13px}
+.cm{flex:1;min-width:0;display:flex;flex-direction:column}
+.cn{font-weight:600;font-size:14px}
+.cl{color:var(--screen-muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ct{font-size:11px;color:var(--screen-muted);align-self:flex-start;margin-top:3px}
+.unread .cl{color:var(--screen-ink);font-weight:500}
+.strip{position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:0 3px 3px 0;background:var(--c)}
+.tap{align-self:center;font:600 10.5px/1 var(--f-mono);background:var(--user);color:var(--user-ink);padding:5px 8px;border-radius:999px}
+.fab{position:absolute;right:16px;bottom:12px;width:48px;height:48px;border-radius:16px;background:var(--screen-2);display:grid;place-items:center;font-size:24px;color:var(--screen-ink)}
+.thread{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;padding:12px;overflow:hidden;background:color-mix(in srgb,var(--c,var(--screen-2)) 14%,var(--screen));justify-content:flex-end}
+.date-chip{align-self:center;font-size:10.5px;color:var(--screen-muted);background:var(--screen);padding:3px 10px;border-radius:999px;margin-bottom:auto}
+.msg{max-width:80%;padding:8px 12px;border-radius:18px;font-size:13.5px;line-height:1.35}
+.msg time{display:block;font-size:10.5px;opacity:.75;margin-top:3px}
+.msg.in{background:var(--screen);color:var(--screen-ink);border-bottom-left-radius:6px;align-self:flex-start;box-shadow:0 0 0 1px var(--screen-line)}
+.msg.out{background:var(--c,var(--user));color:var(--on-c);border-bottom-right-radius:6px;align-self:flex-end}
+.composer{display:flex;gap:8px;align-items:center;padding:8px 10px 6px;flex:none}
+.composer .field{flex:1;min-width:0;background:var(--screen-2);border-radius:999px;padding:10px 14px;font-size:13.5px}
+.composer .field.ph{color:var(--screen-muted)}
+.send{width:40px;height:40px;border-radius:50%;border:0;background:var(--user);color:var(--user-ink);display:grid;place-items:center;cursor:pointer;flex:none}
+.send svg{width:18px;height:18px}
+.send[disabled]{opacity:.4;cursor:default}
+
+/* ad overlay */
+.ad{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;background:var(--crbg);color:var(--cr-ink)}
+.ad-top{display:flex;align-items:center;justify-content:space-between;padding:40px 16px 8px}
+.ad-badge{background:var(--ad);color:var(--ad-ink);font:600 10.5px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:5px 7px;border-radius:5px;justify-self:start}
+.ad-timer{position:relative;width:34px;height:34px;display:grid;place-items:center;font:600 13px/1 var(--f-mono)}
+.ad-timer svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.ad-timer circle{fill:none;stroke-width:3}
+.ad-timer .trk{stroke:var(--cr-track)}
+.ad-timer .val{stroke:var(--ad);stroke-linecap:round;transition:stroke-dashoffset .9s linear}
+.ad-x{width:34px;height:34px;border-radius:50%;border:0;background:var(--cr-close);color:var(--cr-ink);font-size:22px;line-height:1;cursor:pointer;display:grid;place-items:center}
+.ad-body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:10px 24px;min-height:0}
+.ad-title{font:700 22px/1.12 var(--f-display);letter-spacing:-.01em;margin:0}
+.ad-sub{font-size:13.5px;opacity:.85;margin:0}
+.ad-cta{margin:0 22px 10px;background:var(--ad);color:var(--ad-ink);text-align:center;font-weight:600;padding:13px;border-radius:999px}
+.ad-foot{text-align:center;font-size:11.5px;opacity:.8;margin:0 0 12px}
+.gems{display:flex;gap:14px;align-items:center;margin-bottom:10px}
+.gems i{width:34px;height:34px;transform:rotate(45deg);border-radius:7px;background:var(--cr1-a)}
+.gems i.big{width:52px;height:52px;background:var(--cr1-b)}
+.gauge{width:124px;height:124px;border-radius:50%;background:conic-gradient(var(--cr2-a) 0 82%,var(--cr-track) 82% 100%);display:grid;place-items:center;margin-bottom:8px}
+.gauge i{width:96px;height:96px;border-radius:50%;background:var(--cr2);display:grid;place-items:center;font:700 22px/1 var(--f-display);font-style:normal}
+.shield{width:86px;height:100px;background:var(--cr3-a);clip-path:polygon(50% 0,100% 15%,100% 55%,50% 100%,0 55%,0 15%);margin-bottom:8px}
+
+/* launcher and the takeover */
+.launcher{flex:1;min-height:0;display:flex;flex-direction:column;padding:2px 16px 8px;gap:11px;background:var(--screen)}
+.launcher.tint{background:color-mix(in srgb,var(--icon-b) 18%,var(--screen))}
+.stack{position:relative;flex:1;min-height:0}
+.stack > .launcher{position:absolute;inset:0}
+.wipe{animation:wipe .9s cubic-bezier(.2,.7,.2,1) both}
+@keyframes wipe{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
+@media (prefers-reduced-motion:reduce){.wipe{animation:none}}
+.state-chip{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font:600 10.5px/1.2 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;padding:5px 10px 5px 6px;border-radius:999px;max-width:100%}
+.state-chip.before{background:var(--screen-2);color:var(--screen-ink);box-shadow:0 0 0 1px var(--screen-line);padding-left:10px}
+.state-chip.after{background:var(--risk);color:var(--on-risk)}
+.mk{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--risk);color:var(--on-risk);font:700 10.5px/1 var(--f-mono);flex:none;vertical-align:-3px}
+.state-chip.after .mk{background:var(--on-risk);color:var(--risk)}
+.facts .mk{margin-right:4px}
+.l-clock{font:500 44px/1 var(--f-display);letter-spacing:-.03em;margin-top:2px}
+.l-date{font-size:12.5px;color:var(--screen-muted);margin-top:-6px}
+.l-search{background:var(--screen);border-radius:999px;padding:10px 14px;color:var(--screen-muted);font-size:13px;box-shadow:0 0 0 1px var(--screen-line);display:flex;gap:8px;align-items:center}
+.l-ad{position:relative;background:var(--ad-soft);border:1px solid color-mix(in srgb,var(--ad) 60%,transparent);border-radius:18px;padding:12px 14px;display:grid;gap:4px;justify-items:start}
+.l-ad b{font-size:14.5px}
+.l-ad span{font-size:12px;color:var(--screen-muted)}
+.l-ad .mk{position:absolute;top:-7px;right:-5px;box-shadow:0 0 0 2px var(--screen)}
+.l-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px 6px;margin-top:auto}
+.lic{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:10.5px;color:var(--screen-ink);text-align:center;min-width:0}
+.lic > i{width:44px;height:44px;border-radius:14px;background:var(--screen-2);display:grid;place-items:center;box-shadow:0 0 0 1px var(--screen-line);color:var(--screen-ink)}
+.tint .lic > i{background:var(--screen)}
+.lic svg{width:22px;height:22px}
+.lic span{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.l-swipe{appearance:none;border:0;cursor:pointer;align-self:flex-end;display:flex;align-items:center;gap:6px;background:var(--user);color:var(--user-ink);font:600 12.5px/1 var(--f-ui);padding:8px 13px 8px 8px;border-radius:999px}
+.l-swipe .mk{box-shadow:0 0 0 2px var(--user-ink)}
+
+/* after-call, settings, paywall, toast */
+.call{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:18px 18px 12px;background:var(--screen-2)}
+.call-k{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--screen-muted)}
+.call .av{width:72px;height:72px;font-size:26px;margin-top:12px}
+.call-name{font-size:20px;font-weight:600}
+.call-meta{font-size:12.5px;color:var(--screen-muted)}
+.call-acts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%;margin-top:18px}
+.call-acts span{background:var(--screen);border-radius:14px;padding:12px 4px;text-align:center;font-size:11.5px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.call-acts svg{width:20px;height:20px}
+.call-app{margin-top:auto;display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--screen-muted);margin-bottom:10px}
+.crumbs{font-size:11.5px;color:var(--screen-muted);padding:0 16px 10px;margin:0}
+.radios{list-style:none;margin:0;padding:0 8px}
+.radio{appearance:none;border:0;background:none;color:inherit;font:inherit;width:100%;display:flex;align-items:center;gap:12px;padding:12px 10px;border-radius:14px;cursor:pointer;text-align:left}
+.radio:hover{background:var(--screen-2)}
+.rd{width:20px;height:20px;border-radius:50%;border:2px solid var(--screen-muted);display:grid;place-items:center;flex:none}
+.radio.on .rd{border-color:var(--user)}
+.radio.on .rd::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--user)}
+.radio small{display:block;color:var(--screen-muted);font-size:11.5px}
+.pw{flex:1;display:flex;flex-direction:column;gap:12px;padding:0 18px 12px;position:relative}
+.pw-x{align-self:flex-start;font-size:22px;width:34px;height:34px;color:var(--screen-muted)}
+.pw-hero{background:var(--ad-soft);border-radius:22px;padding:18px;display:grid;gap:6px}
+.pw-hero .k2{font:600 10.5px/1 var(--f-mono);letter-spacing:.1em}
+.pw-hero h4{font:700 22px/1.1 var(--f-display);margin:0}
+.pw-hero span:last-child{font-size:12.5px;color:var(--screen-muted)}
+.pw ul{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:13.5px}
+.pw li{display:flex;gap:8px;align-items:flex-start}
+.pw li::before{content:"✓";color:var(--user);font-weight:700}
+.pw-plan{border:2px solid var(--user);border-radius:16px;padding:12px 14px;display:grid;gap:2px;margin-top:auto}
+.pw-plan b{font-size:15px}
+.pw-plan span{font-size:12.5px;color:var(--screen-muted)}
+.pw-fine{text-align:center;font-size:11px;color:var(--screen-muted);margin:0}
+.toast{position:absolute;left:50%;bottom:96px;transform:translateX(-50%);background:var(--screen-ink);color:var(--screen);font:500 12.5px/1.35 var(--f-ui);padding:9px 14px;border-radius:12px;z-index:20;width:max-content;max-width:85%;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+
+/* meters */
+.meters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:300px;max-width:100%}
+.meter{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 12px;transition:background .3s}
+.meter b{display:block;font:600 22px/1.1 var(--f-body)}
+.meter span{font-size:12px;color:var(--ink-2);line-height:1.3;display:block;margin-top:3px}
+.meter.hot{background:var(--ad-soft);border-color:var(--ad)}
+.meters-cap{font-size:12px;color:var(--muted);width:300px;max-width:100%;margin:0}
+
+/* panel */
+.panel{min-width:0;display:flex;flex-direction:column;gap:16px}
+.steps{display:flex;gap:4px}
+.steps button{flex:1;height:8px;border:0;border-radius:4px;background:var(--line);cursor:pointer;padding:0}
+.steps button.done{background:var(--ink-2)}
+.steps button.cur{background:var(--ink)}
+.steps button:hover{background:var(--muted)}
+.step-no{font:500 12px/1 var(--f-mono);color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin:0}
+.step-title{font:500 clamp(20px,2.6vw,26px)/1.2 var(--f-display);letter-spacing:-.01em;margin:0}
+.step-lead{margin:0;font-size:16.5px;max-width:62ch}
+.hint{margin:0;font-size:14px;color:var(--ink-2);display:flex;gap:9px;align-items:baseline}
+.hint::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--user);flex:none;transform:translateY(-1px)}
+.cmp{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:14px;color:var(--ink-2)}
+.cmp button{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 12px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:8px 12px;border-radius:8px;cursor:pointer}
+.cmp button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.note{border-radius:12px;padding:12px 16px}
+.note p{margin:0}
+.note .k{color:var(--ink);display:flex;align-items:center;gap:8px}
+.note .k::before{content:"";width:9px;height:9px;border-radius:2px;flex:none}
+.money{background:var(--ad-soft)}
+.money .k::before{background:var(--ad)}
+.policy{background:var(--risk-soft)}
+.policy .k::before{background:var(--risk)}
+.facts{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.facts li{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.5}
+.facts .tag{margin-top:1px}
+.quote{margin:0;padding:14px 16px;border:1px solid var(--line);border-radius:12px;display:grid;gap:8px;background:var(--paper)}
+.quote blockquote{margin:0;font-size:14.5px;line-height:1.5}
+.quote .tr{margin:0;font-size:14.5px;color:var(--ink-2)}
+.quote figcaption{font:500 12px/1.4 var(--f-mono);color:var(--muted)}
+.snav{display:flex;gap:8px;flex-wrap:wrap}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 14px/1 var(--f-body);padding:11px 16px;border-radius:10px;cursor:pointer}
+.btn:hover{border-color:var(--ink-2)}
+.btn.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn[disabled]{opacity:.45;cursor:default}
+
+/* ── report blocks ── */
+.block{padding-block:clamp(40px,6vw,72px);border-bottom:1px solid var(--line)}
+.block-head{display:grid;gap:10px;margin-bottom:28px;max-width:70ch}
+.block-head p{margin:0;color:var(--ink-2)}
+.apps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,430px),1fr));gap:20px}
+.appcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(18px,3vw,24px);display:grid;gap:18px;min-width:0;align-content:start}
+.ac-head{display:flex;gap:14px;align-items:center}
+.ac-head .app-icon{width:52px;height:52px}
+.ac-name{font:600 18px/1.25 var(--f-body);margin:4px 0 0}
+.ac-pitch{margin:0;color:var(--ink-2);font-size:15px}
+.kv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px;margin:0}
+.kv div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--grid);font-size:14px}
+.kv dt{color:var(--ink-2)}
+.kv dd{margin:0;font-weight:500;text-align:right;font-variant-numeric:tabular-nums}
+@media (max-width:520px){.kv{grid-template-columns:minmax(0,1fr)}}
+.hist{display:grid;gap:6px}
+.hist-title{font-size:14px;font-weight:600;margin:0 0 4px}
+.hrow{display:grid;grid-template-columns:2.6em minmax(0,1fr) 4em;gap:10px;align-items:center;font-size:13px}
+.hrow .lab{color:var(--ink-2);font-variant-numeric:tabular-nums}
+.hrow .val{text-align:right;font-variant-numeric:tabular-nums}
+.htrack{height:10px;position:relative}
+.htrack i{position:absolute;left:0;top:0;bottom:0;background:var(--bar-em);border-radius:0 4px 4px 0;min-width:2px}
+.ac-link{justify-self:start;font-weight:500}
+.themes{display:grid;gap:36px}
+.theme h3{font:600 19px/1.3 var(--f-body);margin:0 0 4px}
+.theme > p{margin:0 0 14px;color:var(--ink-2);max-width:70ch}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:10px;align-content:start;min-width:0;margin:0}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font:500 12px/1.3 var(--f-mono);color:var(--muted)}
+.chip{font:600 11px/1 var(--f-mono);padding:4px 7px;border-radius:5px;background:var(--ink);color:var(--paper)}
+.chip.dev{background:var(--ad);color:var(--ad-ink)}
+.stars{color:var(--ink);letter-spacing:1px}
+.qcard blockquote{margin:0;font-size:14.5px;line-height:1.5}
+.qcard .tr{margin:0;font-size:14.5px;color:var(--ink-2)}
+.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:20px}
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(16px,3vw,22px);min-width:0;position:relative;margin:0}
+.chart h3{font:600 16px/1.35 var(--f-body);margin:0}
+.chart .sub{margin:4px 0 16px;font-size:13.5px;color:var(--ink-2)}
+.brow{display:grid;grid-template-columns:minmax(0,9.5em) minmax(0,1fr) 3.6em;gap:10px;align-items:center;font-size:13.5px;padding:4px 6px;margin-inline:-6px;border-radius:6px;cursor:default}
+.brow:hover,.brow:focus-visible{background:var(--paper)}
+.brow .lab{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink-2)}
+.brow.em .lab{color:var(--ink);font-weight:600}
+.bplot{height:12px;position:relative;background-image:linear-gradient(to right,var(--grid) 1px,transparent 1px);background-size:25% 100%;box-shadow:inset -1px 0 0 var(--grid)}
+.bplot i{position:absolute;left:0;top:1px;bottom:1px;background:var(--bar);border-radius:0 4px 4px 0;min-width:2px}
+.brow.em .bplot i{background:var(--bar-em)}
+.brow .val{text-align:right;font-variant-numeric:tabular-nums}
+.brow.em .val{font-weight:600}
+.axis{display:grid;grid-template-columns:minmax(0,9.5em) minmax(0,1fr) 3.6em;gap:10px;font:500 11px/1 var(--f-mono);color:var(--muted);margin-top:8px}
+.ticks{position:relative;height:12px}
+.ticks span{position:absolute;top:0;transform:translateX(-50%);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ticks span:first-child{transform:none}
+.ticks span:last-child{transform:translateX(-100%)}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);font-size:12.5px;line-height:1.45;padding:8px 10px;border-radius:8px;max-width:260px;z-index:3}
+details.tbl{margin-top:18px}
+details.tbl summary{cursor:pointer;font-weight:500;padding:6px 0}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--surface);margin-top:10px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--grid);vertical-align:top}
+th{font:500 11px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+td.num,th.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+tr.em td{font-weight:600}
+.verdict{background:var(--surface);border:1.5px solid var(--ink);border-radius:18px;padding:clamp(18px,3vw,26px);display:grid;gap:10px;margin-top:28px;max-width:80ch}
+.verdict h3{font:500 clamp(19px,2.4vw,23px)/1.25 var(--f-display);margin:0}
+.verdict p{margin:0}
+.odd{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:28px;margin-top:36px}
+@media (max-width:900px){.odd{grid-template-columns:minmax(0,1fr)}}
+.odd h3{font:600 18px/1.3 var(--f-body);margin:0 0 6px}
+.odd > div > p{margin:0 0 12px;color:var(--ink-2)}
+.odd td.txt{min-width:16em}
+.plain{margin:0;padding-left:1.1em;display:grid;gap:10px}
+.tl{list-style:none;margin:0;padding:0;max-width:780px}
+.tl li{display:grid;grid-template-columns:6.8em 22px minmax(0,1fr);gap:12px;align-items:start;padding-bottom:20px;position:relative}
+.tl li::before{content:"";position:absolute;left:calc(6.8em + 12px + 10px);top:8px;bottom:-8px;width:2px;background:var(--line)}
+.tl li:last-child::before{display:none}
+.tl time{font:500 13px/1.6 var(--f-mono);color:var(--ink-2);text-align:right;font-variant-numeric:tabular-nums}
+.tl .dot{width:14px;height:14px;border-radius:50%;margin:4px auto 0;position:relative;z-index:1}
+.tl .ev .dot{background:var(--ink)}
+.tl .rv .dot{background:var(--paper);border:2px solid var(--ink-2)}
+.tl p{margin:0}
+.tl .src{display:block;font-size:13px;color:var(--muted)}
+.tl-legend{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:13.5px;color:var(--ink-2);margin:0 0 18px;padding:0;list-style:none}
+.tl-legend li{display:flex;gap:8px;align-items:center}
+.tl-legend i{width:12px;height:12px;border-radius:50%}
+.tl-legend .e{background:var(--ink)}
+.tl-legend .r{border:2px solid var(--ink-2)}
+@media (max-width:520px){.tl li{grid-template-columns:5.8em 18px minmax(0,1fr);gap:10px}.tl li::before{left:calc(5.8em + 10px + 8px)}}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px;margin-top:30px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:8px;align-content:start}
+.card h3{font:600 16.5px/1.3 var(--f-body);margin:0;display:flex;gap:9px;align-items:center}
+.card p{margin:0;font-size:14.5px;color:var(--ink-2)}
+.model{list-style:none;counter-reset:m;margin:0;padding:0;max-width:840px}
+.model > li{counter-increment:m;display:grid;grid-template-columns:2.6em minmax(0,1fr);gap:14px;padding:18px 0;border-top:1px solid var(--line)}
+.model > li::before{content:counter(m,decimal-leading-zero);font:500 14px/1.65 var(--f-mono);color:var(--muted)}
+.model h3{font:600 17px/1.35 var(--f-body);margin:0 0 4px}
+.model p{margin:0;color:var(--ink-2)}
+.sdk-group{display:grid;gap:6px;margin-top:12px}
+.sdk-group b{font-size:13.5px}
+.sdk{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.sdk li{font:500 12px/1 var(--f-mono);padding:6px 8px;border-radius:6px;border:1px solid var(--line);background:var(--surface)}
+.rules{display:grid;gap:12px;margin-top:30px;max-width:840px}
+.rules > h3{font:600 18px/1.3 var(--f-body);margin:0}
+.rule{background:var(--risk-soft);border-radius:14px;padding:16px 18px;display:grid;gap:6px;margin:0}
+.rule blockquote{margin:0;font-size:14.5px}
+.rule figcaption{font-size:14.5px;color:var(--ink-2)}
+.us{display:grid;gap:12px;max-width:840px;margin:0;padding:0;list-style:none}
+.us li{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.us b{display:block;margin-bottom:4px}
+.sources{columns:2 330px;column-gap:40px;margin:0;padding:0;list-style:none}
+.sources li{break-inside:avoid;padding:10px 0;border-bottom:1px solid var(--grid);font-size:14.5px}
+.sources small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px}
+.nt{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:clamp(16px,3vw,22px);display:grid;gap:12px;align-content:start;min-width:0}
+.nt .k{margin:0}
+.nt h3{font:600 17.5px/1.3 var(--f-body);margin:0}
+.nt-row{display:flex;gap:10px;align-items:flex-start}
+.nt-row p{margin:0;font-size:15px}
+.nt-row .tag{margin-top:1px}
+.nt-check{margin:0;font-size:13.5px;color:var(--ink-2);border-top:1px dashed var(--line);padding-top:10px}
+footer{padding-block:28px 56px;color:var(--muted);font-size:13px}
+footer p{margin:0;max-width:80ch}
+</style>
+
+<div class="topbar">
+  <div class="wrap topbar-in">
+    <div class="bar-left"><span class="brand">VELDAN</span><span class="bar-k" data-i18n="bar.k">Конкурентний аналіз · SMS-замінники</span></div>
+    <div class="langs" role="group" data-i18n-aria="langs" aria-label="Мова">
+      <button type="button" data-lang="uk" aria-pressed="true" lang="uk" title="Українська">УКР</button>
+      <button type="button" data-lang="ru" aria-pressed="false" lang="ru" title="Русский">РУС</button>
+      <button type="button" data-lang="en" aria-pressed="false" lang="en" title="English">ENG</button>
+    </div>
+  </div>
+</div>
+
+<header class="top wrap">
+  <p class="k" data-i18n="hdr.eyebrow">Google Play · 29.09.2026 · Підготував VELDAN</p>
+  <h1 data-i18n="hdr.h1">Як заробляють SMS-замінники</h1>
+  <p class="lede" data-i18n="hdr.lede">Два застосунки, які люди ставлять замість Samsung Messages і Verizon Message+. Нижче симуляція першої хвилини після встановлення, цифри з Google Play, відгуки користувачів і розбір того, звідки беруться гроші.</p>
+  <ul class="legend">
+    <li><span class="tag ok">✔</span><span data-i18n="hdr.ok">Підтверджено: картка Play, відгуки, Exodus, офіційні сторінки</span></li>
+    <li><span class="tag guess">◌</span><span data-i18n="hdr.guess">Припущення або узагальнення</span></li>
+  </ul>
+  <nav class="toc" data-i18n-aria="toc" aria-label="Розділи">
+    <a href="#demo" data-i18n="toc.demo">Симуляція</a><a href="#apps" data-i18n="toc.apps">Два застосунки</a><a href="#notes" data-i18n="toc.notes">Тонкощі</a><a href="#reviews" data-i18n="toc.reviews">Відгуки</a><a href="#rating" data-i18n="toc.rating">Чи накручений рейтинг</a><a href="#why" data-i18n="toc.why">Чому їх ставлять</a><a href="#model" data-i18n="toc.model">Монетизація</a><a href="#us" data-i18n="toc.us">Висновки для нас</a><a href="#sources" data-i18n="toc.src">Джерела</a>
+  </nav>
+</header>
+
+<section class="stage" id="demo" aria-labelledby="demo-h">
+  <div class="wrap">
+    <div class="stage-head">
+      <div>
+        <h2 id="demo-h" data-i18n="demo.h">Перша хвилина після встановлення</h2>
+        <p data-i18n="demo.p">Натискайте кнопки на екрані телефона або «Далі». Праворуч видно, що відбувається на кожному кроці і де тут гроші.</p>
+      </div>
+      <div class="tabs" role="tablist" data-i18n-aria="tabs" aria-label="Застосунок">
+        <button class="tab" role="tab" id="tab-a" data-app="a" aria-controls="demo-grid"><b>App A</b> · Messenger SMS</button>
+        <button class="tab" role="tab" id="tab-b" data-app="b" aria-controls="demo-grid"><b>App B</b> · Messages: Home App</button>
+      </div>
+    </div>
+    <div class="stage-grid" id="demo-grid" role="tabpanel">
+      <div class="device">
+        <div class="phone"><div class="screen" id="screen" role="region" aria-label="Симуляція"></div></div>
+        <p class="sim-note" data-i18n="demo.sim">Симуляція. Інтерфейс спрощено, реклама й імена в чатах вигадані.</p>
+        <div class="meters" id="meters" aria-live="polite"></div>
+        <p class="meters-cap" data-i18n="demo.cap">Лічильники рахують тільки цю симуляцію. 10 секунд реклами взято з відгуку, 5 секунд умовні.</p>
+      </div>
+      <div class="panel" id="panel" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="apps" aria-labelledby="apps-h">
+  <div class="wrap">
+    <div class="block-head">
+      <h2 id="apps-h" data-i18n="apps.h">Два застосунки</h2>
+      <p data-i18n="apps.p">Дані з карток Google Play станом на 29.09.2026. Кількість рекламних SDK за звітами Exodus Privacy.</p>
+    </div>
+    <div class="apps">
+      <article class="appcard">
+        <div class="ac-head">
+          <span class="app-icon a" data-icon="a"></span>
+          <div><p class="k">App A · com.sms.messenger</p><h3 class="ac-name">Messenger SMS - Text messages</h3></div>
+        </div>
+        <p class="ac-pitch" data-i18n="a.pitch">Месенджер із замком на чати, темами для кожного чату й повідомленнями через інтернет. Великий і старий гравець: у Play з 2018 року.</p>
+        <dl class="kv">
+          <div><dt data-i18n="kv.dev">Розробник</dt><dd>Messenger Messages</dd></div>
+          <div><dt data-i18n="kv.inst">Завантажень</dt><dd data-i18n="a.inst">5 млн+ <small>(≈7,1 млн)</small></dd></div>
+          <div><dt data-i18n="kv.rating">Оцінка</dt><dd data-i18n="a.rating">3,96</dd></div>
+          <div><dt data-i18n="kv.ratings">Оцінок</dt><dd data-i18n="a.ratings">48 276</dd></div>
+          <div><dt data-i18n="kv.reviews">Відгуків з текстом</dt><dd data-i18n="a.reviews">1 215</dd></div>
+          <div><dt data-i18n="kv.since">У Play з</dt><dd data-i18n="a.since">18.04.2018</dd></div>
+          <div><dt data-i18n="kv.upd">Оновлено</dt><dd data-i18n="a.upd">02.09.2026</dd></div>
+          <div><dt data-i18n="kv.ads">Реклама</dt><dd data-i18n="yes">є</dd></div>
+          <div><dt data-i18n="kv.iap">Покупки</dt><dd>$2.49–$32.99</dd></div>
+          <div><dt data-i18n="kv.sdk">Рекламних SDK</dt><dd>10</dd></div>
+        </dl>
+        <div class="hist" data-hist="a"></div>
+        <a class="ac-link" href="https://play.google.com/store/apps/details?id=com.sms.messenger&amp;hl=en_US" target="_blank" rel="noopener" data-i18n="a.link">Відкрити App A в Google Play ↗</a>
+      </article>
+      <article class="appcard">
+        <div class="ac-head">
+          <span class="app-icon b" data-icon="b"></span>
+          <div><p class="k">App B · com.messages.chating.textmessenger.sms</p><h3 class="ac-name">Messages: SMS Texting Home App</h3></div>
+        </div>
+        <p class="ac-pitch" data-i18n="b.pitch">Месенджер і головний екран телефона в одному застосунку. Молодший і менший: у Play з березня 2024 року.</p>
+        <dl class="kv">
+          <div><dt data-i18n="kv.dev">Розробник</dt><dd>Kamrej Apps</dd></div>
+          <div><dt data-i18n="kv.inst">Завантажень</dt><dd data-i18n="b.inst">100 тис.+ <small>(≈287 тис.)</small></dd></div>
+          <div><dt data-i18n="kv.rating">Оцінка</dt><dd data-i18n="b.rating">3,92</dd></div>
+          <div><dt data-i18n="kv.ratings">Оцінок</dt><dd data-i18n="b.ratings">1 898</dd></div>
+          <div><dt data-i18n="kv.reviews">Відгуків з текстом</dt><dd>25</dd></div>
+          <div><dt data-i18n="kv.since">У Play з</dt><dd data-i18n="b.since">13.03.2024</dd></div>
+          <div><dt data-i18n="kv.upd">Оновлено</dt><dd data-i18n="b.upd">09.09.2026</dd></div>
+          <div><dt data-i18n="kv.ads">Реклама</dt><dd data-i18n="yes">є</dd></div>
+          <div><dt data-i18n="kv.iap">Покупки</dt><dd>$6.99–$25.99</dd></div>
+          <div><dt data-i18n="kv.sdk">Рекламних SDK</dt><dd>8</dd></div>
+        </dl>
+        <div class="hist" data-hist="b"></div>
+        <a class="ac-link" href="https://play.google.com/store/apps/details?id=com.messages.chating.textmessenger.sms&amp;hl=en_US" target="_blank" rel="noopener" data-i18n="b.link">Відкрити App B в Google Play ↗</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="notes" aria-labelledby="notes-h">
+  <div class="wrap">
+    <div class="block-head">
+      <h2 id="notes-h" data-i18n="n.h">Тонкощі, на які варто звернути увагу</h2>
+      <p data-i18n="n.p">Деталі, які легко пропустити. У кожному пункті спершу факт, потім що він може означати. Друге лишається гіпотезою, поки її не перевірили.</p>
+    </div>
+    <div class="notes">
+      <article class="nt">
+        <p class="k" data-i18n="n1.k">App B · сумісність пристроїв</p>
+        <h3 data-i18n="n1.h">На Xiaomi застосунок не ставиться</h3>
+        <div class="nt-row"><span class="tag ok">✔</span><p data-i18n="n1.f">Play пише «Ваш пристрій не сумісний із цією версією» на двох різних моделях: Redmi Note 14 (Android 16, HyperOS 3) і Redmi 10C. При цьому в Україні застосунок доступний, а вимога до системи лише Android 10 і новіший.</p></div>
+        <div class="nt-row"><span class="tag guess">◌</span><p data-i18n="n1.g">Найімовірніше, розробник вручну виключив пристрої Xiaomi в каталозі пристроїв Play Console. Прошивки MIUI/HyperOS за замовчуванням обмежують фонову роботу, автозапуск і вікна поверх інших застосунків. Саме на цьому тримаються лаунчер і вікно після дзвінка, тож на Xiaomi схема працювала б гірше й збирала б одиниці.</p></div>
+        <p class="nt-check" data-i18n="n1.c">Як перевірити: відкрити картку на Samsung або Pixel. Якщо там кнопка «Встановити», виключено саме бренд Xiaomi.</p>
+      </article>
+      <article class="nt">
+        <p class="k" data-i18n="n2.k">App A і App B · аудиторія</p>
+        <h3 data-i18n="n2.h">Кого ловлять: власників Samsung і абонентів Verizon у США</h3>
+        <div class="nt-row"><span class="tag ok">✔</span><p data-i18n="n2.f">У відгуках App A люди пишуть, що прийшли після Samsung Messages, у відгуках App B — після Verizon Messenger. Обидва месенджери закрилися саме в США.</p></div>
+        <div class="nt-row"><span class="tag guess">◌</span><p data-i18n="n2.g">Разом із виключенням Xiaomi це схоже на свідомий вибір: люди, яких змусили шукати заміну, і пристрої, де застосунку дозволено більше. Картина складеться, якщо підтвердиться, що на Samsung App B ставиться.</p></div>
+        <p class="nt-check" data-i18n="n2.c">Як перевірити: сумісність на Samsung Galaxy і поведінка лаунчера та вікна після дзвінка на тестовому Samsung.</p>
+      </article>
+      <article class="nt">
+        <p class="k" data-i18n="n3.k">App B · оцінка</p>
+        <h3 data-i18n="n3.h">Оцінка залежить від країни</h3>
+        <div class="nt-row"><span class="tag ok">✔</span><p data-i18n="n3.f">29.09.2026 в українському Google Play в App B оцінка 4,4★ і близько 1 тис. відгуків, в американському — 3,92★ і 1 898 оцінок.</p></div>
+        <div class="nt-row"><span class="tag guess">◌</span><p data-i18n="n3.g">Play рахує оцінки окремо для кожної країни. Людина в Україні бачить кращу репутацію, ніж американець, який скаржиться на рекламу. Цифри цього звіту взято з американського Play.</p></div>
+        <p class="nt-check" data-i18n="n3.c">Для бенчмарків: завжди записувати, з якої країни взято оцінку.</p>
+      </article>
+      <article class="nt">
+        <p class="k" data-i18n="n4.k">App B · загальна гіпотеза</p>
+        <h3 data-i18n="n4.h">Заробіток на присутності поза месенджером</h3>
+        <div class="nt-row"><span class="tag ok">✔</span><p data-i18n="n4.f">Застосунок просить роль головного екрана, показує вікно після кожного дзвінка, і за відгуками ставить рекламу «everywhere».</p></div>
+        <div class="nt-row"><span class="tag guess">◌</span><p data-i18n="n4.g">Схоже, модель App B розрахована на те, щоб бути на екрані якомога частіше, а не лише коли людина пише SMS. Виключення прошивок, які таке обмежують, вписується в цю картину. Доказ поки лише непрямий.</p></div>
+        <p class="nt-check" data-i18n="n4.c">Як перевірити: день користування на тестовому Samsung, рахуючи, скільки разів і де застосунок з’являється на екрані.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="reviews" aria-labelledby="reviews-h">
+  <div class="wrap">
+    <div class="block-head">
+      <h2 id="reviews-h" data-i18n="rev.h">Що пишуть у відгуках</h2>
+      <p data-i18n="rev.p">Цитати з перших 20 відгуків, які Google Play показує на сторінці кожного застосунку. Оригінал англійською, під ним переклад. Імена авторів прибрано.</p>
+    </div>
+    <div class="themes" id="themes"></div>
+  </div>
+</section>
+
+<section class="block" id="rating" aria-labelledby="rating-h">
+  <div class="wrap">
+    <div class="block-head">
+      <h2 id="rating-h" data-i18n="rat.h">Чи накручений рейтинг?</h2>
+      <p data-i18n="rat.p">Щоб цифри щось означали, ми порівняли App A і App B із сімома відомими SMS-застосунками. Для всіх однаково порахували дві речі: частку п’ятірок серед усіх оцінок і частку негативних відгуків (1–2★) серед 20, які Play показує першими.</p>
+    </div>
+    <div class="charts">
+      <figure class="chart" id="ch1">
+        <h3 data-i18n="ch1.h">П’ятірки серед усіх оцінок</h3>
+        <p class="sub" data-i18n="ch1.sub">Частка 5★ у розподілі оцінок, %. Виділені смуги: App A і App B.</p>
+        <div class="bars"></div>
+        <div class="tip" hidden></div>
+      </figure>
+      <figure class="chart" id="ch2">
+        <h3 data-i18n="ch2.h">Негативні серед 20 перших відгуків</h3>
+        <p class="sub" data-i18n="ch2.sub">Частка відгуків на 1–2★, %. Порядок рядків той самий.</p>
+        <div class="bars"></div>
+        <div class="tip" hidden></div>
+      </figure>
+    </div>
+    <details class="tbl">
+      <summary data-i18n="tbl.sum">Усі цифри таблицею</summary>
+      <div class="tablewrap"><table id="ctable"></table></div>
+    </details>
+
+    <div class="verdict">
+      <p class="k" data-i18n="ver.k">Висновок</p>
+      <h3 data-i18n="ver.h">Цифри накрутки не показують</h3>
+      <p data-i18n="ver.p1">Частка п’ятірок у App A (56,6&nbsp;%) і App B (59,9&nbsp;%) майже така сама, як у Textra (58,5&nbsp;%) і Chomp SMS (61,6&nbsp;%), і помітно нижча, ніж у Google Messages (79,6&nbsp;%).</p>
+      <p data-i18n="ver.p2">Розрив між зірками й текстами теж звичайний. У Google Messages, Textra і Pulse SMS негативні 15 з 20 перших відгуків, хоча п’ятірок там від 49 до 80&nbsp;%. Людям, яким щось не подобається, частіше хочеться написати текст.</p>
+      <p data-i18n="ver.p3">Довести купівлю відгуків із публічних даних неможливо, це бачить лише Google. Чесне формулювання для звіту: <strong>оцінка близько 3,9 не відображає того, на що люди скаржаться в текстах.</strong> Нижче дві речі, які справді виділяються.</p>
+    </div>
+
+    <div class="odd">
+      <div>
+        <h3 data-i18n="oddb.h">App B: текстові п’ятірки</h3>
+        <p data-i18n="oddb.p1">Усього 25 відгуків з текстом на 1 898 оцінок. 11 з 20 перших відгуків п’ятірки, здебільшого короткі й загальні, кілька ледве зв’язні. Перша з’явилася через 13 днів після виходу, ще у версії 1.0.0.0. Три написано з 9 по 15 травня 2024 року.</p>
+        <div class="tablewrap"><table id="b5"></table></div>
+        <p style="margin-top:12px" data-i18n="oddb.p2">Але й негативні відгуки в App B короткі: «Too many ads» трапляється тричі. Тож сама довжина нічого не доводить, а 11 відгуків на 1 898 оцінок замало, щоб судити про весь рейтинг.</p>
+      </div>
+      <div>
+        <h3 data-i18n="odda.h">App A: робота з оцінками</h3>
+        <ul class="plain">
+          <li data-i18n="odda.1">У 7 з 19 відповідей розробник просить поставити 5 зірок. Шість із цих прохань написано під відгуками на 2–4★.</li>
+          <li data-i18n="odda.2">У контрольній групі так не роблять. Chomp SMS і Textra лише дякують за вже поставлені п’ятірки.</li>
+          <li data-i18n="odda.3">П’ятірка, яку найчастіше позначали корисною (1 197 разів), насправді скарга. Людина поставила 5★, бо заплатила близько $30 на рік, щоб прибрати рекламу.</li>
+          <li data-i18n="odda.4">Одна з трьох четвірок узагалі не про цей застосунок: у ній хвалять години роботи магазину. Розробник відповів і на неї з проханням поставити 5★.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="why" aria-labelledby="why-h">
+  <div class="wrap">
+    <div class="block-head">
+      <h2 id="why-h" data-i18n="why.h">Чому їх узагалі ставлять</h2>
+      <p data-i18n="why.p">Частина людей приходить сюди вимушено. Verizon і Samsung закрили свої месенджери, і довелося шукати заміну. Це видно з дат: відгуки йдуть слідом за закриттям.</p>
+    </div>
+    <ul class="tl-legend"><li><i class="e"></i><span data-i18n="tl.e">Подія</span></li><li><i class="r"></i><span data-i18n="tl.r">Відгук у Google Play</span></li></ul>
+    <ol class="tl">
+      <li class="rv"><time datetime="2024-10-04" data-i18n="tl1.t">04.10.2024</time><span class="dot"></span><p data-i18n="tl1.p">App B, 3★: «I'm using this because Verizon Messenger is going away».<span class="src">«Я користуюся цим, бо Verizon Messenger закривається».</span></p></li>
+      <li class="ev"><time datetime="2024-12" data-i18n="tl2.t">12.2024</time><span class="dot"></span><p data-i18n="tl2.p"><strong>Verizon вимикає Message+.</strong> Радить перейти на Google Messages на Android або Apple Messages на iPhone.<span class="src">Джерело: Verizon</span></p></li>
+      <li class="rv"><time datetime="2026-04-08" data-i18n="tl3.t">08.04.2026</time><span class="dot"></span><p data-i18n="tl3.p">App A, 1★: «can't delete ads. why are you discontinuing Samsung».<span class="src">Людина пише розробнику так, ніби він і є Samsung.</span></p></li>
+      <li class="ev"><time datetime="2026-07-06" data-i18n="tl4.t">06.07.2026</time><span class="dot"></span><p data-i18n="tl4.p"><strong>Samsung Messages перестає працювати</strong> на Galaxy з Android 12 і новіше у США. Samsung радить Google Messages.<span class="src">Джерела: Samsung, Droid Life</span></p></li>
+      <li class="rv"><time datetime="2026-07-08" data-i18n="tl5.t">08.07.2026</time><span class="dot"></span><p data-i18n="tl5.p">App A, 2★: «I did not like being forced to change».<span class="src">«Мені не сподобалося, що мене змусили перейти».</span></p></li>
+      <li class="rv"><time datetime="2026-08-16" data-i18n="tl6.t">16.08.2026</time><span class="dot"></span><p data-i18n="tl6.p">App A, 1★: «Samsung stopped supporting their text messenger, and unfortunately, I selected this as a replacement».<span class="src">«Samsung перестав підтримувати свій месенджер, і я, на жаль, вибрав на заміну оцей».</span></p></li>
+    </ol>
+    <div class="cards">
+      <div class="card"><h3><span class="tag ok">✔</span><span data-i18n="c1.h">Вимушений перехід</span></h3><p data-i18n="c1.p">Verizon у 2024 році і Samsung у 2026-му закрили свої застосунки. Обидві компанії радили Google Messages, але частина людей ставить те, що знайшла в пошуку.</p></div>
+      <div class="card"><h3><span class="tag ok">✔</span><span data-i18n="c2.h">Недовіра до Google</span></h3><p data-i18n="c2.p">«I don't like Google snooping in everything». Для частини людей Google Messages не варіант, і вони шукають альтернативу.</p></div>
+      <div class="card"><h3><span class="tag ok">✔</span><span data-i18n="c3.h">Персоналізація</span></h3><p data-i18n="c3.p">Свій колір чи шпалери для кожного чату, окрема вкладка для спаму. Це найчастіше хвалять у App A, навіть ті, кому набридла реклама.</p></div>
+      <div class="card"><h3><span class="tag ok">✔</span><span data-i18n="c4.h">Замок на чати</span></h3><p data-i18n="c4.p">В описі App A є замок на чати PIN-кодом або емодзі, сховище і приховані повідомлення. Схоже, «AppLocker» з брифу саме він. Власного екрана блокування телефону немає ні в описах, ні у відгуках.</p></div>
+      <div class="card"><h3><span class="tag guess">◌</span><span data-i18n="c5.h">Назва як пошуковий запит</span></h3><p data-i18n="c5.p">«Messenger SMS - Text messages» і «Messages: SMS Texting Home App» майже цілком складаються зі слів, які люди вводять у пошук. Відгук «why are you discontinuing Samsung» показує, що дехто вважає такий застосунок офіційною заміною.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="model" aria-labelledby="model-h">
+  <div class="wrap">
+    <div class="block-head">
+      <h2 id="model-h" data-i18n="model.h">Як влаштована монетизація</h2>
+      <p data-i18n="model.p">Вісім пунктів у порядку, в якому людина проходить через них.</p>
+    </div>
+    <ol class="model">
+      <li><div><h3 data-i18n="m1.h">Вхід: безкоштовно і з пошуковою назвою</h3><p data-i18n="m1.p">Люди шукають заміну закритим месенджерам. Застосунки безкоштовні, а назви збігаються з тим, що вводять у пошук.</p></div></li>
+      <li><div><h3 data-i18n="m2.h">Роль за замовчуванням</h3><p data-i18n="m2.p">App A отримує всі SMS. App B отримує ще й головний екран. Кожна роль додає моменти, коли людина бачить застосунок.</p></div></li>
+      <li><div><h3 data-i18n="m3.h">Реклама в момент дії</h3><p data-i18n="m3.p">Реклама на весь екран стоїть там, де людина щось робить: відкриває чат (App A, 10 секунд), повертається до списку (App A), надсилає повідомлення (App B).</p></div></li>
+      <li><div><h3 data-i18n="m4.h">Нові поверхні (App B)</h3><p data-i18n="m4.p">Власний головний екран з рекламою і вікно після кожного дзвінка. Застосунок видно навіть тоді, коли людина не пише SMS.</p></div></li>
+      <li><div><h3 data-i18n="m5.h">Платний вихід</h3><p data-i18n="m5.p">App A продає Premium без реклами: 3 дні безкоштовно, далі близько $33 на рік. У App B покупки від $6.99 до $25.99. Що саме там продають, з публічних даних не видно.</p></div></li>
+      <li><div><h3 data-i18n="m6.h">Аукціон рекламних мереж</h3><p data-i18n="m6.p">У App A вбудовано 10 рекламних SDK, у App B 8. Коли за показ змагається багато мереж, кожен показ зазвичай продається дорожче. Exodus знаходить код бібліотек у застосунку, але не доводить, що кожна з них справді показує рекламу.</p>
+        <div class="sdk-group"><b data-i18n="m6.a">App A · звіт від 20.08.2026</b><ul class="sdk"><li>Google AdMob</li><li>AppLovin MAX</li><li>ironSource</li><li>Unity Ads</li><li>Mintegral</li><li>Pangle</li><li>InMobi</li><li>Chartboost</li><li>PubNative</li><li>Facebook Ads</li></ul></div>
+        <div class="sdk-group"><b data-i18n="m6.b">App B · звіт від 19.04.2026</b><ul class="sdk"><li>Google AdMob</li><li>AppLovin MAX</li><li>ironSource</li><li>Mintegral</li><li>Pangle</li><li>InMobi</li><li>Amazon Advertising</li><li>Facebook Ads</li></ul></div>
+      </div></li>
+      <li><div><h3 data-i18n="m7.h">Спершу аудиторія, потім реклама (App A)</h3><p data-i18n="m7.p">У 2019 році пишуть «there are no ads». У січні 2022-го застосунок ще хвалять за те, що в ньому немає реклами. У грудні 2022-го вже просять її прибрати, з січня 2023-го скаржаться на рекламу на весь екран. Застосунок набрав аудиторію без реклами і ввімкнув її пізніше.</p></div></li>
+      <li><div><h3 data-i18n="m8.h">Робота з відгуками (App A)</h3><p data-i18n="m8.p">Розробник відповів на 19 з 20 перших відгуків. Шаблон один: безкоштовний застосунок живе з реклами, купіть Premium. У 7 відповідях просить поставити 5 зірок.</p></div></li>
+    </ol>
+
+    <div class="rules">
+      <h3 data-i18n="rules.h">Де межа за правилами Google Play</h3>
+      <figure class="rule">
+        <blockquote lang="en">«Ads may only be displayed inside of the app serving them»</blockquote>
+        <figcaption data-i18n="r1">Рекламу можна показувати лише всередині застосунку, який її показує. App B з власним головним екраном стоїть на межі: для лаунчера головний екран формально і є застосунком.</figcaption>
+      </figure>
+      <figure class="rule">
+        <blockquote lang="en">«Full screen interstitial ads of all formats (video, GIF, static, etc.) that show unexpectedly, typically when the user has chosen to do something else, are not allowed.»</blockquote>
+        <figcaption data-i18n="r2">Реклама на весь екран, коли людина збиралася зробити щось інше, заборонена. Реклама на відкриття чату в App A дуже схожа на цей опис.</figcaption>
+      </figure>
+      <figure class="rule">
+        <blockquote lang="en">«Full screen interstitial ads of all formats that are not closeable after 15 seconds are not allowed. Opt-in full screen interstitials or full screen interstitials that do not interrupt users in their actions (for example, after the score screen in a game app) may persist more than 15 seconds.»</blockquote>
+        <figcaption data-i18n="r3">Ліміт 15 секунд. Приклад прийнятної реклами правила наводять самі: після екрана з результатом у грі.</figcaption>
+      </figure>
+      <figure class="rule">
+        <blockquote lang="en">«Unless the exclusive purpose of the app is that of a lockscreen, apps may not introduce ads or features that monetize the locked display of a device.»</blockquote>
+        <figcaption data-i18n="r4">Заробляти на екрані блокування може лише застосунок, який і є екраном блокування. В App A і App B такого не знайшли.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="us" aria-labelledby="us-h">
+  <div class="wrap">
+    <div class="block-head"><h2 id="us-h" data-i18n="us.h">Що це означає для наших ігор</h2></div>
+    <ul class="us">
+      <li data-i18n="us1"><b>Реклама на дію заробляє, але саме на неї скаржаться найбільше.</b>У App A головна скарга: 10 секунд реклами перед кожним чатом. У грі аналог цього моменту — реклама на кнопці «Грати» чи на старті рівня. Правила Play самі наводять прийнятний приклад: реклама після екрана з результатом.</li>
+      <li data-i18n="us2"><b>Платний вихід працює, коли ціна не шокує.</b>Відгук від людини, яка заплатила за тишу, зібрав 1 197 позначок «корисно». Поруч скарги «$32 на рік, щоб не бачити реклами?».</li>
+      <li data-i18n="us3"><b>8–10 рекламних мереж навіть у простому SMS-застосунку.</b>Варто звірити, скільки мереж змагається за показ у нашому рекламному модулі.</li>
+      <li data-i18n="us4"><b>Чужі поверхні дають найзліші відгуки.</b>Головний екран і вікно після дзвінка — те, через що застосунок видаляють («had to uninstall it to get my phone back to normal»). До того ж це сіра зона правил Play.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="block" id="sources" aria-labelledby="src-h">
+  <div class="wrap">
+    <div class="block-head"><h2 id="src-h" data-i18n="src.h">Джерела</h2></div>
+    <ul class="sources">
+      <li><a href="https://play.google.com/store/apps/details?id=com.sms.messenger&amp;hl=en_US" target="_blank" rel="noopener">Google Play: Messenger SMS - Text messages</a><small data-i18n="s.play">Картка, розподіл оцінок і 20 перших відгуків, зібрано 29.09.2026</small></li>
+      <li><a href="https://play.google.com/store/apps/details?id=com.messages.chating.textmessenger.sms&amp;hl=en_US" target="_blank" rel="noopener">Google Play: Messages: SMS Texting Home App</a><small data-i18n="s.play">Картка, розподіл оцінок і 20 перших відгуків, зібрано 29.09.2026</small></li>
+      <li><span data-i18n="s.ctrl">Google Play, контрольна група:</span> <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.messaging&amp;hl=en_US" target="_blank" rel="noopener">Google Messages</a>, <a href="https://play.google.com/store/apps/details?id=com.simplemobiletools.smsmessenger&amp;hl=en_US" target="_blank" rel="noopener">Simple SMS Messenger</a>, <a href="https://play.google.com/store/apps/details?id=com.p1.chompsms&amp;hl=en_US" target="_blank" rel="noopener">Chomp SMS</a>, <a href="https://play.google.com/store/apps/details?id=com.textra&amp;hl=en_US" target="_blank" rel="noopener">Textra SMS</a>, <a href="https://play.google.com/store/apps/details?id=com.moez.QKSMS&amp;hl=en_US" target="_blank" rel="noopener">QKSMS</a>, <a href="https://play.google.com/store/apps/details?id=xyz.klinker.messenger&amp;hl=en_US" target="_blank" rel="noopener">Pulse SMS</a>, <a href="https://play.google.com/store/apps/details?id=org.fossify.messages&amp;hl=en_US" target="_blank" rel="noopener">Fossify Messages</a><small data-i18n="s.ctrlS">Ті самі метрики, зібрано 29.09.2026</small></li>
+      <li><a href="https://reports.exodus-privacy.eu.org/en/reports/com.sms.messenger/latest/" target="_blank" rel="noopener" data-i18n="s.exA">Exodus Privacy: звіт по App A</a><small data-i18n="s.exAs">Звіт від 20.08.2026</small></li>
+      <li><a href="https://reports.exodus-privacy.eu.org/en/reports/com.messages.chating.textmessenger.sms/latest/" target="_blank" rel="noopener" data-i18n="s.exB">Exodus Privacy: звіт по App B</a><small data-i18n="s.exBs">Звіт від 19.04.2026</small></li>
+      <li><a href="https://support.google.com/googleplay/android-developer/answer/9857753" target="_blank" rel="noopener" data-i18n="s.pol">Google Play Console Help: правила «Ads»</a><small data-i18n="s.polS">Цитати в розділі «Де межа»</small></li>
+      <li><a href="https://www.samsung.com/us/support/troubleshoot/TSG10010566/" target="_blank" rel="noopener" data-i18n="s.sam">Samsung US: припинення підтримки Samsung Messages</a><small data-i18n="s.samS">З липня 2026, Galaxy з Android 12 і новіше</small></li>
+      <li><a href="https://www.droid-life.com/2026/07/06/samsung-messages-discontinued-switch-google-messages/" target="_blank" rel="noopener">Droid Life: Samsung Messages Just Shutdown For Good</a><small data-i18n="s.dlS">06.07.2026</small></li>
+      <li><a href="https://www.verizon.com/support/no-longer-supported-verizon-messages/" target="_blank" rel="noopener">Verizon: No longer supported: Verizon Messages (Message+)</a><small data-i18n="s.vzS">Вимкнено у грудні 2024</small></li>
+    </ul>
+  </div>
+</section>
+
+<footer class="wrap">
+  <p data-i18n="foot">Звіт підготував <strong>VELDAN</strong>, 29.09.2026. Дані зібрано з публічних сторінок; цифри в Google Play змінюються щодня. Симуляція спрощує інтерфейс; рекламні креативи, імена в чатах і назви рекламодавців вигадані.</p>
+</footer>
+
+<script>
+(function(){
+"use strict";
+const CONTROL = [{"k": "a", "label": "App A · Messenger SMS", "pkg": "com.sms.messenger", "rating": 3.96, "ratings": 48276, "reviews": 1215, "pct": [13.3, 5.3, 10.2, 14.6, 56.6], "n": 20, "neg": 12, "five20": 2}, {"k": "b", "label": "App B · Messages: Home App", "pkg": "com.messages.chating.textmessenger.sms", "rating": 3.92, "ratings": 1898, "reviews": 25, "pct": [14.7, 5.7, 9.8, 9.8, 59.9], "n": 20, "neg": 7, "five20": 11}, {"k": "c", "label": "Google Messages", "pkg": "com.google.android.apps.messaging", "rating": 4.55, "ratings": 49361448, "reviews": 715422, "pct": [6.0, 1.6, 3.8, 9.1, 79.6], "n": 20, "neg": 15, "five20": 0}, {"k": "c", "label": "Simple SMS Messenger", "pkg": "com.simplemobiletools.smsmessenger", "rating": 4.14, "ratings": 82522, "reviews": 1473, "pct": [16.6, 2.1, 4.1, 5.2, 72.0], "n": 20, "neg": 14, "five20": 2}, {"k": "c", "label": "Chomp SMS", "pkg": "com.p1.chompsms", "rating": 4.18, "ratings": 339150, "reviews": 83632, "pct": [9.2, 4.0, 8.2, 17.0, 61.6], "n": 20, "neg": 0, "five20": 12}, {"k": "c", "label": "Textra SMS", "pkg": "com.textra", "rating": 4.03, "ratings": 439964, "reviews": 117591, "pct": [11.2, 6.8, 8.3, 15.2, 58.5], "n": 20, "neg": 15, "five20": 4}, {"k": "c", "label": "QKSMS", "pkg": "com.moez.QKSMS", "rating": 3.83, "ratings": 18106, "reviews": 3011, "pct": [13.6, 9.6, 10.7, 12.9, 53.3], "n": 20, "neg": 6, "five20": 2}, {"k": "c", "label": "Pulse SMS", "pkg": "xyz.klinker.messenger", "rating": 3.55, "ratings": 82175, "reviews": 17378, "pct": [23.1, 8.7, 7.7, 11.1, 49.3], "n": 20, "neg": 15, "five20": 1}, {"k": "c", "label": "Fossify Messages", "pkg": "org.fossify.messages", "rating": 3.17, "ratings": 3359, "reviews": 516, "pct": [19.4, 17.4, 19.4, 13.6, 30.1], "n": 20, "neg": 5, "five20": 3}];
+const B5 = [{"d": "2024-03-26", "v": "1.0.0.0", "w": 7, "likes": 1, "t": "My my contact all friends is preview"}, {"d": "2024-05-09", "v": "1.0.0.6", "w": 87, "likes": 39, "t": "A SURE THING APP FOR LINING UP YOUR MESSAGES TO THEIR INCOMING TIMING KEPT IN ORDER IN SEQUENCE WITH SETTINGS TO DELETE ONE-BY-ONE IN ORDER OF TIMING AND IMPORTANCE. IT'S A REQUIRED MESSAGING RECORDING APP FOR ALL **SMS TEXTINGS**, AND EVEN MORE MEANING, AS YOU DISCOVER THIS APP IN USE, IT WILL BECOME A NECESSITY. NO WASTE OF STORAGE SPACE BUT PROFITABLE TO THE MINDLESS SEARCHES OF OUR INCOMING MESSAGES WHEN WE HAVE TOO MANY APPS THAT DO THE SAME. PICK ONE OF THE FINEST!!!!® 👌👍😉😂🤣😘😜✨🤩🥰"}, {"d": "2024-05-11", "v": null, "w": 11, "likes": 0, "t": "Great to check on I need you check on these alot"}, {"d": "2024-05-15", "v": "1.0.0.7", "w": 25, "likes": 9, "t": "I love this app technician app and I love the pictures I sent get on it nice and fruity, and the words are so clear."}, {"d": "2024-09-11", "v": null, "w": 18, "likes": 33, "t": "Sms messages app great for text chat and private messaging. Always use it to send and receive messages"}, {"d": "2024-09-18", "v": null, "w": 7, "likes": 0, "t": "Good and I like it no problem"}, {"d": "2025-02-24", "v": "3.4", "w": 5, "likes": 2, "t": "good very well good look"}, {"d": "2025-07-23", "v": null, "w": 14, "likes": 0, "t": "I love this app. I can stay in touch with my family and friends 😊"}, {"d": "2025-09-01", "v": "3.6", "w": 3, "likes": 1, "t": "Excellent Messages app"}, {"d": "2025-09-05", "v": "3.6", "w": 7, "likes": 3, "t": "It's my hope that we share nicely"}, {"d": "2026-07-20", "v": null, "w": 3, "likes": 0, "t": "love using it"}];
+
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const LOC = {uk:"uk-UA", ru:"ru-RU", en:"en-US"};
+let lang = "uk";
+const fmt = (n, d) => Number(n).toLocaleString(LOC[lang], {minimumFractionDigits:d || 0, maximumFractionDigits:d || 0});
+const pct = (n, d) => fmt(n, d) + (lang === "en" ? "%" : " %");
+const fmtDate = iso => {
+  const t = new Date(iso + "T12:00:00Z");
+  return lang === "en"
+    ? t.toLocaleDateString("en-US", {month:"short", day:"numeric", year:"numeric", timeZone:"UTC"})
+    : t.toLocaleDateString(LOC[lang], {day:"2-digit", month:"2-digit", year:"numeric", timeZone:"UTC"});
+};
+const starStr = s => "★".repeat(s) + "☆".repeat(5 - s);
+function helpful(n){
+  const a = n % 10, b = n % 100;
+  const form = (one, few, many) => (a === 1 && b !== 11) ? one : (a >= 2 && a <= 4 && (b < 12 || b > 14)) ? few : many;
+  if (lang === "uk") return `${fmt(n)} ${form("позначка", "позначки", "позначок")} «корисно»`;
+  if (lang === "ru") return `${fmt(n)} ${form("отметка", "отметки", "отметок")} «полезно»`;
+  return `${fmt(n)} ${n === 1 ? "helpful vote" : "helpful votes"}`;
+}
+
+const G = {
+  phone:'<path d="M6 3.5h3.2l1.6 4.3-2.1 1.4a11.5 11.5 0 0 0 6.1 6.1l1.4-2.1 4.3 1.6v3.2a1.5 1.5 0 0 1-1.5 1.5A16.5 16.5 0 0 1 4.5 5 1.5 1.5 0 0 1 6 3.5z"/>',
+  camera:'<rect x="3" y="7" width="18" height="12.5" rx="2.5"/><circle cx="12" cy="13.2" r="3.4"/><path d="M8.5 7l1.4-2.5h4.2L15.5 7"/>',
+  gallery:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3.5 16.5l5-5 4 4 2.8-2.8 5.2 5.2"/><circle cx="16" cy="8.8" r="1.6"/>',
+  settings:'<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2.2"/><circle cx="9" cy="17" r="2.2"/>',
+  globe:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c3.2 3.6 3.2 13.4 0 17M12 3.5c-3.2 3.6-3.2 13.4 0 17"/>',
+  calendar:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+  clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  chat:'<path d="M4.5 5h15a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 3.5V17h-1A1.5 1.5 0 0 1 3 15.5v-9A1.5 1.5 0 0 1 4.5 5z"/>',
+  bell:'<path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 1.5h-15z"/><path d="M10 20.5h4"/>',
+  back:'<path d="M15 5l-7 7 7 7"/>',
+  search:'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>',
+  more:'<circle cx="12" cy="5.5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="18.5" r="1"/>',
+  send:'<path d="M4 12l16-7-6 16-3-6.5z"/>',
+  mic:'<rect x="9" y="3.5" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v2.5"/>',
+  home:'<path d="M4 11l8-6.5 8 6.5v9H4z"/><path d="M10 20v-5h4v5"/>'
+};
+const svg = (n, cls) => `<svg class="${cls || ""}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${G[n]}</svg>`;
+const BUBBLE = "M4.5 4h15A2.5 2.5 0 0 1 22 6.5v9a2.5 2.5 0 0 1-2.5 2.5H10l-5 3.8V18h-.5A2.5 2.5 0 0 1 2 15.5v-9A2.5 2.5 0 0 1 4.5 4z";
+const ICON = {
+  a:`<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="${BUBBLE}"/><circle cx="8" cy="11" r="1.3" style="fill:var(--icon-a)"/><circle cx="12" cy="11" r="1.3" style="fill:var(--icon-a)"/><circle cx="16" cy="11" r="1.3" style="fill:var(--icon-a)"/></svg>`,
+  b:`<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="${BUBBLE}"/><path d="M7.5 11.2 12 7.6l4.5 3.6V15h-9z" style="fill:var(--icon-b)"/></svg>`
+};
+const APPNAME = {a:"Messenger SMS - Text messages", b:"Messages: SMS Texting Home App"};
+const SHORT = {a:"Messenger SMS", b:"Messages"};
+const DEV = {a:"Messenger Messages", b:"Kamrej Apps"};
+const DESC = {a:"Private Free Text Messaging App for Secure SMS, Chat & Calls.", b:"Send instant SMS, text messages, and photos, all in one place. Home Launcher Access."};
+const CHAT_COLORS = {a:["--c2","--c1","--c3","--c4","--c5"], b:["--c1","--c2","--c4","--c3"]};
+const CR_ART = {
+  rpg:{bg:"--cr1", art:'<div class="gems"><i></i><i class="big"></i><i></i></div>'},
+  clean:{bg:"--cr2", art:'<div class="gauge"><i>82%</i></div>'},
+  vpn:{bg:"--cr3", art:'<div class="shield"></div>'}
+};
+
+/* ── texts shown inside the simulated phone and in the step panel ── */
+const UI = {
+ uk:{
+  install:"Встановити", open:"Відкрити", uninstall:"Видалити", pending:"Очікування…", installing:"Встановлення…", installed:"Встановлено",
+  toastKeep:"Симуляція йде далі без видалення", flags:"Містить рекламу · Покупки в застосунку", downloads:"завантажень", everyone:"Для всіх", ageLbl:"вікова оцінка",
+  apps:{a:{rating:"3,96", ratings:"48 тис. оцінок", installs:"5 млн+"}, b:{rating:"3,92", ratings:"1,9 тис. оцінок", installs:"100 тис.+"}},
+  roleSmsT:n => `Використовувати «${n}» як застосунок для SMS?`, roleSmsB:"Він замінить поточний застосунок і отримуватиме та надсилатиме ваші повідомлення.",
+  roleHomeT:n => `Використовувати «${n}» як головний екран?`, roleHomeB:"Він відкриватиметься щоразу, коли ви натискаєте «Додому».",
+  cancel:"Скасувати", setDefault:"За замовчуванням", toastAgree:"Симуляція йде сценарієм, де людина погоджується",
+  personal:"Особисті", other:"Інші", searchMsgs:"Пошук у повідомленнях", tap:"торкніться", toastFirst:"У симуляції відкрийте перший чат",
+  today:"Сьогодні", delivered:"Доставлено", msgPh:"Повідомлення", toastSendFirst:"Спершу надішліть відповідь", backAria:"Назад до чатів", sendAria:"Надіслати",
+  ad:"Реклама", adClose:"Закрити рекламу", adIn:n => `Закрити можна через ${n} с`, adNow:"Тепер рекламу можна закрити",
+  date:"вівторок, 29 вересня", search:"Пошук", launcher:["Телефон","Камера","Галерея","Браузер","Календар","Годинник","Налаштування"],
+  bannerT:"Великий розпродаж техніки", bannerS:"До −70% лише сьогодні", swipe:"Свайп праворуч → SMS",
+  home:"Додому", before:"До", after:"Після", beforeCap:"ваш звичний екран", afterCap:"тепер тут Messages", restored:"Як було · екран повернуто",
+  toastHome:"«Додому» тепер завжди відкриває Messages",
+  callEnded:"Дзвінок завершено", outgoing:"Вихідний", writeSms:"Написати SMS", callBack:"Передзвонити", remind:"Нагадати", close:"Закрити",
+  homeScreen:"Головний екран", crumbs:"Налаштування › Застосунки › Застосунки за замовчуванням", system:"Системний", stdHome:"Стандартний головний екран",
+  toastOwned:"Зараз головний екран належить Messages", toastChosen:"Уже вибрано", toastRestored:"Звичний головний екран повернуто",
+  pwTitle:"Жодної реклами", pwSub:"Підтримайте розробника й пишіть без пауз.", pw1:"Без реклами на весь екран", pw2:"Без очікування перед кожним чатом",
+  pwPlan:"3 дні безкоштовно", pwThen:"далі $32.99 на рік", pwTry:"Спробувати безкоштовно", pwFine:"Скасувати можна будь-коли",
+  delT:"Видалити «Messenger SMS»?", toastOther:"Інший вихід — платити близько $33 на рік", deleted:"Messenger SMS видалено",
+  chats:{a:[["Мама","Ти вже вдома?","18:40"],["Олег","Скинь фото з вихідних","17:15"],["Сусідка Таня","Ключі залишила в тебе","15:02"],["Тренування","Зал сьогодні о 19:00","12:30"],["Бабуся","Дякую, отримала","Вт"]],
+         b:[["Олег","Ти де? Ми вже на місці","18:41"],["Мама","Не забудь зарядку","16:20"],["Доставка","Ваше замовлення прибуде завтра","11:03"],["Ірина, робота","Звіт надіслала на пошту","Пн"]]},
+  out:{a:"Буду за 10 хв", b:"Буду за 5 хв"},
+  cr:{rpg:["Кришталеве королівство","Збери армію. Захопи трон. ★ 4,6 · Безкоштовно","Грати зараз"], clean:["Пам’ять майже заповнена","Звільніть 4,2 ГБ одним дотиком","Очистити"], vpn:["Щит VPN","Швидкий VPN для всіх ваших пристроїв","Захистити"]},
+  stepNo:(i, n, a) => `Крок ${i} з ${n} · App ${a}`, onPhone:"На телефоні:", money:"Де гроші", policy:"Правила Google Play",
+  prev:"← Назад", next:"Далі →", restart:"Спочатку", ok:"Підтверджено", guess:"Припущення", stepsAria:"Кроки симуляції", stepAria:(j, t) => `Крок ${j}: ${t}`,
+  compare:"Порівняти:", devReply:"відповідь розробника", simAria:(a, i, t) => `Симуляція ${a}, крок ${i}: ${t}`,
+  meters:["Реклама на весь екран","Секунд чекання на рекламі","Прохання заплатити","Екрани поза месенджером"], hist:"Розподіл оцінок"
+ },
+ ru:{
+  install:"Установить", open:"Открыть", uninstall:"Удалить", pending:"Ожидание…", installing:"Установка…", installed:"Установлено",
+  toastKeep:"Симуляция идёт дальше без удаления", flags:"Содержит рекламу · Покупки в приложении", downloads:"скачиваний", everyone:"Для всех", ageLbl:"возрастной рейтинг",
+  apps:{a:{rating:"3,96", ratings:"48 тыс. оценок", installs:"5 млн+"}, b:{rating:"3,92", ratings:"1,9 тыс. оценок", installs:"100 тыс.+"}},
+  roleSmsT:n => `Использовать «${n}» как приложение для SMS?`, roleSmsB:"Оно заменит текущее приложение и будет получать и отправлять ваши сообщения.",
+  roleHomeT:n => `Использовать «${n}» как главный экран?`, roleHomeB:"Он будет открываться каждый раз, когда вы нажимаете «Домой».",
+  cancel:"Отмена", setDefault:"По умолчанию", toastAgree:"Симуляция идёт по сценарию, где человек соглашается",
+  personal:"Личные", other:"Другие", searchMsgs:"Поиск в сообщениях", tap:"нажмите", toastFirst:"В симуляции откройте первый чат",
+  today:"Сегодня", delivered:"Доставлено", msgPh:"Сообщение", toastSendFirst:"Сначала отправьте ответ", backAria:"Назад к чатам", sendAria:"Отправить",
+  ad:"Реклама", adClose:"Закрыть рекламу", adIn:n => `Закрыть можно через ${n} с`, adNow:"Теперь рекламу можно закрыть",
+  date:"вторник, 29 сентября", search:"Поиск", launcher:["Телефон","Камера","Галерея","Браузер","Календарь","Часы","Настройки"],
+  bannerT:"Большая распродажа техники", bannerS:"До −70% только сегодня", swipe:"Свайп вправо → SMS",
+  home:"Домой", before:"До", after:"После", beforeCap:"ваш привычный экран", afterCap:"теперь здесь Messages", restored:"Как было · экран возвращён",
+  toastHome:"«Домой» теперь всегда открывает Messages",
+  callEnded:"Звонок завершён", outgoing:"Исходящий", writeSms:"Написать SMS", callBack:"Перезвонить", remind:"Напомнить", close:"Закрыть",
+  homeScreen:"Главный экран", crumbs:"Настройки › Приложения › Приложения по умолчанию", system:"Системный", stdHome:"Стандартный главный экран",
+  toastOwned:"Сейчас главный экран принадлежит Messages", toastChosen:"Уже выбрано", toastRestored:"Привычный главный экран возвращён",
+  pwTitle:"Никакой рекламы", pwSub:"Поддержите разработчика и пишите без пауз.", pw1:"Без рекламы на весь экран", pw2:"Без ожидания перед каждым чатом",
+  pwPlan:"3 дня бесплатно", pwThen:"дальше $32.99 в год", pwTry:"Попробовать бесплатно", pwFine:"Отменить можно в любой момент",
+  delT:"Удалить «Messenger SMS»?", toastOther:"Другой выход — платить около $33 в год", deleted:"Messenger SMS удалено",
+  chats:{a:[["Мама","Ты уже дома?","18:40"],["Олег","Скинь фото с выходных","17:15"],["Соседка Таня","Ключи оставила у тебя","15:02"],["Тренировка","Зал сегодня в 19:00","12:30"],["Бабушка","Спасибо, получила","Вт"]],
+         b:[["Олег","Ты где? Мы уже на месте","18:41"],["Мама","Не забудь зарядку","16:20"],["Доставка","Ваш заказ прибудет завтра","11:03"],["Ирина, работа","Отчёт отправила на почту","Пн"]]},
+  out:{a:"Буду через 10 мин", b:"Буду через 5 мин"},
+  cr:{rpg:["Хрустальное королевство","Собери армию. Захвати трон. ★ 4,6 · Бесплатно","Играть сейчас"], clean:["Память почти заполнена","Освободите 4,2 ГБ одним касанием","Очистить"], vpn:["Щит VPN","Быстрый VPN для всех ваших устройств","Защитить"]},
+  stepNo:(i, n, a) => `Шаг ${i} из ${n} · App ${a}`, onPhone:"На телефоне:", money:"Где деньги", policy:"Правила Google Play",
+  prev:"← Назад", next:"Далее →", restart:"Сначала", ok:"Подтверждено", guess:"Предположение", stepsAria:"Шаги симуляции", stepAria:(j, t) => `Шаг ${j}: ${t}`,
+  compare:"Сравнить:", devReply:"ответ разработчика", simAria:(a, i, t) => `Симуляция ${a}, шаг ${i}: ${t}`,
+  meters:["Реклама на весь экран","Секунд ожидания рекламы","Просьбы заплатить","Экраны вне мессенджера"], hist:"Распределение оценок"
+ },
+ en:{
+  install:"Install", open:"Open", uninstall:"Uninstall", pending:"Pending…", installing:"Installing…", installed:"Installed",
+  toastKeep:"The simulation continues without uninstalling", flags:"Contains ads · In-app purchases", downloads:"downloads", everyone:"Everyone", ageLbl:"content rating",
+  apps:{a:{rating:"3.96", ratings:"48K ratings", installs:"5M+"}, b:{rating:"3.92", ratings:"1.9K ratings", installs:"100K+"}},
+  roleSmsT:n => `Use ${n} as your SMS app?`, roleSmsB:"It will replace your current app and send and receive your messages.",
+  roleHomeT:n => `Use ${n} as your home screen?`, roleHomeB:"It will open every time you press Home.",
+  cancel:"Cancel", setDefault:"Set as default", toastAgree:"The simulation follows the path where the user agrees",
+  personal:"Personal", other:"Other", searchMsgs:"Search messages", tap:"tap", toastFirst:"In this simulation, open the first chat",
+  today:"Today", delivered:"Delivered", msgPh:"Message", toastSendFirst:"Send a reply first", backAria:"Back to chats", sendAria:"Send",
+  ad:"Ad", adClose:"Close ad", adIn:n => `You can close it in ${n} s`, adNow:"Now you can close the ad",
+  date:"Tuesday, September 29", search:"Search", launcher:["Phone","Camera","Gallery","Browser","Calendar","Clock","Settings"],
+  bannerT:"Big electronics sale", bannerS:"Up to 70% off, today only", swipe:"Swipe right → SMS",
+  home:"Home", before:"Before", after:"After", beforeCap:"your usual screen", afterCap:"Messages owns it now", restored:"Restored · usual screen is back",
+  toastHome:"Home now always opens Messages",
+  callEnded:"Call ended", outgoing:"Outgoing", writeSms:"Text", callBack:"Call back", remind:"Remind me", close:"Close",
+  homeScreen:"Home screen", crumbs:"Settings › Apps › Default apps", system:"System", stdHome:"Standard home screen",
+  toastOwned:"Messages currently owns the home screen", toastChosen:"Already selected", toastRestored:"Your usual home screen is back",
+  pwTitle:"No ads at all", pwSub:"Support the developer and text without interruptions.", pw1:"No full-screen ads", pw2:"No waiting before every chat",
+  pwPlan:"3 days free", pwThen:"then $32.99 a year", pwTry:"Try it free", pwFine:"Cancel anytime",
+  delT:"Uninstall Messenger SMS?", toastOther:"The other way out is paying about $33 a year", deleted:"Messenger SMS uninstalled",
+  chats:{a:[["Mom","Are you home yet?","18:40"],["Alex","Send the photos from the weekend","17:15"],["Tanya (neighbor)","I left the keys with you","15:02"],["Gym","Workout today at 7 pm","12:30"],["Grandma","Thanks, got it","Tue"]],
+         b:[["Alex","Where are you? We're already here","18:41"],["Mom","Don't forget the charger","16:20"],["Delivery","Your order arrives tomorrow","11:03"],["Irina, work","Sent the report by email","Mon"]]},
+  out:{a:"Be there in 10 min", b:"Be there in 5 min"},
+  cr:{rpg:["Crystal Kingdom","Build an army. Take the throne. ★ 4.6 · Free","Play now"], clean:["Storage almost full","Free up 4.2 GB with one tap","Clean up"], vpn:["Shield VPN","Fast VPN for all your devices","Protect"]},
+  stepNo:(i, n, a) => `Step ${i} of ${n} · App ${a}`, onPhone:"On the phone:", money:"Where the money is", policy:"Google Play rules",
+  prev:"← Back", next:"Next →", restart:"Restart", ok:"Confirmed", guess:"Assumption", stepsAria:"Simulation steps", stepAria:(j, t) => `Step ${j}: ${t}`,
+  compare:"Compare:", devReply:"developer reply", simAria:(a, i, t) => `${a} simulation, step ${i}: ${t}`,
+  meters:["Full-screen ads","Seconds waiting on ads","Requests to pay","Screens outside the messenger"], hist:"Rating distribution"
+ }
+};
+
+/* ── simulation structure (language-independent) ── */
+const SS = {
+ a:[
+  {s:"store", q:{en:"Samsung stopped supporting their text messenger, and unfortunately, I selected this as a replacement.", st:1, d:"2026-08-16", likes:18}},
+  {s:"install"},
+  {s:"roleSms"},
+  {s:"chatsA", q:{en:"it had way too many adds but it was nice and cool 😎 cause every chat had its own colour or wallpaper making me remember who I'm talking to 👌.", st:4, d:"2026-09-09", likes:6}},
+  {s:"adOpen", cr:"rpg", secs:10, fx:{ads:1, secs:10}, q:{en:"Every time I click on a message, I'm bombarded with a 10-second ad, which is just too much.", st:1, d:"2026-04-20", likes:45}},
+  {s:"threadA", q:{en:"its too bad this app has things like ads, and having to verify your number through telegram? weird.", st:2, d:"2026-06-30", likes:15}},
+  {s:"adBack", cr:"clean", secs:5, fx:{ads:1, secs:5}, q:{en:"To many full screen ads for messaging app! Even when you go back from the conversation/texting to the main screen.", st:2, d:"2023-01-01", likes:681}},
+  {s:"paywall", fx:{pay:1}, q:{en:"5 stars only after paying 30 something dollars yearly to remove extremely intrusive annoying multiple bomb barding adds.", st:5, d:"2023-03-17", likes:1197}},
+  {s:"outcomeA", q:{en:"your app was a big immediate fail for extraordinarily annoying, obtrusive and excessive ad popups. It took less than 5 minutes before I uninstalled it.", st:1, d:"2025-04-01", likes:590}}
+ ],
+ b:[
+  {s:"store", q:{en:"I'm using this because Verizon Messenger is going away, but I don't like Google snooping in everything.", st:3, d:"2024-10-04", likes:16}},
+  {s:"install"},
+  {s:"roleSms"},
+  {s:"roleHome"},
+  {s:"homeB", fx:{surf:1}, homeBtn:true, compare:true, q:{en:"this app took over my whole phone, changed the home screen, changed my swipe settings, put ads everywhere. i had to uninstall it to get my phone back to normal.", st:1, d:"2026-04-11", likes:0}},
+  {s:"threadB", sendNext:true, q:{en:"immediately I installed it I stopped receiving messages I almost thought it was my phone that's faulty", st:1, d:"2025-09-08", likes:13}},
+  {s:"adSend", cr:"vpn", secs:5, fx:{ads:1, secs:5}, q:{en:"The ADS on this app is ridiculous way too many. You cannot even get a text set off before a new ad is there?", st:1, d:"2025-02-27", likes:6}},
+  {s:"callB", fx:{surf:1}, q:{en:"everything I get a call and hang up the messenger pops up with option screen to leave message. so now google is monitoring my calls.. ? legal?", st:3, d:"2024-10-04", likes:16}},
+  {s:"settingsB", q:{en:"If you would like to remove our app as your default Home launcher, you can easily change it by following these steps: Settings → Apps → Default Apps → Home", dev:true, d:"2026-04-11"}}
+ ]
+};
+
+/* ── step texts: Ukrainian ── */
+const ST = {};
+ST.uk = {
+ a:[
+  {title:"Людина шукає заміну Samsung Messages",
+   lead:"У липні 2026 року Samsung Messages перестав працювати у США. Людина вводить у пошуку магазину «messages» і бачить цей застосунок поруч зі справжніми месенджерами.",
+   hint:"натисніть «Встановити»",
+   money:"Поки нічого. Картка чесно попереджає: «Містить рекламу» і покупки від $2.49 до $32.99. Але це дрібний рядок під назвою розробника.",
+   facts:[["ok","Картка в Play: 5 млн+ завантажень (за даними сторінки близько 7,1 млн), оцінка 3,96, 48 276 оцінок."],
+          ["guess","Назва майже вся складається з пошукових слів: Messenger, SMS, Text messages. Тому застосунок, імовірно, виринає на загальні запити. Це висновок з назви, даних пошуку в нас немає."]],
+   tr:"Samsung перестав підтримувати свій месенджер, і я, на жаль, вибрав на заміну оцей."},
+  {title:"Встановлення",
+   lead:"Звичайне встановлення. Усе, що стосується грошей, починається після першого запуску.",
+   hint:"зачекайте й натисніть «Відкрити»",
+   facts:[["ok","У Play з 18.04.2018, останнє оновлення 02.09.2026."]]},
+  {title:"Запит стати застосунком для SMS",
+   lead:"Перше, що просить застосунок, це роль SMS-застосунку за замовчуванням. Без неї він не може повноцінно приймати й надсилати SMS, тож саме прохання нормальне.",
+   hint:"натисніть «За замовчуванням»",
+   money:"Ця роль дає головне: кожне повідомлення людини тепер відкривається тут. Кожне відкриття чату стає моментом, коли можна показати рекламу.",
+   facts:[["ok","Опис у Play прямо пропонує: «replace your default SMS app»."]]},
+  {title:"Список чатів: те, за що застосунок хвалять",
+   lead:"У кожного чату свій колір або шпалери, а спам і сервісні SMS лежать в окремій вкладці. Поки що все зручно.",
+   hint:"торкніться чату «Мама»",
+   money:"На цьому екрані реклами немає. Вона чекає на наступний дотик.",
+   facts:[["ok","Відгук 4★ про окрему вкладку для спаму й нагадувань зібрав 1 946 позначок «корисно»."],
+          ["ok","В описі є приватність: замок на чати PIN-кодом або емодзі, сховище, приховані повідомлення."]],
+   tr:"Реклами було забагато, але було класно: кожен чат мав свій колір або шпалери, і я пам’ятав, з ким говорю."},
+  {title:"10 секунд реклами на кожне відкриття чату",
+   lead:"Людина хоче прочитати повідомлення, а бачить рекламу на весь екран. Хрестик з’являється лише через 10 секунд.",
+   hint:"дочекайтеся хрестика й закрийте рекламу",
+   money:"Основне джерело доходу. Людина вже в застосунку і чекає на свій чат, тож показ майже гарантовано відбудеться.",
+   facts:[["ok","Скарга від 20.04.2026: 10-секундна реклама щоразу, коли відкриваєш повідомлення."],
+          ["guess","Рекламний креатив вигаданий."]],
+   policy:"Play забороняє рекламу на весь екран, яка з’являється «unexpectedly, typically when the user has chosen to do something else». Реклама на відкриття чату дуже схожа на цей опис. Закриття через 10 секунд укладається в дозволені 15.",
+   tr:"Щоразу, коли я відкриваю повідомлення, мене засипає 10-секундна реклама. Це вже занадто."},
+  {title:"Нарешті чат",
+   lead:"Людина відповідає й надсилає повідомлення. Сам чат працює як звичайний месенджер.",
+   hint:["надішліть відповідь", "поверніться стрілкою назад"],
+   money:"Окрема гілка: застосунок уміє надсилати повідомлення через інтернет. Для цього номер підтверджують через Telegram.",
+   facts:[["ok","Про Telegram пише сам розробник у відповіді на відгук від 30.06.2026: так можна «send messages for free»."],
+          ["ok","У відгуках 2019 і 2023 років згадуються внутрішні «coins». Навіщо вони, з відгуків не зрозуміло."]],
+   tr:"Шкода, що тут є реклама, а номер треба підтверджувати через Telegram. Дивно."},
+  {title:"Ще одна реклама на виході з чату",
+   lead:"Людина повертається до списку чатів і знову бачить рекламу на весь екран.",
+   hint:"дочекайтеся хрестика",
+   money:"Другий показ за хвилину. Перехід між екранами теж продається.",
+   facts:[["ok","Скарга з 2023 року: реклама на весь екран навіть тоді, коли повертаєшся з чату до списку."],
+          ["guess","Тривалість 5 секунд у симуляції умовна."]],
+   tr:"Забагато реклами на весь екран як для месенджера! Навіть коли повертаєшся з чату на головний екран."},
+  {title:"Платний вихід: Premium",
+   lead:"Реклама вже набридла, і тут з’являється пропозиція її прибрати: 3 дні безкоштовно, далі близько $33 на рік.",
+   hint:"оберіть будь-яку кнопку",
+   money:"Друге джерело доходу. Безкоштовна версія дратує настільки, що частина людей платить. У шаблонних відповідях розробник порівнює місяць Premium з чашкою кави.",
+   facts:[["ok","3 дні безкоштовно: з відповіді розробника від 30.06.2026."],
+          ["ok","Близько $32 на рік: так пишуть у відгуках 2023 і 2024 років. Найдорожча покупка в картці Play коштує $32.99."],
+          ["guess","Коли саме з’являється цей екран і як він виглядає, з публічних даних не видно. Екран відтворено приблизно."]],
+   tr:"5 зірок лише тому, що я плачу тридцять із чимось доларів на рік, щоб прибрати вкрай нав’язливу рекламу, яка сиплеться одна за одною."},
+  {title:"Чим закінчується перша хвилина",
+   lead:"Лишається два виходи: платити за тишу або видалити застосунок. Відгук із 590 позначками «корисно» описує другий.",
+   hint:["видаліть застосунок", "застосунок видалено"],
+   money:"Модель тримається на обсязі: мільйони встановлень перекривають тих, хто пішов у перші хвилини.",
+   facts:[["ok","Розробник відповів на 19 з 20 перших відгуків. У 6 відповідях пояснює, що безкоштовний застосунок живе з реклами, і радить Premium."],
+          ["ok","У 7 з 19 відповідей просить поставити 5 зірок."]],
+   tr:"Ваш застосунок одразу провалився через надзвичайно дратівливі, нав’язливі й надмірні рекламні вікна. Я видалив його менш ніж за 5 хвилин."}
+ ],
+ b:[
+  {title:"Той самий пошук, інший застосунок",
+   lead:"Цей застосунок теж ловить людей, які йдуть з Verizon Message+ і Samsung Messages. У назві є слово «Home»: це не лише месенджер.",
+   hint:"натисніть «Встановити»",
+   money:"Картка попереджає про рекламу й покупки від $6.99 до $25.99.",
+   facts:[["ok","Картка в Play: 100 тис.+ завантажень (за даними сторінки близько 287 тис.), оцінка 3,92, 1 898 оцінок і лише 25 відгуків з текстом."],
+          ["ok","Опис обіцяє «Home Launcher Access»: власний головний екран, де свайп праворуч відкриває SMS."]],
+   tr:"Я користуюся цим, бо Verizon Messenger закривається, а Google, який пхає носа в усе, я не люблю."},
+  {title:"Встановлення",
+   lead:"Звичайне встановлення.",
+   hint:"зачекайте й натисніть «Відкрити»",
+   facts:[["ok","У Play з 13.03.2024, версія 4.6, оновлено 09.09.2026."]]},
+  {title:"Запит стати застосунком для SMS",
+   lead:"Як і App A, спершу просить роль SMS-застосунку за замовчуванням.",
+   hint:"натисніть «За замовчуванням»",
+   money:"Кожне повідомлення тепер відкривається тут.",
+   facts:[["ok","Цей крок обов’язковий для будь-якого SMS-застосунку."]]},
+  {title:"Другий запит: головний екран",
+   lead:"Далі застосунок просить стати головним екраном телефона. Хто погоджується, віддає йому екран, який бачить найчастіше.",
+   hint:"натисніть «За замовчуванням»",
+   money:"Головний екран стає ще однією поверхнею для реклами, окремо від месенджера.",
+   facts:[["ok","Опис у Play: «Transform your device with a Easy and smart launcher. Swipe right to access all SMS and chats instantly.»"],
+          ["guess","Як саме застосунок підводить людину до цього запиту, з публічних даних не видно."]]},
+  {title:"Головний екран захоплено",
+   lead:"На телефоні зараз звичний головний екран, яким він був до встановлення. Людина натискає «Додому», і замість нього відкривається лаунчер Messages. Відтепер так буде після кожного натискання «Додому», з будь-якого застосунку.",
+   hint:["натисніть «Додому» внизу екрана телефона", "свайпніть праворуч або натисніть підказку ③"],
+   money:"Головний екран людина бачить щоразу, коли виходить з будь-якого застосунку, навіть якщо не збирається писати SMS. Кожен такий раз можна показати рекламу.",
+   facts:[["ok","<span class='mk'>1</span>«Додому» відкриває Messages. Розробник сам називає застосунок «default Home launcher» у відповіді на скаргу."],
+          ["ok","<span class='mk'>2</span>Реклама на головному екрані: у відгуку від 11.04.2026 «put ads everywhere»."],
+          ["ok","<span class='mk'>3</span>Свайпи працюють інакше: опис обіцяє «Swipe right to access all SMS», а відгук скаржиться «changed my swipe settings»."],
+          ["guess","Де саме стоїть банер, у відгуку не сказано. Місце в симуляції умовне."]],
+   policy:"За правилами Play рекламу можна показувати лише «inside of the app serving them». Для лаунчера головний екран формально і є застосунком, тому такі схеми живуть у сірій зоні.",
+   tr:"Цей застосунок захопив увесь мій телефон: змінив головний екран, налаштування свайпів і наліпив рекламу скрізь. Довелося видалити, щоб повернути телефон до норми."},
+  {title:"Нарешті повідомлення",
+   lead:"Свайп відкриває SMS. Людина заходить у чат і відповідає.",
+   hint:["відкрийте чат «Олег»", "надішліть відповідь"],
+   money:"Кожне надіслане повідомлення теж можна продати. Що буде після натискання, видно на наступному кроці.",
+   facts:[["ok","Відгук від 08.09.2025: одразу після встановлення перестали приходити повідомлення."]],
+   tr:"Щойно я його встановив, перестали приходити повідомлення. Я вже думав, що зламався телефон."},
+  {title:"Реклама після надсилання",
+   lead:"Щойно повідомлення пішло, на весь екран з’являється реклама.",
+   hint:"дочекайтеся хрестика",
+   money:"Той самий прийом, що в App A, тільки прив’язаний до надсилання.",
+   facts:[["ok","Відгук від 27.02.2025: не встигаєш надіслати повідомлення, а вже нова реклама."],
+          ["ok","Серед 20 перших відгуків ще чотири оцінки 1★, де головна скарга — забагато реклами."],
+          ["guess","Тривалість 5 секунд у симуляції умовна."]],
+   tr:"Реклами в цьому застосунку до смішного багато. Не встигаєш надіслати повідомлення, а вже нова реклама."},
+  {title:"Екран після кожного дзвінка",
+   lead:"Людина поговорила по телефону й поклала слухавку, а на екрані вікно месенджера з варіантами дій.",
+   hint:"закрийте екран",
+   money:"Ще одна поверхня, яку застосунок займає, коли людина ним не користується. Чи є там реклама, з відгуків невідомо.",
+   facts:[["ok","Відгук від 04.10.2024: вікно з’являється щоразу після дзвінка. На питання «це законно?» розробник відповів: «Yes, it's legal.»"],
+          ["guess","Реклама на цьому екрані у відгуках не згадується."]],
+   tr:"Щоразу, коли я кладу слухавку, вискакує месенджер з екраном, щоб залишити повідомлення. То Google тепер стежить за моїми дзвінками? Це законно?"},
+  {title:"Як повернути телефон",
+   lead:"Щоб повернути звичний головний екран, треба знайти потрібний пункт у налаштуваннях. Автор відгуку з кроку 5 не знайшов і просто видалив застосунок.",
+   hint:["оберіть стандартний головний екран", "готово, звичний екран повернуто"],
+   money:"Поки людина не знайде цей пункт, головний екран лишається за застосунком.",
+   facts:[["ok","Цей шлях розробник сам дав у відповідь на скаргу від 11.04.2026: Settings → Apps → Default Apps → Home."]],
+   tr:"Якщо хочете прибрати наш застосунок як головний екран, це легко: Налаштування → Застосунки → Застосунки за замовчуванням → Головний екран."}
+ ]
+};
+
+/* ── step texts: Russian ── */
+ST.ru = {
+ a:[
+  {title:"Человек ищет замену Samsung Messages",
+   lead:"В июле 2026 года Samsung Messages перестал работать в США. Человек вводит в поиске магазина «messages» и видит это приложение рядом с настоящими мессенджерами.",
+   hint:"нажмите «Установить»",
+   money:"Пока ничего. Карточка честно предупреждает: «Содержит рекламу» и покупки от $2.49 до $32.99. Но это мелкая строка под названием разработчика.",
+   facts:[["ok","Карточка в Play: 5 млн+ скачиваний (по данным страницы около 7,1 млн), оценка 3,96, 48 276 оценок."],
+          ["guess","Название почти целиком состоит из поисковых слов: Messenger, SMS, Text messages. Поэтому приложение, вероятно, всплывает по общим запросам. Это вывод из названия, данных поиска у нас нет."]],
+   tr:"Samsung перестал поддерживать свой мессенджер, и я, к сожалению, выбрал на замену вот это."},
+  {title:"Установка",
+   lead:"Обычная установка. Всё, что касается денег, начинается после первого запуска.",
+   hint:"подождите и нажмите «Открыть»",
+   facts:[["ok","В Play с 18.04.2018, последнее обновление 02.09.2026."]]},
+  {title:"Запрос стать приложением для SMS",
+   lead:"Первое, что просит приложение, это роль SMS-приложения по умолчанию. Без неё оно не может полноценно принимать и отправлять SMS, так что сама просьба нормальная.",
+   hint:"нажмите «По умолчанию»",
+   money:"Эта роль даёт главное: каждое сообщение человека теперь открывается здесь. Каждое открытие чата становится моментом, когда можно показать рекламу.",
+   facts:[["ok","Описание в Play прямо предлагает: «replace your default SMS app»."]]},
+  {title:"Список чатов: то, за что приложение хвалят",
+   lead:"У каждого чата свой цвет или обои, а спам и сервисные SMS лежат в отдельной вкладке. Пока всё удобно.",
+   hint:"нажмите на чат «Мама»",
+   money:"На этом экране рекламы нет. Она ждёт следующего касания.",
+   facts:[["ok","Отзыв 4★ об отдельной вкладке для спама и напоминаний собрал 1 946 отметок «полезно»."],
+          ["ok","В описании есть приватность: замок на чаты PIN-кодом или эмодзи, хранилище, скрытые сообщения."]],
+   tr:"Рекламы было слишком много, но было классно: у каждого чата был свой цвет или обои, и я помнил, с кем говорю."},
+  {title:"10 секунд рекламы на каждое открытие чата",
+   lead:"Человек хочет прочитать сообщение, а видит рекламу на весь экран. Крестик появляется только через 10 секунд.",
+   hint:"дождитесь крестика и закройте рекламу",
+   money:"Основной источник дохода. Человек уже в приложении и ждёт свой чат, так что показ почти гарантированно состоится.",
+   facts:[["ok","Жалоба от 20.04.2026: 10-секундная реклама каждый раз, когда открываешь сообщение."],
+          ["guess","Рекламный креатив вымышлен."]],
+   policy:"Play запрещает рекламу на весь экран, которая появляется «unexpectedly, typically when the user has chosen to do something else». Реклама при открытии чата очень похожа на это описание. Закрытие через 10 секунд укладывается в разрешённые 15.",
+   tr:"Каждый раз, когда я открываю сообщение, меня засыпает 10-секундная реклама. Это уже слишком."},
+  {title:"Наконец-то чат",
+   lead:"Человек отвечает и отправляет сообщение. Сам чат работает как обычный мессенджер.",
+   hint:["отправьте ответ", "вернитесь стрелкой назад"],
+   money:"Отдельная ветка: приложение умеет отправлять сообщения через интернет. Для этого номер подтверждают через Telegram.",
+   facts:[["ok","О Telegram пишет сам разработчик в ответе на отзыв от 30.06.2026: так можно «send messages for free»."],
+          ["ok","В отзывах 2019 и 2023 годов упоминаются внутренние «coins». Зачем они, из отзывов непонятно."]],
+   tr:"Жаль, что здесь есть реклама, а номер нужно подтверждать через Telegram. Странно."},
+  {title:"Ещё одна реклама на выходе из чата",
+   lead:"Человек возвращается к списку чатов и снова видит рекламу на весь экран.",
+   hint:"дождитесь крестика",
+   money:"Второй показ за минуту. Переход между экранами тоже продаётся.",
+   facts:[["ok","Жалоба 2023 года: реклама на весь экран даже когда возвращаешься из чата к списку."],
+          ["guess","Длительность 5 секунд в симуляции условная."]],
+   tr:"Слишком много рекламы на весь экран для мессенджера! Даже когда возвращаешься из чата на главный экран."},
+  {title:"Платный выход: Premium",
+   lead:"Реклама уже надоела, и тут появляется предложение её убрать: 3 дня бесплатно, дальше около $33 в год.",
+   hint:"выберите любую кнопку",
+   money:"Второй источник дохода. Бесплатная версия раздражает настолько, что часть людей платит. В шаблонных ответах разработчик сравнивает месяц Premium с чашкой кофе.",
+   facts:[["ok","3 дня бесплатно: из ответа разработчика от 30.06.2026."],
+          ["ok","Около $32 в год: так пишут в отзывах 2023 и 2024 годов. Самая дорогая покупка в карточке Play стоит $32.99."],
+          ["guess","Когда именно появляется этот экран и как он выглядит, по публичным данным не видно. Экран воссоздан приблизительно."]],
+   tr:"5 звёзд только потому, что я плачу тридцать с чем-то долларов в год, чтобы убрать крайне навязчивую рекламу, которая сыплется одна за другой."},
+  {title:"Чем заканчивается первая минута",
+   lead:"Остаётся два выхода: платить за тишину или удалить приложение. Отзыв с 590 отметками «полезно» описывает второй.",
+   hint:["удалите приложение", "приложение удалено"],
+   money:"Модель держится на объёме: миллионы установок перекрывают тех, кто ушёл в первые минуты.",
+   facts:[["ok","Разработчик ответил на 19 из 20 первых отзывов. В 6 ответах объясняет, что бесплатное приложение живёт за счёт рекламы, и советует Premium."],
+          ["ok","В 7 из 19 ответов просит поставить 5 звёзд."]],
+   tr:"Ваше приложение сразу провалилось из-за невероятно раздражающих, навязчивых и чрезмерных рекламных окон. Я удалил его меньше чем за 5 минут."}
+ ],
+ b:[
+  {title:"Тот же поиск, другое приложение",
+   lead:"Это приложение тоже ловит людей, которые уходят с Verizon Message+ и Samsung Messages. В названии есть слово «Home»: это не только мессенджер.",
+   hint:"нажмите «Установить»",
+   money:"Карточка предупреждает о рекламе и покупках от $6.99 до $25.99.",
+   facts:[["ok","Карточка в Play: 100 тыс.+ скачиваний (по данным страницы около 287 тыс.), оценка 3,92, 1 898 оценок и всего 25 отзывов с текстом."],
+          ["ok","Описание обещает «Home Launcher Access»: собственный главный экран, где свайп вправо открывает SMS."]],
+   tr:"Я пользуюсь этим, потому что Verizon Messenger закрывается, а Google, который суёт нос во всё, я не люблю."},
+  {title:"Установка",
+   lead:"Обычная установка.",
+   hint:"подождите и нажмите «Открыть»",
+   facts:[["ok","В Play с 13.03.2024, версия 4.6, обновлено 09.09.2026."]]},
+  {title:"Запрос стать приложением для SMS",
+   lead:"Как и App A, сначала просит роль SMS-приложения по умолчанию.",
+   hint:"нажмите «По умолчанию»",
+   money:"Каждое сообщение теперь открывается здесь.",
+   facts:[["ok","Этот шаг обязателен для любого SMS-приложения."]]},
+  {title:"Второй запрос: главный экран",
+   lead:"Дальше приложение просит стать главным экраном телефона. Кто соглашается, отдаёт ему экран, который видит чаще всего.",
+   hint:"нажмите «По умолчанию»",
+   money:"Главный экран становится ещё одной поверхностью для рекламы, отдельно от мессенджера.",
+   facts:[["ok","Описание в Play: «Transform your device with a Easy and smart launcher. Swipe right to access all SMS and chats instantly.»"],
+          ["guess","Как именно приложение подводит человека к этому запросу, по публичным данным не видно."]]},
+  {title:"Главный экран захвачен",
+   lead:"На телефоне сейчас привычный главный экран, каким он был до установки. Человек нажимает «Домой», и вместо него открывается лаунчер Messages. Теперь так будет после каждого нажатия «Домой», из любого приложения.",
+   hint:["нажмите «Домой» внизу экрана телефона", "свайпните вправо или нажмите подсказку ③"],
+   money:"Главный экран человек видит каждый раз, когда выходит из любого приложения, даже если не собирается писать SMS. Каждый такой раз можно показать рекламу.",
+   facts:[["ok","<span class='mk'>1</span>«Домой» открывает Messages. Разработчик сам называет приложение «default Home launcher» в ответе на жалобу."],
+          ["ok","<span class='mk'>2</span>Реклама на главном экране: в отзыве от 11.04.2026 «put ads everywhere»."],
+          ["ok","<span class='mk'>3</span>Свайпы работают иначе: описание обещает «Swipe right to access all SMS», а отзыв жалуется «changed my swipe settings»."],
+          ["guess","Где именно стоит баннер, в отзыве не сказано. Место в симуляции условное."]],
+   policy:"По правилам Play рекламу можно показывать только «inside of the app serving them». Для лаунчера главный экран формально и есть приложение, поэтому такие схемы живут в серой зоне.",
+   tr:"Это приложение захватило весь мой телефон: сменило главный экран, настройки свайпов и налепило рекламу везде. Пришлось удалить, чтобы вернуть телефон в норму."},
+  {title:"Наконец-то сообщения",
+   lead:"Свайп открывает SMS. Человек заходит в чат и отвечает.",
+   hint:["откройте чат «Олег»", "отправьте ответ"],
+   money:"Каждое отправленное сообщение тоже можно продать. Что будет после нажатия, видно на следующем шаге.",
+   facts:[["ok","Отзыв от 08.09.2025: сразу после установки перестали приходить сообщения."]],
+   tr:"Как только я его установил, перестали приходить сообщения. Я уже думал, что сломался телефон."},
+  {title:"Реклама после отправки",
+   lead:"Как только сообщение ушло, на весь экран появляется реклама.",
+   hint:"дождитесь крестика",
+   money:"Тот же приём, что в App A, только привязанный к отправке.",
+   facts:[["ok","Отзыв от 27.02.2025: не успеваешь отправить сообщение, а уже новая реклама."],
+          ["ok","Среди 20 первых отзывов ещё четыре оценки 1★, где главная жалоба — слишком много рекламы."],
+          ["guess","Длительность 5 секунд в симуляции условная."]],
+   tr:"Рекламы в этом приложении до смешного много. Не успеваешь отправить сообщение, а уже новая реклама."},
+  {title:"Экран после каждого звонка",
+   lead:"Человек поговорил по телефону и положил трубку, а на экране окно мессенджера с вариантами действий.",
+   hint:"закройте экран",
+   money:"Ещё одна поверхность, которую приложение занимает, когда человек им не пользуется. Есть ли там реклама, из отзывов неизвестно.",
+   facts:[["ok","Отзыв от 04.10.2024: окно появляется каждый раз после звонка. На вопрос «это законно?» разработчик ответил: «Yes, it's legal.»"],
+          ["guess","Реклама на этом экране в отзывах не упоминается."]],
+   tr:"Каждый раз, когда я кладу трубку, выскакивает мессенджер с экраном, чтобы оставить сообщение. Так Google теперь следит за моими звонками? Это законно?"},
+  {title:"Как вернуть телефон",
+   lead:"Чтобы вернуть привычный главный экран, нужно найти нужный пункт в настройках. Автор отзыва из шага 5 не нашёл и просто удалил приложение.",
+   hint:["выберите стандартный главный экран", "готово, привычный экран возвращён"],
+   money:"Пока человек не найдёт этот пункт, главный экран остаётся за приложением.",
+   facts:[["ok","Этот путь разработчик сам дал в ответ на жалобу от 11.04.2026: Settings → Apps → Default Apps → Home."]],
+   tr:"Если хотите убрать наше приложение как главный экран, это легко: Настройки → Приложения → Приложения по умолчанию → Главный экран."}
+ ]
+};
+
+/* ── step texts: English (quotes are shown in the original, so no translation line) ── */
+ST.en = {
+ a:[
+  {title:"Someone looks for a Samsung Messages replacement",
+   lead:"In July 2026 Samsung Messages stopped working in the US. The person types “messages” into the store search and sees this app next to real messengers.",
+   hint:"tap Install",
+   money:"Nothing yet. The listing does warn: “Contains ads” and in-app purchases from $2.49 to $32.99. But it's a small line under the developer name.",
+   facts:[["ok","Play listing: 5M+ installs (about 7.1M per the page data), rating 3.96, 48,276 ratings."],
+          ["guess","The name is built almost entirely from search terms: Messenger, SMS, Text messages. So the app likely surfaces for generic queries. This is inferred from the name; we have no search data."]]},
+  {title:"Install",
+   lead:"A normal install. Everything to do with money starts after the first launch.",
+   hint:"wait, then tap Open",
+   facts:[["ok","On Play since Apr 18, 2018; last updated Sep 2, 2026."]]},
+  {title:"Request to become the SMS app",
+   lead:"The first thing the app asks for is the default SMS app role. Without it, it can't fully send and receive SMS, so the request itself is normal.",
+   hint:"tap Set as default",
+   money:"This role gives the app what matters most: every message the person gets now opens here. Every chat opened becomes a moment to show an ad.",
+   facts:[["ok","The Play description says it outright: “replace your default SMS app.”"]]},
+  {title:"The chat list: what people praise",
+   lead:"Each chat has its own color or wallpaper, and spam and service texts sit in a separate tab. So far, so convenient.",
+   hint:"tap the “Mom” chat",
+   money:"No ads on this screen. They're waiting for the next tap.",
+   facts:[["ok","A 4★ review about the separate tab for spam and reminders got 1,946 helpful votes."],
+          ["ok","The description lists privacy features: a PIN or emoji chat lock, a vault, hidden messages."]]},
+  {title:"10 seconds of ads every time a chat opens",
+   lead:"The person wants to read a message and gets a full-screen ad instead. The close button only appears after 10 seconds.",
+   hint:"wait for the ✕ and close the ad",
+   money:"The main source of revenue. The person is already in the app waiting for their chat, so the impression is almost guaranteed.",
+   facts:[["ok","Complaint from Apr 20, 2026: a 10-second ad every time you open a message."],
+          ["guess","The ad creative is made up."]],
+   policy:"Play bans full-screen ads that appear “unexpectedly, typically when the user has chosen to do something else.” An ad on opening a chat fits this description closely. Closing after 10 seconds stays within the allowed 15."},
+  {title:"Finally, the chat",
+   lead:"The person replies and sends a message. The chat itself works like a normal messenger.",
+   hint:["send a reply", "go back with the arrow"],
+   money:"A side branch: the app can send messages over the internet. For that, the number is verified through Telegram.",
+   facts:[["ok","The developer mentions Telegram in a reply from Jun 30, 2026: it lets you “send messages for free.”"],
+          ["ok","Reviews from 2019 and 2023 mention in-app “coins.” What they're for isn't clear from the reviews."]]},
+  {title:"Another ad on the way out of the chat",
+   lead:"The person goes back to the chat list and sees another full-screen ad.",
+   hint:"wait for the ✕",
+   money:"The second impression in a minute. Moving between screens gets sold too.",
+   facts:[["ok","Complaint from 2023: full-screen ads even when you go back from a chat to the list."],
+          ["guess","The 5-second duration in the simulation is a placeholder."]]},
+  {title:"The paid way out: Premium",
+   lead:"The ads are already annoying, and now there's an offer to remove them: 3 days free, then about $33 a year.",
+   hint:"tap either button",
+   money:"The second revenue source. The free version is annoying enough that some people pay. In template replies the developer compares a month of Premium to a cup of coffee.",
+   facts:[["ok","3 days free: from a developer reply on Jun 30, 2026."],
+          ["ok","About $32 a year: that's what reviews from 2023 and 2024 say. The most expensive item on the Play listing is $32.99."],
+          ["guess","When exactly this screen appears and what it looks like isn't visible from public data. The screen is an approximation."]]},
+  {title:"How the first minute ends",
+   lead:"Two ways out remain: pay for quiet or uninstall. The review with 590 helpful votes describes the second.",
+   hint:["uninstall the app", "the app is uninstalled"],
+   money:"The model runs on volume: millions of installs make up for the people who leave in the first minutes.",
+   facts:[["ok","The developer replied to 19 of the first 20 reviews. In 6 replies they explain that a free app lives on ads and recommend Premium."],
+          ["ok","In 7 of 19 replies they ask for 5 stars."]]}
+ ],
+ b:[
+  {title:"Same search, different app",
+   lead:"This app also catches people leaving Verizon Message+ and Samsung Messages. The name includes “Home”: it's not just a messenger.",
+   hint:"tap Install",
+   money:"The listing warns about ads and in-app purchases from $6.99 to $25.99.",
+   facts:[["ok","Play listing: 100K+ installs (about 287K per the page data), rating 3.92, 1,898 ratings and only 25 written reviews."],
+          ["ok","The description promises “Home Launcher Access”: its own home screen where swiping right opens SMS."]]},
+  {title:"Install",
+   lead:"A normal install.",
+   hint:"wait, then tap Open",
+   facts:[["ok","On Play since Mar 13, 2024; version 4.6, updated Sep 9, 2026."]]},
+  {title:"Request to become the SMS app",
+   lead:"Like App A, it first asks for the default SMS app role.",
+   hint:"tap Set as default",
+   money:"Every message now opens here.",
+   facts:[["ok","Every SMS app has to take this step."]]},
+  {title:"Second request: the home screen",
+   lead:"Next the app asks to become the phone's home screen. Whoever agrees hands over the screen they see most often.",
+   hint:"tap Set as default",
+   money:"The home screen becomes one more surface for ads, separate from the messenger.",
+   facts:[["ok","Play description: “Transform your device with a Easy and smart launcher. Swipe right to access all SMS and chats instantly.”"],
+          ["guess","How exactly the app leads people to this request isn't visible from public data."]]},
+  {title:"The home screen is taken over",
+   lead:"Right now the phone shows its usual home screen, as it was before the install. The person presses Home, and the Messages launcher opens instead. From now on this happens every time they press Home, from any app.",
+   hint:["press Home at the bottom of the phone screen", "swipe right or tap hint ③"],
+   money:"People see the home screen every time they leave any app, even when they don't plan to text. Each of those moments can show an ad.",
+   facts:[["ok","<span class='mk'>1</span>Home opens Messages. The developer calls the app a “default Home launcher” in a reply to a complaint."],
+          ["ok","<span class='mk'>2</span>Ads on the home screen: a review from Apr 11, 2026 says “put ads everywhere.”"],
+          ["ok","<span class='mk'>3</span>Swipes work differently: the description promises “Swipe right to access all SMS,” and a review complains “changed my swipe settings.”"],
+          ["guess","The review doesn't say where exactly the banner is. Its position in the simulation is a placeholder."]],
+   policy:"Under Play's rules, ads may only be shown “inside of the app serving them.” For a launcher, the home screen technically is the app, which is why such setups live in a gray zone."},
+  {title:"Finally, the messages",
+   lead:"The swipe opens SMS. The person opens a chat and replies.",
+   hint:["open the “Alex” chat", "send a reply"],
+   money:"Every sent message can be sold too. The next step shows what happens after tapping Send.",
+   facts:[["ok","Review from Sep 8, 2025: messages stopped arriving right after installing."]]},
+  {title:"An ad after sending",
+   lead:"As soon as the message goes out, a full-screen ad appears.",
+   hint:"wait for the ✕",
+   money:"The same trick as in App A, only tied to sending.",
+   facts:[["ok","Review from Feb 27, 2025: you can't even send a text before a new ad shows up."],
+          ["ok","Among the first 20 reviews there are four more 1★ ratings whose main complaint is too many ads."],
+          ["guess","The 5-second duration in the simulation is a placeholder."]]},
+  {title:"A screen after every call",
+   lead:"The person finishes a phone call and hangs up, and the messenger's window pops up with a set of actions.",
+   hint:"close the screen",
+   money:"One more surface the app takes while the person isn't using it. Whether it shows ads isn't known from the reviews.",
+   facts:[["ok","Review from Oct 4, 2024: the window appears after every call. Asked “is this legal?”, the developer replied: “Yes, it's legal.”"],
+          ["guess","The reviews don't mention ads on this screen."]]},
+  {title:"How to get the phone back",
+   lead:"To get the usual home screen back, you have to find the right setting. The reviewer from step 5 didn't, and simply uninstalled the app.",
+   hint:["choose the standard home screen", "done, the usual screen is back"],
+   money:"Until the person finds this setting, the home screen stays with the app.",
+   facts:[["ok","The developer gave this path themselves in reply to a complaint on Apr 11, 2026: Settings → Apps → Default Apps → Home."]]}
+ ]
+};
+
+/* ── static page text: Ukrainian is read from the HTML itself; Russian and English live here ── */
+const TITLE = {uk:"Монетизація SMS-замінників", ru:"Монетизация SMS-заменителей", en:"SMS Replacement Monetization"};
+const ARIA = {
+  uk:{langs:"Мова", toc:"Розділи", tabs:"Застосунок"},
+  ru:{langs:"Язык", toc:"Разделы", tabs:"Приложение"},
+  en:{langs:"Language", toc:"Sections", tabs:"App"}
+};
+const DICT = {};
+DICT.ru = {
+ "bar.k":"Конкурентный анализ · SMS-заменители",
+ "hdr.eyebrow":"Google Play · 29.09.2026 · Подготовил VELDAN",
+ "hdr.h1":"Как зарабатывают SMS-заменители",
+ "hdr.lede":"Два приложения, которые люди ставят вместо Samsung Messages и Verizon Message+. Ниже симуляция первой минуты после установки, цифры из Google Play, отзывы пользователей и разбор того, откуда берутся деньги.",
+ "hdr.ok":"Подтверждено: карточка Play, отзывы, Exodus, официальные страницы",
+ "hdr.guess":"Предположение или обобщение",
+ "toc.demo":"Симуляция", "toc.apps":"Два приложения", "toc.reviews":"Отзывы", "toc.rating":"Накручен ли рейтинг", "toc.why":"Почему их ставят", "toc.model":"Монетизация", "toc.us":"Выводы для нас", "toc.src":"Источники",
+ "demo.h":"Первая минута после установки",
+ "demo.p":"Нажимайте кнопки на экране телефона или «Далее». Справа видно, что происходит на каждом шаге и где здесь деньги.",
+ "demo.sim":"Симуляция. Интерфейс упрощён, реклама и имена в чатах вымышлены.",
+ "demo.cap":"Счётчики считают только эту симуляцию. 10 секунд рекламы взяты из отзыва, 5 секунд условные.",
+ "apps.h":"Два приложения",
+ "apps.p":"Данные из карточек Google Play на 29.09.2026. Количество рекламных SDK по отчётам Exodus Privacy.",
+ "a.pitch":"Мессенджер с замком на чаты, темами для каждого чата и сообщениями через интернет. Крупный и старый игрок: в Play с 2018 года.",
+ "b.pitch":"Мессенджер и главный экран телефона в одном приложении. Моложе и меньше: в Play с марта 2024 года.",
+ "kv.dev":"Разработчик", "kv.inst":"Скачиваний", "kv.rating":"Оценка", "kv.ratings":"Оценок", "kv.reviews":"Отзывов с текстом", "kv.since":"В Play с", "kv.upd":"Обновлено", "kv.ads":"Реклама", "kv.iap":"Покупки", "kv.sdk":"Рекламных SDK",
+ "a.inst":"5 млн+ <small>(≈7,1 млн)</small>", "a.rating":"3,96", "a.ratings":"48 276", "a.reviews":"1 215", "a.since":"18.04.2018", "a.upd":"02.09.2026", "yes":"есть",
+ "b.inst":"100 тыс.+ <small>(≈287 тыс.)</small>", "b.rating":"3,92", "b.ratings":"1 898", "b.since":"13.03.2024", "b.upd":"09.09.2026",
+ "a.link":"Открыть App A в Google Play ↗", "b.link":"Открыть App B в Google Play ↗",
+ "rev.h":"Что пишут в отзывах",
+ "rev.p":"Цитаты из первых 20 отзывов, которые Google Play показывает на странице каждого приложения. Оригинал на английском, под ним перевод. Имена авторов убраны.",
+ "rat.h":"Накручен ли рейтинг?",
+ "rat.p":"Чтобы цифры что-то значили, мы сравнили App A и App B с семью известными SMS-приложениями. Для всех одинаково посчитали две вещи: долю пятёрок среди всех оценок и долю негативных отзывов (1–2★) среди 20, которые Play показывает первыми.",
+ "ch1.h":"Пятёрки среди всех оценок", "ch1.sub":"Доля 5★ в распределении оценок, %. Выделенные полосы: App A и App B.",
+ "ch2.h":"Негативные среди 20 первых отзывов", "ch2.sub":"Доля отзывов на 1–2★, %. Порядок строк тот же.",
+ "tbl.sum":"Все цифры таблицей",
+ "ver.k":"Вывод", "ver.h":"Цифры накрутку не показывают",
+ "ver.p1":"Доля пятёрок у App A (56,6&nbsp;%) и App B (59,9&nbsp;%) почти такая же, как у Textra (58,5&nbsp;%) и Chomp SMS (61,6&nbsp;%), и заметно ниже, чем у Google Messages (79,6&nbsp;%).",
+ "ver.p2":"Разрыв между звёздами и текстами тоже обычный. У Google Messages, Textra и Pulse SMS негативные 15 из 20 первых отзывов, хотя пятёрок там от 49 до 80&nbsp;%. Людям, которым что-то не нравится, чаще хочется написать текст.",
+ "ver.p3":"Доказать покупку отзывов по публичным данным невозможно, это видит только Google. Честная формулировка для отчёта: <strong>оценка около 3,9 не отражает того, на что люди жалуются в текстах.</strong> Ниже две вещи, которые действительно выделяются.",
+ "oddb.h":"App B: текстовые пятёрки",
+ "oddb.p1":"Всего 25 отзывов с текстом на 1 898 оценок. 11 из 20 первых отзывов пятёрки, в основном короткие и общие, несколько едва связные. Первая появилась через 13 дней после выхода, ещё в версии 1.0.0.0. Три написаны с 9 по 15 мая 2024 года.",
+ "oddb.p2":"Но и негативные отзывы в App B короткие: «Too many ads» встречается трижды. Так что сама длина ничего не доказывает, а 11 отзывов на 1 898 оценок слишком мало, чтобы судить обо всём рейтинге.",
+ "odda.h":"App A: работа с оценками",
+ "odda.1":"В 7 из 19 ответов разработчик просит поставить 5 звёзд. Шесть из этих просьб написаны под отзывами на 2–4★.",
+ "odda.2":"В контрольной группе так не делают. Chomp SMS и Textra только благодарят за уже поставленные пятёрки.",
+ "odda.3":"Пятёрка, которую чаще всего отмечали полезной (1 197 раз), на самом деле жалоба. Человек поставил 5★, потому что заплатил около $30 в год, чтобы убрать рекламу.",
+ "odda.4":"Одна из трёх четвёрок вообще не про это приложение: в ней хвалят часы работы магазина. Разработчик ответил и на неё с просьбой поставить 5★.",
+ "why.h":"Почему их вообще ставят",
+ "why.p":"Часть людей приходит сюда вынужденно. Verizon и Samsung закрыли свои мессенджеры, и пришлось искать замену. Это видно по датам: отзывы идут следом за закрытием.",
+ "tl.e":"Событие", "tl.r":"Отзыв в Google Play",
+ "tl1.t":"04.10.2024", "tl1.p":"App B, 3★: «I'm using this because Verizon Messenger is going away».<span class='src'>«Я пользуюсь этим, потому что Verizon Messenger закрывается».</span>",
+ "tl2.t":"12.2024", "tl2.p":"<strong>Verizon отключает Message+.</strong> Советует перейти на Google Messages на Android или Apple Messages на iPhone.<span class='src'>Источник: Verizon</span>",
+ "tl3.t":"08.04.2026", "tl3.p":"App A, 1★: «can't delete ads. why are you discontinuing Samsung».<span class='src'>Человек пишет разработчику так, будто он и есть Samsung.</span>",
+ "tl4.t":"06.07.2026", "tl4.p":"<strong>Samsung Messages перестаёт работать</strong> на Galaxy с Android 12 и новее в США. Samsung советует Google Messages.<span class='src'>Источники: Samsung, Droid Life</span>",
+ "tl5.t":"08.07.2026", "tl5.p":"App A, 2★: «I did not like being forced to change».<span class='src'>«Мне не понравилось, что меня заставили перейти».</span>",
+ "tl6.t":"16.08.2026", "tl6.p":"App A, 1★: «Samsung stopped supporting their text messenger, and unfortunately, I selected this as a replacement».<span class='src'>«Samsung перестал поддерживать свой мессенджер, и я, к сожалению, выбрал на замену вот это».</span>",
+ "c1.h":"Вынужденный переход", "c1.p":"Verizon в 2024 году и Samsung в 2026-м закрыли свои приложения. Обе компании советовали Google Messages, но часть людей ставит то, что нашла в поиске.",
+ "c2.h":"Недоверие к Google", "c2.p":"«I don't like Google snooping in everything». Для части людей Google Messages не вариант, и они ищут альтернативу.",
+ "c3.h":"Персонализация", "c3.p":"Свой цвет или обои для каждого чата, отдельная вкладка для спама. Это чаще всего хвалят в App A, даже те, кому надоела реклама.",
+ "c4.h":"Замок на чаты", "c4.p":"В описании App A есть замок на чаты PIN-кодом или эмодзи, хранилище и скрытые сообщения. Похоже, «AppLocker» из брифа — это он. Собственного экрана блокировки телефона нет ни в описаниях, ни в отзывах.",
+ "c5.h":"Название как поисковый запрос", "c5.p":"«Messenger SMS - Text messages» и «Messages: SMS Texting Home App» почти целиком состоят из слов, которые люди вводят в поиск. Отзыв «why are you discontinuing Samsung» показывает, что кто-то считает такое приложение официальной заменой.",
+ "model.h":"Как устроена монетизация", "model.p":"Восемь пунктов в том порядке, в котором человек через них проходит.",
+ "m1.h":"Вход: бесплатно и с поисковым названием", "m1.p":"Люди ищут замену закрытым мессенджерам. Приложения бесплатные, а названия совпадают с тем, что вводят в поиск.",
+ "m2.h":"Роль по умолчанию", "m2.p":"App A получает все SMS. App B получает ещё и главный экран. Каждая роль добавляет моменты, когда человек видит приложение.",
+ "m3.h":"Реклама в момент действия", "m3.p":"Реклама на весь экран стоит там, где человек что-то делает: открывает чат (App A, 10 секунд), возвращается к списку (App A), отправляет сообщение (App B).",
+ "m4.h":"Новые поверхности (App B)", "m4.p":"Собственный главный экран с рекламой и окно после каждого звонка. Приложение видно даже тогда, когда человек не пишет SMS.",
+ "m5.h":"Платный выход", "m5.p":"App A продаёт Premium без рекламы: 3 дня бесплатно, дальше около $33 в год. В App B покупки от $6.99 до $25.99. Что именно там продают, по публичным данным не видно.",
+ "m6.h":"Аукцион рекламных сетей", "m6.p":"В App A встроено 10 рекламных SDK, в App B 8. Когда за показ соревнуется много сетей, каждый показ обычно продаётся дороже. Exodus находит код библиотек в приложении, но не доказывает, что каждая из них действительно показывает рекламу.",
+ "m6.a":"App A · отчёт от 20.08.2026", "m6.b":"App B · отчёт от 19.04.2026",
+ "m7.h":"Сначала аудитория, потом реклама (App A)", "m7.p":"В 2019 году пишут «there are no ads». В январе 2022-го приложение ещё хвалят за то, что в нём нет рекламы. В декабре 2022-го уже просят её убрать, с января 2023-го жалуются на рекламу на весь экран. Приложение набрало аудиторию без рекламы и включило её позже.",
+ "m8.h":"Работа с отзывами (App A)", "m8.p":"Разработчик ответил на 19 из 20 первых отзывов. Шаблон один: бесплатное приложение живёт за счёт рекламы, купите Premium. В 7 ответах просит поставить 5 звёзд.",
+ "rules.h":"Где граница по правилам Google Play",
+ "r1":"Рекламу можно показывать только внутри приложения, которое её показывает. App B с собственным главным экраном стоит на грани: для лаунчера главный экран формально и есть приложение.",
+ "r2":"Реклама на весь экран, когда человек собирался сделать что-то другое, запрещена. Реклама при открытии чата в App A очень похожа на это описание.",
+ "r3":"Лимит 15 секунд. Пример допустимой рекламы правила приводят сами: после экрана с результатом в игре.",
+ "r4":"Зарабатывать на экране блокировки может только приложение, которое и есть экран блокировки. В App A и App B такого не нашли.",
+ "us.h":"Что это значит для наших игр",
+ "us1":"<b>Реклама на действие зарабатывает, но именно на неё жалуются больше всего.</b>В App A главная жалоба: 10 секунд рекламы перед каждым чатом. В игре аналог этого момента — реклама на кнопке «Играть» или на старте уровня. Правила Play сами приводят допустимый пример: реклама после экрана с результатом.",
+ "us2":"<b>Платный выход работает, когда цена не шокирует.</b>Отзыв человека, который заплатил за тишину, собрал 1 197 отметок «полезно». Рядом жалобы «$32 в год, чтобы не видеть рекламу?».",
+ "us3":"<b>8–10 рекламных сетей даже в простом SMS-приложении.</b>Стоит сверить, сколько сетей соревнуется за показ в нашем рекламном модуле.",
+ "us4":"<b>Чужие поверхности дают самые злые отзывы.</b>Главный экран и окно после звонка — то, из-за чего приложение удаляют («had to uninstall it to get my phone back to normal»). К тому же это серая зона правил Play.",
+ "src.h":"Источники",
+ "s.play":"Карточка, распределение оценок и 20 первых отзывов, собрано 29.09.2026",
+ "s.ctrl":"Google Play, контрольная группа:", "s.ctrlS":"Те же метрики, собрано 29.09.2026",
+ "s.exA":"Exodus Privacy: отчёт по App A", "s.exAs":"Отчёт от 20.08.2026",
+ "s.exB":"Exodus Privacy: отчёт по App B", "s.exBs":"Отчёт от 19.04.2026",
+ "s.pol":"Google Play Console Help: правила «Ads»", "s.polS":"Цитаты в разделе «Где граница»",
+ "s.sam":"Samsung US: прекращение поддержки Samsung Messages", "s.samS":"С июля 2026, Galaxy с Android 12 и новее",
+ "s.dlS":"06.07.2026", "s.vzS":"Отключено в декабре 2024",
+ "toc.notes":"Тонкости",
+ "n.h":"Тонкости, на которые стоит обратить внимание",
+ "n.p":"Детали, которые легко пропустить. В каждом пункте сначала факт, потом что он может значить. Второе остаётся гипотезой, пока его не проверили.",
+ "n1.k":"App B · совместимость устройств", "n1.h":"На Xiaomi приложение не ставится",
+ "n1.f":"Play пишет «Ваше устройство несовместимо с этой версией» на двух разных моделях: Redmi Note 14 (Android 16, HyperOS 3) и Redmi 10C. При этом в Украине приложение доступно, а требование к системе — только Android 10 и новее.",
+ "n1.g":"Скорее всего, разработчик вручную исключил устройства Xiaomi в каталоге устройств Play Console. Прошивки MIUI/HyperOS по умолчанию ограничивают фоновую работу, автозапуск и окна поверх других приложений. Именно на этом держатся лаунчер и окно после звонка, так что на Xiaomi схема работала бы хуже и собирала бы единицы.",
+ "n1.c":"Как проверить: открыть карточку на Samsung или Pixel. Если там кнопка «Установить», исключён именно бренд Xiaomi.",
+ "n2.k":"App A и App B · аудитория", "n2.h":"Кого ловят: владельцев Samsung и абонентов Verizon в США",
+ "n2.f":"В отзывах App A люди пишут, что пришли после Samsung Messages, в отзывах App B — после Verizon Messenger. Оба мессенджера закрылись именно в США.",
+ "n2.g":"Вместе с исключением Xiaomi это похоже на сознательный выбор: люди, которых заставили искать замену, и устройства, где приложению позволено больше. Картина сложится, если подтвердится, что на Samsung App B ставится.",
+ "n2.c":"Как проверить: совместимость на Samsung Galaxy и поведение лаунчера и окна после звонка на тестовом Samsung.",
+ "n3.k":"App B · оценка", "n3.h":"Оценка зависит от страны",
+ "n3.f":"29.09.2026 в украинском Google Play у App B оценка 4,4★ и около 1 тыс. отзывов, в американском — 3,92★ и 1 898 оценок.",
+ "n3.g":"Play считает оценки отдельно для каждой страны. Человек в Украине видит лучшую репутацию, чем американец, который жалуется на рекламу. Цифры этого отчёта взяты из американского Play.",
+ "n3.c":"Для бенчмарков: всегда записывать, из какой страны взята оценка.",
+ "n4.k":"App B · общая гипотеза", "n4.h":"Заработок на присутствии вне мессенджера",
+ "n4.f":"Приложение просит роль главного экрана, показывает окно после каждого звонка и, по отзывам, ставит рекламу «everywhere».",
+ "n4.g":"Похоже, модель App B рассчитана на то, чтобы быть на экране как можно чаще, а не только когда человек пишет SMS. Исключение прошивок, которые такое ограничивают, вписывается в эту картину. Доказательство пока только косвенное.",
+ "n4.c":"Как проверить: день использования на тестовом Samsung с подсчётом, сколько раз и где приложение появляется на экране.",
+ "foot":"Отчёт подготовил <strong>VELDAN</strong>, 29.09.2026. Данные собраны с публичных страниц; цифры в Google Play меняются каждый день. Симуляция упрощает интерфейс; рекламные креативы, имена в чатах и названия рекламодателей вымышлены."
+};
+
+DICT.en = {
+ "bar.k":"Competitive analysis · SMS replacement apps",
+ "hdr.eyebrow":"Google Play · Sep 29, 2026 · Prepared by VELDAN",
+ "hdr.h1":"How SMS replacement apps make money",
+ "hdr.lede":"Two apps people install to replace Samsung Messages and Verizon Message+. Below: a simulation of the first minute after install, numbers from Google Play, user reviews, and a breakdown of where the money comes from.",
+ "hdr.ok":"Confirmed: Play listing, reviews, Exodus, official pages",
+ "hdr.guess":"Assumption or generalization",
+ "toc.demo":"Simulation", "toc.apps":"The two apps", "toc.reviews":"Reviews", "toc.rating":"Is the rating inflated?", "toc.why":"Why people install them", "toc.model":"Monetization", "toc.us":"Takeaways for us", "toc.src":"Sources",
+ "demo.h":"The first minute after install",
+ "demo.p":"Tap the buttons on the phone screen or press Next. The panel on the right explains each step and where the money is.",
+ "demo.sim":"Simulation. The interface is simplified; ads and chat names are made up.",
+ "demo.cap":"Counters track this simulation only. The 10-second ad comes from a review; 5 seconds is a placeholder.",
+ "apps.h":"The two apps",
+ "apps.p":"Data from the Google Play listings as of Sep 29, 2026. Ad SDK counts from Exodus Privacy reports.",
+ "a.pitch":"A messenger with chat locks, per-chat themes and messaging over the internet. A large, long-standing player: on Play since 2018.",
+ "b.pitch":"A messenger and a phone home screen in one app. Newer and smaller: on Play since March 2024.",
+ "kv.dev":"Developer", "kv.inst":"Installs", "kv.rating":"Rating", "kv.ratings":"Ratings", "kv.reviews":"Written reviews", "kv.since":"On Play since", "kv.upd":"Updated", "kv.ads":"Ads", "kv.iap":"In-app purchases", "kv.sdk":"Ad SDKs",
+ "a.inst":"5M+ <small>(≈7.1M)</small>", "a.rating":"3.96", "a.ratings":"48,276", "a.reviews":"1,215", "a.since":"Apr 18, 2018", "a.upd":"Sep 2, 2026", "yes":"yes",
+ "b.inst":"100K+ <small>(≈287K)</small>", "b.rating":"3.92", "b.ratings":"1,898", "b.since":"Mar 13, 2024", "b.upd":"Sep 9, 2026",
+ "a.link":"Open App A on Google Play ↗", "b.link":"Open App B on Google Play ↗",
+ "rev.h":"What reviewers say",
+ "rev.p":"Quotes from the first 20 reviews Google Play shows on each app's page. Author names removed.",
+ "rat.h":"Is the rating inflated?",
+ "rat.p":"To make the numbers meaningful, we compared App A and App B with seven well-known SMS apps. For each, we measured the same two things: the share of 5★ among all ratings, and the share of negative reviews (1–2★) among the first 20 that Play shows.",
+ "ch1.h":"5★ share of all ratings", "ch1.sub":"Share of 5★ in the rating distribution, %. Highlighted bars: App A and App B.",
+ "ch2.h":"Negative among the first 20 reviews", "ch2.sub":"Share of 1–2★ reviews, %. Same row order.",
+ "tbl.sum":"All numbers as a table",
+ "ver.k":"Conclusion", "ver.h":"The numbers don't show inflation",
+ "ver.p1":"The 5★ share for App A (56.6%) and App B (59.9%) is about the same as Textra (58.5%) and Chomp SMS (61.6%), and clearly lower than Google Messages (79.6%).",
+ "ver.p2":"The gap between stars and written reviews is normal too. For Google Messages, Textra and Pulse SMS, 15 of the first 20 reviews are negative, even though 49–80% of their ratings are 5★. Unhappy people are more likely to write something.",
+ "ver.p3":"Bought reviews can't be proven from public data; only Google can see that. The honest wording for the report: <strong>a rating of about 3.9 doesn't reflect what people complain about in their reviews.</strong> Below are two things that do stand out.",
+ "oddb.h":"App B: written 5★ reviews",
+ "oddb.p1":"Only 25 written reviews for 1,898 ratings. 11 of the first 20 are 5★, mostly short and generic, a few barely coherent. The first one appeared 13 days after release, on version 1.0.0.0. Three were written between May 9 and 15, 2024.",
+ "oddb.p2":"But App B's negative reviews are short too: “Too many ads” appears three times. Length alone proves nothing, and 11 reviews out of 1,898 ratings are too few to judge the whole rating.",
+ "odda.h":"App A: managing ratings",
+ "odda.1":"In 7 of 19 replies the developer asks for 5 stars. Six of those requests sit under 2–4★ reviews.",
+ "odda.2":"The control group doesn't do this. Chomp SMS and Textra only thank people for 5★ ratings they already gave.",
+ "odda.3":"The 5★ review marked helpful most often (1,197 times) is actually a complaint. The person gave 5★ because they paid about $30 a year to remove the ads.",
+ "odda.4":"One of the three 4★ reviews isn't about this app at all: it praises a store's opening hours. The developer still replied asking for 5★.",
+ "why.h":"Why people install them at all",
+ "why.p":"Some people end up here because they have to. Verizon and Samsung shut down their messengers, and people had to find a replacement. The dates show it: reviews follow the shutdowns.",
+ "tl.e":"Event", "tl.r":"Google Play review",
+ "tl1.t":"Oct 4, 2024", "tl1.p":"App B, 3★: “I'm using this because Verizon Messenger is going away.”",
+ "tl2.t":"Dec 2024", "tl2.p":"<strong>Verizon shuts down Message+.</strong> It recommends Google Messages on Android or Apple Messages on iPhone.<span class='src'>Source: Verizon</span>",
+ "tl3.t":"Apr 8, 2026", "tl3.p":"App A, 1★: “can't delete ads. why are you discontinuing Samsung.”<span class='src'>The reviewer writes to the developer as if it were Samsung.</span>",
+ "tl4.t":"Jul 6, 2026", "tl4.p":"<strong>Samsung Messages stops working</strong> on Galaxy phones with Android 12 or later in the US. Samsung recommends Google Messages.<span class='src'>Sources: Samsung, Droid Life</span>",
+ "tl5.t":"Jul 8, 2026", "tl5.p":"App A, 2★: “I did not like being forced to change.”",
+ "tl6.t":"Aug 16, 2026", "tl6.p":"App A, 1★: “Samsung stopped supporting their text messenger, and unfortunately, I selected this as a replacement.”",
+ "c1.h":"Forced switch", "c1.p":"Verizon (2024) and Samsung (2026) shut down their apps. Both recommended Google Messages, but some people install whatever they find in search.",
+ "c2.h":"Distrust of Google", "c2.p":"“I don't like Google snooping in everything.” For some people Google Messages is not an option, so they look for alternatives.",
+ "c3.h":"Personalization", "c3.p":"A color or wallpaper for each chat, a separate tab for spam. This is what App A gets praised for most, even by people tired of the ads.",
+ "c4.h":"Chat lock", "c4.p":"App A's description lists a PIN or emoji chat lock, a vault and hidden messages. This is probably the “AppLocker” from the brief. Neither the descriptions nor the reviews mention a custom phone lock screen.",
+ "c5.h":"A name built from search terms", "c5.p":"“Messenger SMS - Text messages” and “Messages: SMS Texting Home App” are made almost entirely of words people type into search. The review “why are you discontinuing Samsung” shows some people take such an app for an official replacement.",
+ "model.h":"How the monetization works", "model.p":"Eight points, in the order a user goes through them.",
+ "m1.h":"Entry: free, with a search-term name", "m1.p":"People are looking to replace a messenger that shut down. The apps are free, and their names match what people type into search.",
+ "m2.h":"The default role", "m2.p":"App A gets all SMS. App B also gets the home screen. Each role adds moments when the person sees the app.",
+ "m3.h":"Ads at the moment of action", "m3.p":"Full-screen ads sit where the person is doing something: opening a chat (App A, 10 seconds), going back to the list (App A), sending a message (App B).",
+ "m4.h":"New surfaces (App B)", "m4.p":"Its own home screen with ads and a window after every call. The app is visible even when the person isn't texting.",
+ "m5.h":"The paid way out", "m5.p":"App A sells ad-free Premium: 3 days free, then about $33 a year. App B's in-app purchases range from $6.99 to $25.99; public data doesn't show what exactly is sold.",
+ "m6.h":"An auction of ad networks", "m6.p":"App A bundles 10 ad SDKs, App B 8. When many networks compete for an impression, it usually sells for more. Exodus detects library code in the app; it doesn't prove each one actually serves ads.",
+ "m6.a":"App A · report of Aug 20, 2026", "m6.b":"App B · report of Apr 19, 2026",
+ "m7.h":"Audience first, ads later (App A)", "m7.p":"In 2019 reviewers write “there are no ads.” In January 2022 people still praise the app for having no ads. By December 2022 they ask to remove them, and from January 2023 they complain about full-screen ads. The app built its audience ad-free and switched ads on later.",
+ "m8.h":"Handling reviews (App A)", "m8.p":"The developer replied to 19 of the first 20 reviews. The template is always the same: a free app lives on ads, buy Premium. In 7 replies they ask for 5 stars.",
+ "rules.h":"Where Google Play's rules draw the line",
+ "r1":"Ads may only appear inside the app serving them. App B, with its own home screen, sits on the edge: for a launcher, the home screen technically is the app.",
+ "r2":"Full-screen ads shown when the user meant to do something else are banned. App A's ad on opening a chat fits this description closely.",
+ "r3":"The limit is 15 seconds. The rules themselves give an example of acceptable placement: after the score screen in a game.",
+ "r4":"Only an app whose sole purpose is a lock screen may monetize the lock screen. We found nothing like that in App A or App B.",
+ "us.h":"What this means for our games",
+ "us1":"<b>Ads on user actions earn money, and they draw the most complaints.</b>App A's top complaint is 10 seconds of ads before every chat. In a game, the equivalent is an ad on the Play button or at the start of a level. Play's rules give an acceptable example themselves: an ad after the score screen.",
+ "us2":"<b>A paid way out works when the price isn't a shock.</b>A review from someone who paid for silence got 1,197 helpful votes. Right next to it: “$32 a year to not see ads?”",
+ "us3":"<b>8–10 ad networks even in a simple SMS app.</b>Worth checking how many networks compete for each impression in our ad module.",
+ "us4":"<b>Taking over other surfaces earns the angriest reviews.</b>The home screen and the after-call window are why people uninstall (“had to uninstall it to get my phone back to normal”). It's also a gray area under Play's rules.",
+ "src.h":"Sources",
+ "s.play":"Listing, rating distribution and the first 20 reviews, collected Sep 29, 2026",
+ "s.ctrl":"Google Play, control group:", "s.ctrlS":"Same metrics, collected Sep 29, 2026",
+ "s.exA":"Exodus Privacy: App A report", "s.exAs":"Report of Aug 20, 2026",
+ "s.exB":"Exodus Privacy: App B report", "s.exBs":"Report of Apr 19, 2026",
+ "s.pol":"Google Play Console Help: Ads policy", "s.polS":"Quoted in “Where Google Play's rules draw the line”",
+ "s.sam":"Samsung US: Samsung Messages discontinuation", "s.samS":"From July 2026, Galaxy phones with Android 12 or later",
+ "s.dlS":"Jul 6, 2026", "s.vzS":"Shut down in December 2024",
+ "toc.notes":"Fine print",
+ "n.h":"Details worth noticing",
+ "n.p":"Small details that are easy to miss. Each item gives the fact first, then what it may mean. The second part stays a hypothesis until someone checks it.",
+ "n1.k":"App B · device compatibility", "n1.h":"The app won't install on Xiaomi",
+ "n1.f":"Play says “Your device isn't compatible with this version” on two different models: Redmi Note 14 (Android 16, HyperOS 3) and Redmi 10C. Yet the app is available in Ukraine and only requires Android 10 or later.",
+ "n1.g":"Most likely the developer manually excluded Xiaomi devices in the Play Console device catalog. MIUI/HyperOS restrict background activity, autostart and drawing over other apps by default. The launcher and the after-call window depend on exactly that, so on Xiaomi the setup would work worse and collect 1★ reviews.",
+ "n1.c":"How to check: open the listing on a Samsung or Pixel. If it shows Install there, the Xiaomi brand is what's excluded.",
+ "n2.k":"App A and App B · audience", "n2.h":"Who they target: Samsung owners and Verizon customers in the US",
+ "n2.f":"App A reviewers say they came after Samsung Messages; App B reviewers, after Verizon Messenger. Both messengers shut down in the US.",
+ "n2.g":"Together with the Xiaomi exclusion, this looks like a deliberate choice: people forced to find a replacement, on devices that let the app do more. The picture holds if App B turns out to install on Samsung.",
+ "n2.c":"How to check: compatibility on a Samsung Galaxy, plus how the launcher and after-call window behave on a test Samsung.",
+ "n3.k":"App B · rating", "n3.h":"The rating depends on the country",
+ "n3.f":"On Sep 29, 2026, App B had 4.4★ and about 1K reviews on the Ukrainian Google Play, and 3.92★ with 1,898 ratings on the US store.",
+ "n3.g":"Play computes ratings per country. Someone in Ukraine sees a better reputation than an American complaining about ads. The numbers in this report come from the US store.",
+ "n3.c":"For benchmarks: always record which country a rating comes from.",
+ "n4.k":"App B · overall hypothesis", "n4.h":"Earning from being present outside the messenger",
+ "n4.f":"The app asks for the home screen role, shows a window after every call, and according to reviews puts ads “everywhere.”",
+ "n4.g":"App B's model seems built to be on screen as often as possible, not only when the person is texting. Excluding firmware that restricts this fits the picture. The evidence is only indirect so far.",
+ "n4.c":"How to check: a day of use on a test Samsung, counting how often and where the app appears on screen.",
+ "foot":"Report prepared by <strong>VELDAN</strong>, Sep 29, 2026. Data collected from public pages; Google Play numbers change daily. The simulation simplifies the interface; ad creatives, chat names and advertiser names are made up."
+};
+
+/* ── review themes: quotes are language-independent, headings and translations per language ── */
+const TQ = [
+ [{app:"A", st:1, d:"2026-04-20", likes:45, en:"Every time I click on a message, I'm bombarded with a 10-second ad, which is just too much."},
+  {app:"A", st:1, d:"2025-04-01", likes:590, en:"your app was a big immediate fail for extraordinarily annoying, obtrusive and excessive ad popups. It took less than 5 minutes before I uninstalled it."},
+  {app:"B", st:1, d:"2025-02-27", likes:6, en:"The ADS on this app is ridiculous way too many. You cannot even get a text set off before a new ad is there?"}],
+ [{app:"A", st:1, d:"2024-10-23", likes:134, en:"switching back to the Samsung messenger that doesn't hold me hostage for ads and is free.. 32$ a year to not see ads?"},
+  {app:"A", st:5, d:"2023-03-17", likes:1197, en:"5 stars only after paying 30 something dollars yearly to remove extremely intrusive annoying multiple bomb barding adds."},
+  {app:"A", st:2, d:"2026-07-07", likes:14, en:"why am I getting advertisements on this app and not the previous one? now I have to PAY to get rid of these annoying adds."}],
+ [{app:"B", st:1, d:"2026-04-11", likes:0, en:"this app took over my whole phone, changed the home screen, changed my swipe settings, put ads everywhere. i had to uninstall it to get my phone back to normal."},
+  {app:"B", st:3, d:"2024-10-04", likes:16, en:"everything I get a call and hang up the messenger pops up with option screen to leave message."}],
+ [{app:"B", st:1, d:"2025-09-08", likes:13, en:"immediately I installed it I stopped receiving messages I almost thought it was my phone that's faulty"},
+  {app:"A", st:1, d:"2026-06-28", likes:26, en:"doubles messages, turns some into drafts, blocks some peoples texts,and more malfunctions."}],
+ [{app:"A", dev:0, en:"We are sorry for this, but to continue work on this free app we need revenue from Ads. Developing a mobile app of this high quality costs a lot of money every day. If you like our app and don't like ads, support us by purchasing the premium version."},
+  {app:"A", dev:1, en:"if you like the app, please give us a 5 STAR rating ★★★★★."}]
+];
+const TT = {
+ uk:{
+  h:["Реклама на кожну дію","Платити, щоб прибрати рекламу","Застосунок займає телефон","Ламається головне","Як відповідає розробник App A"],
+  p:["Головна скарга в обох застосунках. Реклама стоїть у момент, коли людина щось робить: відкриває чат, повертається до списку, надсилає повідомлення.",
+     "Люди прийшли з безкоштовних Samsung Messages і Message+, де реклами не було, і не розуміють, чому тепер мають платити.",
+     "Скарги, характерні для App B: головний екран і вікно після дзвінків.",
+     "Частина скарг зовсім не про рекламу: повідомлення зникають, дублюються або не приходять.",
+     "Розробник відповів на 19 з 20 перших відгуків. Відповіді здебільшого шаблонні."],
+  tr:[["Щоразу, коли я відкриваю повідомлення, мене засипає 10-секундна реклама. Це вже занадто.",
+       "Ваш застосунок одразу провалився через надзвичайно дратівливі, нав’язливі й надмірні рекламні вікна. Я видалив його менш ніж за 5 хвилин.",
+       "Реклами в цьому застосунку до смішного багато. Не встигаєш надіслати повідомлення, а вже нова реклама."],
+      ["Повертаюся до месенджера Samsung, який безкоштовний і не тримає мене в заручниках реклами. 32 долари на рік, щоб не бачити реклами?",
+       "5 зірок лише тому, що я плачу тридцять із чимось доларів на рік, щоб прибрати вкрай нав’язливу рекламу, яка сиплеться одна за одною.",
+       "Чому тут є реклама, а в попередньому застосунку її не було? Тепер я мушу ПЛАТИТИ, щоб позбутися цієї дратівливої реклами."],
+      ["Цей застосунок захопив увесь мій телефон: змінив головний екран, налаштування свайпів і наліпив рекламу скрізь. Довелося видалити, щоб повернути телефон до норми.",
+       "Щоразу, коли я кладу слухавку, вискакує месенджер з екраном, щоб залишити повідомлення."],
+      ["Щойно я його встановив, перестали приходити повідомлення. Я вже думав, що зламався телефон.",
+       "Дублює повідомлення, частину перетворює на чернетки, блокує повідомлення деяких людей, і це ще не все."],
+      ["Нам шкода, але щоб і далі розвивати цей безкоштовний застосунок, нам потрібен дохід від реклами. Розробка такого якісного застосунку щодня коштує багато грошей. Якщо застосунок вам подобається, а реклама ні, підтримайте нас: купіть преміум-версію.",
+       "Якщо застосунок вам подобається, поставте нам, будь ласка, 5 зірок ★★★★★."]],
+  dev:["Ця відповідь тричі серед 20 перших відгуків","Відповідь на 4★ від 23.07.2026, де хвалять години роботи магазину, а не застосунок"]
+ },
+ ru:{
+  h:["Реклама на каждое действие","Платить, чтобы убрать рекламу","Приложение занимает телефон","Ломается главное","Как отвечает разработчик App A"],
+  p:["Главная жалоба в обоих приложениях. Реклама стоит в момент, когда человек что-то делает: открывает чат, возвращается к списку, отправляет сообщение.",
+     "Люди пришли с бесплатных Samsung Messages и Message+, где рекламы не было, и не понимают, почему теперь должны платить.",
+     "Жалобы, характерные для App B: главный экран и окно после звонков.",
+     "Часть жалоб вообще не про рекламу: сообщения пропадают, дублируются или не приходят.",
+     "Разработчик ответил на 19 из 20 первых отзывов. Ответы в основном шаблонные."],
+  tr:[["Каждый раз, когда я открываю сообщение, меня засыпает 10-секундная реклама. Это уже слишком.",
+       "Ваше приложение сразу провалилось из-за невероятно раздражающих, навязчивых и чрезмерных рекламных окон. Я удалил его меньше чем за 5 минут.",
+       "Рекламы в этом приложении до смешного много. Не успеваешь отправить сообщение, а уже новая реклама."],
+      ["Возвращаюсь к мессенджеру Samsung, который бесплатный и не держит меня в заложниках рекламы. 32 доллара в год, чтобы не видеть рекламу?",
+       "5 звёзд только потому, что я плачу тридцать с чем-то долларов в год, чтобы убрать крайне навязчивую рекламу, которая сыплется одна за другой.",
+       "Почему здесь есть реклама, а в прошлом приложении её не было? Теперь я должен ПЛАТИТЬ, чтобы избавиться от этой раздражающей рекламы."],
+      ["Это приложение захватило весь мой телефон: сменило главный экран, настройки свайпов и налепило рекламу везде. Пришлось удалить, чтобы вернуть телефон в норму.",
+       "Каждый раз, когда я кладу трубку, выскакивает мессенджер с экраном, чтобы оставить сообщение."],
+      ["Как только я его установил, перестали приходить сообщения. Я уже думал, что сломался телефон.",
+       "Дублирует сообщения, часть превращает в черновики, блокирует сообщения некоторых людей, и это ещё не всё."],
+      ["Нам жаль, но чтобы и дальше развивать это бесплатное приложение, нам нужен доход от рекламы. Разработка такого качественного приложения каждый день стоит больших денег. Если приложение вам нравится, а реклама нет, поддержите нас: купите премиум-версию.",
+       "Если приложение вам нравится, поставьте нам, пожалуйста, 5 звёзд ★★★★★."]],
+  dev:["Этот ответ трижды среди 20 первых отзывов","Ответ на 4★ от 23.07.2026, где хвалят часы работы магазина, а не приложение"]
+ },
+ en:{
+  h:["Ads on every action","Paying to remove ads","The app takes over the phone","The basics break","How App A's developer replies"],
+  p:["The top complaint for both apps. Ads land at the moment the person is doing something: opening a chat, going back to the list, sending a message.",
+     "People came from the free Samsung Messages and Message+, which had no ads, and don't see why they should pay now.",
+     "Complaints specific to App B: the home screen and the window after calls.",
+     "Some complaints aren't about ads at all: messages disappear, get duplicated or never arrive.",
+     "The developer replied to 19 of the first 20 reviews. The replies are mostly templates."],
+  tr:null,
+  dev:["This reply appears three times among the first 20 reviews","Reply to a 4★ review from Jul 23, 2026 that praises a store's opening hours, not the app"]
+ }
+};
+
+/* ── chart, table and tooltip texts ── */
+const CHT = {
+ uk:{val2:r => `${r.neg} з ${r.n}`,
+     tip1:r => `<b>${esc(r.label)}</b><br>5★: ${pct(r.five, 1)} з ${fmt(r.ratings)} оцінок<br>Середня оцінка: ${fmt(r.rating, 2)}`,
+     tip2:r => `<b>${esc(r.label)}</b><br>1–2★ серед перших ${r.n} відгуків: ${r.neg}<br>1–2★ серед усіх оцінок: ${pct(r.neg12, 1)}`,
+     th:["Застосунок","Оцінка","Оцінок","5★, %","1★, %","1–2★, %","1–2★ серед 20 перших","5★ серед 20 перших"],
+     b5th:["Дата","Версія","Слів","«Корисно»","Текст"]},
+ ru:{val2:r => `${r.neg} из ${r.n}`,
+     tip1:r => `<b>${esc(r.label)}</b><br>5★: ${pct(r.five, 1)} из ${fmt(r.ratings)} оценок<br>Средняя оценка: ${fmt(r.rating, 2)}`,
+     tip2:r => `<b>${esc(r.label)}</b><br>1–2★ среди первых ${r.n} отзывов: ${r.neg}<br>1–2★ среди всех оценок: ${pct(r.neg12, 1)}`,
+     th:["Приложение","Оценка","Оценок","5★, %","1★, %","1–2★, %","1–2★ среди 20 первых","5★ среди 20 первых"],
+     b5th:["Дата","Версия","Слов","«Полезно»","Текст"]},
+ en:{val2:r => `${r.neg} of ${r.n}`,
+     tip1:r => `<b>${esc(r.label)}</b><br>5★: ${pct(r.five, 1)} of ${fmt(r.ratings)} ratings<br>Average rating: ${fmt(r.rating, 2)}`,
+     tip2:r => `<b>${esc(r.label)}</b><br>1–2★ in the first ${r.n} reviews: ${r.neg}<br>1–2★ among all ratings: ${pct(r.neg12, 1)}`,
+     th:["App","Rating","Ratings","5★, %","1★, %","1–2★, %","1–2★ in first 20","5★ in first 20"],
+     b5th:["Date","Version","Words","Helpful","Text"]}
+};
+
+/* ── simulated phone screens ── */
+let anim = false;
+const statusBar = () => '<div class="sb"><span>18:42</span><span class="cam"></span><span class="sys"><span class="sig"><i style="height:4px"></i><i style="height:6px"></i><i style="height:8px"></i><i style="height:10px"></i></span><span class="bat"><i></i></span></span></div>';
+
+function storeBody(key, installing){
+  const U = UI[lang], M = U.apps[key];
+  const action = installing
+    ? `<div class="inst"><div class="pbar"><i id="pb"></i></div><div class="inst-row"><span id="pbt">${U.pending}</span><span id="pbp">0%</span></div><div class="st-row" id="openrow" hidden><button class="pbtn quiet" data-act="toast" data-toast="${esc(U.toastKeep)}">${U.uninstall}</button><button class="pbtn primary pulse" data-act="next" style="flex:1">${U.open}</button></div></div>`
+    : `<button class="pbtn primary wide pulse" data-act="next">${U.install}</button>`;
+  return `<div class="st">
+    <div class="st-search">${svg("search", "ic")}<b>messages</b>${svg("mic", "ic")}</div>
+    <div class="st-app"><div class="app-icon ${key}">${ICON[key]}</div><div><div class="st-name">${esc(APPNAME[key])}</div><div class="st-dev">${esc(DEV[key])}</div><div class="st-flags">${U.flags}</div></div></div>
+    <div class="st-stats"><div><b>${M.rating} ★</b>${M.ratings}</div><div><b>${M.installs}</b>${U.downloads}</div><div><b>${U.everyone}</b>${U.ageLbl}</div></div>
+    ${action}
+    <div class="st-shots"><i></i><i></i><i></i></div>
+    <p class="st-about" lang="en">${esc(DESC[key])}</p>
+  </div>`;
+}
+function roleScreen(key, kind){
+  const U = UI[lang];
+  const t = kind === "sms" ? U.roleSmsT(SHORT[key]) : U.roleHomeT(SHORT[key]);
+  const b = kind === "sms" ? U.roleSmsB : U.roleHomeB;
+  return {
+    body:`<div class="splash"><div class="app-icon ${key} big">${ICON[key]}</div><span>${esc(SHORT[key])}</span></div>`,
+    over:`<div class="scrim"></div><div class="dlg" role="dialog" aria-label="${esc(t)}"><div class="app-icon ${key} sm">${ICON[key]}</div><p class="dlg-title">${esc(t)}</p><p class="dlg-body">${esc(b)}</p><div class="dlg-actions"><button data-act="toast" data-toast="${esc(U.toastAgree)}">${U.cancel}</button><button class="strong pulse" data-act="next">${U.setDefault}</button></div></div>`
+  };
+}
+function chatList(key, act, withSegs){
+  const U = UI[lang], list = U.chats[key], colors = CHAT_COLORS[key];
+  return `<div class="abar"><span class="t">${esc(SHORT[key])}</span>${svg("search", "ic")}${svg("more", "ic")}</div>
+   ${withSegs ? `<div class="segs"><span class="on">${U.personal}</span><span>${U.other}</span></div>` : `<div class="l-searchbar">${svg("search", "ic")}${U.searchMsgs}</div>`}
+   <ul class="chats">${list.map((c, i) => {
+     const cue = i === 0 && act;
+     return `<li><button class="chat ${i === 0 ? "unread" : ""} ${cue ? "cue" : ""}" ${cue ? `data-act="${act}"` : `data-act="toast" data-toast="${esc(U.toastFirst)}"`} style="--c:var(${colors[i]})">${withSegs ? '<span class="strip"></span>' : ""}<span class="av">${esc(c[0][0])}</span><span class="cm"><span class="cn">${esc(c[0])}</span><span class="cl">${esc(c[1])}</span></span>${cue ? `<span class="tap">${U.tap}</span>` : `<span class="ct">${c[2]}</span>`}</button></li>`;
+   }).join("")}</ul>
+   <div class="fab" aria-hidden="true">+</div>`;
+}
+function threadBody(key, sent, backAct){
+  const U = UI[lang], c = U.chats[key][0], color = CHAT_COLORS[key][0];
+  return `<div class="abar"><button class="iconbtn ${sent && backAct ? "pulse" : ""}" data-act="${sent && backAct ? backAct : "toast"}" data-toast="${esc(U.toastSendFirst)}" aria-label="${U.backAria}">${svg("back", "ic")}</button><span class="av sm" style="--c:var(${color})">${esc(c[0][0])}</span><span class="t">${esc(c[0])}</span>${svg("more", "ic")}</div>
+   <div class="thread" style="--c:var(${color})"><span class="date-chip">${U.today}</span><div class="msg in">${esc(c[1])}<time>${c[2]}</time></div>${sent ? `<div class="msg out">${esc(U.out[key])}<time>18:42 · ${U.delivered}</time></div>` : ""}</div>
+   <div class="composer"><div class="field ${sent ? "ph" : ""}">${sent ? U.msgPh : esc(U.out[key])}</div><button class="send ${sent ? "" : "pulse"}" data-act="send" ${sent ? "disabled" : ""} aria-label="${U.sendAria}">${svg("send")}</button></div>`;
+}
+function adOverlay(crKey, secs){
+  const U = UI[lang], art = CR_ART[crKey], t = U.cr[crKey];
+  return `<div class="ad" style="--crbg:var(${art.bg})" role="dialog" aria-label="${U.ad}">
+    <div class="ad-top"><span class="ad-badge">${U.ad}</span><span><span class="ad-timer" id="adt"><svg viewBox="0 0 36 36" aria-hidden="true"><circle class="trk" cx="18" cy="18" r="15"/><circle class="val" id="adring" cx="18" cy="18" r="15" stroke-dasharray="94.25" stroke-dashoffset="0"/></svg><span id="adn">${secs}</span></span><button class="ad-x" id="adx" data-act="next" aria-label="${U.adClose}" hidden>×</button></span></div>
+    <div class="ad-body">${art.art}<p class="ad-title">${t[0]}</p><p class="ad-sub">${t[1]}</p></div>
+    <div class="ad-cta">${t[2]}</div>
+    <p class="ad-foot" id="adfoot">${U.adIn(secs)}</p></div>`;
+}
+/* o: {app, tint, ad, swipe, marks, chip:{cls, text, mk}, cls} */
+function launcher(o){
+  const U = UI[lang];
+  const glyphs = ["phone","camera","gallery","globe","calendar","clock","settings"];
+  const own = o.app
+    ? `<span class="lic"><i class="app-icon ${o.app} sm">${ICON[o.app]}</i><span>${esc(SHORT[o.app])}</span></span>`
+    : `<span class="lic"><i>${svg("chat")}</i><span>SMS</span></span>`;
+  const chip = o.chip ? `<span class="state-chip ${o.chip.cls}">${o.chip.mk ? '<span class="mk">1</span>' : ""}${esc(o.chip.text)}</span>` : "";
+  const ad = o.ad ? `<div class="l-ad">${o.marks ? '<span class="mk">2</span>' : ""}<span class="ad-badge">${U.ad}</span><b>${U.bannerT}</b><span>${U.bannerS}</span></div>` : "";
+  const swipe = o.swipe ? `<button class="l-swipe pulse" data-act="next">${o.marks ? '<span class="mk">3</span>' : ""}${U.swipe}</button>` : "";
+  return `<div class="launcher ${o.tint ? "tint" : ""} ${o.cls || ""}">${chip}
+    <div class="l-clock">18:42</div><div class="l-date">${U.date}</div>
+    <div class="l-search">${svg("search", "ic")}${U.search}</div>${ad}
+    <div class="l-grid">${glyphs.map((g, i) => `<span class="lic"><i>${svg(g)}</i><span>${U.launcher[i]}</span></span>`).join("")}${own}</div>${swipe}
+  </div>`;
+}
+const beforeHome = () => launcher({chip:{cls:"before", text:`${UI[lang].before} · ${UI[lang].beforeCap}`}});
+
+const SCREENS = {
+  store:key => ({body:storeBody(key, false)}),
+  install:key => ({body:storeBody(key, true), after:startInstall}),
+  roleSms:key => roleScreen(key, "sms"),
+  roleHome:key => roleScreen(key, "home"),
+  chatsA:() => ({body:chatList("a", "next", true)}),
+  adOpen:(key, S) => ({body:chatList("a", null, true), over:adOverlay(S.cr, S.secs), after:() => startAd(S.secs)}),
+  threadA:(key, S, ph) => ({body:threadBody("a", ph >= 1, "next")}),
+  adBack:(key, S) => ({body:threadBody("a", true, null), over:adOverlay(S.cr, S.secs), after:() => startAd(S.secs)}),
+  paywall:() => { const U = UI[lang]; return {body:`<div class="pw"><button class="iconbtn pw-x" data-act="next" aria-label="${U.close}">×</button>
+     <div class="pw-hero"><span class="k2">MESSENGER SMS PREMIUM</span><h4>${U.pwTitle}</h4><span>${U.pwSub}</span></div>
+     <ul><li>${U.pw1}</li><li>${U.pw2}</li></ul>
+     <div class="pw-plan"><b>${U.pwPlan}</b><span>${U.pwThen}</span></div>
+     <button class="pbtn primary wide pulse" data-act="next">${U.pwTry}</button>
+     <p class="pw-fine">${U.pwFine}</p></div>`}; },
+  outcomeA:(key, S, ph) => { const U = UI[lang]; return ph === 0
+    ? {body:launcher({app:"a"}), over:`<div class="scrim"></div><div class="dlg" role="dialog" aria-label="${esc(U.delT)}"><div class="app-icon a sm">${ICON.a}</div><p class="dlg-title">${esc(U.delT)}</p><div class="dlg-actions"><button data-act="toast" data-toast="${esc(U.toastOther)}">${U.cancel}</button><button class="danger pulse" data-act="phase">${U.uninstall}</button></div></div>`}
+    : {body:launcher({}), over:`<div class="toast" role="status">${U.deleted}</div>`}; },
+  homeB:(key, S, ph) => {
+    const U = UI[lang];
+    if (ph === 0) return {body:beforeHome()};
+    const after = launcher({app:"b", tint:true, ad:true, swipe:true, marks:true, chip:{cls:"after", text:`${U.after} · ${U.afterCap}`, mk:true}, cls:anim ? "wipe" : ""});
+    return {body:`<div class="stack">${beforeHome()}${after}</div>`};
+  },
+  threadB:(key, S, ph) => ph === 0 ? {body:chatList("b", "phase", false)} : {body:threadBody("b", false, null)},
+  adSend:(key, S) => ({body:threadBody("b", true, null), over:adOverlay(S.cr, S.secs), after:() => startAd(S.secs)}),
+  callB:() => { const U = UI[lang], who = U.chats.b[0][0]; return {body:`<div class="call"><span class="call-k">${U.callEnded}</span><span class="av" style="--c:var(--c1)">${esc(who[0])}</span><span class="call-name">${esc(who)}</span><span class="call-meta">${U.outgoing} · 02:14</span>
+     <div class="call-acts"><span>${svg("chat")}${U.writeSms}</span><span>${svg("phone")}${U.callBack}</span><span>${svg("bell")}${U.remind}</span></div>
+     <span class="call-app"><span class="app-icon b xs">${ICON.b}</span>Messages</span>
+     <button class="pbtn quiet wide pulse" data-act="next">${U.close}</button></div>`}; },
+  settingsB:(key, S, ph) => { const U = UI[lang];
+    if (ph >= 1) return {body:launcher({chip:{cls:"before", text:U.restored}}), over:`<div class="toast" role="status">${U.toastRestored}</div>`};
+    return {body:`<div class="abar">${svg("back", "ic")}<span class="t">${U.homeScreen}</span></div>
+     <p class="crumbs">${U.crumbs}</p>
+     <ul class="radios"><li><button class="radio on" data-act="toast" data-toast="${esc(U.toastOwned)}"><span class="rd"></span><span>Messages<small>Kamrej Apps</small></span></button></li>
+     <li><button class="radio pulse" data-act="phase"><span class="rd"></span><span>${U.stdHome}<small>${U.system}</small></span></button></li></ul>`}; }
+};
+
+/* ── simulation engine ── */
+const screenEl = $("#screen"), panelEl = $("#panel"), metersEl = $("#meters");
+let cur = "a";
+const pos = {a:0, b:0};
+let phase = 0, timers = [];
+const clearTimers = () => { timers.forEach(t => { clearInterval(t); clearTimeout(t); }); timers = []; };
+$$("[data-icon]").forEach(el => { el.innerHTML = ICON[el.dataset.icon]; });
+
+function startInstall(){
+  const U = UI[lang], pb = $("#pb", screenEl), pbp = $("#pbp", screenEl), pbt = $("#pbt", screenEl), row = $("#openrow", screenEl);
+  let p = reduce ? 100 : 0;
+  const tick = () => {
+    p = Math.min(100, p + 9);
+    pb.style.width = p + "%"; pbp.textContent = p + "%";
+    pbt.textContent = p < 100 ? U.installing : U.installed;
+    if (p >= 100) { row.hidden = false; clearInterval(t); }
+  };
+  const t = setInterval(tick, 110); timers.push(t); tick();
+}
+function startAd(secs){
+  const U = UI[lang];
+  let n = secs;
+  const ring = $("#adring", screenEl), num = $("#adn", screenEl), x = $("#adx", screenEl), tm = $("#adt", screenEl), foot = $("#adfoot", screenEl);
+  const t = setInterval(() => {
+    n -= 1;
+    num.textContent = n;
+    ring.style.strokeDashoffset = (94.25 * (1 - n / secs)).toFixed(2);
+    foot.textContent = n > 0 ? U.adIn(n) : U.adNow;
+    if (n <= 0) { clearInterval(t); tm.hidden = true; x.hidden = false; x.classList.add("pulse"); }
+  }, 1000);
+  timers.push(t);
+}
+function toast(text){
+  const old = screenEl.querySelector(".toast"); if (old) old.remove();
+  const d = document.createElement("div"); d.className = "toast"; d.setAttribute("role", "status"); d.textContent = text;
+  screenEl.appendChild(d);
+  timers.push(setTimeout(() => d.remove(), 2400));
+}
+function renderPanel(key, S, T){
+  const U = UI[lang], n = SS[key].length, i = pos[key], titles = ST[lang][key].map(t => t.title);
+  const hint = Array.isArray(T.hint) ? T.hint[Math.min(phase, T.hint.length - 1)] : T.hint;
+  const facts = (T.facts || []).map(([t, x]) => `<li><span class="tag ${t}" title="${t === "ok" ? U.ok : U.guess}">${t === "ok" ? "✔" : "◌"}</span><span>${x}</span></li>`).join("");
+  let q = "";
+  if (S.q) {
+    const A = key.toUpperCase();
+    const meta = S.q.dev ? `App ${A} · ${U.devReply} · ${fmtDate(S.q.d)}` : `App ${A} · ${starStr(S.q.st)} · ${fmtDate(S.q.d)}${S.q.likes ? " · " + helpful(S.q.likes) : ""}`;
+    q = `<figure class="quote"><blockquote lang="en">“${esc(S.q.en)}”</blockquote>${lang !== "en" && T.tr ? `<p class="tr">«${esc(T.tr)}»</p>` : ""}<figcaption>${meta}</figcaption></figure>`;
+  }
+  const cmp = S.compare ? `<div class="cmp" role="group" aria-label="${U.compare}"><span>${U.compare}</span><button data-cmp="0" aria-pressed="${phase === 0}">${U.before}</button><button data-cmp="1" aria-pressed="${phase >= 1}">${U.after}</button></div>` : "";
+  panelEl.innerHTML = `
+    <div class="steps" role="group" aria-label="${U.stepsAria}">${titles.map((t, j) => `<button class="${j < i ? "done" : ""} ${j === i ? "cur" : ""}" data-go="${j}" aria-label="${esc(U.stepAria(j + 1, t))}" ${j === i ? 'aria-current="step"' : ""}></button>`).join("")}</div>
+    <p class="step-no">${U.stepNo(i + 1, n, key.toUpperCase())}</p>
+    <h3 class="step-title">${T.title}</h3>
+    <p class="step-lead">${T.lead}</p>
+    ${hint ? `<p class="hint">${U.onPhone} ${hint}</p>` : ""}
+    ${cmp}
+    ${T.money ? `<div class="note money"><p class="k">${U.money}</p><p>${T.money}</p></div>` : ""}
+    ${facts ? `<ul class="facts">${facts}</ul>` : ""}
+    ${T.policy ? `<div class="note policy"><p class="k">${U.policy}</p><p>${T.policy}</p></div>` : ""}
+    ${q}
+    <div class="snav"><button class="btn" data-nav="prev" ${i === 0 ? "disabled" : ""}>${U.prev}</button><button class="btn primary" data-nav="next" ${i === n - 1 ? "disabled" : ""}>${U.next}</button><button class="btn" data-nav="restart">${U.restart}</button></div>`;
+}
+function renderMeters(key){
+  const tot = {ads:0, secs:0, pay:0, surf:0};
+  SS[key].slice(0, pos[key] + 1).forEach(s => { if (s.fx) Object.keys(s.fx).forEach(k => { tot[k] += s.fx[k]; }); });
+  const U = UI[lang];
+  metersEl.innerHTML = ["ads","secs","pay","surf"].map((k, j) => `<div class="meter ${tot[k] ? "hot" : ""}"><b>${tot[k]}</b><span>${U.meters[j]}</span></div>`).join("");
+}
+function render(){
+  clearTimers();
+  const key = cur, S = SS[key][pos[key]], T = ST[lang][key][pos[key]], U = UI[lang];
+  const out = SCREENS[S.s](key, S, phase);
+  const gest = S.homeBtn
+    ? `<div class="gesture has-btn"><button class="homebtn ${phase === 0 ? "pulse" : ""}" data-act="home">${svg("home")}${U.home}</button></div>`
+    : '<div class="gesture"><i></i></div>';
+  screenEl.innerHTML = statusBar() + `<div class="sc">${out.body || ""}</div>` + gest + (out.over || "");
+  screenEl.setAttribute("aria-label", U.simAria(SHORT[key], pos[key] + 1, T.title));
+  renderPanel(key, S, T);
+  renderMeters(key);
+  if (out.after) out.after();
+  $$(".tab").forEach(t => { const on = t.dataset.app === cur; t.setAttribute("aria-selected", on ? "true" : "false"); t.tabIndex = on ? 0 : -1; });
+}
+function go(i){
+  const nav = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.nav : null;
+  pos[cur] = Math.max(0, Math.min(SS[cur].length - 1, i)); phase = 0; render();
+  if (nav) { let b = panelEl.querySelector(`[data-nav="${nav}"]`); if (b && b.disabled) b = panelEl.querySelector('[data-nav="restart"]'); if (b) b.focus({preventScroll:true}); }
+}
+function setPhase(p, withAnim){ phase = p; anim = !!withAnim; render(); anim = false; }
+screenEl.addEventListener("click", e => {
+  const b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
+  const a = b.dataset.act, S = SS[cur][pos[cur]];
+  if (a === "next") go(pos[cur] + 1);
+  else if (a === "toast") toast(b.dataset.toast);
+  else if (a === "phase") setPhase(phase + 1, false);
+  else if (a === "send") { if (S.sendNext) go(pos[cur] + 1); else setPhase(1, false); }
+  else if (a === "home") { setPhase(1, true); toast(UI[lang].toastHome); }
+});
+let sx = null;
+screenEl.addEventListener("pointerdown", e => { sx = e.clientX; });
+screenEl.addEventListener("pointerup", e => {
+  if (sx === null) return; const dx = e.clientX - sx; sx = null;
+  if (SS[cur][pos[cur]].s === "homeB" && phase >= 1 && Math.abs(dx) > 50) go(pos[cur] + 1);
+});
+panelEl.addEventListener("click", e => {
+  const g = e.target.closest("[data-go]"); if (g) { go(Number(g.dataset.go)); return; }
+  const c = e.target.closest("[data-cmp]"); if (c) { const v = Number(c.dataset.cmp); if (v !== phase) setPhase(v, v === 1); return; }
+  const b = e.target.closest("[data-nav]"); if (!b || b.disabled) return;
+  if (b.dataset.nav === "prev") go(pos[cur] - 1); else if (b.dataset.nav === "next") go(pos[cur] + 1); else go(0);
+});
+$$(".tab").forEach(t => t.addEventListener("click", () => { if (cur !== t.dataset.app) { cur = t.dataset.app; phase = 0; render(); } }));
+$(".tabs").addEventListener("keydown", e => {
+  if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+  e.preventDefault(); cur = cur === "a" ? "b" : "a"; phase = 0; render(); $("#tab-" + cur).focus();
+});
+
+/* ── report parts drawn from data ── */
+const cut = (s, n) => s.length > n ? s.slice(0, n).replace(/\s+\S*$/, "") + "…" : s;
+function bars(fig, rows, val, label, tip){
+  const box = $(".bars", fig), tipEl = $(".tip", fig);
+  const ticks = [0, 25, 50, 75, 100].map(v => `<span style="left:${v}%">${v === 100 ? pct(100) : v}</span>`).join("");
+  box.innerHTML = rows.map((r, i) => `<div class="brow ${r.k !== "c" ? "em" : ""}" tabindex="0" data-i="${i}"><span class="lab">${esc(r.short)}</span><span class="bplot"><i style="width:${val(r).toFixed(1)}%"></i></span><span class="val">${label(r)}</span></div>`).join("")
+    + `<div class="axis" aria-hidden="true"><span></span><span class="ticks">${ticks}</span><span></span></div>`;
+  const show = el => {
+    tipEl.innerHTML = tip(rows[Number(el.dataset.i)]); tipEl.hidden = false;
+    const fr = fig.getBoundingClientRect(), er = el.getBoundingClientRect();
+    const left = Math.min(Math.max(8, er.left - fr.left + er.width * 0.25), fig.clientWidth - tipEl.offsetWidth - 8);
+    tipEl.style.left = left + "px"; tipEl.style.top = (er.top - fr.top - tipEl.offsetHeight - 6) + "px";
+  };
+  $$(".brow", box).forEach(el => {
+    el.addEventListener("mouseenter", () => show(el)); el.addEventListener("focus", () => show(el));
+    el.addEventListener("mouseleave", () => { tipEl.hidden = true; }); el.addEventListener("blur", () => { tipEl.hidden = true; });
+  });
+}
+function renderReport(){
+  const U = UI[lang], C = CHT[lang], TX = TT[lang];
+  $$("[data-hist]").forEach(el => {
+    const r = CONTROL.find(x => x.k === el.dataset.hist);
+    el.innerHTML = `<p class="hist-title">${U.hist}</p>` + [5,4,3,2,1].map(s => `<div class="hrow"><span class="lab">${s} ★</span><span class="htrack"><i style="width:${r.pct[s - 1]}%"></i></span><span class="val">${pct(r.pct[s - 1], 1)}</span></div>`).join("");
+  });
+  $("#themes").innerHTML = TQ.map((group, gi) => `<div class="theme"><h3>${TX.h[gi]}</h3><p>${TX.p[gi]}</p><div class="qgrid">${group.map((q, qi) => {
+    const meta = q.dev != null
+      ? `<span class="chip dev">App ${q.app}</span><span>${esc(TX.dev[q.dev])}</span>`
+      : `<span class="chip">App ${q.app}</span><span class="stars" aria-label="${q.st}/5">${starStr(q.st)}</span><span>${fmtDate(q.d)}</span>${q.likes ? `<span>${helpful(q.likes)}</span>` : ""}`;
+    const tr = TX.tr ? `<p class="tr">«${esc(TX.tr[gi][qi])}»</p>` : "";
+    return `<figure class="qcard"><div class="qmeta">${meta}</div><blockquote lang="en">“${esc(q.en)}”</blockquote>${tr}</figure>`;
+  }).join("")}</div></div>`).join("");
+  const rows = CONTROL.map(r => Object.assign({}, r, {
+    short:r.k === "a" ? "App A" : r.k === "b" ? "App B" : r.label,
+    five:r.pct[4], neg12:r.pct[0] + r.pct[1], topNeg:r.n ? 100 * r.neg / r.n : 0
+  })).sort((x, y) => y.five - x.five);
+  bars($("#ch1"), rows, r => r.five, r => fmt(r.five, 1), C.tip1);
+  bars($("#ch2"), rows, r => r.topNeg, C.val2, C.tip2);
+  $("#ctable").innerHTML = `<thead><tr>${C.th.map((h, i) => `<th class="${i ? "num" : ""}">${h}</th>`).join("")}</tr></thead><tbody>`
+    + rows.map(r => `<tr class="${r.k !== "c" ? "em" : ""}"><td>${esc(r.label)}</td><td class="num">${fmt(r.rating, 2)}</td><td class="num">${fmt(r.ratings)}</td><td class="num">${fmt(r.five, 1)}</td><td class="num">${fmt(r.pct[0], 1)}</td><td class="num">${fmt(r.neg12, 1)}</td><td class="num">${r.neg}</td><td class="num">${r.five20}</td></tr>`).join("") + "</tbody>";
+  $("#b5").innerHTML = `<thead><tr>${C.b5th.map((h, i) => `<th class="${i === 2 || i === 3 ? "num" : ""}">${h}</th>`).join("")}</tr></thead><tbody>`
+    + B5.map(r => `<tr><td style="white-space:nowrap">${fmtDate(r.d)}</td><td>${r.v ? esc(r.v) : "—"}</td><td class="num">${r.w}</td><td class="num">${r.likes}</td><td class="txt" lang="en">${esc(cut(r.t, 150))}</td></tr>`).join("") + "</tbody>";
+}
+
+/* ── language switching ── */
+const UKS = {};
+$$("[data-i18n]").forEach(el => { const k = el.dataset.i18n; if (!(k in UKS)) UKS[k] = el.innerHTML; });
+function applyLang(l){
+  lang = DICT[l] || l === "uk" ? l : "uk";
+  const d = lang === "uk" ? UKS : DICT[lang], miss = [];
+  $$("[data-i18n]").forEach(el => { const v = d[el.dataset.i18n]; if (v == null) miss.push(el.dataset.i18n); else el.innerHTML = v; });
+  $$("[data-i18n-aria]").forEach(el => el.setAttribute("aria-label", ARIA[lang][el.dataset.i18nAria]));
+  document.documentElement.lang = lang;
+  document.documentElement.setAttribute("data-i18n-missing", Array.from(new Set(miss)).join(","));
+  document.title = TITLE[lang];
+  $$(".langs button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang ? "true" : "false"));
+  render(); renderReport();
+}
+$$(".langs button").forEach(b => b.addEventListener("click", () => {
+  applyLang(b.dataset.lang);
+  try { localStorage.setItem("veldan-sms-lang", b.dataset.lang); } catch (err) { /* storage can be blocked */ }
+}));
+let start = "uk";
+const hashLang = (location.hash || "").replace("#", "");
+if (["uk","ru","en"].includes(hashLang)) start = hashLang;
+else { try { const s = localStorage.getItem("veldan-sms-lang"); if (["uk","ru","en"].includes(s)) start = s; } catch (err) { /* ignore */ } }
+applyLang(start);
+
+})();
+</script>
