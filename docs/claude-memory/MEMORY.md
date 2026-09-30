@@ -17,3 +17,4 @@
 - [UAPP: вертикалі й брифи](uapp-verticals-briefs.md) — 1 RBX, 2 стрімінги (Тарас), 3 TikTok (Nasuf); Ігор ставить сиру задачу → бриф
 - [Пам'ять у репо](memory-in-repo.md) — docs/claude-memory + симлінк з ~/.claude; два акаунти; після змін коміт і пуш; без особистих оцінок (репо публічне)
 - [TikTok: звіт для менеджера](tiktok-competitor-analysis.md) — 30.09.2026, доробка звіту Nasuf, 3 мови; копія docs/research/tiktok-30-09-2026/; як оновити
+- [Home Launcher PoC](home-launcher-poc.md) — лаунчер-PoC + артефакт-презентація з інтерактивним телефоном (30.09.2026); далі інтерактиви до інших функцій
