@@ -13,7 +13,7 @@
 - [Конкурентні звіти: розділ «Тонкощі»](competitor-fine-print-section.md) — факт ✔ / гіпотеза ◌ / як перевірити; оцінки підписувати країною
 - [UAPP: git = повний бекап](uapp-git-backup-public-repo.md) — усе в git, включно з .jks і google-services.json; не йдуть лише build/сміття; теки англ + дата дд-мм-рррр
 - [Звіти: claude.ai, в UAPP лише на прохання](artifact-then-save-on-request.md) — зберігати окремою текою docs/research/<тема>-дд-мм-рррр/ тільки коли скаже; брифи для розробників — у docs/research/briefs/
-- [Користувач = VELDAN](user-is-veldan.md) — підпис «Підготував VELDAN» у звітах і брифах для колег
+- [Користувач = VELDAN](user-is-veldan.md) — «Підготував VELDAN» зверху (шапка) у звітах, брифах і презентаціях-артефактах
 - [UAPP: вертикалі й брифи](uapp-verticals-briefs.md) — 1 RBX, 2 стрімінги (Тарас), 3 TikTok (Nasuf); Ігор ставить сиру задачу → бриф
 - [Пам'ять у репо](memory-in-repo.md) — docs/claude-memory + симлінк з ~/.claude; два акаунти; після змін коміт і пуш; без особистих оцінок (репо публічне)
 - [TikTok: звіт для менеджера](tiktok-competitor-analysis.md) — 30.09.2026, доробка звіту Nasuf, 3 мови; копія docs/research/tiktok-30-09-2026/; як оновити
