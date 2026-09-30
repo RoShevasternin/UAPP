@@ -1,0 +1,18 @@
+- [UAPP: employer & repo layout](uapp-employer-and-repo.md) — one git repo, many unrelated company games; prefix per-game facts
+- [Workflow: direct edits + verify on device](workflow-direct-edits.md) — edit in place, build, install, screenshot; show diffs, never paste-back
+- [Mindora: don't repack atlas from CLI](mindora-texturepacker-cli.md) — TexturePacker CLI is unlicensed and watermarks; atlas working copy is often newer than HEAD
+- [UAPP: правки сервера → еталон → бекпорт](uapp-server-patch-backport.md) — businesModule копіюється, не шариться; пропустив бекпорт — апки розходяться
+- [UAPP: баланс при міграції — завжди з нуля](uapp-balance-reset-default.md) — рішення користувача для всього парку, не питати
+- [UAPP: онбординг лише при першому запуску](uapp-onboarding-once.md) — прапорець у MainScreen.show, читання в LoaderScreen; правило для всіх апок
+- [UAPP: наївний запит пушів у onCreate](uapp-naive-push-permission.md) — перевіряти й заміняти опт-іном при міграції
+- [UAPP: ручка ціни в кожній механіці](uapp-price-handle-always.md) — Econ.price(block,0)+Wallet.spend навіть якщо безкоштовно; є таблиця боргу
+- [UAPP: без нативки в меню](uapp-no-native-on-menu.md) — прибирати showNativeAt з MainScreen/HomeScreen при міграції
+- [UAPP: прогрес 23–24.09 і відкрите](uapp-progress-2026-09-23.md) — T3/T6/T7/T8/T2-1/T10/T23 мігровані, не закомічено; питання бекпорту крашу
+- [UAPP: реліз-нотатки для маркету](uapp-release-notes-style.md) — англійською, 3 абстрактні пункти
+- [UAPP: аналіз SMS-конкурентів (VELDAN)](sms-competitor-analysis.md) — артефакт 29.09.2026, висновки, накрутка не підтвердилась, як оновити
+- [Конкурентні звіти: розділ «Тонкощі»](competitor-fine-print-section.md) — факт ✔ / гіпотеза ◌ / як перевірити; оцінки підписувати країною
+- [UAPP: git = повний бекап](uapp-git-backup-public-repo.md) — усе в git, включно з .jks і google-services.json; не йдуть лише build/сміття; теки англ + дата дд-мм-рррр
+- [Звіти: claude.ai, в UAPP лише на прохання](artifact-then-save-on-request.md) — зберігати окремою текою docs/research/<тема>-дд-мм-рррр/ тільки коли скаже; брифи для розробників — у docs/research/briefs/
+- [Користувач = VELDAN](user-is-veldan.md) — підпис «Підготував VELDAN» у звітах і брифах для колег
+- [UAPP: вертикалі й брифи](uapp-verticals-briefs.md) — 1 RBX, 2 стрімінги (Тарас), 3 TikTok (Nasuf); Ігор ставить сиру задачу → бриф
+- [Пам'ять у репо](memory-in-repo.md) — docs/claude-memory + симлінк з ~/.claude; два акаунти; після змін коміт і пуш; без особистих оцінок (репо публічне)

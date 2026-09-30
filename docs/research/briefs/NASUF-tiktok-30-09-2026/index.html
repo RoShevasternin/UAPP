@@ -1,0 +1,927 @@
+<!doctype html>
+<!-- Жива версія: https://claude.ai/artifact/RaT2KKrtWHNHdY1j1mLSSu (мова: #uk #ru #en #tr) -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Бриф TikTok-вертикалі</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@500;700&display=swap">
+<style>
+:root{
+  --paper:#F3F4F7; --surface:#FFFFFF; --sunk:#EBEDF1; --ink:#12141B; --ink-2:#434859; --muted:#6A7082; --line:#DCDFE6;
+  --cyan:#0A8580; --cyan-soft:#D9F2F1; --pink:#CC1D48; --pink-soft:#FCE4EA;
+  --glitch-c:rgba(12,170,165,.5); --glitch-p:rgba(230,35,85,.45);
+  --t-nothing:#C21F3D; --t-ads:#A87300; --t-account:#6446BD; --t-paid:#2A5FCC; --t-works:#177A56;
+  --t-nothing-bg:#FBE2E7; --t-ads-bg:#FFF0C4; --t-account-bg:#ECE6FA; --t-paid-bg:#E1E9FB; --t-works-bg:#DBF1E7;
+  --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#0D0F14; --surface:#161922; --sunk:#1E222C; --ink:#E9EBF1; --ink-2:#B3B8C6; --muted:#8C92A4; --line:#2A2F3B;
+    --cyan:#45D8D2; --cyan-soft:#0F2E2D; --pink:#FF5D80; --pink-soft:#3A1520;
+    --glitch-c:rgba(60,225,220,.45); --glitch-p:rgba(255,80,120,.45);
+    --t-nothing:#FF7089; --t-ads:#F0C23A; --t-account:#A68DFF; --t-paid:#7DA6FF; --t-works:#4FCB99;
+    --t-nothing-bg:#3A1720; --t-ads-bg:#382E0E; --t-account-bg:#261E43; --t-paid-bg:#162645; --t-works-bg:#0F3125;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#0D0F14; --surface:#161922; --sunk:#1E222C; --ink:#E9EBF1; --ink-2:#B3B8C6; --muted:#8C92A4; --line:#2A2F3B;
+  --cyan:#45D8D2; --cyan-soft:#0F2E2D; --pink:#FF5D80; --pink-soft:#3A1520;
+  --glitch-c:rgba(60,225,220,.45); --glitch-p:rgba(255,80,120,.45);
+  --t-nothing:#FF7089; --t-ads:#F0C23A; --t-account:#A68DFF; --t-paid:#7DA6FF; --t-works:#4FCB99;
+  --t-nothing-bg:#3A1720; --t-ads-bg:#382E0E; --t-account-bg:#261E43; --t-paid-bg:#162645; --t-works-bg:#0F3125;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 var(--f-body);-webkit-font-smoothing:antialiased}
+a{color:var(--cyan);text-underline-offset:2px}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+code{font:.86em/1.4 var(--f-mono);background:var(--sunk);padding:.12em .38em;border-radius:4px;overflow-wrap:anywhere}
+
+/* top bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--paper);border-bottom:1px solid var(--line)}
+.bar-in{max-width:880px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font:500 12px/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.langs{display:inline-flex;gap:2px;padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--surface);flex:none}
+.langs button{appearance:none;border:0;background:none;color:var(--ink-2);font:500 12px/1 var(--f-mono);letter-spacing:.04em;padding:6px 9px;border-radius:7px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.langs button:hover{background:var(--sunk)}
+.langs button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.flag{width:21px;height:14px;border-radius:2px;display:block;flex:none;box-shadow:0 0 0 1px rgba(0,0,0,.14)}
+@media (max-width:460px){.langs .code{display:none}.langs button{padding:7px 8px}}
+
+main{max-width:880px;margin:0 auto;padding-inline:16px;padding-block:40px 64px}
+
+/* hero */
+.eyebrow{font:500 12px/1.3 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--cyan)}
+h1{font:700 clamp(1.75rem,5.2vw,2.75rem)/1.14 var(--f-display);letter-spacing:-.01em;margin:.4em 0 .55em;text-wrap:balance;max-width:20ch;
+   text-shadow:-1.5px -1px 0 var(--glitch-c),1.5px 1px 0 var(--glitch-p)}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px;padding:0;list-style:none}
+.meta li{font:13px/1 var(--f-mono);padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted)}
+.meta li b{color:var(--ink);font-weight:500}
+.meta li.who{background:var(--pink-soft);border-color:transparent;color:var(--pink)}
+.meta li.who b{color:var(--pink)}
+.lead{font-size:1.14rem;line-height:1.58;max-width:64ch;margin:0}
+
+/* sections */
+section{margin-top:56px}
+h2{font:500 1.3rem/1.3 var(--f-display);margin:0 0 14px;text-wrap:balance}
+h3{text-wrap:balance}
+section>p{max-width:68ch;margin:0 0 14px}
+
+/* verticals */
+.verts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}
+.vert{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.vtop{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.vnum{font:700 1.9rem/1 var(--f-display);color:var(--muted)}
+.vert h3{font:600 1.02rem/1.3 var(--f-body);margin:4px 0 0}
+.vert p{margin:0;color:var(--ink-2);font-size:.95rem}
+.vwho{margin-top:auto;padding-top:6px;font:500 12.5px/1.3 var(--f-mono);color:var(--muted)}
+.vert.cur{border-color:var(--ink);box-shadow:-3px -3px 0 var(--cyan),3px 3px 0 var(--pink)}
+.vert.cur .vnum{color:var(--ink)}
+.vert.cur .vwho{color:var(--pink)}
+.badge{font:500 11px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:5px 7px;border-radius:6px}
+@media (max-width:720px){.verts{grid-template-columns:1fr}}
+
+/* goal */
+.goal{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px;max-width:760px}
+.goal p{margin:0 0 12px;font-size:1.04rem;max-width:66ch}
+.goal p:last-child{margin:0;color:var(--ink-2);font-size:.98rem}
+.goal b{font-weight:600;background:linear-gradient(transparent 58%,var(--cyan-soft) 58%)}
+
+/* categories */
+.cats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.cat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.cat-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.cat h3{margin:0;font:600 1rem/1.35 var(--f-body)}
+.cat>p{margin:0;color:var(--ink-2);font-size:.93rem}
+.tag{font:500 10.5px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:5px 7px;border-radius:6px;white-space:nowrap;flex:none}
+.tag.req{background:var(--cyan-soft);color:var(--cyan)}
+.tag.hyp{border:1px dashed var(--muted);color:var(--muted)}
+.qs{display:flex;flex-wrap:wrap;gap:6px;margin:auto 0 0;padding:0;list-style:none}
+.q{display:inline-flex;align-items:stretch;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--paper);max-width:100%}
+.q a{font:12.5px/1.25 var(--f-mono);color:var(--ink);text-decoration:none;padding:6px 8px;overflow-wrap:anywhere}
+.q a:hover{background:var(--sunk);text-decoration:underline}
+.q button{appearance:none;border:0;border-left:1px solid var(--line);background:none;color:var(--muted);padding:0 8px;cursor:pointer;display:grid;place-items:center}
+.q button:hover{color:var(--ink);background:var(--sunk)}
+.q button.ok{color:var(--t-works)}
+.cat.note{background:transparent;border-style:dashed;justify-content:center}
+.cat.note p{color:var(--muted)}
+@media (max-width:720px){.cats{grid-template-columns:1fr}}
+
+/* steps */
+.steps{list-style:none;margin:0;padding:0}
+.step{display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;position:relative;padding-bottom:20px}
+.step::before{content:"";position:absolute;left:19px;top:42px;bottom:2px;width:2px;background:var(--line)}
+.step:last-child{padding-bottom:0}
+.step:last-child::before{display:none}
+.step .n{width:40px;height:40px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font:700 15px/1 var(--f-display);background:var(--surface)}
+.step.flagged .n{border-color:var(--pink);color:var(--pink)}
+.step h3{margin:8px 0 4px;font:600 1.02rem/1.3 var(--f-body)}
+.step p{margin:0;color:var(--ink-2);max-width:66ch}
+
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:600px;font-size:.93rem}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+tbody tr:last-child td{border-bottom:0}
+th{font:500 11.5px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+td:first-child{font-weight:600;min-width:150px}
+td.src{color:var(--ink-2);min-width:150px}
+.words{font:12px/1.6 var(--f-mono);color:var(--ink-2);min-width:220px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;flex:none}
+.tname{white-space:nowrap}
+
+/* review tool */
+.tool{margin-top:16px;border:1px solid var(--line);border-radius:12px;background:var(--surface);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.tool-in{padding:16px;display:flex;flex-direction:column;gap:10px;border-right:1px solid var(--line)}
+.tool label{font:600 1rem/1.3 var(--f-body)}
+.hint{font-size:.86rem;color:var(--muted);margin:0}
+textarea{width:100%;min-height:230px;resize:vertical;font:12.5px/1.55 var(--f-mono);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn{appearance:none;font:500 13px/1 var(--f-body);padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.btn:hover{background:var(--sunk)}
+.tool-out{padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.verdict{display:flex;align-items:center;gap:8px;font:600 .96rem/1.3 var(--f-body);padding:10px 12px;border-radius:8px}
+.verdict.yes{background:var(--pink-soft);color:var(--pink)}
+.verdict.no{background:var(--sunk);color:var(--ink-2)}
+.rule{font-size:.83rem;color:var(--muted);margin:0}
+.bars{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.bars li{display:grid;grid-template-columns:minmax(0,1fr) 2.2em 3.6em;gap:4px 8px;align-items:center;font-size:.9rem}
+.bl{display:flex;align-items:center;min-width:0}
+.num{font:12.5px/1 var(--f-mono);font-variant-numeric:tabular-nums;text-align:right;color:var(--ink-2)}
+.track{grid-column:1/-1;height:6px;border-radius:3px;background:var(--sunk);overflow:hidden}
+.fill{display:block;height:100%;border-radius:3px}
+.rv-h{font:500 11.5px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.rv{list-style:none;margin:0;padding:0;display:grid;gap:8px;max-height:280px;overflow:auto}
+.rv li{font-size:.88rem;line-height:1.45;padding:8px 10px;border:1px solid var(--line);border-radius:8px}
+.chips{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.chip{font:500 10.5px/1 var(--f-mono);padding:4px 6px;border-radius:5px}
+mark{color:inherit;border-radius:3px;padding:0 2px}
+.m-nothing,.c-nothing{background:var(--t-nothing-bg)} .c-nothing{color:var(--t-nothing)}
+.m-ads,.c-ads{background:var(--t-ads-bg)} .c-ads{color:var(--t-ads)}
+.m-account,.c-account{background:var(--t-account-bg)} .c-account{color:var(--t-account)}
+.m-paid,.c-paid{background:var(--t-paid-bg)} .c-paid{color:var(--t-paid)}
+.m-works,.c-works{background:var(--t-works-bg)} .c-works{color:var(--t-works)}
+@media (max-width:760px){.tool{grid-template-columns:1fr}.tool-in{border-right:0;border-bottom:1px solid var(--line)}}
+
+/* questions */
+.qlist{counter-reset:q;list-style:none;margin:0;padding:0;display:grid;gap:12px;max-width:70ch}
+.qlist li{counter-increment:q;display:grid;grid-template-columns:2em minmax(0,1fr);gap:10px;align-items:baseline}
+.qlist li::before{content:counter(q);font:700 1.05rem/1 var(--f-display);color:var(--cyan)}
+
+/* risks, method */
+.plain{list-style:none;margin:0;padding:0;max-width:72ch;border-top:1px solid var(--line)}
+.plain li{padding:12px 0;border-bottom:1px solid var(--line);color:var(--ink-2)}
+.plain li b{color:var(--ink);font-weight:600}
+ol.plain{counter-reset:m}
+ol.plain li{counter-increment:m;display:grid;grid-template-columns:2em minmax(0,1fr);gap:10px}
+ol.plain li::before{content:counter(m);font:500 13px/1.7 var(--f-mono);color:var(--muted)}
+
+/* checklist */
+.checks{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:2px;max-width:72ch}
+.checks label{display:flex;gap:10px;align-items:flex-start;padding:7px 10px;border-radius:8px;cursor:pointer}
+.checks label:hover{background:var(--sunk)}
+.checks input{margin:4px 0 0;accent-color:var(--cyan);width:16px;height:16px;flex:none}
+.checks input:checked+span{color:var(--muted);text-decoration:line-through}
+.prog{font:500 12px/1 var(--f-mono);color:var(--muted);margin:0 0 8px;font-variant-numeric:tabular-nums}
+.after{font-size:.9rem;color:var(--muted);max-width:68ch;margin:0}
+
+/* links */
+.links{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.links li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.links a{font-weight:600}
+.links .d{grid-column:1;color:var(--ink-2);font-size:.92rem}
+.links .host{grid-column:2;grid-row:1/3;align-self:center;font:12px/1.3 var(--f-mono);color:var(--muted)}
+@media (max-width:560px){.links li{grid-template-columns:minmax(0,1fr)}.links .host{grid-column:1;grid-row:auto}}
+
+footer{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}
+footer b{color:var(--ink);font-weight:600}
+</style>
+
+<header class="bar">
+  <div class="bar-in">
+    <span class="brand" id="brand">VELDAN · бриф</span>
+    <div class="langs" id="langs" role="group" aria-label="Мова">
+      <button type="button" data-lang="uk" lang="uk" aria-label="Українська" title="Українська" aria-pressed="true"><svg class="flag" viewBox="0 0 3 2" aria-hidden="true"><rect width="3" height="1" fill="#0057B7"/><rect y="1" width="3" height="1" fill="#FFD700"/></svg><span class="code">УКР</span></button>
+      <button type="button" data-lang="ru" lang="ru" aria-label="Русский" title="Русский" aria-pressed="false"><svg class="flag" viewBox="0 0 9 6" aria-hidden="true"><rect width="9" height="2" fill="#FFFFFF"/><rect y="2" width="9" height="2" fill="#0039A6"/><rect y="4" width="9" height="2" fill="#D52B1E"/></svg><span class="code">РУС</span></button>
+      <button type="button" data-lang="en" lang="en" aria-label="English" title="English" aria-pressed="false"><svg class="flag" viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><clipPath id="gb-s"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="gb-t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#gb-s)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#FFFFFF" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#gb-t)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#FFFFFF" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg><span class="code">ENG</span></button>
+      <button type="button" data-lang="tr" lang="tr" aria-label="Türkçe" title="Türkçe" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#E30A17"/><circle cx="10" cy="10" r="5" fill="#FFFFFF"/><circle cx="11.25" cy="10" r="4" fill="#E30A17"/><polygon fill="#FFFFFF" points="13.92,10 15.64,9.44 15.64,7.62 16.71,9.09 18.44,8.53 17.37,10 18.44,11.47 16.71,10.91 15.64,12.38 15.64,10.56"/></svg><span class="code">TÜR</span></button>
+    </div>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<script>
+(function(){
+"use strict";
+
+var URLS = {
+  sms:"https://claude.ai/artifact/7sNYo5vgL4DCK2yYX38wEb",
+  taras:"https://claude.ai/artifact/9Fh7k46NUXF4BcRC7Y3jdk",
+  exodus:"https://reports.exodus-privacy.eu.org/",
+  policy:"https://play.google/developer-content-policy/",
+  ads:"https://support.google.com/googleplay/android-developer/answer/9857753",
+  ttcg:"https://www.tiktok.com/community-guidelines/en/integrity-authenticity",
+  ttvi:"https://www.tiktok.com/legal/virtual-items",
+  playcard:"https://play.google.com/store/apps/details?id=&lt;package&gt;&amp;hl=en_US&amp;gl=US"
+};
+var SMS_HASH = {uk:"", ru:"#ru", en:"#en", tr:"#en"};
+var LANGS = ["uk","ru","en","tr"];
+
+var CATS = [
+  {id:"followers", src:"req", q:["free tiktok followers","tiktok followers","tiktok likes","tiktok views","followers for tiktok"]},
+  {id:"promo",     src:"req", q:["tiktok viral","go viral on tiktok","fyp booster","tiktok promotion"]},
+  {id:"coins",     src:"req", q:["free tiktok coins","tiktok coins","tiktok gifts"]},
+  {id:"aivideo",   src:"req", q:["auto captions for tiktok","ai subtitles video","ai video enhancer","ai voice over"]},
+  {id:"aitext",    src:"hyp", q:["tiktok hashtag generator","ai caption generator","tiktok script ai","tiktok bio"]},
+  {id:"analytics", src:"hyp", q:["tiktok analytics","tiktok unfollowers","who viewed my tiktok profile"]},
+  {id:"download",  src:"hyp", q:["tiktok downloader no watermark","save tiktok video"]}
+];
+
+var RT = [
+  {id:"nothing", color:"--t-nothing",
+   words:"scam · fake · nothing · never got / arrived · didn’t get · 0 followers · not working · waste of time · lies",
+   re:/\b(scam\w*|fake|nothing|never (?:got|get|arrived?|came|received?)|did ?n[o'’]?t (?:get|receive|work)|0 followers|no followers|zero followers|not working|does ?n[o'’]?t work|waste of (?:my )?time|lie[sd]?|liars?)\b/i},
+  {id:"ads", color:"--t-ads",
+   words:"too many ads · only ads · ad after every … · ads every time / tap · full of ads",
+   re:/\b(too many ads|so many ads|full of ads|only ads|just ads|nothing but ads|ads? after (?:every|each)|ad after ad|ads? (?:every|each) (?:time|tap|click|second|step|minute)|constant ads|ads everywhere)\b/i},
+  {id:"account", color:"--t-account",
+   words:"password · login · hacked · banned · suspended · shadowban · stolen · restricted",
+   re:/\b(hacked|password|log ?in|banned|suspended|shadow ?bann?ed|stole|stolen|lost my account|restricted)\b/i},
+  {id:"paid", color:"--t-paid",
+   words:"subscription · charged · paywall · have to pay · premium · VIP · refund · $",
+   re:/(\$\s?\d+(?:[.,]\d+)?|\b(?:subscription|subscribe|charged|paywall|pay to|have to pay|must pay|premium|vip|refund|free trial)\b)/i},
+  {id:"works", color:"--t-works", good:true,
+   words:"works · legit · actually got · received my · recommend · love it",
+   re:/\b(works?|worked|legit|actually got|got my|received my|recommend(?:ed)?|love (?:it|this)|thank you)\b/i}
+];
+
+var EXAMPLE = [
+  "Watched ads for an hour and still 0 followers. Total scam.",
+  "An ad after every tap and the coins never arrived. Waste of time.",
+  "It asked for my TikTok password and the next day my account was hacked.",
+  "You need a $7.99 weekly subscription before you get anything.",
+  "Auto captions actually work and saved me a lot of time. Recommend."
+].join("\n\n");
+
+var I18N = {
+uk:{
+  locale:"uk-UA", brand:"VELDAN · бриф", langAria:"Мова",
+  ui:{copy:"Копіювати запит", copied:"Скопійовано", open:"Відкрити пошук у Google Play (США)"},
+  eyebrow:"Бриф · вертикаль 3 · TikTok",
+  title:"Що дати безкоштовно TikTok-користувачу",
+  meta:[["","30.09.2026"],["Запит:","Ігор"],["Бриф:","VELDAN"],["Виконавець:","Nasuf"]],
+  lead:'Треба з’ясувати, що TikTok-користувачі хочуть отримати безкоштовно, знайти в Google Play застосунки, які це вже дають або тільки обіцяють, і розібрати, як вони заробляють. Результат — звіт у форматі нашого <a href="{sms}">аналізу SMS-застосунків</a> і 2–3 ідеї для наших наступних апок.',
+  ctx:{h:"Контекст: три вертикалі", cur:"Ця задача",
+    intro:"Усі наші нові продукти працюють за однією моделлю: користувач дивиться рекламу й отримує щось цінне. Різняться лише аудиторія і нагорода.",
+    v:[
+      {n:"RBX-монетки", t:"Наші нинішні ігри. Дивишся рекламу — отримуєш монетки RBX.", w:"Працює"},
+      {n:"Безкоштовні стрімінги", t:"YouTube Premium, Netflix, Spotify за перегляд реклами.", w:'Веде Тарас · <a href="{taras}">бриф</a>'},
+      {n:"TikTok-користувачі", t:"Що дати аудиторії TikTok безкоштовно, щоб вона дивилась рекламу.", w:"Веде Nasuf"}
+    ]},
+  goal:{h:"Що має дати аналіз",
+    p1:"Відповідь на одне питання: <b>яку безкоштовну нагороду TikTok-користувач справді хоче і чи дивитиметься заради неї рекламу</b>. Щоб відповісти, дивимось на тих, хто вже працює з цією аудиторією в Play: що обіцяють, чи видають, що пишуть користувачі і з чого живе сам застосунок.",
+    p2:"Окрема увага — застосункам, у відгуках на які пишуть «купа реклами, а в результаті нічого». Їх позначаємо й розбираємо монетизацію найдетальніше: саме вони показують, скільки реклами аудиторія терпить заради обіцянки."},
+  cats:{h:"Де шукати: 7 напрямів",
+    intro:"Чотири напрями прийшли із запиту, три — наші гіпотези. Для кожного є готові запити в американському Play (англійською, <code>&amp;gl=US</code>): клік відкриває пошук, кнопка поруч копіює запит.",
+    tags:{req:"із запиту", hyp:"гіпотеза"},
+    note:"Список не закритий. Якщо в пошуку трапиться інший напрям із великою аудиторією — додай його.",
+    items:{
+      followers:{n:"Накрутка підписників, лайків, переглядів", t:"Застосунки, що обіцяють «безкоштовних підписників» чи перегляди за рекламу, внутрішні монетки або взаємні підписки."},
+      promo:{n:"Просування ролика", t:"Обіцяють вивести відео в рекомендації (FYP), «зробити вірусним», підняти охоплення."},
+      coins:{n:"TikTok-монетки й подарунки", t:"Обіцяють безкоштовні TikTok Coins для донатів стрімерам. З’ясувати, що видають насправді: код, подарункову карту чи нічого."},
+      aivideo:{n:"AI для відео", t:"Автосубтитри, покращення якості, озвучка, прибирання фону, автомонтаж під формат TikTok."},
+      aitext:{n:"AI для контенту", t:"Ідеї для ролика, сценарії, підписи, хештеги, біо профілю."},
+      analytics:{n:"Аналітика профілю", t:"Статистика, хто відписався, «хто дивився мій профіль», найкращий час для публікації."},
+      download:{n:"Завантаження відео", t:"Збереження ролика без водяного знака, витяг звуку. Попит великий; окремо перевірити, що про це кажуть правила Play і TikTok."}
+    }},
+  steps:{h:"Як працювати: від пошуку до висновку", items:[
+    ["Пошук","За кожним запитом переглянути перші 20–30 результатів. У довгий список брати застосунки від 100 тис. встановлень. Орієнтир — 20–30 застосунків на всі напрями."],
+    ["Скринінг відгуків","Для кожного застосунку прочитати 20 найновіших і 20 найкорисніших відгуків і розкласти скарги за типами (таблиця нижче). Оцінку записувати разом із країною магазину."],
+    ["Позначити «обіцяють і не дають»","Якщо третина прочитаних відгуків або більше — «нічого не отримав» чи «сама реклама», ставимо прапорець. Це орієнтир, а не закон: сумнівні випадки теж позначай, з поясненням."],
+    ["Глибокий розбір","3–5 позначених застосунків і 2–3 чесних для порівняння. Власний тест: пройти шлях до першої нагороди, порахувати рекламу й хвилини, записати формати, платне, SDK."],
+    ["Висновок","Відповіді на головні питання і 2–3 ідеї для нас: що даємо, скільки це коштує, які ризики."]
+  ]},
+  screen:{h:"Скринінг відгуків",
+    intro:"Відгуки в американському Play — англійською. Нижче типи скарг і слова, за якими їх легко знайти. Інструмент під таблицею робить це автоматично.",
+    cols:["Тип","Що означає","Слова-маркери"],
+    types:{
+      nothing:["Нічого не отримав","Обіцянку не виконано: 0 підписників, монетки не прийшли."],
+      ads:["Сама реклама","Реклама після кожної дії, а нагорода не наближається."],
+      account:["Проблеми з акаунтом","Просили пароль TikTok; акаунт зламали, заблокували чи обмежили."],
+      paid:["Платно замість безкоштовно","Нагорода лише з підпискою, несподівані списання."],
+      works:["Працює","Користувач отримав обіцяне."]
+    }},
+  tool:{label:"Перевірка відгуків", hint:"Встав відгуки одного застосунку, кожен з нового абзацу.", ex:"Вставити приклад", clear:"Очистити",
+    exNote:"Зараз тут приклад: вигадані тексти, щоб показати, як працює перевірка.",
+    empty:"Відгуків поки немає.", total:"Відгуків: {n}",
+    yes:"Позначити: обіцяють і не дають", no:"Прапорець не потрібен",
+    rule:"Правило: прапорець, якщо ≥ 1/3 відгуків — «нічого не отримав» або «сама реклама».", now:"Зараз: {p}."},
+  fields:{h:"Що зібрати по кожному застосунку", cols:["Поле","Що записати","Де взяти"], rows:[
+    ["Назва й посилання","Назва, package id, посилання на Play","Google Play"],
+    ["Напрям","Один із 7 напрямів і що саме обіцяє","Опис, скріншоти"],
+    ["Розробник","Назва, країна, скільки ще застосунків","Сторінка розробника в Play"],
+    ["Масштаб","Встановлення, оцінка з країною магазину, кількість оцінок, дата виходу й оновлення","Картка Play"],
+    ["Ціна нагороди","Скільки реклами, хвилин чи завдань до першої нагороди","Власний тест"],
+    ["Чи видає","Що реально отримав на тесті","Власний тест, відгуки"],
+    ["Доступ до TikTok","Чи просить логін TikTok і як: офіційний вхід TikTok чи власна форма з паролем","Власний тест"],
+    ["Реклама","Формати (банер, нативна, інтерстиціал, rewarded) і де стоять","Власний тест"],
+    ["Платне","Підписка, покупки, діапазон цін","Картка Play, власний тест"],
+    ["Рекламні SDK","Мережі й медіація",'<a href="{exodus}">Exodus Privacy</a>'],
+    ["Відгуки","Частки скарг за типами, прапорець","Скринінг"]
+  ]},
+  q:{h:"Головні питання", intro:"Звіт має чітко відповісти на кожне:", items:[
+    "Чого TikTok-користувачі хочуть найбільше? Порівняти 7 напрямів за встановленнями й кількістю застосунків.",
+    "Хто вже дає це за рекламу і чи видає обіцяне?",
+    "Як заробляють ті, хто обіцяє і не дає: скільки реклами до «нагороди», які формати, чи є підписка?",
+    "Що з цього ми можемо давати чесно: без пароля від TikTok і без порушення правил Play і TikTok?",
+    "Скільки нам коштуватиме одна нагорода? Наприклад, AI-субтитри для хвилини відео через API. Дохід від реклами порахуємо разом.",
+    "Які 2–3 ідеї апки ти б запропонував нам і чому?"
+  ]},
+  risks:{h:"Ризики, які перевірити одразу", intro:"Вони вирішують, чи напрям узагалі нам підходить. У звіті — окрема позначка для кожного напряму.", items:[
+    ["Накрутка і правила TikTok.",'TikTok у <a href="{ttcg}">правилах спільноти</a> (розділ Integrity and Authenticity) забороняє фейкову активність: продаж підписників і лайків, інструкції з накрутки. Перевірити актуальний текст і що буває з акаунтом користувача.'],
+    ["Пароль від TikTok.","Застосунок, що просить логін і пароль у власній формі, — ознака крадіжки акаунтів. Тестувати тільки на тестовому TikTok-акаунті, ніколи на особистому."],
+    ["TikTok-монетки.",'Монетки й подарунки регулює <a href="{ttvi}">Virtual Items Policy</a> TikTok. З’ясувати, як конкуренти «дають монетки» і чи це взагалі можливо легально.'],
+    ["Бренд TikTok.","Чи можна писати TikTok у назві й ставити схожу іконку? Записати, як це роблять конкуренти і чи є дисклеймер «not affiliated with TikTok»."],
+    ["Правила Google Play.",'Перевірити в <a href="{policy}">Policy Center</a> розділи про оманливу поведінку, видавання себе за інший бренд та інтелектуальну власність. Для реклами — <a href="{ads}">правила Ads</a>, як у нашому SMS-звіті.']
+  ]},
+  deliver:{h:"Формат результату", intro:'Зразок — наш <a href="{sms}">звіт про SMS-застосунки</a>: одна HTML-сторінка, яку можна відкрити в браузері й показати менеджеру. У звіті мають бути:', prog:"Виконано {n} з {m}", items:[
+    "Таблиця всіх застосунків із довгого списку з полями вище",
+    "Карта попиту: 7 напрямів поруч, який найбільший",
+    "Скринінг відгуків: частки скарг і хто позначений",
+    "Симуляція або скріншоти шляху 2–3 застосунків: встановлення → що просять → реклама → що отримав",
+    "Монетизація позначених: реклама, платне, SDK",
+    "Цитати негативних відгуків із датою, країною магазину й перекладом",
+    "Розділ «Тонкощі»: факт ✔ окремо від гіпотези ◌ і як її перевірити",
+    "Висновок: 2–3 ідеї для нас із вартістю й ризиками",
+    "Дата збору даних і джерела"
+  ], after:"Кожну цифру з Play підписуй датою й країною магазину. Галочки тут — для тебе: вони зберігаються лише в твоєму браузері."},
+  method:{h:"Як ми збирали дані минулого разу", intro:"Цей метод дав цифри для SMS-звіту. Його можна повторити без змін.", items:[
+    ["Картка Play.","Завантажити HTML сторінки <code>{playcard}</code> через <code>curl</code>. Дані лежать у блоках <code>AF_initDataCallback</code>: у <code>ds:5</code> — картка, в одному з інших — 20 перших відгуків. Звичайний вебфетч сторінку Play не читає."],
+    ["Рекламні SDK.",'Звіт <a href="{exodus}">Exodus Privacy</a> за package id. Exodus знаходить код бібліотеки, але не доводить, що вона показує рекламу.'],
+    ["Контрольна група.","Ті самі метрики для 5–7 відомих чесних застосунків тієї ж категорії, наприклад відеоредакторів з автосубтитрами. Без неї не видно, чи цифри незвичні."],
+    ["Власний тест.","Тестовий телефон або емулятор, тестовий Google-акаунт і тестовий TikTok-акаунт. Пройти шлях до першої нагороди, засікти час, порахувати рекламу, зробити скріншоти."],
+    ["Межа даних.","Записувати дату збору, країну магазину, що було видно, а чого ні."]
+  ]},
+  links:{h:"Приклади й посилання", items:{
+    sms:["Звіт про SMS-застосунки","Зразок формату результату"],
+    taras:["Бриф вертикалі 2 (стрімінги)","Сусідня задача Тараса, та сама структура"],
+    exodus:["Exodus Privacy","Рекламні SDK за package id"],
+    policy:["Google Play Policy Center","Правила Play"],
+    ads:["Google Play: правила Ads","Правила реклами в застосунках"],
+    ttcg:["TikTok Community Guidelines","Розділ Integrity and Authenticity"],
+    ttvi:["TikTok Virtual Items Policy","Монетки й подарунки"]
+  }},
+  foot:"Бриф підготував <b>VELDAN</b> · 30.09.2026. Питання по брифу — до VELDAN, по продукту — до Ігора."
+},
+
+ru:{
+  locale:"ru-RU", brand:"VELDAN · бриф", langAria:"Язык",
+  ui:{copy:"Скопировать запрос", copied:"Скопировано", open:"Открыть поиск в Google Play (США)"},
+  eyebrow:"Бриф · вертикаль 3 · TikTok",
+  title:"Что дать бесплатно пользователю TikTok",
+  meta:[["","30.09.2026"],["Запрос:","Игорь"],["Бриф:","VELDAN"],["Исполнитель:","Nasuf"]],
+  lead:'Нужно выяснить, что пользователи TikTok хотят получить бесплатно, найти в Google Play приложения, которые это уже дают или только обещают, и разобрать, как они зарабатывают. Результат — отчёт в формате нашего <a href="{sms}">анализа SMS-приложений</a> и 2–3 идеи для наших следующих приложений.',
+  ctx:{h:"Контекст: три вертикали", cur:"Эта задача",
+    intro:"Все наши новые продукты работают по одной модели: пользователь смотрит рекламу и получает что-то ценное. Меняются только аудитория и награда.",
+    v:[
+      {n:"RBX-монетки", t:"Наши нынешние игры. Смотришь рекламу — получаешь монетки RBX.", w:"Работает"},
+      {n:"Бесплатные стриминги", t:"YouTube Premium, Netflix, Spotify за просмотр рекламы.", w:'Ведёт Тарас · <a href="{taras}">бриф</a>'},
+      {n:"Пользователи TikTok", t:"Что дать аудитории TikTok бесплатно, чтобы она смотрела рекламу.", w:"Ведёт Nasuf"}
+    ]},
+  goal:{h:"На что должен ответить анализ",
+    p1:"На один вопрос: <b>какую бесплатную награду пользователь TikTok действительно хочет и будет ли ради неё смотреть рекламу</b>. Чтобы ответить, смотрим на тех, кто уже работает с этой аудиторией в Play: что обещают, выдают ли, что пишут пользователи и за счёт чего живёт само приложение.",
+    p2:"Отдельное внимание — приложениям, в отзывах на которые пишут «куча рекламы, а в итоге ничего». Их помечаем и разбираем монетизацию подробнее всего: именно они показывают, сколько рекламы аудитория терпит ради обещания."},
+  cats:{h:"Где искать: 7 направлений",
+    intro:"Четыре направления пришли из запроса, три — наши гипотезы. Для каждого есть готовые запросы в американском Play (на английском, <code>&amp;gl=US</code>): клик открывает поиск, кнопка рядом копирует запрос.",
+    tags:{req:"из запроса", hyp:"гипотеза"},
+    note:"Список не закрыт. Если в поиске попадётся другое направление с большой аудиторией — добавь его.",
+    items:{
+      followers:{n:"Накрутка подписчиков, лайков, просмотров", t:"Приложения, которые обещают «бесплатных подписчиков» или просмотры за рекламу, внутренние монетки или взаимные подписки."},
+      promo:{n:"Продвижение ролика", t:"Обещают вывести видео в рекомендации (FYP), «сделать вирусным», поднять охват."},
+      coins:{n:"TikTok-монетки и подарки", t:"Обещают бесплатные TikTok Coins для донатов стримерам. Выяснить, что выдают на самом деле: код, подарочную карту или ничего."},
+      aivideo:{n:"AI для видео", t:"Автосубтитры, улучшение качества, озвучка, удаление фона, автомонтаж под формат TikTok."},
+      aitext:{n:"AI для контента", t:"Идеи для ролика, сценарии, подписи, хештеги, био профиля."},
+      analytics:{n:"Аналитика профиля", t:"Статистика, кто отписался, «кто смотрел мой профиль», лучшее время для публикации."},
+      download:{n:"Скачивание видео", t:"Сохранение ролика без водяного знака, извлечение звука. Спрос большой; отдельно проверить, что об этом говорят правила Play и TikTok."}
+    }},
+  steps:{h:"Как работать: от поиска до вывода", items:[
+    ["Поиск","По каждому запросу просмотреть первые 20–30 результатов. В длинный список брать приложения от 100 тыс. установок. Ориентир — 20–30 приложений на все направления."],
+    ["Скрининг отзывов","Для каждого приложения прочитать 20 самых новых и 20 самых полезных отзывов и разложить жалобы по типам (таблица ниже). Оценку записывать вместе со страной магазина."],
+    ["Пометить «обещают и не дают»","Если треть прочитанных отзывов или больше — «ничего не получил» или «одна реклама», ставим флажок. Это ориентир, а не закон: сомнительные случаи тоже помечай, с пояснением."],
+    ["Глубокий разбор","3–5 помеченных приложений и 2–3 честных для сравнения. Свой тест: пройти путь до первой награды, посчитать рекламу и минуты, записать форматы, платное, SDK."],
+    ["Вывод","Ответы на главные вопросы и 2–3 идеи для нас: что даём, сколько это стоит, какие риски."]
+  ]},
+  screen:{h:"Скрининг отзывов",
+    intro:"Отзывы в американском Play — на английском. Ниже типы жалоб и слова, по которым их легко найти. Инструмент под таблицей делает это автоматически.",
+    cols:["Тип","Что значит","Слова-маркеры"],
+    types:{
+      nothing:["Ничего не получил","Обещание не выполнено: 0 подписчиков, монетки не пришли."],
+      ads:["Одна реклама","Реклама после каждого действия, а награда не приближается."],
+      account:["Проблемы с аккаунтом","Просили пароль TikTok; аккаунт взломали, заблокировали или ограничили."],
+      paid:["Платно вместо бесплатно","Награда только по подписке, неожиданные списания."],
+      works:["Работает","Пользователь получил обещанное."]
+    }},
+  tool:{label:"Проверка отзывов", hint:"Вставь отзывы одного приложения, каждый с нового абзаца.", ex:"Вставить пример", clear:"Очистить",
+    exNote:"Сейчас здесь пример: выдуманные тексты, чтобы показать, как работает проверка.",
+    empty:"Отзывов пока нет.", total:"Отзывов: {n}",
+    yes:"Пометить: обещают и не дают", no:"Флажок не нужен",
+    rule:"Правило: флажок, если ≥ 1/3 отзывов — «ничего не получил» или «одна реклама».", now:"Сейчас: {p}."},
+  fields:{h:"Что собрать по каждому приложению", cols:["Поле","Что записать","Где взять"], rows:[
+    ["Название и ссылка","Название, package id, ссылка на Play","Google Play"],
+    ["Направление","Одно из 7 направлений и что именно обещает","Описание, скриншоты"],
+    ["Разработчик","Название, страна, сколько ещё приложений","Страница разработчика в Play"],
+    ["Масштаб","Установки, оценка со страной магазина, количество оценок, дата выхода и обновления","Карточка Play"],
+    ["Цена награды","Сколько рекламы, минут или заданий до первой награды","Свой тест"],
+    ["Выдаёт ли","Что реально получил на тесте","Свой тест, отзывы"],
+    ["Доступ к TikTok","Просит ли логин TikTok и как: официальный вход TikTok или своя форма с паролем","Свой тест"],
+    ["Реклама","Форматы (баннер, нативная, интерстишиал, rewarded) и где стоят","Свой тест"],
+    ["Платное","Подписка, покупки, диапазон цен","Карточка Play, свой тест"],
+    ["Рекламные SDK","Сети и медиация",'<a href="{exodus}">Exodus Privacy</a>'],
+    ["Отзывы","Доли жалоб по типам, флажок","Скрининг"]
+  ]},
+  q:{h:"Главные вопросы", intro:"Отчёт должен чётко ответить на каждый:", items:[
+    "Чего пользователи TikTok хотят больше всего? Сравнить 7 направлений по установкам и количеству приложений.",
+    "Кто уже даёт это за рекламу и выдаёт ли обещанное?",
+    "Как зарабатывают те, кто обещает и не даёт: сколько рекламы до «награды», какие форматы, есть ли подписка?",
+    "Что из этого мы можем давать честно: без пароля от TikTok и без нарушения правил Play и TikTok?",
+    "Сколько нам будет стоить одна награда? Например, AI-субтитры для минуты видео через API. Доход от рекламы посчитаем вместе.",
+    "Какие 2–3 идеи приложения ты бы предложил нам и почему?"
+  ]},
+  risks:{h:"Риски, которые проверить сразу", intro:"Они решают, подходит ли нам направление вообще. В отчёте — отдельная пометка для каждого направления.", items:[
+    ["Накрутка и правила TikTok.",'TikTok в <a href="{ttcg}">правилах сообщества</a> (раздел Integrity and Authenticity) запрещает фейковую активность: продажу подписчиков и лайков, инструкции по накрутке. Проверить актуальный текст и что бывает с аккаунтом пользователя.'],
+    ["Пароль от TikTok.","Приложение, которое просит логин и пароль в собственной форме, — признак кражи аккаунтов. Тестировать только на тестовом аккаунте TikTok, никогда на личном."],
+    ["TikTok-монетки.",'Монетки и подарки регулирует <a href="{ttvi}">Virtual Items Policy</a> TikTok. Выяснить, как конкуренты «дают монетки» и возможно ли это вообще легально.'],
+    ["Бренд TikTok.","Можно ли писать TikTok в названии и ставить похожую иконку? Записать, как это делают конкуренты и есть ли дисклеймер «not affiliated with TikTok»."],
+    ["Правила Google Play.",'Проверить в <a href="{policy}">Policy Center</a> разделы об обманном поведении, выдаче себя за другой бренд и интеллектуальной собственности. Для рекламы — <a href="{ads}">правила Ads</a>, как в нашем SMS-отчёте.']
+  ]},
+  deliver:{h:"Формат результата", intro:'Образец — наш <a href="{sms}">отчёт об SMS-приложениях</a>: одна HTML-страница, которую можно открыть в браузере и показать менеджеру. В отчёте должны быть:', prog:"Готово {n} из {m}", items:[
+    "Таблица всех приложений из длинного списка с полями выше",
+    "Карта спроса: 7 направлений рядом, какое самое большое",
+    "Скрининг отзывов: доли жалоб и кто помечен",
+    "Симуляция или скриншоты пути 2–3 приложений: установка → что просят → реклама → что получил",
+    "Монетизация помеченных: реклама, платное, SDK",
+    "Цитаты негативных отзывов с датой, страной магазина и переводом",
+    "Раздел «Тонкости»: факт ✔ отдельно от гипотезы ◌ и как её проверить",
+    "Вывод: 2–3 идеи для нас со стоимостью и рисками",
+    "Дата сбора данных и источники"
+  ], after:"Каждую цифру из Play подписывай датой и страной магазина. Галочки здесь — для тебя: они сохраняются только в твоём браузере."},
+  method:{h:"Как мы собирали данные в прошлый раз", intro:"Этот метод дал цифры для SMS-отчёта. Его можно повторить без изменений.", items:[
+    ["Карточка Play.","Скачать HTML страницы <code>{playcard}</code> через <code>curl</code>. Данные лежат в блоках <code>AF_initDataCallback</code>: в <code>ds:5</code> — карточка, в одном из других — 20 первых отзывов. Обычный веб-фетч страницу Play не читает."],
+    ["Рекламные SDK.",'Отчёт <a href="{exodus}">Exodus Privacy</a> по package id. Exodus находит код библиотеки, но не доказывает, что она показывает рекламу.'],
+    ["Контрольная группа.","Те же метрики для 5–7 известных честных приложений той же категории, например видеоредакторов с автосубтитрами. Без неё не видно, необычные ли цифры."],
+    ["Свой тест.","Тестовый телефон или эмулятор, тестовый Google-аккаунт и тестовый аккаунт TikTok. Пройти путь до первой награды, засечь время, посчитать рекламу, сделать скриншоты."],
+    ["Границы данных.","Записывать дату сбора, страну магазина, что было видно, а что нет."]
+  ]},
+  links:{h:"Примеры и ссылки", items:{
+    sms:["Отчёт об SMS-приложениях","Образец формата результата"],
+    taras:["Бриф вертикали 2 (стриминги)","Соседняя задача Тараса, та же структура (на украинском)"],
+    exodus:["Exodus Privacy","Рекламные SDK по package id"],
+    policy:["Google Play Policy Center","Правила Play"],
+    ads:["Google Play: правила Ads","Правила рекламы в приложениях"],
+    ttcg:["TikTok Community Guidelines","Раздел Integrity and Authenticity"],
+    ttvi:["TikTok Virtual Items Policy","Монетки и подарки"]
+  }},
+  foot:"Бриф подготовил <b>VELDAN</b> · 30.09.2026. Вопросы по брифу — к VELDAN, по продукту — к Игорю."
+},
+
+en:{
+  locale:"en-US", brand:"VELDAN · brief", langAria:"Language",
+  ui:{copy:"Copy query", copied:"Copied", open:"Open the search in Google Play (US)"},
+  eyebrow:"Brief · vertical 3 · TikTok",
+  title:"What to give TikTok users for free",
+  meta:[["","Sep 30, 2026"],["Request:","Igor"],["Brief:","VELDAN"],["Assignee:","Nasuf"]],
+  lead:'Find out what TikTok users want to get for free, find Google Play apps that already give it or only promise it, and break down how they make money. The result is a report in the format of our <a href="{sms}">SMS apps analysis</a> plus 2–3 ideas for our next apps.',
+  ctx:{h:"Context: three verticals", cur:"This task",
+    intro:"All our new products run on one model: the user watches ads and gets something valuable in return. Only the audience and the reward change.",
+    v:[
+      {n:"RBX coins", t:"Our current games. Watch an ad, get RBX coins.", w:"Live"},
+      {n:"Free streaming", t:"YouTube Premium, Netflix, Spotify for watching ads.", w:'Owner: Taras · <a href="{taras}">brief</a>'},
+      {n:"TikTok users", t:"What we can give the TikTok audience for free so they watch ads.", w:"Owner: Nasuf"}
+    ]},
+  goal:{h:"What the analysis must answer",
+    p1:"One question: <b>which free reward does a TikTok user actually want, and will they watch ads for it</b>. To answer it, we look at who already works with this audience on Play: what they promise, whether they deliver, what users write, and what the app itself lives on.",
+    p2:"Pay special attention to apps whose reviews say “tons of ads and nothing in the end”. Flag them and study their monetization in the most detail: they show how many ads this audience will sit through for a promise."},
+  cats:{h:"Where to look: 7 directions",
+    intro:"Four directions come from the request, three are our hypotheses. Each has ready-made searches for the US Play Store (in English, <code>&amp;gl=US</code>): clicking opens the search, the button next to it copies the query.",
+    tags:{req:"from request", hyp:"hypothesis"},
+    note:"The list is open. If your search turns up another direction with a large audience, add it.",
+    items:{
+      followers:{n:"Boosting followers, likes, views", t:"Apps promising “free followers” or views in exchange for ads, in-app coins or follow-for-follow."},
+      promo:{n:"Video promotion", t:"They promise to push a video into recommendations (FYP), “make it viral”, grow reach."},
+      coins:{n:"TikTok coins and gifts", t:"They promise free TikTok Coins to tip streamers. Find out what they actually give: a code, a gift card or nothing."},
+      aivideo:{n:"AI for video", t:"Auto captions, quality enhancement, voice-over, background removal, auto-editing into TikTok format."},
+      aitext:{n:"AI for content", t:"Video ideas, scripts, captions, hashtags, profile bio."},
+      analytics:{n:"Profile analytics", t:"Stats, who unfollowed, “who viewed my profile”, best time to post."},
+      download:{n:"Video downloading", t:"Saving videos without the watermark, extracting audio. Demand is big; check separately what Play and TikTok rules say about it."}
+    }},
+  steps:{h:"How to work: from search to conclusion", items:[
+    ["Search","For each query, look through the first 20–30 results. Put apps with 100K+ installs on the long list. Target: 20–30 apps across all directions."],
+    ["Review screening","For each app, read the 20 newest and 20 most helpful reviews and sort the complaints by type (table below). Record the rating together with the store country."],
+    ["Flag “promise but don’t deliver”","If a third or more of the reviews you read say “got nothing” or “just ads”, flag the app. This is a guideline, not a law: flag borderline cases too, with a note."],
+    ["Deep dive","3–5 flagged apps plus 2–3 honest ones for comparison. Your own test: reach the first reward, count ads and minutes, record formats, paid features, SDKs."],
+    ["Conclusion","Answers to the key questions and 2–3 ideas for us: what we give, what it costs, what the risks are."]
+  ]},
+  screen:{h:"Review screening",
+    intro:"Reviews in the US Play Store are in English. Below are the complaint types and the words that make them easy to find. The tool under the table does this automatically.",
+    cols:["Type","What it means","Marker words"],
+    types:{
+      nothing:["Got nothing","Promise not kept: 0 followers, coins never arrived."],
+      ads:["Just ads","An ad after every action, and the reward never gets closer."],
+      account:["Account problems","Asked for the TikTok password; account hacked, banned or restricted."],
+      paid:["Paid instead of free","Reward only with a subscription, unexpected charges."],
+      works:["Works","The user got what was promised."]
+    }},
+  tool:{label:"Review check", hint:"Paste one app’s reviews, each in a new paragraph.", ex:"Paste example", clear:"Clear",
+    exNote:"This is an example: made-up texts that show how the check works.",
+    empty:"No reviews yet.", total:"Reviews: {n}",
+    yes:"Flag it: promises but doesn’t deliver", no:"No flag needed",
+    rule:"Rule: flag if ≥ 1/3 of reviews say “got nothing” or “just ads”.", now:"Now: {p}."},
+  fields:{h:"What to collect for each app", cols:["Field","What to record","Where to get it"], rows:[
+    ["Name and link","Name, package id, Play link","Google Play"],
+    ["Direction","Which of the 7 directions and what exactly it promises","Description, screenshots"],
+    ["Developer","Name, country, how many other apps","Developer page on Play"],
+    ["Scale","Installs, rating with store country, number of ratings, release and update dates","Play listing"],
+    ["Cost of the reward","How many ads, minutes or tasks until the first reward","Your own test"],
+    ["Does it deliver","What you actually got in the test","Your own test, reviews"],
+    ["TikTok access","Does it ask for a TikTok login, and how: the official TikTok login or its own password form","Your own test"],
+    ["Ads","Formats (banner, native, interstitial, rewarded) and where they appear","Your own test"],
+    ["Paid","Subscription, purchases, price range","Play listing, your own test"],
+    ["Ad SDKs","Networks and mediation",'<a href="{exodus}">Exodus Privacy</a>'],
+    ["Reviews","Share of complaints by type, flag","Screening"]
+  ]},
+  q:{h:"Key questions", intro:"The report must clearly answer each one:", items:[
+    "What do TikTok users want most? Compare the 7 directions by installs and number of apps.",
+    "Who already gives this for ads, and do they deliver?",
+    "How do the apps that promise and don’t deliver make money: how many ads until the “reward”, which formats, is there a subscription?",
+    "What of this can we give honestly: without the user’s TikTok password and without breaking Play or TikTok rules?",
+    "What will one reward cost us? For example, AI captions for one minute of video via an API. We’ll work out the ad revenue together.",
+    "Which 2–3 app ideas would you suggest to us, and why?"
+  ]},
+  risks:{h:"Risks to check first", intro:"They decide whether a direction suits us at all. Give each direction its own mark in the report.", items:[
+    ["Boosting and TikTok rules.",'TikTok’s <a href="{ttcg}">Community Guidelines</a> (Integrity and Authenticity) prohibit fake engagement: selling followers and likes, instructions for boosting. Check the current text and what happens to the user’s account.'],
+    ["TikTok password.","An app that asks for a login and password in its own form is a sign of account theft. Test only with a test TikTok account, never your personal one."],
+    ["TikTok coins.",'Coins and gifts are governed by TikTok’s <a href="{ttvi}">Virtual Items Policy</a>. Find out how competitors “give coins” and whether that is legally possible at all.'],
+    ["TikTok brand.","Can the app name include TikTok, can the icon look similar? Record how competitors do it and whether they carry a “not affiliated with TikTok” disclaimer."],
+    ["Google Play rules.",'In the <a href="{policy}">Policy Center</a>, check the sections on deceptive behavior, impersonation and intellectual property. For ads, the <a href="{ads}">Ads policy</a>, as in our SMS report.']
+  ]},
+  deliver:{h:"Result format", intro:'The model is our <a href="{sms}">SMS apps report</a>: a single HTML page you can open in a browser and show to the manager. The report must include:', prog:"{n} of {m} done", items:[
+    "A table of all long-list apps with the fields above",
+    "Demand map: the 7 directions side by side, which one is biggest",
+    "Review screening: complaint shares and which apps are flagged",
+    "Simulation or screenshots of the flow in 2–3 apps: install → what they ask for → ads → what you got",
+    "Monetization of the flagged apps: ads, paid features, SDKs",
+    "Quotes from negative reviews with date, store country and translation",
+    "A “Fine print” section: fact ✔ kept apart from hypothesis ◌, and how to check it",
+    "Conclusion: 2–3 ideas for us with cost and risks",
+    "Data collection date and sources"
+  ], after:"Label every Play figure with a date and store country. The checkboxes here are for you: they are saved only in your browser."},
+  method:{h:"How we collected data last time", intro:"This method produced the numbers for the SMS report. You can repeat it as is.", items:[
+    ["Play listing.","Download the HTML of <code>{playcard}</code> with <code>curl</code>. The data sits in <code>AF_initDataCallback</code> blocks: <code>ds:5</code> holds the listing, another one holds the first 20 reviews. A regular web fetch can’t read the Play page."],
+    ["Ad SDKs.",'The <a href="{exodus}">Exodus Privacy</a> report by package id. Exodus finds the library code but doesn’t prove it shows ads.'],
+    ["Control group.","The same metrics for 5–7 well-known honest apps in the same category, for example video editors with auto captions. Without it you can’t tell whether the numbers are unusual."],
+    ["Your own test.","A test phone or emulator, a test Google account and a test TikTok account. Reach the first reward, time it, count the ads, take screenshots."],
+    ["Data limits.","Record the collection date, store country, what was visible and what wasn’t."]
+  ]},
+  links:{h:"Examples and links", items:{
+    sms:["SMS apps report","Model for the result format"],
+    taras:["Vertical 2 brief (streaming)","Taras’s related task, same structure (in Ukrainian)"],
+    exodus:["Exodus Privacy","Ad SDKs by package id"],
+    policy:["Google Play Policy Center","Play rules"],
+    ads:["Google Play Ads policy","Rules for ads in apps"],
+    ttcg:["TikTok Community Guidelines","Integrity and Authenticity section"],
+    ttvi:["TikTok Virtual Items Policy","Coins and gifts"]
+  }},
+  foot:"Brief prepared by <b>VELDAN</b> · Sep 30, 2026. Questions about the brief go to VELDAN, about the product to Igor."
+},
+
+tr:{
+  locale:"tr-TR", brand:"VELDAN · görev tanımı", langAria:"Dil",
+  ui:{copy:"Sorguyu kopyala", copied:"Kopyalandı", open:"Google Play’de (ABD) aramayı aç"},
+  eyebrow:"Görev tanımı · 3. dikey · TikTok",
+  title:"TikTok kullanıcısına ücretsiz ne verebiliriz",
+  meta:[["","30.09.2026"],["Talep:","Igor"],["Görev tanımı:","VELDAN"],["Sorumlu:","Nasuf"]],
+  lead:'TikTok kullanıcılarının ücretsiz olarak ne almak istediğini bulmamız gerekiyor. Google Play’de bunu zaten veren ya da yalnızca vaat eden uygulamaları bul ve nasıl para kazandıklarını incele. Sonuç: <a href="{sms}">SMS uygulamaları analizimiz</a> formatında bir rapor ve sonraki uygulamalarımız için 2–3 fikir.',
+  ctx:{h:"Bağlam: üç dikey", cur:"Bu görev",
+    intro:"Tüm yeni ürünlerimiz aynı modelle çalışır: kullanıcı reklam izler ve karşılığında değerli bir şey alır. Değişen yalnızca kitle ve ödül.",
+    v:[
+      {n:"RBX jetonları", t:"Mevcut oyunlarımız. Reklam izle, RBX jetonu kazan.", w:"Yayında"},
+      {n:"Ücretsiz yayın abonelikleri", t:"Reklam izleme karşılığında YouTube Premium, Netflix, Spotify.", w:'Sorumlu: Taras · <a href="{taras}">görev tanımı</a>'},
+      {n:"TikTok kullanıcıları", t:"TikTok kitlesinin reklam izlemesi için ona ücretsiz ne verebiliriz.", w:"Sorumlu: Nasuf"}
+    ]},
+  goal:{h:"Analiz neyi cevaplamalı",
+    p1:"Tek bir soruyu: <b>TikTok kullanıcısı gerçekten hangi ücretsiz ödülü istiyor ve bunun için reklam izler mi</b>. Cevap için Play’de bu kitleyle zaten çalışanlara bakıyoruz: ne vaat ediyorlar, veriyorlar mı, kullanıcılar ne yazıyor ve uygulama neyle geçiniyor.",
+    p2:"Yorumlarında «bir sürü reklam, sonunda hiçbir şey» yazan uygulamalara özel dikkat. Onları işaretleyip gelir modelini en ayrıntılı şekilde inceliyoruz: kitlenin bir vaat uğruna ne kadar reklama katlandığını tam da onlar gösteriyor."},
+  cats:{h:"Nerede aramalı: 7 yön",
+    intro:"Dört yön talepten geldi, üçü bizim hipotezimiz. Her biri için ABD Play mağazasında hazır aramalar var (İngilizce, <code>&amp;gl=US</code>): tıklayınca arama açılır, yanındaki düğme sorguyu kopyalar.",
+    tags:{req:"talepten", hyp:"hipotez"},
+    note:"Liste kapalı değil. Aramada büyük kitlesi olan başka bir yön çıkarsa onu da ekle.",
+    items:{
+      followers:{n:"Takipçi, beğeni, izlenme artırma", t:"Reklam, uygulama içi jeton ya da karşılıklı takip karşılığında «ücretsiz takipçi» veya izlenme vaat eden uygulamalar."},
+      promo:{n:"Video tanıtımı", t:"Videoyu öneriler akışına (FYP) çıkarmayı, «viral yapmayı», erişimi artırmayı vaat ediyorlar."},
+      coins:{n:"TikTok jetonları ve hediyeler", t:"Yayıncılara bağış için ücretsiz TikTok Coins vaat ediyorlar. Gerçekte ne verdiklerini bul: kod, hediye kartı ya da hiçbir şey."},
+      aivideo:{n:"Video için yapay zekâ", t:"Otomatik altyazı, kalite iyileştirme, seslendirme, arka plan silme, TikTok formatına otomatik kurgu."},
+      aitext:{n:"İçerik için yapay zekâ", t:"Video fikirleri, senaryolar, açıklamalar, hashtag’ler, profil biyografisi."},
+      analytics:{n:"Profil analitiği", t:"İstatistikler, takipten çıkanlar, «profilime kim baktı», en iyi paylaşım saati."},
+      download:{n:"Video indirme", t:"Videoyu filigransız kaydetme, sesi ayırma. Talep büyük; Play ve TikTok kurallarının buna ne dediğini ayrıca kontrol et."}
+    }},
+  steps:{h:"Nasıl çalışmalı: aramadan sonuca", items:[
+    ["Arama","Her sorgu için ilk 20–30 sonuca bak. Uzun listeye 100 bin+ indirmesi olan uygulamaları al. Hedef: tüm yönler için toplam 20–30 uygulama."],
+    ["Yorum taraması","Her uygulama için en yeni 20 ve en faydalı 20 yorumu oku, şikâyetleri türlerine ayır (aşağıdaki tablo). Puanı mağaza ülkesiyle birlikte kaydet."],
+    ["«Vaat edip vermeyenleri» işaretle","Okuduğun yorumların üçte biri veya fazlası «hiçbir şey alamadım» ya da «sadece reklam» diyorsa bayrak koy. Bu bir kılavuz, kesin kural değil: şüpheli durumları da açıklamayla işaretle."],
+    ["Derin inceleme","İşaretli 3–5 uygulama ve karşılaştırma için 2–3 dürüst uygulama. Kendi testin: ilk ödüle kadar git, reklamları ve dakikaları say, formatları, ücretli kısmı, SDK’ları kaydet."],
+    ["Sonuç","Ana sorulara cevaplar ve bizim için 2–3 fikir: ne veriyoruz, maliyeti ne, riskleri neler."]
+  ]},
+  screen:{h:"Yorum taraması",
+    intro:"ABD Play’deki yorumlar İngilizce. Aşağıda şikâyet türleri ve onları kolayca bulduran kelimeler var. Tablonun altındaki araç bunu otomatik yapar.",
+    cols:["Tür","Anlamı","İşaret kelimeler"],
+    types:{
+      nothing:["Hiçbir şey alamadım","Vaat yerine getirilmedi: 0 takipçi, jetonlar gelmedi."],
+      ads:["Sadece reklam","Her adımdan sonra reklam, ödül ise yaklaşmıyor."],
+      account:["Hesap sorunları","TikTok şifresi istendi; hesap çalındı, engellendi ya da kısıtlandı."],
+      paid:["Ücretsiz yerine ücretli","Ödül yalnızca abonelikle, beklenmedik ödemeler."],
+      works:["Çalışıyor","Kullanıcı vaat edileni aldı."]
+    }},
+  tool:{label:"Yorum kontrolü", hint:"Bir uygulamanın yorumlarını yapıştır, her biri yeni paragrafta.", ex:"Örneği ekle", clear:"Temizle",
+    exNote:"Şu an burada bir örnek var: aracın nasıl çalıştığını gösteren uydurma metinler.",
+    empty:"Henüz yorum yok.", total:"Yorum: {n}",
+    yes:"İşaretle: vaat ediyor ama vermiyor", no:"Bayrak gerekmiyor",
+    rule:"Kural: yorumların ≥ 1/3’ü «hiçbir şey alamadım» veya «sadece reklam» ise bayrak.", now:"Şu an: {p}."},
+  fields:{h:"Her uygulama için ne toplanmalı", cols:["Alan","Ne yazılmalı","Nereden"], rows:[
+    ["Ad ve bağlantı","Ad, package id, Play bağlantısı","Google Play"],
+    ["Yön","7 yönden hangisi ve tam olarak ne vaat ediyor","Açıklama, ekran görüntüleri"],
+    ["Geliştirici","Ad, ülke, başka kaç uygulaması var","Play’deki geliştirici sayfası"],
+    ["Ölçek","İndirme, mağaza ülkesiyle puan, puan sayısı, çıkış ve güncelleme tarihi","Play sayfası"],
+    ["Ödülün bedeli","İlk ödüle kadar kaç reklam, dakika veya görev","Kendi testin"],
+    ["Veriyor mu","Testte gerçekte ne alındı","Kendi testin, yorumlar"],
+    ["TikTok erişimi","TikTok girişi istiyor mu ve nasıl: resmî TikTok girişi mi, şifre isteyen kendi formu mu","Kendi testin"],
+    ["Reklam","Formatlar (banner, native, geçiş reklamı, ödüllü) ve nerede çıktıkları","Kendi testin"],
+    ["Ücretli","Abonelik, satın almalar, fiyat aralığı","Play sayfası, kendi testin"],
+    ["Reklam SDK’ları","Ağlar ve aracılık (mediation)",'<a href="{exodus}">Exodus Privacy</a>'],
+    ["Yorumlar","Şikâyet türlerinin payları, bayrak","Tarama"]
+  ]},
+  q:{h:"Ana sorular", intro:"Rapor her birine net cevap vermeli:", items:[
+    "TikTok kullanıcıları en çok neyi istiyor? 7 yönü indirme ve uygulama sayısına göre karşılaştır.",
+    "Bunu reklam karşılığında zaten kim veriyor ve vaat edileni veriyor mu?",
+    "Vaat edip vermeyenler nasıl para kazanıyor: «ödüle» kadar kaç reklam, hangi formatlar, abonelik var mı?",
+    "Bunlardan hangisini dürüstçe verebiliriz: kullanıcının TikTok şifresini istemeden, Play ve TikTok kurallarını çiğnemeden?",
+    "Bir ödül bize kaça mal olur? Örneğin API ile bir dakikalık videoya yapay zekâ altyazısı. Reklam gelirini birlikte hesaplarız.",
+    "Bize hangi 2–3 uygulama fikrini önerirsin ve neden?"
+  ]},
+  risks:{h:"Hemen kontrol edilecek riskler", intro:"Bir yönün bize uygun olup olmadığını bunlar belirler. Raporda her yön için ayrı bir işaret olsun.", items:[
+    ["Takipçi artırma ve TikTok kuralları.",'TikTok <a href="{ttcg}">topluluk kurallarında</a> (Integrity and Authenticity bölümü) sahte etkileşimi yasaklıyor: takipçi ve beğeni satışı, artırma talimatları. Güncel metni ve kullanıcının hesabına ne olduğunu kontrol et.'],
+    ["TikTok şifresi.","Kendi formunda kullanıcı adı ve şifre isteyen uygulama, hesap hırsızlığının işaretidir. Yalnızca test TikTok hesabıyla dene, asla kişisel hesabınla değil."],
+    ["TikTok jetonları.",'Jetonları ve hediyeleri TikTok’un <a href="{ttvi}">Virtual Items Policy</a> belgesi düzenliyor. Rakiplerin «jetonu» nasıl verdiğini ve bunun yasal olarak mümkün olup olmadığını bul.'],
+    ["TikTok markası.","Uygulama adında TikTok yazılabilir mi, benzer ikon kullanılabilir mi? Rakiplerin bunu nasıl yaptığını ve «not affiliated with TikTok» uyarısı olup olmadığını kaydet."],
+    ["Google Play kuralları.",'<a href="{policy}">Policy Center</a>’da aldatıcı davranış, başka markayı taklit ve fikrî mülkiyet bölümlerini kontrol et. Reklam için SMS raporundaki gibi <a href="{ads}">Ads kuralları</a>.']
+  ]},
+  deliver:{h:"Sonuç formatı", intro:'Örnek: <a href="{sms}">SMS uygulamaları raporumuz</a>. Tarayıcıda açılıp yöneticiye gösterilebilen tek bir HTML sayfası. Raporda şunlar olmalı:', prog:"{m} maddeden {n} tamam", items:[
+    "Uzun listedeki tüm uygulamaların yukarıdaki alanlarla tablosu",
+    "Talep haritası: 7 yön yan yana, hangisi en büyük",
+    "Yorum taraması: şikâyet payları ve işaretlenenler",
+    "2–3 uygulamanın akışının simülasyonu veya ekran görüntüleri: kurulum → ne istiyor → reklam → ne alındı",
+    "İşaretlenenlerin gelir modeli: reklam, ücretli kısım, SDK’lar",
+    "Tarih, mağaza ülkesi ve çeviriyle olumsuz yorum alıntıları",
+    "«İncelikler» bölümü: gerçek ✔ hipotezden ◌ ayrı, nasıl doğrulanacağıyla",
+    "Sonuç: maliyet ve risklerle bizim için 2–3 fikir",
+    "Veri toplama tarihi ve kaynaklar"
+  ], after:"Play’den gelen her rakamı tarih ve mağaza ülkesiyle belirt. Buradaki onay kutuları senin için: yalnızca senin tarayıcında saklanır."},
+  method:{h:"Geçen sefer verileri nasıl topladık", intro:"Bu yöntem SMS raporunun rakamlarını verdi. Aynen tekrarlanabilir.", items:[
+    ["Play sayfası.","<code>{playcard}</code> sayfasının HTML’ini <code>curl</code> ile indir. Veriler <code>AF_initDataCallback</code> bloklarında: <code>ds:5</code>’te sayfa bilgileri, diğerlerinden birinde ilk 20 yorum. Sıradan web getirme araçları Play sayfasını okuyamıyor."],
+    ["Reklam SDK’ları.",'package id ile <a href="{exodus}">Exodus Privacy</a> raporu. Exodus kütüphanenin kodunu bulur ama reklam gösterdiğini kanıtlamaz.'],
+    ["Kontrol grubu.","Aynı kategorideki 5–7 bilinen dürüst uygulama için aynı metrikler, örneğin otomatik altyazılı video editörleri. Onsuz rakamların olağandışı olup olmadığı anlaşılmaz."],
+    ["Kendi testin.","Test telefonu veya emülatör, test Google hesabı ve test TikTok hesabı. İlk ödüle kadar git, süreyi ölç, reklamları say, ekran görüntüsü al."],
+    ["Verinin sınırları.","Toplama tarihini, mağaza ülkesini, neyin görünüp neyin görünmediğini yaz."]
+  ]},
+  links:{h:"Örnekler ve bağlantılar", items:{
+    sms:["SMS uygulamaları raporu","Sonuç formatı için örnek"],
+    taras:["2. dikey görev tanımı (yayın abonelikleri)","Taras’ın komşu görevi, aynı yapı (Ukraynaca)"],
+    exodus:["Exodus Privacy","package id’ye göre reklam SDK’ları"],
+    policy:["Google Play Policy Center","Play kuralları"],
+    ads:["Google Play Ads politikası","Uygulama içi reklam kuralları"],
+    ttcg:["TikTok Community Guidelines","Integrity and Authenticity bölümü"],
+    ttvi:["TikTok Virtual Items Policy","Jetonlar ve hediyeler"]
+  }},
+  foot:"Görev tanımını hazırlayan: <b>VELDAN</b> · 30.09.2026. Görev tanımıyla ilgili sorular VELDAN’a, ürünle ilgili sorular Igor’a."
+}
+};
+
+var ICON_COPY = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><rect x="5.2" y="5.2" width="8.3" height="8.3" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.6 3.3V3a1.5 1.5 0 0 0-1.5-1.5H3.5A1.5 1.5 0 0 0 2 3v5.6a1.5 1.5 0 0 0 1.5 1.5h.3" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>';
+var ICON_CHECK = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var ICON_FLAG = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3.5 1.5v13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/><path d="M4.3 2.4h8.4l-2 3 2 3H4.3z" fill="currentColor"/></svg>';
+
+var app = document.getElementById("app");
+var langsEl = document.getElementById("langs");
+var lang = pickLang();
+var reviewText = EXAMPLE;
+var checks = loadChecks();
+
+function pickLang(){
+  var h = (location.hash || "").slice(1);
+  if (LANGS.indexOf(h) >= 0) return h;
+  try { var s = localStorage.getItem("tt-brief-lang"); if (LANGS.indexOf(s) >= 0) return s; } catch (e) {}
+  return "uk";
+}
+function loadChecks(){
+  try { var v = JSON.parse(localStorage.getItem("tt-brief-deliver") || "[]"); if (Array.isArray(v)) return v; } catch (e) {}
+  return [];
+}
+function saveChecks(){ try { localStorage.setItem("tt-brief-deliver", JSON.stringify(checks)); } catch (e) {} }
+
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function fill(s){
+  return String(s).replace(/\{(\w+)\}/g, function(m, k){
+    if (k === "sms") return URLS.sms + SMS_HASH[lang];
+    return URLS[k] || m;
+  });
+}
+function playSearch(q){ return "https://play.google.com/store/search?q=" + encodeURIComponent(q) + "&amp;c=apps&amp;hl=en_US&amp;gl=US"; }
+function host(u){ try { return new URL(u).host.replace(/^www\./, ""); } catch (e) { return ""; } }
+function linkUrl(k){ return k === "sms" ? URLS.sms + SMS_HASH[lang] : URLS[k]; }
+
+function render(){
+  var T = I18N[lang];
+  var ta = document.getElementById("rv-input");
+  if (ta) reviewText = ta.value;
+
+  document.documentElement.lang = lang;
+  document.getElementById("brand").textContent = T.brand;
+  langsEl.setAttribute("aria-label", T.langAria);
+  Array.prototype.forEach.call(langsEl.querySelectorAll("button"), function(b){
+    b.setAttribute("aria-pressed", b.getAttribute("data-lang") === lang ? "true" : "false");
+  });
+
+  var html = "";
+
+  html += '<header class="hero"><div class="eyebrow">' + T.eyebrow + '</div><h1>' + T.title + '</h1><ul class="meta">' +
+    T.meta.map(function(m, i){ return '<li' + (i === 3 ? ' class="who"' : '') + '>' + (m[0] ? m[0] + ' ' : '') + '<b>' + m[1] + '</b></li>'; }).join("") +
+    '</ul><p class="lead">' + fill(T.lead) + '</p></header>';
+
+  html += '<section><h2>' + T.ctx.h + '</h2><p>' + T.ctx.intro + '</p><div class="verts">' +
+    T.ctx.v.map(function(v, i){
+      return '<article class="vert' + (i === 2 ? ' cur' : '') + '"><div class="vtop"><span class="vnum">' + (i + 1) + '</span>' +
+        (i === 2 ? '<span class="badge">' + T.ctx.cur + '</span>' : '') + '</div><h3>' + v.n + '</h3><p>' + v.t + '</p><div class="vwho">' + fill(v.w) + '</div></article>';
+    }).join("") + '</div></section>';
+
+  html += '<section><h2>' + T.goal.h + '</h2><div class="goal"><p>' + T.goal.p1 + '</p><p>' + T.goal.p2 + '</p></div></section>';
+
+  html += '<section><h2>' + T.cats.h + '</h2><p>' + T.cats.intro + '</p><div class="cats">' +
+    CATS.map(function(c){
+      var C = T.cats.items[c.id];
+      return '<article class="cat"><div class="cat-head"><h3>' + C.n + '</h3><span class="tag ' + c.src + '">' + T.cats.tags[c.src] + '</span></div><p>' + C.t + '</p><ul class="qs">' +
+        c.q.map(function(q){
+          return '<li class="q"><a href="' + playSearch(q) + '" title="' + esc(T.ui.open) + '">' + esc(q) + '</a><button type="button" data-copy="' + esc(q) + '" aria-label="' + esc(T.ui.copy + ": " + q) + '" title="' + esc(T.ui.copy) + '">' + ICON_COPY + '</button></li>';
+        }).join("") + '</ul></article>';
+    }).join("") + '<article class="cat note"><p>' + T.cats.note + '</p></article></div></section>';
+
+  html += '<section><h2>' + T.steps.h + '</h2><ol class="steps">' +
+    T.steps.items.map(function(s, i){
+      return '<li class="step' + (i === 2 ? ' flagged' : '') + '"><span class="n">' + (i + 1) + '</span><div><h3>' + s[0] + '</h3><p>' + s[1] + '</p></div></li>';
+    }).join("") + '</ol></section>';
+
+  html += '<section><h2>' + T.screen.h + '</h2><p>' + T.screen.intro + '</p><div class="tw"><table><thead><tr>' +
+    T.screen.cols.map(function(c){ return '<th scope="col">' + c + '</th>'; }).join("") + '</tr></thead><tbody>' +
+    RT.map(function(r){
+      var R = T.screen.types[r.id];
+      return '<tr><td class="tname"><span class="dot" style="background:var(' + r.color + ')"></span>' + R[0] + '</td><td>' + R[1] + '</td><td class="words">' + esc(r.words) + '</td></tr>';
+    }).join("") + '</tbody></table></div>' +
+    '<div class="tool"><div class="tool-in"><label for="rv-input">' + T.tool.label + '</label><p class="hint">' + T.tool.hint + '</p>' +
+    '<textarea id="rv-input" spellcheck="false" lang="en"></textarea><div class="btns"><button type="button" class="btn" id="rv-ex">' + T.tool.ex + '</button><button type="button" class="btn" id="rv-clear">' + T.tool.clear + '</button></div>' +
+    '<p class="hint" id="rv-note">' + T.tool.exNote + '</p></div><div class="tool-out" id="rv-out" aria-live="polite"></div></div></section>';
+
+  html += '<section><h2>' + T.fields.h + '</h2><div class="tw"><table><thead><tr>' +
+    T.fields.cols.map(function(c){ return '<th scope="col">' + c + '</th>'; }).join("") + '</tr></thead><tbody>' +
+    T.fields.rows.map(function(r){ return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td><td class="src">' + fill(r[2]) + '</td></tr>'; }).join("") +
+    '</tbody></table></div></section>';
+
+  html += '<section><h2>' + T.q.h + '</h2><p>' + T.q.intro + '</p><ol class="qlist">' +
+    T.q.items.map(function(q){ return '<li><span>' + q + '</span></li>'; }).join("") + '</ol></section>';
+
+  html += '<section><h2>' + T.risks.h + '</h2><p>' + T.risks.intro + '</p><ul class="plain">' +
+    T.risks.items.map(function(r){ return '<li><b>' + r[0] + '</b> ' + fill(r[1]) + '</li>'; }).join("") + '</ul></section>';
+
+  html += '<section><h2>' + T.deliver.h + '</h2><p>' + fill(T.deliver.intro) + '</p><p class="prog" id="prog"></p><ul class="checks">' +
+    T.deliver.items.map(function(t, i){
+      return '<li><label><input type="checkbox" id="dl-' + i + '" data-i="' + i + '"' + (checks[i] ? ' checked' : '') + '><span>' + t + '</span></label></li>';
+    }).join("") + '</ul><p class="after">' + T.deliver.after + '</p></section>';
+
+  html += '<section><h2>' + T.method.h + '</h2><p>' + T.method.intro + '</p><ol class="plain">' +
+    T.method.items.map(function(m){ return '<li><span><b>' + m[0] + '</b> ' + fill(m[1]) + '</span></li>'; }).join("") + '</ol></section>';
+
+  html += '<section><h2>' + T.links.h + '</h2><ul class="links">' +
+    ["sms","taras","exodus","policy","ads","ttcg","ttvi"].map(function(k){
+      var L = T.links.items[k], u = linkUrl(k);
+      return '<li><a href="' + u + '">' + L[0] + '</a><span class="d">' + L[1] + '</span><span class="host">' + host(u) + '</span></li>';
+    }).join("") + '</ul></section>';
+
+  html += '<footer>' + T.foot + '</footer>';
+
+  app.innerHTML = html;
+
+  Array.prototype.forEach.call(app.querySelectorAll('a[href^="http"]'), function(a){
+    a.setAttribute("target", "_blank");
+    a.setAttribute("rel", "noopener noreferrer");
+  });
+
+  bind(T);
+  document.getElementById("rv-input").value = reviewText;
+  runTool();
+  updateProg();
+}
+
+function bind(T){
+  Array.prototype.forEach.call(app.querySelectorAll("[data-copy]"), function(b){
+    b.addEventListener("click", function(){
+      var q = b.getAttribute("data-copy");
+      var done = function(){
+        b.classList.add("ok"); b.innerHTML = ICON_CHECK; b.setAttribute("aria-label", T.ui.copied);
+        setTimeout(function(){ b.classList.remove("ok"); b.innerHTML = ICON_COPY; b.setAttribute("aria-label", T.ui.copy + ": " + q); }, 1400);
+      };
+      var selectIt = function(){
+        var a = b.previousElementSibling, r = document.createRange(), s = window.getSelection();
+        r.selectNodeContents(a); s.removeAllRanges(); s.addRange(r);
+      };
+      try { navigator.clipboard.writeText(q).then(done, selectIt); } catch (e) { selectIt(); }
+    });
+  });
+  Array.prototype.forEach.call(app.querySelectorAll(".checks input"), function(c){
+    c.addEventListener("change", function(){ checks[+c.getAttribute("data-i")] = c.checked; saveChecks(); updateProg(); });
+  });
+  var ta = document.getElementById("rv-input");
+  ta.addEventListener("input", function(){ reviewText = ta.value; runTool(); });
+  document.getElementById("rv-ex").addEventListener("click", function(){ ta.value = reviewText = EXAMPLE; runTool(); });
+  document.getElementById("rv-clear").addEventListener("click", function(){ ta.value = reviewText = ""; runTool(); ta.focus(); });
+}
+
+function updateProg(){
+  var T = I18N[lang], m = T.deliver.items.length, n = 0;
+  for (var i = 0; i < m; i++) if (checks[i]) n++;
+  document.getElementById("prog").textContent = T.deliver.prog.replace("{n}", n).replace("{m}", m);
+}
+
+function highlight(txt, tags){
+  var s = esc(txt);
+  tags.forEach(function(id){
+    var r = RT.filter(function(x){ return x.id === id; })[0];
+    s = s.replace(new RegExp(r.re.source, "gi"), function(m){ return '<mark class="m-' + id + '">' + m + '</mark>'; });
+  });
+  return s;
+}
+
+function runTool(){
+  var T = I18N[lang], out = document.getElementById("rv-out"), val = reviewText || "";
+  document.getElementById("rv-note").hidden = val.trim() !== EXAMPLE.trim();
+  var blocks = val.split(/\n\s*\n/).map(function(s){ return s.trim(); }).filter(Boolean);
+  if (blocks.length === 1 && blocks[0].indexOf("\n") >= 0) blocks = blocks[0].split("\n").map(function(s){ return s.trim(); }).filter(Boolean);
+  var n = blocks.length;
+  if (!n) { out.innerHTML = '<p class="hint">' + T.tool.empty + '</p><p class="rule">' + T.tool.rule + '</p>'; return; }
+
+  var res = blocks.map(function(txt){
+    var tags = RT.filter(function(r){ return !r.good && txt.search(r.re) >= 0; }).map(function(r){ return r.id; });
+    if (!tags.length && txt.search(RT[4].re) >= 0) tags.push("works");
+    return {txt:txt, tags:tags};
+  });
+  var cnt = {};
+  RT.forEach(function(r){ cnt[r.id] = res.filter(function(x){ return x.tags.indexOf(r.id) >= 0; }).length; });
+  var bad = res.filter(function(x){ return x.tags.indexOf("nothing") >= 0 || x.tags.indexOf("ads") >= 0; }).length;
+  var share = bad / n, flag = share >= 1 / 3;
+  var pf = new Intl.NumberFormat(T.locale, {style:"percent", maximumFractionDigits:0});
+
+  out.innerHTML =
+    '<div class="verdict ' + (flag ? "yes" : "no") + '">' + (flag ? ICON_FLAG : "") + '<span>' + (flag ? T.tool.yes : T.tool.no) + '</span></div>' +
+    '<p class="rule">' + T.tool.rule + ' ' + T.tool.now.replace("{p}", pf.format(share)) + '</p>' +
+    '<ul class="bars">' + RT.map(function(r){
+      var c = cnt[r.id];
+      return '<li><span class="bl"><span class="dot" style="background:var(' + r.color + ')"></span>' + T.screen.types[r.id][0] + '</span><span class="num">' + c + '</span><span class="num">' + pf.format(c / n) +
+        '</span><span class="track"><span class="fill" style="width:' + (c / n * 100).toFixed(1) + '%;background:var(' + r.color + ')"></span></span></li>';
+    }).join("") + '</ul>' +
+    '<div class="rv-h">' + T.tool.total.replace("{n}", n) + '</div>' +
+    '<ol class="rv">' + res.map(function(x){
+      return '<li lang="en"><div>' + highlight(x.txt, x.tags) + '</div>' + (x.tags.length ? '<div class="chips">' + x.tags.map(function(t){
+        return '<span class="chip c-' + t + '" lang="' + lang + '">' + T.screen.types[t][0] + '</span>';
+      }).join("") + '</div>' : '') + '</li>';
+    }).join("") + '</ol>';
+}
+
+Array.prototype.forEach.call(langsEl.querySelectorAll("button"), function(b){
+  b.addEventListener("click", function(){
+    var l = b.getAttribute("data-lang");
+    if (l === lang) return;
+    lang = l;
+    try { localStorage.setItem("tt-brief-lang", l); } catch (e) {}
+    try { history.replaceState(null, "", "#" + l); } catch (e) {}
+    render();
+  });
+});
+window.addEventListener("hashchange", function(){
+  var h = (location.hash || "").slice(1);
+  if (LANGS.indexOf(h) >= 0 && h !== lang) { lang = h; render(); }
+});
+
+render();
+})();
+</script>

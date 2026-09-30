@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Бриф: нагорода за рекламу</title>
+<style>
+:root { --bg:#fbfaf7; --fg:#1f1e1c; --muted:#6b675f; --line:#e4e0d8; --accent:#b4532a; --code:#f1eee7; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg:#1b1a18; --fg:#ece9e2; --muted:#a39e94; --line:#34322e; --accent:#e08a5e; --code:#2a2825; }
+}
+:root[data-theme="dark"] { --bg:#1b1a18; --fg:#ece9e2; --muted:#a39e94; --line:#34322e; --accent:#e08a5e; --code:#2a2825; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+main { max-width:760px; margin:0 auto; padding:40px 16px 64px; }
+h1 { font-size:1.9rem; line-height:1.25; margin:0 0 8px; }
+h2 { font-size:1.3rem; margin:2.2em 0 .6em; padding-top:.6em; border-top:1px solid var(--line); }
+.meta { color:var(--muted); margin-top:0; }
+a { color:var(--accent); }
+code { background:var(--code); padding:.1em .35em; border-radius:4px; font-size:.9em; word-break:break-word; }
+li > p { margin:.3em 0; }
+ul li[data-checked] { list-style:none; margin-left:-1.4em; }
+.table-wrap { overflow-x:auto; }
+table { border-collapse:collapse; width:100%; font-size:.95rem; }
+th, td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+th { background:var(--code); }
+</style>
+</head>
+<body>
+<main>
+<h1 id="бриф-вертикаль-нагорода-за-перегляд-реклами">Бриф: вертикаль «нагорода за перегляд реклами»</h1>
+<p class="meta"><time datetime="2026-09-29">29.09.2026</time> · жива версія: <a href="https://claude.ai/artifact/9Fh7k46NUXF4BcRC7Y3jdk">Claude Docs</a></p>
+<p>Треба знайти в Google Play застосунки, які обіцяють безкоштовний доступ до Netflix, YouTube Premium, Spotify та інших стрімінгів за ігри чи перегляд реклами, і розібрати їхню монетизацію у форматі нашого <a href="https://claude.ai/artifact/7sNYo5vgL4DCK2yYX38wEb">звіту про SMS-застосунки</a>.</p>
+<p>Бриф підготував <strong>VELDAN</strong>.</p>
+<h2 id="контекст">Контекст</h2>
+<p>Зараз наші застосунки — міні-тули для RBX. Банер, нативна реклама або інтерстиціал відкривають сайт, де користувач «заробляє монетки» і дивиться рекламу. На цьому тримається монетизація.</p>
+<p>Менеджер хоче розглянути новий флоу: нагорода — не монетки, а безкоштовний доступ до популярного сервісу. Приклад обіцянки: «грай у нашу гру — отримаєш місяць Netflix». Сервіси з великою аудиторією: Netflix, YouTube Premium, Spotify, Apple Music, Disney+, Amazon Prime Video тощо.</p>
+<p>Логіка для користувача: він грає й дивиться рекламу, бо знає, що в кінці отримає реальну підписку. Треба з&#39;ясувати, хто на ринку вже так робить, як саме, і чи це працює.</p>
+<h2 id="що-шукати">Що шукати</h2>
+<p>Потрібно 8–12 застосунків у Google Play, з них 3–5 розібрати глибоко. Шукаємо кілька типів:</p>
+<ul><li><p><strong>Прямі обіцянки.</strong> Назва чи опис прямо обіцяють Netflix, YouTube Premium, Spotify тощо безкоштовно.</p></li><li><p><strong>Застосунки-винагороди.</strong> Граєш, дивишся рекламу чи проходиш опитування, отримуєш бали, а бали обмінюєш на подарункові картки. Серед карток можуть бути Netflix, Spotify, Google Play.</p></li><li><p><strong>Ігри з нагородами.</strong> Гра, де за рівні чи турніри видають картки або коди.</p></li><li><p><strong>Кешбек / cashback-застосунки</strong> з виплатою подарунковими картками стрімінгів.</p></li></ul>
+<p>Пошукові запити для Play (англійською; дивитися американський магазин через вебверсію Play з параметром <code>&amp;gl=US</code>, бо основна аудиторія там):</p>
+<ul><li><p><code>free netflix</code>, <code>netflix gift card</code>, <code>free youtube premium</code>, <code>free spotify premium</code></p></li><li><p><code>earn gift cards</code>, <code>rewards app gift cards</code>, <code>play games earn gift cards</code></p></li><li><p><code>watch ads earn rewards</code>, <code>free subscription rewards</code></p></li></ul>
+<p>Для кожного запиту переглянути перші 20–30 результатів і вибрати застосунки з 100 тис.+ завантажень. Записати, з якої країни дивились магазин.</p>
+<h2 id="що-зібрати-по-кожному-застосунку">Що зібрати по кожному застосунку</h2>
+<div class="table-wrap"><table><thead><tr><th>Поле</th><th>Що записати</th><th>Де взяти</th></tr></thead><tbody><tr><td>Назва й посилання</td><td>Назва, package id, посилання на Play</td><td>Google Play</td></tr><tr><td>Розробник</td><td>Назва, країна, скільки ще застосунків</td><td>Сторінка розробника в Play</td></tr><tr><td>Масштаб</td><td>Завантаження, оцінка, кількість оцінок, дата виходу й оновлення</td><td>Картка Play (вказати країну магазину)</td></tr><tr><td>Що обіцяють</td><td>Який сервіс, на який термін, у яких країнах</td><td>Опис, скріншоти, сам застосунок</td></tr><tr><td>Як видають нагороду</td><td>Код, подарункова картка, партнерський сервіс, переказ</td><td>Застосунок, FAQ, відгуки</td></tr><tr><td>Ціна нагороди для користувача</td><td>Скільки хвилин гри, реклам або днів до першої нагороди</td><td>Власний тест, відгуки</td></tr><tr><td>Реклама</td><td>Формати (банер, нативна, інтерстиціал, rewarded) і де вони стоять</td><td>Власний тест</td></tr><tr><td>Платний вихід</td><td>Покупки, підписка, діапазон цін</td><td>Картка Play, застосунок</td></tr><tr><td>Рекламні SDK</td><td>Мережі й медіація</td><td><a href="https://reports.exodus-privacy.eu.org/">Exodus Privacy</a></td></tr><tr><td>Чи видають насправді</td><td>Скільки відгуків підтверджують отримання, скільки скаржаться</td><td>20 перших відгуків + пошук по відгуках</td></tr></tbody></table></div>
+<h2 id="головні-питання">Головні питання</h2>
+<p>Аналіз має чітко відповісти на ці питання:</p>
+<ol><li><p>Хто на ринку вже дає доступ до стрімінгів за гру чи рекламу, і який у них масштаб?</p></li><li><p>Як фізично видається нагорода: власний код, подарункова картка через партнера чи щось інше?</p></li><li><p>Яка економіка: скільки реклами чи часу треба, щоб отримати місяць підписки, і чи покриває реклама ціну нагороди?</p></li><li><p>Де й коли користувач бачить рекламу, і чи вона добровільна (rewarded) чи примусова?</p></li><li><p>Чи користувачі реально отримують нагороду? Або застосунок збирає рекламу, а виплату постійно відкладає?</p></li><li><p>Чи можемо ми зробити такий флоу в наших іграх: що потрібно (партнер з картками, бюджет на нагороди) і чи це вигідніше за монетки?</p></li></ol>
+<h2 id="ризики-які-перевірити-одразу">Ризики, які перевірити одразу</h2>
+<p>Ці питання вирішують, чи вертикаль взагалі для нас. Відповіді потрібні до того, як менеджер ухвалюватиме рішення.</p>
+<ul><li><p><strong>Як видають нагороду насправді.</strong> Відгуки на кшталт «нічого не отримав» чи «бали згоріли» — це дані про ринок, їх треба зібрати. Записати, як часто так пишуть і на якому кроці застосунок відкладає виплату: поріг балів, ліміти, перевірка акаунта, чекання. Це частина їхньої моделі, і її треба розібрати так само уважно, як рекламу.</p></li><li><p><strong>Чужі бренди.</strong> Чи має застосунок право писати Netflix чи Spotify у назві, ставити їхні логотипи? Записати, як саме кожен застосунок використовує бренд і чи є дисклеймер на кшталт «not affiliated with».</p></li><li><p><strong>Правила Google Play.</strong> Перевірити в <a href="https://play.google/developer-content-policy/">Policy Center</a>, що Play каже про обманливі обіцянки, винагороди та інтелектуальну власність. Для реклами — <a href="https://support.google.com/googleplay/android-developer/answer/9857753">правила Ads</a>, як у нашому минулому звіті.</p></li><li><p><strong>Цитувати правила дослівно.</strong> У звіті лише текст зі сторінки правил з посиланням, без переказу з пам&#39;яті.</p></li></ul>
+<h2 id="формат-результату">Формат результату</h2>
+<p>Зразок — наш <a href="https://claude.ai/artifact/7sNYo5vgL4DCK2yYX38wEb">звіт про SMS-застосунки</a>: одна HTML-сторінка, яку можна відкрити в браузері й показати менеджеру. Новий звіт має мати такі частини:</p>
+<ul><li data-checked="false"><p><input type="checkbox" disabled> Список застосунків з посиланнями на Play і короткою карткою кожного (поля з таблиці вище)</p></li><li data-checked="false"><p><input type="checkbox" disabled> Симуляція або скріншоти флоу 2–3 головних застосунків: встановлення → гра чи реклама → бали → видача нагороди</p></li><li data-checked="false"><p><input type="checkbox" disabled> Система монетизації кожного: де реклама, які мережі, що платне, скільки реклами на одну нагороду</p></li><li data-checked="false"><p><input type="checkbox" disabled> Головні негативні відгуки з цитатами, датами й перекладом</p></li><li data-checked="false"><p><input type="checkbox" disabled> Чому люди їх завантажують: що їх приваблює і звідки трафік</p></li><li data-checked="false"><p><input type="checkbox" disabled> Розділ «Тонкощі»: факт ✔ окремо від гіпотези ◌ і як її перевірити</p></li><li data-checked="false"><p><input type="checkbox" disabled> Висновок для нас: чи варто заходити в цю вертикаль і що для цього треба</p></li><li data-checked="false"><p><input type="checkbox" disabled> Джерела з посиланнями і датою збору даних</p></li></ul>
+<p>Кожну цифру підписувати джерелом і країною магазину. Припущення позначати як припущення, як у зразку.</p>
+<h2 id="як-ми-збирали-дані-минулого-разу">Як ми збирали дані минулого разу</h2>
+<p>Цей метод дав цифри для звіту про SMS-застосунки. Його можна повторити без змін.</p>
+<ol><li><p><strong>Картка Play.</strong> Завантажити HTML сторінки <code>https://play.google.com/store/apps/details?id=&lt;package&gt;&amp;hl=en_US&amp;gl=US</code> через <code>curl</code>. Цифри лежать у блоках <code>AF_initDataCallback</code>: у <code>ds:5</code> — картка (завантаження, оцінка, розподіл зірок, ціни), в одному з інших — 20 перших відгуків з датами й відповідями розробника. Звичайний вебфетч сторінку Play не читає.</p></li><li><p><strong>Рекламні SDK.</strong> Звіт <a href="https://reports.exodus-privacy.eu.org/">Exodus Privacy</a> за package id. Нагадування: Exodus знаходить код бібліотеки, але не доводить, що вона показує рекламу.</p></li><li><p><strong>Контрольна група.</strong> Ті самі метрики для 5–7 відомих чесних застосунків тієї ж категорії. Без неї неможливо сказати, що цифри незвичні (наприклад, чи рейтинг накручений).</p></li><li><p><strong>Власний тест.</strong> На тестовому пристрої або емуляторі з тестовим Google-акаунтом, не на особистому телефоні. Пройти флоу до першої нагороди, засікти час, порахувати рекламу, зробити скріншоти.</p></li><li><p><strong>Записувати межу даних.</strong> Дата збору, країна магазину, що було видно, а чого — ні.</p></li></ol>
+
+</main>
+</body>
+</html>
