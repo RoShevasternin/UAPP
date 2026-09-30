@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Home Launcher PoC</string>
+    <string name="status_default">✅ Default Home App</string>
+    <string name="status_not_default">⚠️ Not the Default Home App</string>
+    <string name="action_set_default">Make default</string>
+    <string name="action_change_default">Change</string>
+    <string name="home_presses">HOME presses while on top: %1$d</string>
+    <string name="home_card_text">Ето шок ти глянь как можно</string>
+    <string name="no_browser">No browser found</string>
+</resources>
