@@ -1,0 +1,129 @@
+{
+ "collected": "2026-09-30",
+ "note": "Share (%) of 1-2★ reviews from 2025-2026, longer than 60 chars, per direction that match each theme. One review can match several themes. Rough keyword classification.",
+ "themes_regex": {
+  "vanish": "wait(ing|ed)? (for|till|until|a|over|more|like|\\d)|\\b1[0-9]{2} ?hours|withdraw|holding|to my tiktok|transfer|can.?t access|never see|(coins?|stars?|points?|credits?|balance|hearts?)\\b.{0,40}\\b(gone|vanish|disappear|lost|reset|deleted|taken|missing|zero|0\\b)|\\b(lost|lose)\\b.{0,20}\\b(coins?|stars?|points?|credits?)|pending|on hold|\\bhold\\b|releas|cooldown|can.?t (redeem|withdraw|claim|cash|use (my|the) (coins|stars|points))|no way to (redeem|withdraw|claim|transfer)",
+  "unfollow": "unfollow|drop(ped|s)? (back|down)|went back down|disappear.{0,30}(follower|like|view|subscriber)|(follower|like|view|subscriber)s?.{0,30}(disappear|drop|removed|gone|decreas)|removed (the|my|all|almost)",
+  "nothing": "didn.?t get(ting)? any|(don.?t|doesn.?t|didn.?t|won.?t|not) give|(it|they) didn.?t|(didn.?t|did not|never|not|haven.?t|no) (get|got|receiv|recieve|deliver|credit|come|came|arriv)|nothing (happen|came|at all|in return|,|\\.)|got nothing|gives? nothing|\\b0 (followers|likes|views|coins)|no (followers|likes|views|single) |not (a )?single (follower|like)|zero (followers|likes)|not credited",
+  "paid": "\\bpaid\\b|\\bpay\\b|charg|subscri|refund|\\$\\s?\\d|£|€|₹|₦|money|purchas|\\bbought\\b|\\bbuy\\b|premium|\\bvip\\b|trial|paywall",
+  "ads": "\\bads?\\b|\\badds?\\b|advert|commercial|advertis",
+  "broken": "error|crash|not working|doesn.?t work|does not work|won.?t work|isn.?t working|stopped working|loading|bug|glitch|stuck|freez|something went wrong|not open|won.?t open|lag",
+  "account": "\\bban(ned)?\\b|hack|password|blocked|suspicious|shadow ?ban|under attack|locked|lost my (tiktok|ig|instagram|account)|restrict",
+  "scam": "scam|fake|fraud|cheat|liar|\\blie[sd]?\\b|misleading|steal|theft|con\\b",
+  "rate": "rate (it|the app|us|5|five)|5 ?stars? (for|to get|review)|give (it |them |you )?(5|five) ?star|forc.{0,20}(rate|review)|review (for|to earn|to get)|copy.{0,15}paste",
+  "limit": "only (\\d|one|once|1|two|three) (free|time|video|download|trial|day)|limit|free (version|trial|credits?).{0,30}(only|run out|not enough|few)|few (credits|points|tries)|not free|never free|nothing is free|have to pay (to|for) (use|every)",
+  "quality": "low quality|poor quality|quality|resolution|doesn.?t follow|ignore[sd]? (the )?prompt|not accurate|inaccurate|wrong|random names|watermark"
+ },
+ "matrix": {
+  "followers": {
+   "n": 556,
+   "nothing": 16,
+   "vanish": 6,
+   "unfollow": 16,
+   "paid": 37,
+   "ads": 3,
+   "broken": 14,
+   "account": 4,
+   "scam": 22
+  },
+  "promo": {
+   "n": 151,
+   "nothing": 9,
+   "vanish": 11,
+   "unfollow": 1,
+   "paid": 34,
+   "ads": 2,
+   "broken": 17,
+   "account": 1,
+   "scam": 26
+  },
+  "coins": {
+   "n": 142,
+   "nothing": 9,
+   "vanish": 22,
+   "unfollow": 1,
+   "paid": 9,
+   "ads": 18,
+   "broken": 15,
+   "account": 9,
+   "scam": 34
+  },
+  "aivideo": {
+   "n": 484,
+   "nothing": 5,
+   "vanish": 4,
+   "unfollow": 0,
+   "paid": 49,
+   "ads": 9,
+   "broken": 20,
+   "account": 2,
+   "scam": 9
+  },
+  "aitext": {
+   "n": 50,
+   "nothing": 4,
+   "vanish": 4,
+   "unfollow": 0,
+   "paid": 48,
+   "ads": 14,
+   "broken": 18,
+   "account": 0,
+   "scam": 4
+  },
+  "analytics": {
+   "n": 180,
+   "nothing": 14,
+   "vanish": 1,
+   "unfollow": 9,
+   "paid": 42,
+   "ads": 4,
+   "broken": 12,
+   "account": 9,
+   "scam": 23
+  },
+  "download": {
+   "n": 216,
+   "nothing": 1,
+   "vanish": 2,
+   "unfollow": 0,
+   "paid": 22,
+   "ads": 55,
+   "broken": 20,
+   "account": 0,
+   "scam": 6
+  },
+  "control": {
+   "n": 352,
+   "nothing": 1,
+   "vanish": 2,
+   "unfollow": 0,
+   "paid": 28,
+   "ads": 12,
+   "broken": 25,
+   "account": 2,
+   "scam": 3
+  },
+  "platform": {
+   "n": 210,
+   "nothing": 5,
+   "vanish": 1,
+   "unfollow": 0,
+   "paid": 7,
+   "ads": 12,
+   "broken": 16,
+   "account": 6,
+   "scam": 10
+  },
+  "live": {
+   "n": 36,
+   "nothing": 6,
+   "vanish": 3,
+   "unfollow": 0,
+   "paid": 56,
+   "ads": 8,
+   "broken": 25,
+   "account": 3,
+   "scam": 11
+  }
+ }
+}

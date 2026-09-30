@@ -39,4 +39,12 @@ metadata:
 
 **Як оновити.** Робочі файли (`template.html` + `build.py`, дані) лежали в scratchpad сесії й зникнуть. Джерело — сам артефакт: `Artifact read` за URL, потім `publish` з `url`. Дані Play брали curl'ом (`ds:5`) і через batchexecute `UsvDTd`, як у [[sms-competitor-analysis]].
 
-Контекст вертикалей: [[uapp-verticals-briefs]]. У репо копію не кладемо, поки користувач не скаже ([[artifact-then-save-on-request]]).
+**Локальна копія (30.09.2026, на прохання користувача):** `docs/research/tiktok-30-09-2026/`. Там `index.html` (з doctype і charset) і `data/`:
+- `apps.json` — 51 картка Play з описами й темами скарг;
+- `complaints.json` — матриця тем і словник regex;
+- `reviews-negative.json` — 2 377 відгуків, на яких побудована карта;
+- `search.json` — 22 запити пошуку й 17 доданих застосунків.
+
+Правиш артефакт — перезбережи й теку.
+
+Контекст вертикалей: [[uapp-verticals-briefs]]. Правило збереження: [[artifact-then-save-on-request]].
