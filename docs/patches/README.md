@@ -60,4 +60,4 @@ icon `code`.
 
 | № | що | ігри | сторінка | стан |
 |---|---|---|---|---|
-| 01 | Meta SDK поруч із TikTok ([запис](01-meta-sdk.md)) | T5 RBX Boss, еталон | https://claude.ai/artifact/DT1VQTRqKQiqfpZrRRpi43 | чекає вибору |
+| 01 | Meta SDK поруч із TikTok ([запис](01-meta-sdk.md)) | T5 RBX Boss, еталон | https://claude.ai/artifact/DT1VQTRqKQiqfpZrRRpi43 | T5 вставлено + бібліотеки T5 оновлено; еталон відкладено |

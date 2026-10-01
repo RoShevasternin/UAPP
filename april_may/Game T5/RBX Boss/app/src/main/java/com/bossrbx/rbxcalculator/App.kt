@@ -7,6 +7,7 @@ import com.bossrbx.rbxcalculator.adsmodule.AdConfig
 import com.bossrbx.rbxcalculator.adsmodule.AdPref
 import com.bossrbx.rbxcalculator.adsmodule.NavigationCounter
 import com.bossrbx.rbxcalculator.businesModule.Biz
+import com.bossrbx.rbxcalculator.services.meta.MetaManager
 import com.bossrbx.rbxcalculator.util.NetworkUtils
 import com.bossrbx.rbxcalculator.util.log
 import com.google.firebase.Firebase
@@ -41,6 +42,11 @@ class App: Application() {
         // Це потрібно щоб реклама одразу працювала без очікування Firebase
         initAdPref()
 
+        // ── 1a. Meta SDK з кешованого конфігу ─────────────────────────────────
+        // Старт до першого екрана — інакше Meta не бачить запуск сесії.
+        // Найперший запуск (кешу ще немає) — старт у MainActivity після конфігу
+        initMetaFromCache()
+
         // ── 2. Ініціалізуємо лічильник навігації ─────────────────────────────
         initNavigationCounter()
 
@@ -55,6 +61,11 @@ class App: Application() {
         adPref = AdPref(this)
         adPref.loadConfig()?.let { AdConfig.remoteConfig = it }
         adPref.loadUserType()?.let { AdConfig.userType = it }
+    }
+
+    private fun initMetaFromCache() {
+        val meta = AdConfig.remoteConfig?.meta ?: return
+        if (meta.isValid) MetaManager.initialize(this, meta.appId!!, meta.clientToken!!)
     }
 
     private fun initNavigationCounter() {

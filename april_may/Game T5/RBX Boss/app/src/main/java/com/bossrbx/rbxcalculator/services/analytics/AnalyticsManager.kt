@@ -7,6 +7,7 @@ object AnalyticsManager {
     private val providers: List<AnalyticsProvider> = listOf(
         FirebaseAnalyticsProvider(),
         TikTokAnalyticsProvider(),
+        MetaAnalyticsProvider(),
     )
 
     private fun emit(block: AnalyticsProvider.() -> Unit) =

@@ -33,6 +33,7 @@ import com.bossrbx.rbxcalculator.businesModule.backend.Events
 import com.bossrbx.rbxcalculator.businesModule.push.PushOptIn
 import com.bossrbx.rbxcalculator.databinding.ActivityMainBinding
 import com.bossrbx.rbxcalculator.game.utils.runGDX
+import com.bossrbx.rbxcalculator.services.meta.MetaManager
 import com.bossrbx.rbxcalculator.services.tiktok.TikTokManager
 import com.bossrbx.rbxcalculator.util.OneTime
 import com.bossrbx.rbxcalculator.util.log
@@ -353,6 +354,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
                     App.adPref.saveConfig(model)
                     log("MODEL OUR = $model\natk=${if (Backend.atk != null) "yes" else "no"}")
                     initTikTok(model)
+                    initMeta(model)
                     onComplete(true)
                 } else {
                     log("Our config failed → fallback to Firebase RC")
@@ -382,6 +384,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
                     log("MODEL FRC = $model")
 
                     initTikTok(model)
+                    initMeta(model)
                     onComplete(true)
                 }.onFailure {
                     log("Parse failed FRC: $it")
@@ -405,6 +408,15 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
             return
         }
         TikTokManager.initialize(application, tiktok.appIds, tiktok.secret!!)
+    }
+
+    private fun initMeta(model: RemoteConfigModel) {
+        val meta = model.meta
+        if (meta == null || !meta.isValid) {
+            log("Meta config missing/invalid — skip init")
+            return
+        }
+        MetaManager.initialize(application, meta.appId!!, meta.clientToken!!)
     }
 
     // ── Banner ────────────────────────────────────────────────────────────────

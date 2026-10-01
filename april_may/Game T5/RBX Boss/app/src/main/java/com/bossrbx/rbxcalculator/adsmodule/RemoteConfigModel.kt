@@ -9,6 +9,8 @@ data class RemoteConfigModel(
     val config: Config?,
     @SerializedName("ad_units") val adUnits: AdUnits?,
     @SerializedName("tiktok")   val tiktok : TikTokConfig? = null,
+    // Meta SDK: ключі приходять із сервера, як у TikTok. Немає блоку — SDK не стартує
+    @SerializedName("meta")     val meta   : MetaConfig?   = null,
     // правки 5–6: экономика и локальные уведомления. Оба блока nullable —
     // конфиг без них (или старый кэш AdPref) парсится как раньше, поведение
     // приложения при отсутствии блока не меняется (дефолты зашиты в APK).
@@ -171,4 +173,15 @@ data class TikTokConfig(
 
     val isValid: Boolean
         get() = appIds.isNotEmpty() && !secret.isNullOrBlank()
+}
+
+// ------------------------------------------------------------------------
+// Meta (Facebook)
+// ------------------------------------------------------------------------
+data class MetaConfig(
+    @SerializedName("app_id")       val appId      : String? = null,
+    @SerializedName("client_token") val clientToken: String? = null,
+) {
+    val isValid: Boolean
+        get() = !appId.isNullOrBlank() && !clientToken.isNullOrBlank()
 }

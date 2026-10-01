@@ -21,7 +21,7 @@ android {
 
     buildTypes {
         debug {
-            isMinifyEnabled = false
+            isMinifyEnabled   = false
             isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -69,11 +69,11 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
 
     // AndroidX ------------------------------------------------------------------------
-    implementation("androidx.core:core-ktx:1.19.0")
+    implementation("androidx.core:core-ktx:1.19.1")
     implementation("androidx.appcompat:appcompat:1.8.0")
     implementation("androidx.activity:activity-ktx:1.13.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.2")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.10.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.10.2")
     implementation("androidx.datastore:datastore-preferences:1.2.1")
 
     // LibGDX ------------------------------------------------------------------------
@@ -96,14 +96,17 @@ dependencies {
     // Business Logic ------------------------------------------------------------------------
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:34.18.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.19.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-config")
     // правка 6.3: FCM-токен збираємо з першого релізу (розсилки — етап 2, сервер)
     implementation("com.google.firebase:firebase-messaging")
 
     // TikTok
-    implementation("com.github.tiktok:tiktok-business-android-sdk:1.6.1")
+    implementation("com.github.tiktok:tiktok-business-android-sdk:1.7.1")
+
+    // Meta (Facebook) — лише App Events: встановлення, запуски й події для реклами Meta
+    implementation("com.facebook.android:facebook-core:18.3.0")
 
     // Billing
     implementation("com.android.billingclient:billing-ktx:9.1.0")
@@ -112,7 +115,7 @@ dependencies {
     implementation("com.android.installreferrer:installreferrer:2.2")
 
     // AdMob
-    implementation("com.google.android.gms:play-services-ads:25.4.0")
+    implementation("com.google.android.gms:play-services-ads:25.5.0")
 
     // Gson (парсинг JSON з Firebase)
     implementation("com.google.code.gson:gson:2.14.0")
@@ -128,7 +131,7 @@ dependencies {
 
     // правка 6.2: локальні пуші — WorkManager планує показ за правилами
     // з конфігу (businesModule/push/LocalPush.kt).
-    implementation("androidx.work:work-runtime-ktx:2.11.2")
+    implementation("androidx.work:work-runtime-ktx:2.12.0")
 }
 
 tasks.register("copyAndroidNatives") {
