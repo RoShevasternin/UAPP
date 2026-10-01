@@ -18,4 +18,6 @@ metadata:
 
 Пов'язане: [[uapp-patch-page-flow]], [[uapp-server-patch-backport]].
 
-Патч 02 (01.10.2026, чекає вибору): тестові ключі для debug з `local.properties` (`meta.testAppId`, `meta.testClientToken`) + покрокова інструкція отримання ключів: https://claude.ai/artifact/KFsw6S28gUK1xdfpY6AVN8. У Gradle-скрипті `java.util.Properties` не резолвиться (`java` — розширення) — тільки `import java.util.Properties` угорі файлу.
+Патч 02 (01.10.2026, **вставлено**, Meta приймає install/activate з тестовими ключами VELDAN): тестові ключі для debug з `local.properties` (`meta.testAppId`, `meta.testClientToken`) + покрокова інструкція отримання ключів: https://claude.ai/artifact/KFsw6S28gUK1xdfpY6AVN8. У Gradle-скрипті `java.util.Properties` не резолвиться (`java` — розширення) — тільки `import java.util.Properties` угорі файлу.
+
+Тестова Meta App — на особистому акаунті VELDAN; бойову створять на рекламному акаунті. Тоді: ключі бойової → сервер, тестові рядки з `local.properties` прибрати, тестову App видалити, щоб не було двох застосунків з одним пакетом.

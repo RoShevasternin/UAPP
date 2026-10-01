@@ -1,8 +1,19 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlinx-serialization")
     id("com.google.gms.google-services")
 }
+
+// Тестові ключі Meta — лише для debug. Лежать у local.properties (у git не йде):
+//   meta.testAppId=…
+//   meta.testClientToken=…
+// Потрібні, щоб перевірити Meta до того, як сервер почне віддавати блок "meta".
+val localProps = Properties().apply {
+    rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
+}
+fun localProp(key: String): String = localProps.getProperty(key, "").trim()
 
 android {
     namespace = "com.bossrbx.rbxcalculator"
@@ -21,6 +32,8 @@ android {
 
     buildTypes {
         debug {
+            buildConfigField("String", "META_TEST_APP_ID",       "\"${localProp("meta.testAppId")}\"")
+            buildConfigField("String", "META_TEST_CLIENT_TOKEN", "\"${localProp("meta.testClientToken")}\"")
             isMinifyEnabled   = false
             isShrinkResources = false
             proguardFiles(
@@ -29,6 +42,9 @@ android {
             )
         }
         release {
+            // release тестових ключів не бачить ніколи — лише сервер
+            buildConfigField("String", "META_TEST_APP_ID",       "\"\"")
+            buildConfigField("String", "META_TEST_CLIENT_TOKEN", "\"\"")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
