@@ -15,7 +15,7 @@
 | тека | що | жива версія |
 |---|---|---|
 | [`push-fix-08-09-2026/`](for-devs/push-fix-08-09-2026/) | `DEV_TASKS.md` — задача серверної команди (аналітика пушів), `PUSH_FIX.md` — рішення з повними файлами | — |
-| [`meta-sdk-01-10-2026/`](for-devs/meta-sdk-01-10-2026/) | інтеграція Meta SDK поруч із TikTok: 7 кроків під свій пакет, блок сервера, ключі, перевірка | https://claude.ai/artifact/26iqp2YAqPhQjSYeC9oo3D |
+| [`meta-sdk-01-10-2026/`](for-devs/meta-sdk-01-10-2026/) | інтеграція Meta SDK поруч із TikTok, 4 мови (УКР/РУС/ENG/TÜR): 7 кроків під свій пакет, блок у конфігу, пастки | https://claude.ai/artifact/26iqp2YAqPhQjSYeC9oo3D |
 
 ## research
 

@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Жива версія: https://claude.ai/artifact/26iqp2YAqPhQjSYeC9oo3D -->
+<!-- Жива версія: https://claude.ai/artifact/26iqp2YAqPhQjSYeC9oo3D (мова: #uk #ru #en #tr) -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Meta SDK в UAPP</title>
@@ -12,7 +12,7 @@
 :root {
   --ground: #F4F5F7; --surface: #FFFFFF; --sunk: #EEF0F3; --line: #DADDE3;
   --ink: #161A22; --ink-2: #464C5A; --muted: #6B7182;
-  --accent: #2456C7; --accent-soft: #E3EBFB; --accent-ink: #FFFFFF;
+  --accent: #2456C7; --accent-soft: #E3EBFB;
   --ok: #16794C; --ok-soft: #DDF1E6; --warn: #9A6200; --warn-soft: #FDF0D2; --bad: #B4232F; --bad-soft: #FBE4E6;
   --syn-kw: #B4232F; --syn-type: #8A4B00; --syn-fn: #6F42C1; --syn-str: #0B4A86; --syn-num: #0550AE; --syn-com: #6E7781;
   --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -22,7 +22,7 @@
   :root:not([data-theme="light"]) {
     --ground: #0E1117; --surface: #161B23; --sunk: #0E1117; --line: #2C333E;
     --ink: #E7EAF0; --ink-2: #B4BAC6; --muted: #8B92A1;
-    --accent: #6A9BFF; --accent-soft: #17264A; --accent-ink: #0E1117;
+    --accent: #6A9BFF; --accent-soft: #17264A;
     --ok: #4FC78A; --ok-soft: #10301F; --warn: #E6B450; --warn-soft: #33270C; --bad: #FF7B85; --bad-soft: #3A161A;
     --syn-kw: #FF7B72; --syn-type: #FFA657; --syn-fn: #D2A8FF; --syn-str: #A5D6FF; --syn-num: #79C0FF; --syn-com: #8B949E;
     color-scheme: dark;
@@ -31,7 +31,7 @@
 :root[data-theme="dark"] {
   --ground: #0E1117; --surface: #161B23; --sunk: #0E1117; --line: #2C333E;
   --ink: #E7EAF0; --ink-2: #B4BAC6; --muted: #8B92A1;
-  --accent: #6A9BFF; --accent-soft: #17264A; --accent-ink: #0E1117;
+  --accent: #6A9BFF; --accent-soft: #17264A;
   --ok: #4FC78A; --ok-soft: #10301F; --warn: #E6B450; --warn-soft: #33270C; --bad: #FF7B85; --bad-soft: #3A161A;
   --syn-kw: #FF7B72; --syn-type: #FFA657; --syn-fn: #D2A8FF; --syn-str: #A5D6FF; --syn-num: #79C0FF; --syn-com: #8B949E;
   color-scheme: dark;
@@ -44,25 +44,30 @@ h1, h2, h3 { text-wrap: balance; line-height: 1.25; margin: 0; }
 p { margin: 0; }
 :not(pre) > code { font: .86em/1.4 var(--f-mono); background: var(--sunk); border: 1px solid var(--line); border-radius: 4px; padding: .05em .35em; overflow-wrap: anywhere; }
 
-/* верхня панель з налаштуванням під апку */
+/* верхня панель: мова + підстановка під апку */
 .cfg { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); border-bottom: 1px solid var(--line); }
 .cfg-in { max-width: 1120px; margin: 0 auto; padding: 10px 16px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
 .cfg-title { font: 600 14px/1.2 var(--f-body); margin-right: auto; }
 .cfg label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
-.cfg input { font: 13px/1 var(--f-mono); color: var(--ink); background: var(--sunk); border: 1px solid var(--line); border-radius: 7px; padding: 7px 9px; width: 230px; max-width: 58vw; }
+.cfg input { font: 13px/1 var(--f-mono); color: var(--ink); background: var(--sunk); border: 1px solid var(--line); border-radius: 7px; padding: 7px 9px; width: 220px; max-width: 56vw; }
 .cfg input[aria-invalid="true"] { border-color: var(--bad); background: var(--bad-soft); }
 .cfg .hint { font-size: 12px; color: var(--bad); }
+.langs { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); flex: none; }
+.langs button { appearance: none; border: 0; background: none; color: var(--ink-2); font: 500 12px/1 var(--f-mono); padding: 6px 8px; border-radius: 7px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.langs button:hover { background: var(--sunk); }
+.langs button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+.flag { width: 21px; height: 14px; border-radius: 2px; display: block; flex: none; box-shadow: 0 0 0 1px rgba(0,0,0,.14); }
+@media (max-width: 520px) { .langs .code { display: none; } }
 
 .wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 36px 72px; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 40px; }
 @media (max-width: 860px) { .wrap { grid-template-columns: minmax(0, 1fr); } .toc { display: none; } }
-.toc { position: sticky; top: 76px; align-self: start; font-size: 13.5px; }
+.toc { position: sticky; top: 110px; align-self: start; font-size: 13.5px; }
 .toc p { font: 600 11px/1 var(--f-body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
 .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; border-left: 2px solid var(--line); }
 .toc a { display: block; padding: 4px 10px; margin-left: -2px; border-left: 2px solid transparent; color: var(--ink-2); text-decoration: none; }
 .toc a:hover { color: var(--ink); border-left-color: var(--muted); }
 main { min-width: 0; }
 
-/* шапка */
 .eyebrow { font: 500 12px/1.2 var(--f-mono); letter-spacing: .06em; color: var(--muted); }
 h1 { font-size: clamp(28px, 4.4vw, 38px); font-weight: 700; letter-spacing: -.02em; margin: 10px 0 12px; }
 .lead { font-size: 17px; color: var(--ink-2); max-width: 64ch; }
@@ -71,29 +76,25 @@ h1 { font-size: clamp(28px, 4.4vw, 38px); font-weight: 700; letter-spacing: -.02
 .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0 0; padding: 0; list-style: none; }
 .chips li { font: 12.5px/1 var(--f-mono); padding: 6px 9px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink-2); }
 
-section { margin-top: 52px; scroll-margin-top: 80px; }
+section { margin-top: 52px; scroll-margin-top: 110px; }
 section > h2 { font-size: 22px; font-weight: 700; letter-spacing: -.01em; margin-bottom: 12px; }
-section > p, .prose { max-width: 70ch; color: var(--ink-2); }
+section > p { max-width: 70ch; color: var(--ink-2); }
 section > p + p { margin-top: 10px; }
-.prose li + li { margin-top: 4px; }
-.prose { padding-left: 20px; margin: 10px 0 0; }
 
-/* схема */
 .flow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
-.flow > div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; position: relative; }
+.flow > div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; position: relative; min-width: 0; }
 .flow h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
 .flow p { font-size: 13.5px; color: var(--ink-2); }
 .flow > div:not(:last-child)::after { content: "→"; position: absolute; right: -9px; top: 50%; transform: translate(50%, -50%); color: var(--muted); font-size: 16px; background: var(--ground); padding: 0 2px; }
 @media (max-width: 640px) { .flow { grid-template-columns: minmax(0, 1fr); } .flow > div:not(:last-child)::after { content: "↓"; right: 50%; top: auto; bottom: -11px; transform: translate(50%, 50%); } }
 
-/* передумови */
 .pre { margin-top: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); overflow: hidden; }
+.pre ul { margin: 0; padding: 0; }
 .pre li { list-style: none; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; padding: 10px 14px; border-top: 1px solid var(--line); font-size: 14px; }
 .pre li:first-child { border-top: 0; }
-.pre ul { margin: 0; padding: 0; }
 .pre .where { font: 12.5px/1.5 var(--f-mono); color: var(--muted); overflow-wrap: anywhere; }
+@media (max-width: 560px) { .pre li { grid-template-columns: minmax(0, 1fr); } }
 
-/* кроки */
 .step { margin-top: 28px; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 14px; }
 .step .n { width: 34px; height: 34px; border-radius: 50%; background: var(--ink); color: var(--surface); display: grid; place-items: center; font: 600 14px/1 var(--f-mono); }
 .step h3 { font-size: 16.5px; font-weight: 600; margin: 5px 0 6px; }
@@ -120,24 +121,10 @@ pre code { font: inherit; }
 .hljs-comment { color: var(--syn-com); font-style: italic; }
 .hljs-meta, .hljs-variable, .hljs-attr { color: var(--syn-type); }
 
-.note { border-radius: 10px; padding: 12px 14px; font-size: 14px; background: var(--warn-soft); color: var(--ink); max-width: 76ch; }
-.note b { color: var(--warn); }
-
-/* таблиці */
-.tw { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); margin-top: 14px; }
-table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 14px; }
-th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
-tbody tr:last-child td { border-bottom: 0; }
-th { font: 600 11.5px/1.3 var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--sunk); }
-td:first-child { font-weight: 600; }
-td code { white-space: nowrap; }
-
-/* пастки */
 .traps { margin: 14px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); max-width: 78ch; }
 .traps li { padding: 12px 0; border-bottom: 1px solid var(--line); color: var(--ink-2); }
 .traps b { color: var(--ink); }
 
-/* чек-лист */
 .checks { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 2px; max-width: 78ch; }
 .checks label { display: flex; gap: 10px; align-items: flex-start; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
 .checks label:hover { background: var(--sunk); }
@@ -150,82 +137,81 @@ footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line);
 
 <div class="cfg">
   <div class="cfg-in">
-    <span class="cfg-title">Підставити під свою апку</span>
-    <label for="pkg">Пакет <input id="pkg" type="text" value="com.bossrbx.rbxcalculator" spellcheck="false" autocomplete="off"></label>
-    <label for="act">Стартова активіті <input id="act" type="text" value="StartActivity" spellcheck="false" autocomplete="off"></label>
-    <span class="hint" id="pkg-hint" hidden>Пакет має виглядати як com.company.app</span>
+    <span class="cfg-title" data-i="cfgTitle">Підставити під свою апку</span>
+    <label for="pkg"><span data-i="pkgLabel">Пакет</span> <input id="pkg" type="text" value="com.bossrbx.rbxcalculator" spellcheck="false" autocomplete="off"></label>
+    <label for="act"><span data-i="actLabel">Стартова активіті</span> <input id="act" type="text" value="StartActivity" spellcheck="false" autocomplete="off"></label>
+    <span class="hint" id="pkg-hint" data-i="pkgHint" hidden>Пакет має виглядати як com.company.app</span>
+    <div class="langs" id="langs" role="group" aria-label="Мова">
+      <button type="button" data-lang="uk" lang="uk" aria-label="Українська" title="Українська" aria-pressed="true"><svg class="flag" viewBox="0 0 3 2" aria-hidden="true"><rect width="3" height="1" fill="#0057B7"/><rect y="1" width="3" height="1" fill="#FFD700"/></svg><span class="code">УКР</span></button>
+      <button type="button" data-lang="ru" lang="ru" aria-label="Русский" title="Русский" aria-pressed="false"><svg class="flag" viewBox="0 0 9 6" aria-hidden="true"><rect width="9" height="2" fill="#FFFFFF"/><rect y="2" width="9" height="2" fill="#0039A6"/><rect y="4" width="9" height="2" fill="#D52B1E"/></svg><span class="code">РУС</span></button>
+      <button type="button" data-lang="en" lang="en" aria-label="English" title="English" aria-pressed="false"><svg class="flag" viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><clipPath id="gb-s"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="gb-t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#gb-s)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#FFFFFF" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#gb-t)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#FFFFFF" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg><span class="code">ENG</span></button>
+      <button type="button" data-lang="tr" lang="tr" aria-label="Türkçe" title="Türkçe" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#E30A17"/><circle cx="10" cy="10" r="5" fill="#FFFFFF"/><circle cx="11.25" cy="10" r="4" fill="#E30A17"/><polygon fill="#FFFFFF" points="13.92,10 15.64,9.44 15.64,7.62 16.71,9.09 18.44,8.53 17.37,10 18.44,11.47 16.71,10.91 15.64,12.38 15.64,10.56"/></svg><span class="code">TÜR</span></button>
+    </div>
   </div>
 </div>
 
 <div class="wrap">
   <nav class="toc" aria-label="Зміст">
-    <p>Зміст</p>
+    <p data-i="tocTitle">Зміст</p>
     <ol>
-      <li><a href="#how">Як це працює</a></li>
-      <li><a href="#before">Перед початком</a></li>
-      <li><a href="#steps">Сім кроків у коді</a></li>
-      <li><a href="#server">Що віддає сервер</a></li>
-      <li><a href="#keys">Ключі в кабінеті Meta</a></li>
-      <li><a href="#verify">Перевірка</a></li>
-      <li><a href="#traps">Пастки</a></li>
-      <li><a href="#done">Чек-лист готовності</a></li>
+      <li><a href="#how" data-i="toc1">Як це працює</a></li>
+      <li><a href="#before" data-i="toc2">Перед початком</a></li>
+      <li><a href="#steps" data-i="toc3">Сім кроків у коді</a></li>
+      <li><a href="#server" data-i="toc4">Блок у конфігу</a></li>
+      <li><a href="#traps" data-i="toc5">Пастки</a></li>
+      <li><a href="#done" data-i="toc6">Чек-лист готовності</a></li>
     </ol>
   </nav>
 
   <main>
     <header>
-      <div class="eyebrow">UAPP · ІНТЕГРАЦІЯ · 01.10.2026</div>
-      <h1>Meta SDK в UAPP</h1>
-      <p class="lead">Як додати Meta (Facebook) SDK у гру парку поруч із TikTok: сім змін у коді, формат блоку на сервері, звідки брати ключі й як перевірити, що Meta приймає події.</p>
-      <p class="by">Підготував <b>VELDAN</b>. Зразок, на якому все перевірено: <b>T5 RBX Boss</b> (debug і release на реальному девайсі).</p>
-      <ul class="chips">
-        <li>facebook-core 18.3.0</li>
-        <li>лише App Events</li>
-        <li>ключі тільки з сервера</li>
-        <li>без ключів — тихо пропускає</li>
-      </ul>
+      <div class="eyebrow" data-i="eyebrow">UAPP · ІНТЕГРАЦІЯ · 01.10.2026</div>
+      <h1 data-i="h1">Meta SDK в UAPP</h1>
+      <p class="lead" data-i="lead"></p>
+      <p class="by" data-i="by"></p>
+      <ul class="chips"><li data-i="chip1"></li><li data-i="chip2"></li><li data-i="chip3"></li><li data-i="chip4"></li></ul>
     </header>
 
     <section id="how">
-      <h2>Як це працює</h2>
-      <p>Meta SDK лише рахує встановлення, запуски й одну нашу подію, щоб реклама в Meta Ads бачила результат. Facebook Login і Share не підключаємо. Ключі в апку не зашиваємо: вони приходять із нашого конфіг-сервера так само, як ключі TikTok.</p>
+      <h2 data-i="howH"></h2>
+      <p data-i="howP1"></p>
       <div class="flow">
-        <div><h3>Сервер</h3><p>Віддає блок <code>meta</code> з <code>app_id</code> і <code>client_token</code> поруч із <code>tiktok</code>.</p></div>
-        <div><h3>Запуск SDK</h3><p>З кешованого конфігу ще в <code>App.onCreate</code>. Найперший запуск — у <code>MainActivity</code> після свіжого конфігу.</p></div>
-        <div><h3>Події</h3><p>Встановлення й запуски — автоматично. На головний екран — <code>fb_mobile_achievement_unlocked</code>.</p></div>
+        <div><h3 data-i="f1h"></h3><p data-i="f1p"></p></div>
+        <div><h3 data-i="f2h"></h3><p data-i="f2p"></p></div>
+        <div><h3 data-i="f3h"></h3><p data-i="f3p"></p></div>
       </div>
-      <p style="margin-top:14px">Блоку <code>meta</code> немає, або одне з полів порожнє: у лозі один рядок <code>Meta config missing/invalid — skip init</code>, і гра працює далі, як із TikTok. Помилок і крашів немає.</p>
+      <p style="margin-top:14px" data-i="howP2"></p>
     </section>
 
     <section id="before">
-      <h2>Перед початком</h2>
-      <p>Інструкція для апок, мігрованих за еталоном (є <code>businesModule</code> і TikTok). Переконайся, що в проєкті є все з цього списку. Якщо чогось бракує, спершу мігруй апку за процедурою.</p>
+      <h2 data-i="befH"></h2>
+      <p data-i="befP"></p>
       <div class="pre"><ul>
-        <li><span>Провайдери аналітики і <code>AnalyticsManager</code> зі списком <code>providers</code></span><span class="where" data-tpl>services/analytics/</span></li>
-        <li><span><code>RemoteConfigModel</code> з полем <code>tiktok</code></span><span class="where">adsmodule/RemoteConfigModel.kt</span></li>
-        <li><span><code>initTikTok(model)</code> у двох місцях отримання конфігу</span><span class="where">MainActivity.kt</span></li>
-        <li><span><code>initAdPref()</code>, що кладе кешований конфіг в <code>AdConfig.remoteConfig</code></span><span class="where">App.kt</span></li>
-        <li><span>Правило R8, що зберігає класи <code>adsmodule</code> для Gson</span><span class="where">app/proguard-rules.pro</span></li>
+        <li><span data-i="pre1"></span><span class="where">services/analytics/</span></li>
+        <li><span data-i="pre2"></span><span class="where">adsmodule/RemoteConfigModel.kt</span></li>
+        <li><span data-i="pre3"></span><span class="where">MainActivity.kt</span></li>
+        <li><span data-i="pre4"></span><span class="where">App.kt</span></li>
+        <li><span data-i="pre5"></span><span class="where">app/proguard-rules.pro</span></li>
       </ul></div>
     </section>
 
     <section id="steps">
-      <h2>Сім кроків у коді</h2>
-      <p>Вставляй згори вниз: проєкт компілюється, коли вставлено всі сім. Код уже підставлений під пакет із поля вгорі сторінки.</p>
+      <h2 data-i="stH"></h2>
+      <p data-i="stP"></p>
 
       <div class="step"><span class="n">1</span><div class="body">
-        <h3><span class="verb add">ДОДАТИ</span>Залежність</h3>
-        <p>У блок <code>dependencies</code> одразу після TikTok. Правила R8 у <code>facebook-core</code> свої, ProGuard додатково не чіпаємо.</p>
-        <div class="code"><div class="code-head"><span class="code-path">app/build.gradle.kts</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>    // Meta (Facebook) — лише App Events: встановлення, запуски й події для реклами Meta
+        <h3><span class="verb add" data-i="vAdd"></span><span data-i="s1h"></span></h3>
+        <p data-i="s1p"></p>
+        <div class="code"><div class="code-head"><span class="code-path">app/build.gradle.kts</span><button class="copy" type="button" data-i="copy"></button></div><pre><code class="language-kotlin">    // Meta (Facebook) — лише App Events: встановлення, запуски й події для реклами Meta
     implementation("com.facebook.android:facebook-core:18.3.0")</code></pre></div>
       </div></div>
 
       <div class="step"><span class="n">2</span><div class="body">
-        <h3><span class="verb add">ДОДАТИ</span>Блок <code>meta</code> у моделі конфігу</h3>
-        <p>Поле — у <code>RemoteConfigModel</code>, одразу під <code>tiktok</code>. Клас <code>MetaConfig</code> — у кінець файлу.</p>
-        <div class="code"><div class="code-head"><span class="code-path" data-tpl>app/src/main/java/{{PATH}}/adsmodule/RemoteConfigModel.kt · поле</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>    // Meta SDK: ключі приходять із сервера, як у TikTok. Немає блоку — SDK не стартує
+        <h3><span class="verb add" data-i="vAdd"></span><span data-i="s2h"></span></h3>
+        <p data-i="s2p"></p>
+        <div class="code"><div class="code-head"><span class="code-path" data-i="l2a"></span><button class="copy" type="button" data-i="copy"></button></div><pre><code class="language-kotlin">    // Meta SDK: ключі приходять із сервера, як у TikTok. Немає блоку — SDK не стартує
     @SerializedName("meta")     val meta   : MetaConfig?   = null,</code></pre></div>
-        <div class="code"><div class="code-head"><span class="code-path" data-tpl>app/src/main/java/{{PATH}}/adsmodule/RemoteConfigModel.kt · кінець файлу</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>// ------------------------------------------------------------------------
+        <div class="code"><div class="code-head"><span class="code-path" data-i="l2b"></span><button class="copy" type="button" data-i="copy"></button></div><pre><code class="language-kotlin">// ------------------------------------------------------------------------
 // Meta (Facebook)
 // ------------------------------------------------------------------------
 data class MetaConfig(
@@ -238,9 +224,9 @@ data class MetaConfig(
       </div></div>
 
       <div class="step"><span class="n">3</span><div class="body">
-        <h3><span class="verb new">НОВИЙ ФАЙЛ</span><code>MetaManager</code></h3>
-        <p>Запускає SDK один раз. До запуску прапорець <code>isReady</code> вимкнений, і події не відправляються.</p>
-        <div class="code"><div class="code-head"><span class="code-path" data-tpl>app/src/main/java/{{PATH}}/services/meta/MetaManager.kt</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>package {{PKG}}.services.meta
+        <h3><span class="verb new" data-i="vNew"></span><code>MetaManager</code></h3>
+        <p data-i="s3p"></p>
+        <div class="code"><div class="code-head"><span class="code-path" data-tpl>app/src/main/java/{{PATH}}/services/meta/MetaManager.kt</span><button class="copy" type="button" data-i="copy"></button></div><pre><code class="language-kotlin" data-tpl>package {{PKG}}.services.meta
 
 import android.app.Application
 import com.facebook.FacebookSdk
@@ -290,9 +276,9 @@ object MetaManager {
       </div></div>
 
       <div class="step"><span class="n">4</span><div class="body">
-        <h3><span class="verb new">НОВИЙ ФАЙЛ</span><code>MetaAnalyticsProvider</code></h3>
-        <p>Повторює <code>TikTokAnalyticsProvider</code>: ті самі місця в грі, лише події Meta. Якщо в апці провайдер TikTok шле ще щось, додай відповідну подію Meta з <code>AppEventsConstants</code>.</p>
-        <div class="code"><div class="code-head"><span class="code-path" data-tpl>app/src/main/java/{{PATH}}/services/analytics/MetaAnalyticsProvider.kt</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>package {{PKG}}.services.analytics
+        <h3><span class="verb new" data-i="vNew"></span><code>MetaAnalyticsProvider</code></h3>
+        <p data-i="s4p"></p>
+        <div class="code"><div class="code-head"><span class="code-path" data-tpl>app/src/main/java/{{PATH}}/services/analytics/MetaAnalyticsProvider.kt</span><button class="copy" type="button" data-i="copy"></button></div><pre><code class="language-kotlin" data-tpl>package {{PKG}}.services.analytics
 
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsConstants
@@ -322,9 +308,9 @@ class MetaAnalyticsProvider : AnalyticsProvider {
       </div></div>
 
       <div class="step"><span class="n">5</span><div class="body">
-        <h3><span class="verb add">ДОДАТИ</span>Провайдер у <code>AnalyticsManager</code></h3>
-        <p>Один рядок у список <code>providers</code>, після TikTok.</p>
-        <div class="code"><div class="code-head"><span class="code-path" data-tpl>app/src/main/java/{{PATH}}/services/analytics/AnalyticsManager.kt</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>    private val providers: List&lt;AnalyticsProvider&gt; = listOf(
+        <h3><span class="verb add" data-i="vAdd"></span><span data-i="s5h"></span></h3>
+        <p data-i="s5p"></p>
+        <div class="code"><div class="code-head"><span class="code-path" data-tpl>app/src/main/java/{{PATH}}/services/analytics/AnalyticsManager.kt</span><button class="copy" type="button" data-i="copy"></button></div><pre><code class="language-kotlin">    private val providers: List&lt;AnalyticsProvider&gt; = listOf(
         FirebaseAnalyticsProvider(),
         TikTokAnalyticsProvider(),
         MetaAnalyticsProvider(),
@@ -332,26 +318,26 @@ class MetaAnalyticsProvider : AnalyticsProvider {
       </div></div>
 
       <div class="step"><span class="n">6</span><div class="body">
-        <h3><span class="verb add">ДОДАТИ</span>Ранній старт у <code>App</code></h3>
-        <p>Імпорт, виклик одразу після <code>initAdPref()</code> і функція поруч з іншими <code>init…</code>. Так SDK стартує до першого екрана, і Meta бачить початок сесії.</p>
-        <div class="code"><div class="code-head"><span class="code-path" data-tpl>app/src/main/java/{{PATH}}/App.kt · імпорт</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>import {{PKG}}.services.meta.MetaManager</code></pre></div>
-        <div class="code"><div class="code-head"><span class="code-path" data-tpl>App.kt · onCreate(), одразу після initAdPref()</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>        // ── 1a. Meta SDK з кешованого конфігу ─────────────────────────────────
+        <h3><span class="verb add" data-i="vAdd"></span><span data-i="s6h"></span></h3>
+        <p data-i="s6p"></p>
+        <div class="code"><div class="code-head"><span class="code-path" data-i="l6a"></span><button class="copy" type="button" data-i="copy"></button></div><pre><code class="language-kotlin" data-tpl>import {{PKG}}.services.meta.MetaManager</code></pre></div>
+        <div class="code"><div class="code-head"><span class="code-path" data-i="l6b"></span><button class="copy" type="button" data-i="copy"></button></div><pre><code class="language-kotlin">        // ── 1a. Meta SDK з кешованого конфігу ─────────────────────────────────
         // Старт до першого екрана — інакше Meta не бачить запуск сесії.
         // Найперший запуск (кешу ще немає) — старт у MainActivity після конфігу
         initMetaFromCache()</code></pre></div>
-        <div class="code"><div class="code-head"><span class="code-path" data-tpl>App.kt · після initAdPref()</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>    private fun initMetaFromCache() {
+        <div class="code"><div class="code-head"><span class="code-path" data-i="l6c"></span><button class="copy" type="button" data-i="copy"></button></div><pre><code class="language-kotlin">    private fun initMetaFromCache() {
         val meta = AdConfig.remoteConfig?.meta ?: return
         if (meta.isValid) MetaManager.initialize(this, meta.appId!!, meta.clientToken!!)
     }</code></pre></div>
       </div></div>
 
       <div class="step"><span class="n">7</span><div class="body">
-        <h3><span class="verb add">ДОДАТИ</span>Старт після свіжого конфігу в <code>MainActivity</code></h3>
-        <p>Імпорт, рядок <code>initMeta(model)</code> після <b>кожного</b> <code>initTikTok(model)</code> (їх два: наш сервер і легасі Firebase RC), і функція одразу після <code>initTikTok</code>.</p>
-        <div class="code"><div class="code-head"><span class="code-path" data-tpl>app/src/main/java/{{PATH}}/MainActivity.kt · імпорт</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>import {{PKG}}.services.meta.MetaManager</code></pre></div>
-        <div class="code"><div class="code-head"><span class="code-path">MainActivity.kt · у fetchOurConfig і fetchRemoteConfig</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin">                    initTikTok(model)
+        <h3><span class="verb add" data-i="vAdd"></span><span data-i="s7h"></span></h3>
+        <p data-i="s7p"></p>
+        <div class="code"><div class="code-head"><span class="code-path" data-i="l7a"></span><button class="copy" type="button" data-i="copy"></button></div><pre><code class="language-kotlin" data-tpl>import {{PKG}}.services.meta.MetaManager</code></pre></div>
+        <div class="code"><div class="code-head"><span class="code-path" data-i="l7b"></span><button class="copy" type="button" data-i="copy"></button></div><pre><code class="language-kotlin">                    initTikTok(model)
                     initMeta(model)</code></pre></div>
-        <div class="code"><div class="code-head"><span class="code-path">MainActivity.kt · після initTikTok()</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin">    private fun initMeta(model: RemoteConfigModel) {
+        <div class="code"><div class="code-head"><span class="code-path" data-i="l7c"></span><button class="copy" type="button" data-i="copy"></button></div><pre><code class="language-kotlin">    private fun initMeta(model: RemoteConfigModel) {
         val meta = model.meta
         if (meta == null || !meta.isValid) {
             log("Meta config missing/invalid — skip init")
@@ -362,139 +348,297 @@ class MetaAnalyticsProvider : AnalyticsProvider {
       </div></div>
 
       <div class="step"><span class="n">✓</span><div class="body">
-        <h3><span class="verb check">ПЕРЕВІРИТИ</span>Правило R8 для моделей конфігу</h3>
-        <p>Без нього release перейменує поля <code>MetaConfig</code>, і Gson не прочитає блок <code>meta</code>. У мігрованих апках правило вже є, просто переконайся.</p>
-        <div class="code"><div class="code-head"><span class="code-path">app/proguard-rules.pro</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-ini" data-tpl># Зберігаємо всі data класи для Gson
+        <h3><span class="verb check" data-i="vCheck"></span><span data-i="r8h"></span></h3>
+        <p data-i="r8p"></p>
+        <div class="code"><div class="code-head"><span class="code-path">app/proguard-rules.pro</span><button class="copy" type="button" data-i="copy"></button></div><pre><code class="language-ini" data-tpl># Зберігаємо всі data класи для Gson
 -keep class {{PKG}}.adsmodule.** { *; }
 -keepclassmembers class {{PKG}}.adsmodule.** { *; }</code></pre></div>
       </div></div>
     </section>
 
     <section id="server">
-      <h2>Що віддає сервер</h2>
-      <p>Серверна команда додає блок у картку кожної апки, поруч із <code>tiktok</code>. Назви полів мають збігатися дослівно: інакше апка мовчки пропустить Meta.</p>
-      <div class="code" style="margin-top:14px"><div class="code-head"><span class="code-path">відповідь конфіг-сервера</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-json">"meta": {
+      <h2 data-i="srvH"></h2>
+      <p data-i="srvP1"></p>
+      <div class="code" style="margin-top:14px"><div class="code-head"><span class="code-path" data-i="srvLbl"></span><button class="copy" type="button" data-i="copy"></button></div><pre><code class="language-json">"meta": {
   "app_id": "123456789012345",
   "client_token": "0123456789abcdef0123456789abcdef"
 }</code></pre></div>
-      <p style="margin-top:12px">Значення в кожної гри свої. <b>App Secret</b> у конфіг не кладемо ніколи: апці він не потрібен, а Meta забороняє зашивати його в застосунок.</p>
-    </section>
-
-    <section id="keys">
-      <h2>Ключі в кабінеті Meta</h2>
-      <p>Робить той, хто веде рекламний акаунт. На кожну гру — окремий застосунок у Meta.</p>
-      <div class="tw"><table>
-        <thead><tr><th>Крок</th><th>Що зробити</th></tr></thead>
-        <tbody>
-          <tr><td>1. Створити</td><td>developers.facebook.com → My Apps → Create app. Use case: фільтр <b>Ads and monetization</b> → <b>Create &amp; manage app ads with Meta Ads Manager</b>. Варіант «Other» не брати: Meta його прибирає. Facebook Login не потрібен.</td></tr>
-          <tr><td>2. Бізнес</td><td>Business portfolio — бізнес-акаунт, з якого підуть кампанії.</td></tr>
-          <tr><td>3. App ID</td><td>App settings → Basic (також угорі кабінету).</td></tr>
-          <tr><td>4. Client Token</td><td>App settings → Advanced → Security → Client token.</td></tr>
-          <tr><td>5. Android</td><td>App settings → Basic → Add platform → Android. Package name: <code data-tpl>{{PKG}}</code>. Class name: <code data-tpl>{{PKG}}.{{ACT}}</code>. Key hashes лишити порожніми (вони лише для Facebook Login). Заповнити Privacy Policy URL → Save changes.</td></tr>
-          <tr><td>6. Сервер</td><td>App ID і Client Token передати серверній команді для блоку <code>meta</code> цієї апки.</td></tr>
-          <tr><td>7. Перед рекламою</td><td>App Mode → Live. Play Console → Data safety: дописати дані, які збирає Meta SDK (рекламний ID, взаємодія з апкою).</td></tr>
-        </tbody>
-      </table></div>
-    </section>
-
-    <section id="verify">
-      <h2>Перевірка</h2>
-      <p>Зібрати й запустити <b>debug</b> і <b>release</b>. Release без підпису на телефон не стане, тож для тесту підпиши його debug-ключем:</p>
-      <div class="code" style="margin-top:14px"><div class="code-head"><span class="code-path">термінал, з теки проєкту</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-bash">sh ./gradlew :app:assembleDebug :app:assembleRelease
-BT=$(ls -d ~/Library/Android/sdk/build-tools/* | sort -V | tail -1)
-"$BT/zipalign" -f -p 4 app/build/outputs/apk/release/app-release-unsigned.apk /tmp/aligned.apk
-"$BT/apksigner" sign --ks ~/.android/debug.keystore --ks-pass pass:android --key-pass pass:android --ks-key-alias androiddebugkey --out /tmp/release-test.apk /tmp/aligned.apk
-adb install -r /tmp/release-test.apk</code></pre></div>
-      <div class="tw"><table>
-        <thead><tr><th>Ситуація</th><th>Що має бути в logcat (debug)</th></tr></thead>
-        <tbody>
-          <tr><td>На старті, завжди</td><td><code>FacebookInitProvider: Failed to auto initialize</code> — нормально: Meta пробує стартувати сама, але ключів у маніфесті немає.</td></tr>
-          <tr><td>Сервер без блоку <code>meta</code></td><td><code>Meta config missing/invalid — skip init</code>, далі <code>TikTok SDK initialized SUCCESSFULLY</code>. Подій у Meta немає.</td></tr>
-          <tr><td>Сервер віддає ключі</td><td><code>Meta SDK initialized SUCCESSFULLY, appId=…</code>, потім <code>FacebookSDK.AppEvents</code>: <code>MOBILE_INSTALL_EVENT</code>, <code>fb_mobile_activate_app</code> і <code>Result: Success</code>.</td></tr>
-          <tr><td>Неправильні ключі</td><td><code>Result: Failed</code>, <code>errorCode: 190, OAuthException</code>. Перевір App ID і Client Token у конфігу.</td></tr>
-        </tbody>
-      </table></div>
-      <p style="margin-top:14px">У кабінеті Meta: <b>Events Manager → Набори даних → застосунок</b>. Події видно у вкладці <b>«Тестування подій»</b> одразу. «Огляд» оновлюється із затримкою до кількох годин, і період угорі має включати сьогоднішню дату.</p>
+      <p style="margin-top:12px" data-i="srvP2"></p>
     </section>
 
     <section id="traps">
-      <h2>Пастки</h2>
+      <h2 data-i="trH"></h2>
       <ul class="traps">
-        <li><b>Банер «Оновіть Facebook SDK» в Events Manager</b> стосується iOS (SKAdNetwork). Для Android не потрібен, якщо стоїть 18.3.0 або новіша.</li>
-        <li><b>Ключі не кладемо в маніфест, <code>strings.xml</code> чи <code>local.properties</code>.</b> Рішення VELDAN: ключі приходять тільки з сервера, тестових у проєкті немає.</li>
-        <li><b>Найперший запуск після встановлення.</b> SDK стартує вже після відкриття екрана, тож початок цієї сесії Meta не бачить. Встановлення при цьому зараховується, а з другого запуску старт іде з кешу до першого екрана.</li>
-        <li><b>Два <code>initTikTok(model)</code> у <code>MainActivity</code>.</b> Якщо <code>initMeta</code> додати лише в один, на запасному Firebase RC Meta не стартує.</li>
-        <li><b>MIUI/HyperOS</b> вбиває фоновий процес гри, поки відкритий лендінг у Chrome. У лозі це <code>Process … has died</code> без <code>FATAL</code>, і це не краш.</li>
-        <li><b>Тестовий застосунок у Meta</b> на особистому акаунті після перевірки видаляємо (My Apps), щоб не було двох застосунків з одним пакетом.</li>
+        <li data-i="tr1"></li>
+        <li data-i="tr2"></li>
+        <li data-i="tr3"></li>
+        <li data-i="tr4"></li>
+        <li data-i="tr5"></li>
       </ul>
     </section>
 
     <section id="done">
-      <h2>Чек-лист готовності</h2>
-      <p>Галочки зберігаються лише у твоєму браузері.</p>
+      <h2 data-i="dnH"></h2>
+      <p data-i="dnP"></p>
       <ul class="checks" id="checks">
-        <li><label><input type="checkbox" id="c1"><span>Сім кроків вставлено, правило R8 для <code>adsmodule</code> на місці</span></label></li>
-        <li><label><input type="checkbox" id="c2"><span>Debug і release збираються</span></label></li>
-        <li><label><input type="checkbox" id="c3"><span>Без блоку <code>meta</code>: <code>skip init</code> у лозі, гра працює, TikTok стартує</span></label></li>
-        <li><label><input type="checkbox" id="c4"><span>Застосунок у Meta створено, платформа Android з пакетом і стартовою активіті</span></label></li>
-        <li><label><input type="checkbox" id="c5"><span>Серверна команда додала блок <code>meta</code> у картку апки</span></label></li>
-        <li><label><input type="checkbox" id="c6"><span>З ключами: <code>Meta SDK initialized</code> і <code>Result: Success</code>, події видно в «Тестуванні подій»</span></label></li>
-        <li><label><input type="checkbox" id="c7"><span>Release перевірено на девайсі</span></label></li>
-        <li><label><input type="checkbox" id="c8"><span>Data safety в Play Console оновлено, застосунок у Meta в режимі Live</span></label></li>
+        <li><label><input type="checkbox" id="c1"><span data-i="c1"></span></label></li>
+        <li><label><input type="checkbox" id="c2"><span data-i="c2"></span></label></li>
+        <li><label><input type="checkbox" id="c3"><span data-i="c3"></span></label></li>
+        <li><label><input type="checkbox" id="c4"><span data-i="c4"></span></label></li>
+        <li><label><input type="checkbox" id="c5"><span data-i="c5"></span></label></li>
       </ul>
       <p class="prog" id="prog"></p>
     </section>
 
-    <footer>
-      Підготував VELDAN · 01.10.2026. У репо UAPP: <code>docs/for-devs/meta-sdk-01-10-2026/</code>; історія інтеграції в T5 — <code>docs/patches/01-meta-sdk.md</code>.
-    </footer>
+    <footer data-i="foot"></footer>
   </main>
 </div>
 
 <script>
 (function () {
   "use strict";
-  var pkgEl = document.getElementById("pkg"), actEl = document.getElementById("act"), hint = document.getElementById("pkg-hint");
-  var tpls = Array.prototype.map.call(document.querySelectorAll("[data-tpl]"), function (el) { return { el: el, src: el.textContent }; });
+  var LANGS = ["uk", "ru", "en", "tr"];
+  var T = {
+  uk: {
+    cfgTitle: "Підставити під свою апку", pkgLabel: "Пакет", actLabel: "Стартова активіті", pkgHint: "Пакет має виглядати як com.company.app",
+    langAria: "Мова", tocTitle: "Зміст", toc1: "Як це працює", toc2: "Перед початком", toc3: "Сім кроків у коді", toc4: "Блок у конфігу", toc5: "Пастки", toc6: "Чек-лист готовності",
+    eyebrow: "UAPP · ІНТЕГРАЦІЯ · 01.10.2026", h1: "Meta SDK в UAPP",
+    lead: "Як додати Meta (Facebook) SDK у гру парку поруч із TikTok: сім змін у коді й блок у конфігу, з якого апка бере ключі.",
+    by: "Підготував <b>VELDAN</b>. Зразок, на якому все перевірено: <b>T5 RBX Boss</b> (debug і release на реальному девайсі).",
+    chip1: "facebook-core 18.3.0", chip2: "лише App Events", chip3: "ключі тільки з конфігу", chip4: "без ключів — тихо пропускає",
+    howH: "Як це працює",
+    howP1: "Meta SDK лише рахує встановлення, запуски й одну нашу подію, щоб реклама в Meta Ads бачила результат. Facebook Login і Share не підключаємо. Ключі в апку не зашиваємо: вони приходять із нашого конфіг-сервера так само, як ключі TikTok.",
+    f1h: "Конфіг", f1p: "Сервер віддає блок <code>meta</code> з <code>app_id</code> і <code>client_token</code> поруч із <code>tiktok</code>.",
+    f2h: "Запуск SDK", f2p: "З кешованого конфігу ще в <code>App.onCreate</code>. Найперший запуск — у <code>MainActivity</code> після свіжого конфігу.",
+    f3h: "Події", f3p: "Встановлення й запуски — автоматично. На головний екран — <code>fb_mobile_achievement_unlocked</code>.",
+    howP2: "Блоку <code>meta</code> немає, або одне з полів порожнє: у лозі один рядок <code>Meta config missing/invalid — skip init</code>, і гра працює далі, як із TikTok. Помилок і крашів немає.",
+    befH: "Перед початком", befP: "Інструкція для апок, мігрованих за еталоном: у них є <code>businesModule</code> і TikTok. Переконайся, що в проєкті є все з цього списку.",
+    pre1: "Провайдери аналітики і <code>AnalyticsManager</code> зі списком <code>providers</code>", pre2: "<code>RemoteConfigModel</code> з полем <code>tiktok</code>",
+    pre3: "<code>initTikTok(model)</code> у двох місцях отримання конфігу", pre4: "<code>initAdPref()</code>, що кладе кешований конфіг в <code>AdConfig.remoteConfig</code>", pre5: "Правило R8, що зберігає класи <code>adsmodule</code> для Gson",
+    stH: "Сім кроків у коді", stP: "Вставляй згори вниз: проєкт компілюється, коли вставлено всі сім. Код уже підставлений під пакет із поля вгорі сторінки. Коментарі в коді — українською, як у всьому парку.",
+    vAdd: "ДОДАТИ", vNew: "НОВИЙ ФАЙЛ", vCheck: "ПЕРЕВІРИТИ", copy: "Копіювати", copied: "Скопійовано", selected: "Виділено — Ctrl/⌘+C",
+    s1h: "Залежність", s1p: "У блок <code>dependencies</code> одразу після TikTok. Правила R8 у <code>facebook-core</code> свої, ProGuard додатково не чіпаємо.",
+    s2h: "Блок <code>meta</code> у моделі конфігу", s2p: "Поле — у <code>RemoteConfigModel</code>, одразу під <code>tiktok</code>. Клас <code>MetaConfig</code> — у кінець файлу.",
+    l2a: "app/src/main/java/{{PATH}}/adsmodule/RemoteConfigModel.kt · поле", l2b: "RemoteConfigModel.kt · кінець файлу",
+    s3p: "Запускає SDK один раз. До запуску прапорець <code>isReady</code> вимкнений, і події не відправляються.",
+    s4p: "Повторює <code>TikTokAnalyticsProvider</code>: ті самі місця в грі, лише події Meta. Якщо в апці провайдер TikTok шле ще щось, додай відповідну подію Meta з <code>AppEventsConstants</code>.",
+    s5h: "Провайдер у <code>AnalyticsManager</code>", s5p: "Один рядок у список <code>providers</code>, після TikTok.",
+    s6h: "Ранній старт у <code>App</code>", s6p: "Імпорт, виклик одразу після <code>initAdPref()</code> і функція поруч з іншими <code>init…</code>. Так SDK стартує до першого екрана, і Meta бачить початок сесії.",
+    l6a: "App.kt · імпорт", l6b: "App.kt · onCreate(), одразу після initAdPref()", l6c: "App.kt · функція поруч з initAdPref()",
+    s7h: "Старт після свіжого конфігу в <code>MainActivity</code>", s7p: "Імпорт, рядок <code>initMeta(model)</code> після <b>кожного</b> <code>initTikTok(model)</code> (їх два: наш сервер і запасний Firebase RC), і функція одразу після <code>initTikTok</code>.",
+    l7a: "MainActivity.kt · імпорт", l7b: "MainActivity.kt · у fetchOurConfig і fetchRemoteConfig", l7c: "MainActivity.kt · після initTikTok()",
+    r8h: "Правило R8 для моделей конфігу", r8p: "Без нього release перейменує поля <code>MetaConfig</code>, і Gson не прочитає блок <code>meta</code>. У мігрованих апках правило вже є, просто переконайся.",
+    srvH: "Блок у конфігу", srvP1: "Ключі для кожної апки серверна команда кладе в її конфіг, поруч із <code>tiktok</code>. В апці нічого вписувати не треба. Назви полів мають збігатися дослівно, інакше апка мовчки пропустить Meta.",
+    srvLbl: "відповідь конфіг-сервера", srvP2: "Значення в кожної гри свої. App Secret у конфіг не кладемо ніколи.",
+    trH: "Пастки",
+    tr1: "<b>Ключі не кладемо в маніфест, <code>strings.xml</code> чи <code>local.properties</code>.</b> Тільки конфіг. Тестових ключів у проєкті не тримаємо.",
+    tr2: "<b><code>FacebookInitProvider: Failed to auto initialize</code> на старті — нормально.</b> Meta пробує стартувати сама, але ключів у маніфесті немає. Справжній запуск іде з <code>MetaManager</code>.",
+    tr3: "<b>Два <code>initTikTok(model)</code> у <code>MainActivity</code>.</b> Якщо <code>initMeta</code> додати лише в один, на запасному Firebase RC Meta не стартує.",
+    tr4: "<b>Найперший запуск після встановлення.</b> SDK стартує вже після відкриття екрана, тож початок цієї сесії Meta не бачить. Встановлення при цьому зараховується, а з другого запуску старт іде з кешу до першого екрана.",
+    tr5: "<b>MIUI/HyperOS</b> вбиває фоновий процес гри, поки відкритий лендінг у Chrome. У лозі це <code>Process … has died</code> без <code>FATAL</code>, і це не краш.",
+    dnH: "Чек-лист готовності", dnP: "Галочки зберігаються лише у твоєму браузері.",
+    c1: "Сім кроків вставлено, правило R8 для <code>adsmodule</code> на місці", c2: "Debug і release збираються",
+    c3: "Без блоку <code>meta</code>: у лозі <code>skip init</code>, гра працює, TikTok стартує",
+    c4: "Коли в конфігу з'явились ключі: у лозі <code>Meta SDK initialized SUCCESSFULLY</code> і <code>Result: Success</code>", c5: "Release перевірено на девайсі",
+    prog: "Виконано {n} з {m}", foot: "Підготував VELDAN · 01.10.2026. У репо UAPP: <code>docs/for-devs/meta-sdk-01-10-2026/</code>."
+  },
+  ru: {
+    cfgTitle: "Подставить под своё приложение", pkgLabel: "Пакет", actLabel: "Стартовая активити", pkgHint: "Пакет должен выглядеть как com.company.app",
+    langAria: "Язык", tocTitle: "Содержание", toc1: "Как это работает", toc2: "Перед началом", toc3: "Семь шагов в коде", toc4: "Блок в конфиге", toc5: "Подводные камни", toc6: "Чек-лист готовности",
+    eyebrow: "UAPP · ИНТЕГРАЦИЯ · 01.10.2026", h1: "Meta SDK в UAPP",
+    lead: "Как добавить Meta (Facebook) SDK в игру парка рядом с TikTok: семь изменений в коде и блок в конфиге, из которого приложение берёт ключи.",
+    by: "Подготовил <b>VELDAN</b>. Образец, на котором всё проверено: <b>T5 RBX Boss</b> (debug и release на реальном устройстве).",
+    chip1: "facebook-core 18.3.0", chip2: "только App Events", chip3: "ключи только из конфига", chip4: "без ключей — тихо пропускает",
+    howH: "Как это работает",
+    howP1: "Meta SDK только считает установки, запуски и одно наше событие, чтобы реклама в Meta Ads видела результат. Facebook Login и Share не подключаем. Ключи в приложение не зашиваем: они приходят с нашего конфиг-сервера так же, как ключи TikTok.",
+    f1h: "Конфиг", f1p: "Сервер отдаёт блок <code>meta</code> с <code>app_id</code> и <code>client_token</code> рядом с <code>tiktok</code>.",
+    f2h: "Запуск SDK", f2p: "Из кешированного конфига ещё в <code>App.onCreate</code>. Самый первый запуск — в <code>MainActivity</code> после свежего конфига.",
+    f3h: "События", f3p: "Установки и запуски — автоматически. На главный экран — <code>fb_mobile_achievement_unlocked</code>.",
+    howP2: "Блока <code>meta</code> нет или одно из полей пустое: в логе одна строка <code>Meta config missing/invalid — skip init</code>, и игра работает дальше, как с TikTok. Ошибок и крашей нет.",
+    befH: "Перед началом", befP: "Инструкция для приложений, мигрированных по эталону: в них есть <code>businesModule</code> и TikTok. Убедись, что в проекте есть всё из этого списка.",
+    pre1: "Провайдеры аналитики и <code>AnalyticsManager</code> со списком <code>providers</code>", pre2: "<code>RemoteConfigModel</code> с полем <code>tiktok</code>",
+    pre3: "<code>initTikTok(model)</code> в двух местах получения конфига", pre4: "<code>initAdPref()</code>, который кладёт кешированный конфиг в <code>AdConfig.remoteConfig</code>", pre5: "Правило R8, сохраняющее классы <code>adsmodule</code> для Gson",
+    stH: "Семь шагов в коде", stP: "Вставляй сверху вниз: проект компилируется, когда вставлены все семь. Код уже подставлен под пакет из поля вверху страницы. Комментарии в коде — на украинском, как во всём парке.",
+    vAdd: "ДОБАВИТЬ", vNew: "НОВЫЙ ФАЙЛ", vCheck: "ПРОВЕРИТЬ", copy: "Копировать", copied: "Скопировано", selected: "Выделено — Ctrl/⌘+C",
+    s1h: "Зависимость", s1p: "В блок <code>dependencies</code> сразу после TikTok. Правила R8 у <code>facebook-core</code> свои, ProGuard дополнительно не трогаем.",
+    s2h: "Блок <code>meta</code> в модели конфига", s2p: "Поле — в <code>RemoteConfigModel</code>, сразу под <code>tiktok</code>. Класс <code>MetaConfig</code> — в конец файла.",
+    l2a: "app/src/main/java/{{PATH}}/adsmodule/RemoteConfigModel.kt · поле", l2b: "RemoteConfigModel.kt · конец файла",
+    s3p: "Запускает SDK один раз. До запуска флаг <code>isReady</code> выключен, и события не отправляются.",
+    s4p: "Повторяет <code>TikTokAnalyticsProvider</code>: те же места в игре, только события Meta. Если в приложении провайдер TikTok шлёт что-то ещё, добавь соответствующее событие Meta из <code>AppEventsConstants</code>.",
+    s5h: "Провайдер в <code>AnalyticsManager</code>", s5p: "Одна строка в список <code>providers</code>, после TikTok.",
+    s6h: "Ранний старт в <code>App</code>", s6p: "Импорт, вызов сразу после <code>initAdPref()</code> и функция рядом с остальными <code>init…</code>. Так SDK стартует до первого экрана, и Meta видит начало сессии.",
+    l6a: "App.kt · импорт", l6b: "App.kt · onCreate(), сразу после initAdPref()", l6c: "App.kt · функция рядом с initAdPref()",
+    s7h: "Старт после свежего конфига в <code>MainActivity</code>", s7p: "Импорт, строка <code>initMeta(model)</code> после <b>каждого</b> <code>initTikTok(model)</code> (их два: наш сервер и запасной Firebase RC), и функция сразу после <code>initTikTok</code>.",
+    l7a: "MainActivity.kt · импорт", l7b: "MainActivity.kt · в fetchOurConfig и fetchRemoteConfig", l7c: "MainActivity.kt · после initTikTok()",
+    r8h: "Правило R8 для моделей конфига", r8p: "Без него release переименует поля <code>MetaConfig</code>, и Gson не прочитает блок <code>meta</code>. В мигрированных приложениях правило уже есть, просто убедись.",
+    srvH: "Блок в конфиге", srvP1: "Ключи для каждого приложения серверная команда кладёт в его конфиг, рядом с <code>tiktok</code>. В приложении ничего вписывать не нужно. Названия полей должны совпадать дословно, иначе приложение молча пропустит Meta.",
+    srvLbl: "ответ конфиг-сервера", srvP2: "Значения у каждой игры свои. App Secret в конфиг не кладём никогда.",
+    trH: "Подводные камни",
+    tr1: "<b>Ключи не кладём в манифест, <code>strings.xml</code> или <code>local.properties</code>.</b> Только конфиг. Тестовых ключей в проекте не держим.",
+    tr2: "<b><code>FacebookInitProvider: Failed to auto initialize</code> на старте — нормально.</b> Meta пытается стартовать сама, но ключей в манифесте нет. Настоящий запуск идёт из <code>MetaManager</code>.",
+    tr3: "<b>Два <code>initTikTok(model)</code> в <code>MainActivity</code>.</b> Если <code>initMeta</code> добавить только в один, на запасном Firebase RC Meta не стартует.",
+    tr4: "<b>Самый первый запуск после установки.</b> SDK стартует уже после открытия экрана, поэтому начало этой сессии Meta не видит. Установка при этом засчитывается, а со второго запуска старт идёт из кеша до первого экрана.",
+    tr5: "<b>MIUI/HyperOS</b> убивает фоновый процесс игры, пока открыт лендинг в Chrome. В логе это <code>Process … has died</code> без <code>FATAL</code>, и это не краш.",
+    dnH: "Чек-лист готовности", dnP: "Галочки сохраняются только в твоём браузере.",
+    c1: "Семь шагов вставлено, правило R8 для <code>adsmodule</code> на месте", c2: "Debug и release собираются",
+    c3: "Без блока <code>meta</code>: в логе <code>skip init</code>, игра работает, TikTok стартует",
+    c4: "Когда в конфиге появились ключи: в логе <code>Meta SDK initialized SUCCESSFULLY</code> и <code>Result: Success</code>", c5: "Release проверен на устройстве",
+    prog: "Готово {n} из {m}", foot: "Подготовил VELDAN · 01.10.2026. В репо UAPP: <code>docs/for-devs/meta-sdk-01-10-2026/</code>."
+  },
+  en: {
+    cfgTitle: "Adapt to your app", pkgLabel: "Package", actLabel: "Launcher activity", pkgHint: "The package should look like com.company.app",
+    langAria: "Language", tocTitle: "Contents", toc1: "How it works", toc2: "Before you start", toc3: "Seven code steps", toc4: "Config block", toc5: "Gotchas", toc6: "Ready checklist",
+    eyebrow: "UAPP · INTEGRATION · 01.10.2026", h1: "Meta SDK in UAPP",
+    lead: "How to add the Meta (Facebook) SDK to a game in our park next to TikTok: seven code changes and the config block the app reads its keys from.",
+    by: "Prepared by <b>VELDAN</b>. Reference app where everything was verified: <b>T5 RBX Boss</b> (debug and release on a real device).",
+    chip1: "facebook-core 18.3.0", chip2: "App Events only", chip3: "keys from config only", chip4: "no keys — skips silently",
+    howH: "How it works",
+    howP1: "The Meta SDK only counts installs, launches and one event of ours, so that Meta Ads campaigns can see results. We don't add Facebook Login or Share. Keys are never hard-coded: they come from our config server, the same way as the TikTok keys.",
+    f1h: "Config", f1p: "The server returns a <code>meta</code> block with <code>app_id</code> and <code>client_token</code> next to <code>tiktok</code>.",
+    f2h: "SDK start", f2p: "From the cached config in <code>App.onCreate</code>. On the very first launch — in <code>MainActivity</code> after the fresh config arrives.",
+    f3h: "Events", f3p: "Installs and launches — automatically. Home screen — <code>fb_mobile_achievement_unlocked</code>.",
+    howP2: "No <code>meta</code> block, or one of the fields is empty: the log shows a single line <code>Meta config missing/invalid — skip init</code>, and the game carries on as with TikTok. No errors, no crashes.",
+    befH: "Before you start", befP: "This guide is for apps migrated to the etalon: they have <code>businesModule</code> and TikTok. Make sure the project has everything on this list.",
+    pre1: "Analytics providers and <code>AnalyticsManager</code> with a <code>providers</code> list", pre2: "<code>RemoteConfigModel</code> with a <code>tiktok</code> field",
+    pre3: "<code>initTikTok(model)</code> in both places where the config arrives", pre4: "<code>initAdPref()</code>, which puts the cached config into <code>AdConfig.remoteConfig</code>", pre5: "An R8 rule that keeps the <code>adsmodule</code> classes for Gson",
+    stH: "Seven code steps", stP: "Insert top to bottom: the project compiles once all seven are in. The code already uses the package from the field at the top of the page. Code comments are in Ukrainian, as everywhere in the park.",
+    vAdd: "ADD", vNew: "NEW FILE", vCheck: "CHECK", copy: "Copy", copied: "Copied", selected: "Selected — Ctrl/⌘+C",
+    s1h: "Dependency", s1p: "In the <code>dependencies</code> block, right after TikTok. <code>facebook-core</code> ships its own R8 rules, so ProGuard needs no changes.",
+    s2h: "<code>meta</code> block in the config model", s2p: "The field goes into <code>RemoteConfigModel</code>, right below <code>tiktok</code>. The <code>MetaConfig</code> class goes to the end of the file.",
+    l2a: "app/src/main/java/{{PATH}}/adsmodule/RemoteConfigModel.kt · field", l2b: "RemoteConfigModel.kt · end of file",
+    s3p: "Starts the SDK once. Until it starts, <code>isReady</code> is false and no events are sent.",
+    s4p: "Mirrors <code>TikTokAnalyticsProvider</code>: the same places in the game, Meta events instead. If your TikTok provider sends anything else, add the matching Meta event from <code>AppEventsConstants</code>.",
+    s5h: "Provider in <code>AnalyticsManager</code>", s5p: "One line in the <code>providers</code> list, after TikTok.",
+    s6h: "Early start in <code>App</code>", s6p: "An import, a call right after <code>initAdPref()</code>, and a function next to the other <code>init…</code> functions. This way the SDK starts before the first screen and Meta sees the session start.",
+    l6a: "App.kt · import", l6b: "App.kt · onCreate(), right after initAdPref()", l6c: "App.kt · function next to initAdPref()",
+    s7h: "Start after the fresh config in <code>MainActivity</code>", s7p: "An import, an <code>initMeta(model)</code> line after <b>each</b> <code>initTikTok(model)</code> (there are two: our server and the Firebase RC fallback), and a function right after <code>initTikTok</code>.",
+    l7a: "MainActivity.kt · import", l7b: "MainActivity.kt · in fetchOurConfig and fetchRemoteConfig", l7c: "MainActivity.kt · after initTikTok()",
+    r8h: "R8 rule for config models", r8p: "Without it, release builds rename the <code>MetaConfig</code> fields and Gson can't read the <code>meta</code> block. Migrated apps already have this rule; just make sure.",
+    srvH: "Config block", srvP1: "The server team puts the keys for each app into that app's config, next to <code>tiktok</code>. Nothing needs to be written in the app. Field names must match exactly, otherwise the app silently skips Meta.",
+    srvLbl: "config server response", srvP2: "Each game has its own values. The App Secret never goes into the config.",
+    trH: "Gotchas",
+    tr1: "<b>Keys never go into the manifest, <code>strings.xml</code> or <code>local.properties</code>.</b> Config only. No test keys in the project.",
+    tr2: "<b><code>FacebookInitProvider: Failed to auto initialize</code> at startup is normal.</b> Meta tries to start on its own, but the manifest has no keys. The real start comes from <code>MetaManager</code>.",
+    tr3: "<b>Two <code>initTikTok(model)</code> calls in <code>MainActivity</code>.</b> If you add <code>initMeta</code> to only one of them, Meta won't start on the Firebase RC fallback.",
+    tr4: "<b>The very first launch after install.</b> The SDK starts after the first screen opens, so Meta doesn't see the start of that session. The install is still counted, and from the second launch the SDK starts from cache before the first screen.",
+    tr5: "<b>MIUI/HyperOS</b> kills the game's background process while a landing page is open in Chrome. The log shows <code>Process … has died</code> without <code>FATAL</code> — it's not a crash.",
+    dnH: "Ready checklist", dnP: "Checkmarks are saved only in your browser.",
+    c1: "All seven steps are in, the R8 rule for <code>adsmodule</code> is present", c2: "Debug and release build",
+    c3: "Without a <code>meta</code> block: <code>skip init</code> in the log, the game works, TikTok starts",
+    c4: "Once the config has keys: <code>Meta SDK initialized SUCCESSFULLY</code> and <code>Result: Success</code> in the log", c5: "Release checked on a device",
+    prog: "{n} of {m} done", foot: "Prepared by VELDAN · 01.10.2026. In the UAPP repo: <code>docs/for-devs/meta-sdk-01-10-2026/</code>."
+  },
+  tr: {
+    cfgTitle: "Kendi uygulamana uyarla", pkgLabel: "Paket", actLabel: "Başlangıç aktivitesi", pkgHint: "Paket com.company.app gibi görünmeli",
+    langAria: "Dil", tocTitle: "İçindekiler", toc1: "Nasıl çalışır", toc2: "Başlamadan önce", toc3: "Kodda yedi adım", toc4: "Konfigürasyon bloğu", toc5: "Dikkat edilecekler", toc6: "Hazırlık listesi",
+    eyebrow: "UAPP · ENTEGRASYON · 01.10.2026", h1: "UAPP’de Meta SDK",
+    lead: "Parktaki bir oyuna TikTok’un yanına Meta (Facebook) SDK nasıl eklenir: koddaki yedi değişiklik ve uygulamanın anahtarları aldığı konfigürasyon bloğu.",
+    by: "Hazırlayan: <b>VELDAN</b>. Her şeyin doğrulandığı örnek: <b>T5 RBX Boss</b> (gerçek cihazda debug ve release).",
+    chip1: "facebook-core 18.3.0", chip2: "yalnızca App Events", chip3: "anahtarlar yalnızca konfigürasyondan", chip4: "anahtar yoksa sessizce atlar",
+    howH: "Nasıl çalışır",
+    howP1: "Meta SDK yalnızca kurulumları, açılışları ve bizim bir olayımızı sayar; böylece Meta Ads kampanyaları sonucu görür. Facebook Login ve Share eklemiyoruz. Anahtarlar uygulamaya gömülmez: TikTok anahtarları gibi bizim konfigürasyon sunucumuzdan gelir.",
+    f1h: "Konfigürasyon", f1p: "Sunucu, <code>tiktok</code>’un yanında <code>app_id</code> ve <code>client_token</code> içeren bir <code>meta</code> bloğu döndürür.",
+    f2h: "SDK başlatma", f2p: "Önbellekteki konfigürasyondan, daha <code>App.onCreate</code> içinde. İlk açılışta — taze konfigürasyon gelince <code>MainActivity</code> içinde.",
+    f3h: "Olaylar", f3p: "Kurulum ve açılışlar — otomatik. Ana ekran — <code>fb_mobile_achievement_unlocked</code>.",
+    howP2: "<code>meta</code> bloğu yoksa ya da alanlardan biri boşsa: logda tek satır <code>Meta config missing/invalid — skip init</code> görünür ve oyun TikTok’taki gibi devam eder. Hata ya da çökme yok.",
+    befH: "Başlamadan önce", befP: "Bu rehber etalona göre taşınmış uygulamalar içindir: bunlarda <code>businesModule</code> ve TikTok var. Projede bu listedeki her şeyin olduğundan emin ol.",
+    pre1: "Analitik sağlayıcıları ve <code>providers</code> listesi olan <code>AnalyticsManager</code>", pre2: "<code>tiktok</code> alanı olan <code>RemoteConfigModel</code>",
+    pre3: "Konfigürasyonun geldiği iki yerde <code>initTikTok(model)</code>", pre4: "Önbellekteki konfigürasyonu <code>AdConfig.remoteConfig</code>’e koyan <code>initAdPref()</code>", pre5: "Gson için <code>adsmodule</code> sınıflarını koruyan R8 kuralı",
+    stH: "Kodda yedi adım", stP: "Yukarıdan aşağıya ekle: yedisi de eklenince proje derlenir. Kod, sayfanın üstündeki alandaki pakete göre hazır. Koddaki yorumlar, parktaki her yerde olduğu gibi Ukraynacadır.",
+    vAdd: "EKLE", vNew: "YENİ DOSYA", vCheck: "KONTROL ET", copy: "Kopyala", copied: "Kopyalandı", selected: "Seçildi — Ctrl/⌘+C",
+    s1h: "Bağımlılık", s1p: "<code>dependencies</code> bloğuna, TikTok’un hemen arkasına. <code>facebook-core</code> kendi R8 kurallarıyla gelir, ProGuard’a dokunmuyoruz.",
+    s2h: "Konfigürasyon modelinde <code>meta</code> bloğu", s2p: "Alan <code>RemoteConfigModel</code> içinde, <code>tiktok</code>’un hemen altına. <code>MetaConfig</code> sınıfı dosyanın sonuna.",
+    l2a: "app/src/main/java/{{PATH}}/adsmodule/RemoteConfigModel.kt · alan", l2b: "RemoteConfigModel.kt · dosyanın sonu",
+    s3p: "SDK’yı bir kez başlatır. Başlamadan önce <code>isReady</code> kapalıdır ve olay gönderilmez.",
+    s4p: "<code>TikTokAnalyticsProvider</code>’ın aynısı: oyunda aynı yerler, yalnızca Meta olayları. Uygulamadaki TikTok sağlayıcısı başka bir şey de gönderiyorsa <code>AppEventsConstants</code>’tan karşılık gelen Meta olayını ekle.",
+    s5h: "<code>AnalyticsManager</code>’a sağlayıcı", s5p: "<code>providers</code> listesine, TikTok’tan sonra tek satır.",
+    s6h: "<code>App</code>’te erken başlatma", s6p: "Bir import, <code>initAdPref()</code>’ten hemen sonra bir çağrı ve diğer <code>init…</code> fonksiyonlarının yanına bir fonksiyon. Böylece SDK ilk ekrandan önce başlar ve Meta oturumun başlangıcını görür.",
+    l6a: "App.kt · import", l6b: "App.kt · onCreate(), initAdPref()’ten hemen sonra", l6c: "App.kt · initAdPref()’in yanına fonksiyon",
+    s7h: "<code>MainActivity</code>’de taze konfigürasyondan sonra başlatma", s7p: "Bir import, <b>her</b> <code>initTikTok(model)</code>’den sonra bir <code>initMeta(model)</code> satırı (iki tane var: bizim sunucu ve yedek Firebase RC) ve <code>initTikTok</code>’un hemen arkasına bir fonksiyon.",
+    l7a: "MainActivity.kt · import", l7b: "MainActivity.kt · fetchOurConfig ve fetchRemoteConfig içinde", l7c: "MainActivity.kt · initTikTok()’tan sonra",
+    r8h: "Konfigürasyon modelleri için R8 kuralı", r8p: "Bu kural olmazsa release, <code>MetaConfig</code> alanlarını yeniden adlandırır ve Gson <code>meta</code> bloğunu okuyamaz. Taşınmış uygulamalarda kural zaten var, yalnızca emin ol.",
+    srvH: "Konfigürasyon bloğu", srvP1: "Sunucu ekibi her uygulamanın anahtarlarını o uygulamanın konfigürasyonuna, <code>tiktok</code>’un yanına koyar. Uygulamaya bir şey yazmaya gerek yok. Alan adları birebir aynı olmalı, yoksa uygulama Meta’yı sessizce atlar.",
+    srvLbl: "konfigürasyon sunucusunun yanıtı", srvP2: "Her oyunun değerleri kendine özeldir. App Secret konfigürasyona asla konmaz.",
+    trH: "Dikkat edilecekler",
+    tr1: "<b>Anahtarlar manifest’e, <code>strings.xml</code>’e ya da <code>local.properties</code>’e konmaz.</b> Yalnızca konfigürasyon. Projede test anahtarı tutulmaz.",
+    tr2: "<b>Açılışta <code>FacebookInitProvider: Failed to auto initialize</code> normaldir.</b> Meta kendi kendine başlamaya çalışır ama manifest’te anahtar yok. Asıl başlatma <code>MetaManager</code>’dan gelir.",
+    tr3: "<b><code>MainActivity</code>’de iki <code>initTikTok(model)</code> var.</b> <code>initMeta</code>’yı yalnızca birine eklersen, yedek Firebase RC’de Meta başlamaz.",
+    tr4: "<b>Kurulumdan sonraki ilk açılış.</b> SDK ilk ekran açıldıktan sonra başlar, bu yüzden Meta o oturumun başlangıcını görmez. Kurulum yine de sayılır; ikinci açılıştan itibaren SDK ilk ekrandan önce önbellekten başlar.",
+    tr5: "<b>MIUI/HyperOS</b>, Chrome’da landing sayfası açıkken oyunun arka plan sürecini kapatır. Logda <code>FATAL</code> olmadan <code>Process … has died</code> görünür — bu bir çökme değildir.",
+    dnH: "Hazırlık listesi", dnP: "İşaretler yalnızca senin tarayıcında saklanır.",
+    c1: "Yedi adım eklendi, <code>adsmodule</code> için R8 kuralı yerinde", c2: "Debug ve release derleniyor",
+    c3: "<code>meta</code> bloğu olmadan: logda <code>skip init</code>, oyun çalışıyor, TikTok başlıyor",
+    c4: "Konfigürasyonda anahtarlar olunca: logda <code>Meta SDK initialized SUCCESSFULLY</code> ve <code>Result: Success</code>", c5: "Release cihazda kontrol edildi",
+    prog: "{m} maddeden {n} tamam", foot: "Hazırlayan: VELDAN · 01.10.2026. UAPP reposunda: <code>docs/for-devs/meta-sdk-01-10-2026/</code>."
+  }
+  };
+
+  var pkgEl = document.getElementById("pkg"), actEl = document.getElementById("act"), hint = document.getElementById("pkg-hint"), langsEl = document.getElementById("langs");
   var PKG_RE = /^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)+$/;
+  var tpls = Array.prototype.map.call(document.querySelectorAll("[data-tpl]"), function (el) { return { el: el, src: el.textContent }; });
 
   function load(k, d) { try { return localStorage.getItem(k) || d; } catch (e) { return d; } }
   function save(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function pickLang() {
+    var h = (location.hash || "").slice(1);
+    if (LANGS.indexOf(h) >= 0) return h;
+    var s = load("meta-doc-lang", "uk");
+    return LANGS.indexOf(s) >= 0 ? s : "uk";
+  }
+  var lang = pickLang();
 
-  function apply() {
+  function vals() {
     var pkg = pkgEl.value.trim(), act = actEl.value.trim().replace(/^\./, "") || "StartActivity";
-    var ok = PKG_RE.test(pkg);
-    pkgEl.setAttribute("aria-invalid", ok ? "false" : "true");
-    hint.hidden = ok;
-    if (!ok) return;
-    save("meta-doc-pkg", pkg); save("meta-doc-act", act);
+    return { pkg: pkg, path: pkg.replace(/\./g, "/"), act: act, ok: PKG_RE.test(pkg) };
+  }
+  function fill(s, v) { return s.split("{{PKG}}").join(v.pkg).split("{{PATH}}").join(v.path).split("{{ACT}}").join(v.act); }
+
+  function renderText() {
+    var D = T[lang], v = vals();
+    document.documentElement.lang = lang;
+    langsEl.setAttribute("aria-label", D.langAria);
+    Array.prototype.forEach.call(langsEl.querySelectorAll("button"), function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-lang") === lang ? "true" : "false"); });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-i]"), function (el) {
+      var k = el.getAttribute("data-i");
+      if (D[k] != null) el.innerHTML = v.ok ? fill(D[k], v) : D[k];
+    });
+    prog();
+  }
+  function renderCode() {
+    var v = vals();
+    pkgEl.setAttribute("aria-invalid", v.ok ? "false" : "true");
+    hint.hidden = v.ok;
+    if (!v.ok) return;
+    save("meta-doc-pkg", v.pkg); save("meta-doc-act", v.act);
     tpls.forEach(function (t) {
-      var text = t.src.split("{{PKG}}").join(pkg).split("{{PATH}}").join(pkg.replace(/\./g, "/")).split("{{ACT}}").join(act);
-      t.el.textContent = text;
-      if (t.el.tagName === "CODE" && t.el.parentNode.tagName === "PRE" && window.hljs) {
-        t.el.removeAttribute("data-highlighted");
-        try { window.hljs.highlightElement(t.el); } catch (e) {}
-      }
+      t.el.textContent = fill(t.src, v);
+      if (t.el.tagName === "CODE" && window.hljs) { t.el.removeAttribute("data-highlighted"); try { window.hljs.highlightElement(t.el); } catch (e) {} }
     });
   }
 
   pkgEl.value = load("meta-doc-pkg", pkgEl.value);
   actEl.value = load("meta-doc-act", actEl.value);
-  pkgEl.addEventListener("input", apply);
-  actEl.addEventListener("input", apply);
+  pkgEl.addEventListener("input", function () { renderCode(); renderText(); });
+  actEl.addEventListener("input", function () { renderCode(); renderText(); });
+  if (window.hljs) Array.prototype.forEach.call(document.querySelectorAll("pre code:not([data-tpl])"), function (c) { try { window.hljs.highlightElement(c); } catch (e) {} });
 
-  if (window.hljs) {
-    Array.prototype.forEach.call(document.querySelectorAll("pre code:not([data-tpl])"), function (c) { try { window.hljs.highlightElement(c); } catch (e) {} });
-  }
-  apply();
+  Array.prototype.forEach.call(langsEl.querySelectorAll("button"), function (b) {
+    b.addEventListener("click", function () {
+      lang = b.getAttribute("data-lang");
+      save("meta-doc-lang", lang);
+      try { history.replaceState(null, "", "#" + lang); } catch (e) {}
+      renderText();
+    });
+  });
+  window.addEventListener("hashchange", function () { var h = location.hash.slice(1); if (LANGS.indexOf(h) >= 0 && h !== lang) { lang = h; renderText(); } });
 
   Array.prototype.forEach.call(document.querySelectorAll(".copy"), function (b) {
     b.addEventListener("click", function () {
-      var code = b.closest(".code").querySelector("pre code");
-      var text = code.textContent;
-      var done = function () { b.textContent = "Скопійовано"; b.classList.add("ok"); setTimeout(function () { b.textContent = "Копіювати"; b.classList.remove("ok"); }, 1500); };
-      var sel = function () { var r = document.createRange(), s = window.getSelection(); r.selectNodeContents(code); s.removeAllRanges(); s.addRange(r); b.textContent = "Виділено — Ctrl/⌘+C"; };
-      try { navigator.clipboard.writeText(text).then(done, sel); } catch (e) { sel(); }
+      var D = T[lang], code = b.closest(".code").querySelector("pre code");
+      var reset = function () { setTimeout(function () { b.textContent = T[lang].copy; b.classList.remove("ok"); }, 1500); };
+      var done = function () { b.textContent = D.copied; b.classList.add("ok"); reset(); };
+      var sel = function () { var r = document.createRange(), s = window.getSelection(); r.selectNodeContents(code); s.removeAllRanges(); s.addRange(r); b.textContent = D.selected; reset(); };
+      try { navigator.clipboard.writeText(code.textContent).then(done, sel); } catch (e) { sel(); }
     });
   });
 
@@ -503,12 +647,14 @@ adb install -r /tmp/release-test.apk</code></pre></div>
   try { state = JSON.parse(load("meta-doc-checks", "{}")) || {}; } catch (e) { state = {}; }
   function prog() {
     var n = boxes.filter(function (b) { return b.checked; }).length;
-    document.getElementById("prog").textContent = "Виконано " + n + " з " + boxes.length;
+    document.getElementById("prog").textContent = T[lang].prog.replace("{n}", n).replace("{m}", boxes.length);
   }
   boxes.forEach(function (b) {
     b.checked = !!state[b.id];
     b.addEventListener("change", function () { state[b.id] = b.checked; save("meta-doc-checks", JSON.stringify(state)); prog(); });
   });
-  prog();
+
+  renderCode();
+  renderText();
 })();
 </script>
