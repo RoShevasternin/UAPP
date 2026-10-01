@@ -13,8 +13,8 @@ android {
         applicationId = "com.bossrbx.rbxcalculator"
         minSdk = 24
         targetSdk = 37
-        versionCode = 4
-        versionName = "4.0.0"
+        versionCode = 5
+        versionName = "4.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
