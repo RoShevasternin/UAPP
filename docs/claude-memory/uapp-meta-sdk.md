@@ -17,3 +17,5 @@ metadata:
 Стан на 01.10.2026: **у T5 вставлено** (і там же оновлено всі бібліотеки: AGP 9.4.1, Gradle 9.8.0, TikTok 1.7.1 та ін.), debug і release перевірено на Redmi. **Еталон відкладено** рішенням VELDAN («поки тільки T5, бо ми в ньому працюємо») — кроки 8–14 лежать на сторінці. Release у T5 без signingConfig: для тесту на девайсі підписувати debug-ключем (zipalign + apksigner). Далі: серверна команда додає блок `meta` → Test events в Events Manager → Data safety у Play Console → бекпорт у решту мігрованих апок окремими патчами.
 
 Пов'язане: [[uapp-patch-page-flow]], [[uapp-server-patch-backport]].
+
+Патч 02 (01.10.2026, чекає вибору): тестові ключі для debug з `local.properties` (`meta.testAppId`, `meta.testClientToken`) + покрокова інструкція отримання ключів: https://claude.ai/artifact/KFsw6S28gUK1xdfpY6AVN8. У Gradle-скрипті `java.util.Properties` не резолвиться (`java` — розширення) — тільки `import java.util.Properties` угорі файлу.
