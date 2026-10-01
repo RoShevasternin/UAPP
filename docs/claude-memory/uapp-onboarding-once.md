@@ -9,4 +9,4 @@ metadata:
 
 **Why:** користувач 2026-09-09 (T1 with ADS) попросив зробити так і явно сказав записати в інтеграцію, бо стосується решти апок.
 
-**How to apply:** процедура `docs/ETALON_MIGRATION.md`, розділ 5б — робити за нею, не питати. Див. [[uapp-balance-reset-default]].
+**How to apply:** процедура `docs/procedures/ETALON_MIGRATION.md`, розділ 5б — робити за нею, не питати. Див. [[uapp-balance-reset-default]].

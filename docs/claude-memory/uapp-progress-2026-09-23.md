@@ -13,7 +13,7 @@ firebase-bom 34.19.0, ads 25.5.0, appcompat 1.8.0, navigation 2.10.1, TikTok 1.7
 T3 Rbux Drop (`cougame`), T6 Skinly (`skinly`, монети як альтернатива рекламі при
 розблокуванні скінів), T7 RBX Treasure (`fungamers`), T8 RBX COINS (`funrbx`),
 T2-1 RSBUX (`blitzrbx`). Усе перевірено на девайсі, **нічого не закомічено**.
-Журнал кожної — в `docs/ETALON_MIGRATION.md`, список мігрованих — у `CLAUDE.md`.
+Журнал кожної — в `docs/procedures/ETALON_MIGRATION.md`, список мігрованих — у `CLAUDE.md`.
 
 **24.09.2026:** T10 RBX Sakura (`july/Game T10`, `fungambx`) — той самий шаблон
 T9/T8, донор T8 трибічним злиттям + ручні правки (своя верстка меню). Перевірено

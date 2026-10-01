@@ -1,0 +1,514 @@
+<!doctype html>
+<!-- Жива версія: https://claude.ai/artifact/26iqp2YAqPhQjSYeC9oo3D -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meta SDK в UAPP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style>
+/* Технічна документація: ліворуч зміст, праворуч кроки; код — головний елемент сторінки */
+:root {
+  --ground: #F4F5F7; --surface: #FFFFFF; --sunk: #EEF0F3; --line: #DADDE3;
+  --ink: #161A22; --ink-2: #464C5A; --muted: #6B7182;
+  --accent: #2456C7; --accent-soft: #E3EBFB; --accent-ink: #FFFFFF;
+  --ok: #16794C; --ok-soft: #DDF1E6; --warn: #9A6200; --warn-soft: #FDF0D2; --bad: #B4232F; --bad-soft: #FBE4E6;
+  --syn-kw: #B4232F; --syn-type: #8A4B00; --syn-fn: #6F42C1; --syn-str: #0B4A86; --syn-num: #0550AE; --syn-com: #6E7781;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0E1117; --surface: #161B23; --sunk: #0E1117; --line: #2C333E;
+    --ink: #E7EAF0; --ink-2: #B4BAC6; --muted: #8B92A1;
+    --accent: #6A9BFF; --accent-soft: #17264A; --accent-ink: #0E1117;
+    --ok: #4FC78A; --ok-soft: #10301F; --warn: #E6B450; --warn-soft: #33270C; --bad: #FF7B85; --bad-soft: #3A161A;
+    --syn-kw: #FF7B72; --syn-type: #FFA657; --syn-fn: #D2A8FF; --syn-str: #A5D6FF; --syn-num: #79C0FF; --syn-com: #8B949E;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0E1117; --surface: #161B23; --sunk: #0E1117; --line: #2C333E;
+  --ink: #E7EAF0; --ink-2: #B4BAC6; --muted: #8B92A1;
+  --accent: #6A9BFF; --accent-soft: #17264A; --accent-ink: #0E1117;
+  --ok: #4FC78A; --ok-soft: #10301F; --warn: #E6B450; --warn-soft: #33270C; --bad: #FF7B85; --bad-soft: #3A161A;
+  --syn-kw: #FF7B72; --syn-type: #FFA657; --syn-fn: #D2A8FF; --syn-str: #A5D6FF; --syn-num: #79C0FF; --syn-com: #8B949E;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--ground); color: var(--ink); font: 15.5px/1.62 var(--f-body); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-underline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+h1, h2, h3 { text-wrap: balance; line-height: 1.25; margin: 0; }
+p { margin: 0; }
+:not(pre) > code { font: .86em/1.4 var(--f-mono); background: var(--sunk); border: 1px solid var(--line); border-radius: 4px; padding: .05em .35em; overflow-wrap: anywhere; }
+
+/* верхня панель з налаштуванням під апку */
+.cfg { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); border-bottom: 1px solid var(--line); }
+.cfg-in { max-width: 1120px; margin: 0 auto; padding: 10px 16px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+.cfg-title { font: 600 14px/1.2 var(--f-body); margin-right: auto; }
+.cfg label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.cfg input { font: 13px/1 var(--f-mono); color: var(--ink); background: var(--sunk); border: 1px solid var(--line); border-radius: 7px; padding: 7px 9px; width: 230px; max-width: 58vw; }
+.cfg input[aria-invalid="true"] { border-color: var(--bad); background: var(--bad-soft); }
+.cfg .hint { font-size: 12px; color: var(--bad); }
+
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 36px 72px; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 40px; }
+@media (max-width: 860px) { .wrap { grid-template-columns: minmax(0, 1fr); } .toc { display: none; } }
+.toc { position: sticky; top: 76px; align-self: start; font-size: 13.5px; }
+.toc p { font: 600 11px/1 var(--f-body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; border-left: 2px solid var(--line); }
+.toc a { display: block; padding: 4px 10px; margin-left: -2px; border-left: 2px solid transparent; color: var(--ink-2); text-decoration: none; }
+.toc a:hover { color: var(--ink); border-left-color: var(--muted); }
+main { min-width: 0; }
+
+/* шапка */
+.eyebrow { font: 500 12px/1.2 var(--f-mono); letter-spacing: .06em; color: var(--muted); }
+h1 { font-size: clamp(28px, 4.4vw, 38px); font-weight: 700; letter-spacing: -.02em; margin: 10px 0 12px; }
+.lead { font-size: 17px; color: var(--ink-2); max-width: 64ch; }
+.by { margin-top: 14px; font-size: 13.5px; color: var(--muted); }
+.by b { color: var(--ink); font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0 0; padding: 0; list-style: none; }
+.chips li { font: 12.5px/1 var(--f-mono); padding: 6px 9px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink-2); }
+
+section { margin-top: 52px; scroll-margin-top: 80px; }
+section > h2 { font-size: 22px; font-weight: 700; letter-spacing: -.01em; margin-bottom: 12px; }
+section > p, .prose { max-width: 70ch; color: var(--ink-2); }
+section > p + p { margin-top: 10px; }
+.prose li + li { margin-top: 4px; }
+.prose { padding-left: 20px; margin: 10px 0 0; }
+
+/* схема */
+.flow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+.flow > div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; position: relative; }
+.flow h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.flow p { font-size: 13.5px; color: var(--ink-2); }
+.flow > div:not(:last-child)::after { content: "→"; position: absolute; right: -9px; top: 50%; transform: translate(50%, -50%); color: var(--muted); font-size: 16px; background: var(--ground); padding: 0 2px; }
+@media (max-width: 640px) { .flow { grid-template-columns: minmax(0, 1fr); } .flow > div:not(:last-child)::after { content: "↓"; right: 50%; top: auto; bottom: -11px; transform: translate(50%, 50%); } }
+
+/* передумови */
+.pre { margin-top: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); overflow: hidden; }
+.pre li { list-style: none; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; padding: 10px 14px; border-top: 1px solid var(--line); font-size: 14px; }
+.pre li:first-child { border-top: 0; }
+.pre ul { margin: 0; padding: 0; }
+.pre .where { font: 12.5px/1.5 var(--f-mono); color: var(--muted); overflow-wrap: anywhere; }
+
+/* кроки */
+.step { margin-top: 28px; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 14px; }
+.step .n { width: 34px; height: 34px; border-radius: 50%; background: var(--ink); color: var(--surface); display: grid; place-items: center; font: 600 14px/1 var(--f-mono); }
+.step h3 { font-size: 16.5px; font-weight: 600; margin: 5px 0 6px; }
+.step .body { min-width: 0; display: grid; gap: 10px; }
+.step .body > p { color: var(--ink-2); max-width: 70ch; }
+.verb { font: 600 11px/1 var(--f-mono); letter-spacing: .06em; padding: 4px 6px; border-radius: 5px; vertical-align: 2px; margin-right: 6px; }
+.verb.add { background: var(--ok-soft); color: var(--ok); }
+.verb.new { background: var(--accent-soft); color: var(--accent); }
+.verb.check { background: var(--warn-soft); color: var(--warn); }
+
+.code { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--surface); }
+.code-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 6px 8px 6px 12px; border-bottom: 1px solid var(--line); }
+.code-path { font: 12px/1.4 var(--f-mono); color: var(--muted); overflow-wrap: anywhere; min-width: 0; }
+.copy { flex: none; font: 500 12px/1 var(--f-body); color: var(--ink-2); background: transparent; border: 1px solid var(--line); border-radius: 6px; padding: 6px 9px; cursor: pointer; }
+.copy:hover { background: var(--sunk); color: var(--ink); }
+.copy.ok { color: var(--ok); border-color: var(--ok); }
+pre { margin: 0; padding: 12px 14px; overflow-x: auto; background: var(--sunk); font: 12.8px/1.6 var(--f-mono); tab-size: 4; }
+pre code { font: inherit; }
+.hljs-keyword, .hljs-built_in, .hljs-literal { color: var(--syn-kw); }
+.hljs-type, .hljs-title.class_ { color: var(--syn-type); }
+.hljs-title, .hljs-title.function_ { color: var(--syn-fn); }
+.hljs-string { color: var(--syn-str); }
+.hljs-number { color: var(--syn-num); }
+.hljs-comment { color: var(--syn-com); font-style: italic; }
+.hljs-meta, .hljs-variable, .hljs-attr { color: var(--syn-type); }
+
+.note { border-radius: 10px; padding: 12px 14px; font-size: 14px; background: var(--warn-soft); color: var(--ink); max-width: 76ch; }
+.note b { color: var(--warn); }
+
+/* таблиці */
+.tw { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); margin-top: 14px; }
+table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+tbody tr:last-child td { border-bottom: 0; }
+th { font: 600 11.5px/1.3 var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--sunk); }
+td:first-child { font-weight: 600; }
+td code { white-space: nowrap; }
+
+/* пастки */
+.traps { margin: 14px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); max-width: 78ch; }
+.traps li { padding: 12px 0; border-bottom: 1px solid var(--line); color: var(--ink-2); }
+.traps b { color: var(--ink); }
+
+/* чек-лист */
+.checks { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 2px; max-width: 78ch; }
+.checks label { display: flex; gap: 10px; align-items: flex-start; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
+.checks label:hover { background: var(--sunk); }
+.checks input { margin-top: 5px; width: 16px; height: 16px; accent-color: var(--accent); flex: none; }
+.checks input:checked + span { color: var(--muted); text-decoration: line-through; }
+.prog { font: 500 12.5px/1 var(--f-mono); color: var(--muted); margin-top: 10px; font-variant-numeric: tabular-nums; }
+footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 13.5px; color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<div class="cfg">
+  <div class="cfg-in">
+    <span class="cfg-title">Підставити під свою апку</span>
+    <label for="pkg">Пакет <input id="pkg" type="text" value="com.bossrbx.rbxcalculator" spellcheck="false" autocomplete="off"></label>
+    <label for="act">Стартова активіті <input id="act" type="text" value="StartActivity" spellcheck="false" autocomplete="off"></label>
+    <span class="hint" id="pkg-hint" hidden>Пакет має виглядати як com.company.app</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Зміст">
+    <p>Зміст</p>
+    <ol>
+      <li><a href="#how">Як це працює</a></li>
+      <li><a href="#before">Перед початком</a></li>
+      <li><a href="#steps">Сім кроків у коді</a></li>
+      <li><a href="#server">Що віддає сервер</a></li>
+      <li><a href="#keys">Ключі в кабінеті Meta</a></li>
+      <li><a href="#verify">Перевірка</a></li>
+      <li><a href="#traps">Пастки</a></li>
+      <li><a href="#done">Чек-лист готовності</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header>
+      <div class="eyebrow">UAPP · ІНТЕГРАЦІЯ · 01.10.2026</div>
+      <h1>Meta SDK в UAPP</h1>
+      <p class="lead">Як додати Meta (Facebook) SDK у гру парку поруч із TikTok: сім змін у коді, формат блоку на сервері, звідки брати ключі й як перевірити, що Meta приймає події.</p>
+      <p class="by">Підготував <b>VELDAN</b>. Зразок, на якому все перевірено: <b>T5 RBX Boss</b> (debug і release на реальному девайсі).</p>
+      <ul class="chips">
+        <li>facebook-core 18.3.0</li>
+        <li>лише App Events</li>
+        <li>ключі тільки з сервера</li>
+        <li>без ключів — тихо пропускає</li>
+      </ul>
+    </header>
+
+    <section id="how">
+      <h2>Як це працює</h2>
+      <p>Meta SDK лише рахує встановлення, запуски й одну нашу подію, щоб реклама в Meta Ads бачила результат. Facebook Login і Share не підключаємо. Ключі в апку не зашиваємо: вони приходять із нашого конфіг-сервера так само, як ключі TikTok.</p>
+      <div class="flow">
+        <div><h3>Сервер</h3><p>Віддає блок <code>meta</code> з <code>app_id</code> і <code>client_token</code> поруч із <code>tiktok</code>.</p></div>
+        <div><h3>Запуск SDK</h3><p>З кешованого конфігу ще в <code>App.onCreate</code>. Найперший запуск — у <code>MainActivity</code> після свіжого конфігу.</p></div>
+        <div><h3>Події</h3><p>Встановлення й запуски — автоматично. На головний екран — <code>fb_mobile_achievement_unlocked</code>.</p></div>
+      </div>
+      <p style="margin-top:14px">Блоку <code>meta</code> немає, або одне з полів порожнє: у лозі один рядок <code>Meta config missing/invalid — skip init</code>, і гра працює далі, як із TikTok. Помилок і крашів немає.</p>
+    </section>
+
+    <section id="before">
+      <h2>Перед початком</h2>
+      <p>Інструкція для апок, мігрованих за еталоном (є <code>businesModule</code> і TikTok). Переконайся, що в проєкті є все з цього списку. Якщо чогось бракує, спершу мігруй апку за процедурою.</p>
+      <div class="pre"><ul>
+        <li><span>Провайдери аналітики і <code>AnalyticsManager</code> зі списком <code>providers</code></span><span class="where" data-tpl>services/analytics/</span></li>
+        <li><span><code>RemoteConfigModel</code> з полем <code>tiktok</code></span><span class="where">adsmodule/RemoteConfigModel.kt</span></li>
+        <li><span><code>initTikTok(model)</code> у двох місцях отримання конфігу</span><span class="where">MainActivity.kt</span></li>
+        <li><span><code>initAdPref()</code>, що кладе кешований конфіг в <code>AdConfig.remoteConfig</code></span><span class="where">App.kt</span></li>
+        <li><span>Правило R8, що зберігає класи <code>adsmodule</code> для Gson</span><span class="where">app/proguard-rules.pro</span></li>
+      </ul></div>
+    </section>
+
+    <section id="steps">
+      <h2>Сім кроків у коді</h2>
+      <p>Вставляй згори вниз: проєкт компілюється, коли вставлено всі сім. Код уже підставлений під пакет із поля вгорі сторінки.</p>
+
+      <div class="step"><span class="n">1</span><div class="body">
+        <h3><span class="verb add">ДОДАТИ</span>Залежність</h3>
+        <p>У блок <code>dependencies</code> одразу після TikTok. Правила R8 у <code>facebook-core</code> свої, ProGuard додатково не чіпаємо.</p>
+        <div class="code"><div class="code-head"><span class="code-path">app/build.gradle.kts</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>    // Meta (Facebook) — лише App Events: встановлення, запуски й події для реклами Meta
+    implementation("com.facebook.android:facebook-core:18.3.0")</code></pre></div>
+      </div></div>
+
+      <div class="step"><span class="n">2</span><div class="body">
+        <h3><span class="verb add">ДОДАТИ</span>Блок <code>meta</code> у моделі конфігу</h3>
+        <p>Поле — у <code>RemoteConfigModel</code>, одразу під <code>tiktok</code>. Клас <code>MetaConfig</code> — у кінець файлу.</p>
+        <div class="code"><div class="code-head"><span class="code-path" data-tpl>app/src/main/java/{{PATH}}/adsmodule/RemoteConfigModel.kt · поле</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>    // Meta SDK: ключі приходять із сервера, як у TikTok. Немає блоку — SDK не стартує
+    @SerializedName("meta")     val meta   : MetaConfig?   = null,</code></pre></div>
+        <div class="code"><div class="code-head"><span class="code-path" data-tpl>app/src/main/java/{{PATH}}/adsmodule/RemoteConfigModel.kt · кінець файлу</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>// ------------------------------------------------------------------------
+// Meta (Facebook)
+// ------------------------------------------------------------------------
+data class MetaConfig(
+    @SerializedName("app_id")       val appId      : String? = null,
+    @SerializedName("client_token") val clientToken: String? = null,
+) {
+    val isValid: Boolean
+        get() = !appId.isNullOrBlank() &amp;&amp; !clientToken.isNullOrBlank()
+}</code></pre></div>
+      </div></div>
+
+      <div class="step"><span class="n">3</span><div class="body">
+        <h3><span class="verb new">НОВИЙ ФАЙЛ</span><code>MetaManager</code></h3>
+        <p>Запускає SDK один раз. До запуску прапорець <code>isReady</code> вимкнений, і події не відправляються.</p>
+        <div class="code"><div class="code-head"><span class="code-path" data-tpl>app/src/main/java/{{PATH}}/services/meta/MetaManager.kt</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>package {{PKG}}.services.meta
+
+import android.app.Application
+import com.facebook.FacebookSdk
+import com.facebook.LoggingBehavior
+import com.facebook.appevents.AppEventsLogger
+import {{PKG}}.BuildConfig
+import {{PKG}}.util.OneTime
+import {{PKG}}.util.log
+
+// Meta SDK — лише App Events. App ID і Client Token приходять із нашого сервера
+// (блок "meta" конфігу), тому в маніфесті їх немає: автостарт Meta на початку процесу
+// тихо пропускається, а справжній старт — тут, щойно прийшов конфіг.
+object MetaManager {
+
+    private val once = OneTime()
+
+    // true після успішного старту. До нього AppEventsLogger створювати не можна — кине виняток
+    @Volatile
+    var isReady = false
+        private set
+
+    fun initialize(app: Application, appId: String, clientToken: String) {
+        once.use {
+            runCatching {
+                FacebookSdk.setApplicationId(appId)
+                FacebookSdk.setClientToken(clientToken)
+                if (BuildConfig.DEBUG) {
+                    FacebookSdk.setIsDebugEnabled(true)
+                    FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS)
+                }
+                @Suppress("DEPRECATION")
+                FacebookSdk.sdkInitialize(app)
+                FacebookSdk.setAutoInitEnabled(true)
+                FacebookSdk.fullyInitialize()
+
+                // встановлення й запуски — на них тримається атрибуція реклами Meta
+                AppEventsLogger.activateApp(app)
+
+                isReady = true
+                log("Meta SDK initialized SUCCESSFULLY, appId=$appId")
+            }.onFailure {
+                log("Meta SDK FAILED: $it")
+            }
+        }
+    }
+}</code></pre></div>
+      </div></div>
+
+      <div class="step"><span class="n">4</span><div class="body">
+        <h3><span class="verb new">НОВИЙ ФАЙЛ</span><code>MetaAnalyticsProvider</code></h3>
+        <p>Повторює <code>TikTokAnalyticsProvider</code>: ті самі місця в грі, лише події Meta. Якщо в апці провайдер TikTok шле ще щось, додай відповідну подію Meta з <code>AppEventsConstants</code>.</p>
+        <div class="code"><div class="code-head"><span class="code-path" data-tpl>app/src/main/java/{{PATH}}/services/analytics/MetaAnalyticsProvider.kt</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>package {{PKG}}.services.analytics
+
+import com.facebook.FacebookSdk
+import com.facebook.appevents.AppEventsConstants
+import com.facebook.appevents.AppEventsLogger
+import {{PKG}}.adsmodule.UserType
+import {{PKG}}.services.meta.MetaManager
+
+// Дзеркало TikTokAnalyticsProvider: ті самі місця в грі → стандартні події Meta.
+// Поки SDK не стартував (немає блоку "meta" в конфігу) — подія мовчки пропускається.
+class MetaAnalyticsProvider : AnalyticsProvider {
+
+    // Створюється при першій події, коли SDK вже працює
+    private val logger by lazy { AppEventsLogger.newLogger(FacebookSdk.getApplicationContext()) }
+
+    override fun openHomeScreen() = track(AppEventsConstants.EVENT_NAME_UNLOCKED_ACHIEVEMENT)
+    override fun userType(userType: UserType, referrer: String) {}
+
+    override fun hasClick_ORGtoPAID(referrer: String, irClickTime: String) {}
+
+    // ------------------------------------------------------------------------
+    // Helper
+    // ------------------------------------------------------------------------
+    private fun track(event: String) {
+        if (MetaManager.isReady) logger.logEvent(event)
+    }
+}</code></pre></div>
+      </div></div>
+
+      <div class="step"><span class="n">5</span><div class="body">
+        <h3><span class="verb add">ДОДАТИ</span>Провайдер у <code>AnalyticsManager</code></h3>
+        <p>Один рядок у список <code>providers</code>, після TikTok.</p>
+        <div class="code"><div class="code-head"><span class="code-path" data-tpl>app/src/main/java/{{PATH}}/services/analytics/AnalyticsManager.kt</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>    private val providers: List&lt;AnalyticsProvider&gt; = listOf(
+        FirebaseAnalyticsProvider(),
+        TikTokAnalyticsProvider(),
+        MetaAnalyticsProvider(),
+    )</code></pre></div>
+      </div></div>
+
+      <div class="step"><span class="n">6</span><div class="body">
+        <h3><span class="verb add">ДОДАТИ</span>Ранній старт у <code>App</code></h3>
+        <p>Імпорт, виклик одразу після <code>initAdPref()</code> і функція поруч з іншими <code>init…</code>. Так SDK стартує до першого екрана, і Meta бачить початок сесії.</p>
+        <div class="code"><div class="code-head"><span class="code-path" data-tpl>app/src/main/java/{{PATH}}/App.kt · імпорт</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>import {{PKG}}.services.meta.MetaManager</code></pre></div>
+        <div class="code"><div class="code-head"><span class="code-path" data-tpl>App.kt · onCreate(), одразу після initAdPref()</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>        // ── 1a. Meta SDK з кешованого конфігу ─────────────────────────────────
+        // Старт до першого екрана — інакше Meta не бачить запуск сесії.
+        // Найперший запуск (кешу ще немає) — старт у MainActivity після конфігу
+        initMetaFromCache()</code></pre></div>
+        <div class="code"><div class="code-head"><span class="code-path" data-tpl>App.kt · після initAdPref()</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>    private fun initMetaFromCache() {
+        val meta = AdConfig.remoteConfig?.meta ?: return
+        if (meta.isValid) MetaManager.initialize(this, meta.appId!!, meta.clientToken!!)
+    }</code></pre></div>
+      </div></div>
+
+      <div class="step"><span class="n">7</span><div class="body">
+        <h3><span class="verb add">ДОДАТИ</span>Старт після свіжого конфігу в <code>MainActivity</code></h3>
+        <p>Імпорт, рядок <code>initMeta(model)</code> після <b>кожного</b> <code>initTikTok(model)</code> (їх два: наш сервер і легасі Firebase RC), і функція одразу після <code>initTikTok</code>.</p>
+        <div class="code"><div class="code-head"><span class="code-path" data-tpl>app/src/main/java/{{PATH}}/MainActivity.kt · імпорт</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin" data-tpl>import {{PKG}}.services.meta.MetaManager</code></pre></div>
+        <div class="code"><div class="code-head"><span class="code-path">MainActivity.kt · у fetchOurConfig і fetchRemoteConfig</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin">                    initTikTok(model)
+                    initMeta(model)</code></pre></div>
+        <div class="code"><div class="code-head"><span class="code-path">MainActivity.kt · після initTikTok()</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-kotlin">    private fun initMeta(model: RemoteConfigModel) {
+        val meta = model.meta
+        if (meta == null || !meta.isValid) {
+            log("Meta config missing/invalid — skip init")
+            return
+        }
+        MetaManager.initialize(application, meta.appId!!, meta.clientToken!!)
+    }</code></pre></div>
+      </div></div>
+
+      <div class="step"><span class="n">✓</span><div class="body">
+        <h3><span class="verb check">ПЕРЕВІРИТИ</span>Правило R8 для моделей конфігу</h3>
+        <p>Без нього release перейменує поля <code>MetaConfig</code>, і Gson не прочитає блок <code>meta</code>. У мігрованих апках правило вже є, просто переконайся.</p>
+        <div class="code"><div class="code-head"><span class="code-path">app/proguard-rules.pro</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-ini" data-tpl># Зберігаємо всі data класи для Gson
+-keep class {{PKG}}.adsmodule.** { *; }
+-keepclassmembers class {{PKG}}.adsmodule.** { *; }</code></pre></div>
+      </div></div>
+    </section>
+
+    <section id="server">
+      <h2>Що віддає сервер</h2>
+      <p>Серверна команда додає блок у картку кожної апки, поруч із <code>tiktok</code>. Назви полів мають збігатися дослівно: інакше апка мовчки пропустить Meta.</p>
+      <div class="code" style="margin-top:14px"><div class="code-head"><span class="code-path">відповідь конфіг-сервера</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-json">"meta": {
+  "app_id": "123456789012345",
+  "client_token": "0123456789abcdef0123456789abcdef"
+}</code></pre></div>
+      <p style="margin-top:12px">Значення в кожної гри свої. <b>App Secret</b> у конфіг не кладемо ніколи: апці він не потрібен, а Meta забороняє зашивати його в застосунок.</p>
+    </section>
+
+    <section id="keys">
+      <h2>Ключі в кабінеті Meta</h2>
+      <p>Робить той, хто веде рекламний акаунт. На кожну гру — окремий застосунок у Meta.</p>
+      <div class="tw"><table>
+        <thead><tr><th>Крок</th><th>Що зробити</th></tr></thead>
+        <tbody>
+          <tr><td>1. Створити</td><td>developers.facebook.com → My Apps → Create app. Use case: фільтр <b>Ads and monetization</b> → <b>Create &amp; manage app ads with Meta Ads Manager</b>. Варіант «Other» не брати: Meta його прибирає. Facebook Login не потрібен.</td></tr>
+          <tr><td>2. Бізнес</td><td>Business portfolio — бізнес-акаунт, з якого підуть кампанії.</td></tr>
+          <tr><td>3. App ID</td><td>App settings → Basic (також угорі кабінету).</td></tr>
+          <tr><td>4. Client Token</td><td>App settings → Advanced → Security → Client token.</td></tr>
+          <tr><td>5. Android</td><td>App settings → Basic → Add platform → Android. Package name: <code data-tpl>{{PKG}}</code>. Class name: <code data-tpl>{{PKG}}.{{ACT}}</code>. Key hashes лишити порожніми (вони лише для Facebook Login). Заповнити Privacy Policy URL → Save changes.</td></tr>
+          <tr><td>6. Сервер</td><td>App ID і Client Token передати серверній команді для блоку <code>meta</code> цієї апки.</td></tr>
+          <tr><td>7. Перед рекламою</td><td>App Mode → Live. Play Console → Data safety: дописати дані, які збирає Meta SDK (рекламний ID, взаємодія з апкою).</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="verify">
+      <h2>Перевірка</h2>
+      <p>Зібрати й запустити <b>debug</b> і <b>release</b>. Release без підпису на телефон не стане, тож для тесту підпиши його debug-ключем:</p>
+      <div class="code" style="margin-top:14px"><div class="code-head"><span class="code-path">термінал, з теки проєкту</span><button class="copy" type="button">Копіювати</button></div><pre><code class="language-bash">sh ./gradlew :app:assembleDebug :app:assembleRelease
+BT=$(ls -d ~/Library/Android/sdk/build-tools/* | sort -V | tail -1)
+"$BT/zipalign" -f -p 4 app/build/outputs/apk/release/app-release-unsigned.apk /tmp/aligned.apk
+"$BT/apksigner" sign --ks ~/.android/debug.keystore --ks-pass pass:android --key-pass pass:android --ks-key-alias androiddebugkey --out /tmp/release-test.apk /tmp/aligned.apk
+adb install -r /tmp/release-test.apk</code></pre></div>
+      <div class="tw"><table>
+        <thead><tr><th>Ситуація</th><th>Що має бути в logcat (debug)</th></tr></thead>
+        <tbody>
+          <tr><td>На старті, завжди</td><td><code>FacebookInitProvider: Failed to auto initialize</code> — нормально: Meta пробує стартувати сама, але ключів у маніфесті немає.</td></tr>
+          <tr><td>Сервер без блоку <code>meta</code></td><td><code>Meta config missing/invalid — skip init</code>, далі <code>TikTok SDK initialized SUCCESSFULLY</code>. Подій у Meta немає.</td></tr>
+          <tr><td>Сервер віддає ключі</td><td><code>Meta SDK initialized SUCCESSFULLY, appId=…</code>, потім <code>FacebookSDK.AppEvents</code>: <code>MOBILE_INSTALL_EVENT</code>, <code>fb_mobile_activate_app</code> і <code>Result: Success</code>.</td></tr>
+          <tr><td>Неправильні ключі</td><td><code>Result: Failed</code>, <code>errorCode: 190, OAuthException</code>. Перевір App ID і Client Token у конфігу.</td></tr>
+        </tbody>
+      </table></div>
+      <p style="margin-top:14px">У кабінеті Meta: <b>Events Manager → Набори даних → застосунок</b>. Події видно у вкладці <b>«Тестування подій»</b> одразу. «Огляд» оновлюється із затримкою до кількох годин, і період угорі має включати сьогоднішню дату.</p>
+    </section>
+
+    <section id="traps">
+      <h2>Пастки</h2>
+      <ul class="traps">
+        <li><b>Банер «Оновіть Facebook SDK» в Events Manager</b> стосується iOS (SKAdNetwork). Для Android не потрібен, якщо стоїть 18.3.0 або новіша.</li>
+        <li><b>Ключі не кладемо в маніфест, <code>strings.xml</code> чи <code>local.properties</code>.</b> Рішення VELDAN: ключі приходять тільки з сервера, тестових у проєкті немає.</li>
+        <li><b>Найперший запуск після встановлення.</b> SDK стартує вже після відкриття екрана, тож початок цієї сесії Meta не бачить. Встановлення при цьому зараховується, а з другого запуску старт іде з кешу до першого екрана.</li>
+        <li><b>Два <code>initTikTok(model)</code> у <code>MainActivity</code>.</b> Якщо <code>initMeta</code> додати лише в один, на запасному Firebase RC Meta не стартує.</li>
+        <li><b>MIUI/HyperOS</b> вбиває фоновий процес гри, поки відкритий лендінг у Chrome. У лозі це <code>Process … has died</code> без <code>FATAL</code>, і це не краш.</li>
+        <li><b>Тестовий застосунок у Meta</b> на особистому акаунті після перевірки видаляємо (My Apps), щоб не було двох застосунків з одним пакетом.</li>
+      </ul>
+    </section>
+
+    <section id="done">
+      <h2>Чек-лист готовності</h2>
+      <p>Галочки зберігаються лише у твоєму браузері.</p>
+      <ul class="checks" id="checks">
+        <li><label><input type="checkbox" id="c1"><span>Сім кроків вставлено, правило R8 для <code>adsmodule</code> на місці</span></label></li>
+        <li><label><input type="checkbox" id="c2"><span>Debug і release збираються</span></label></li>
+        <li><label><input type="checkbox" id="c3"><span>Без блоку <code>meta</code>: <code>skip init</code> у лозі, гра працює, TikTok стартує</span></label></li>
+        <li><label><input type="checkbox" id="c4"><span>Застосунок у Meta створено, платформа Android з пакетом і стартовою активіті</span></label></li>
+        <li><label><input type="checkbox" id="c5"><span>Серверна команда додала блок <code>meta</code> у картку апки</span></label></li>
+        <li><label><input type="checkbox" id="c6"><span>З ключами: <code>Meta SDK initialized</code> і <code>Result: Success</code>, події видно в «Тестуванні подій»</span></label></li>
+        <li><label><input type="checkbox" id="c7"><span>Release перевірено на девайсі</span></label></li>
+        <li><label><input type="checkbox" id="c8"><span>Data safety в Play Console оновлено, застосунок у Meta в режимі Live</span></label></li>
+      </ul>
+      <p class="prog" id="prog"></p>
+    </section>
+
+    <footer>
+      Підготував VELDAN · 01.10.2026. У репо UAPP: <code>docs/for-devs/meta-sdk-01-10-2026/</code>; історія інтеграції в T5 — <code>docs/patches/01-meta-sdk.md</code>.
+    </footer>
+  </main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var pkgEl = document.getElementById("pkg"), actEl = document.getElementById("act"), hint = document.getElementById("pkg-hint");
+  var tpls = Array.prototype.map.call(document.querySelectorAll("[data-tpl]"), function (el) { return { el: el, src: el.textContent }; });
+  var PKG_RE = /^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)+$/;
+
+  function load(k, d) { try { return localStorage.getItem(k) || d; } catch (e) { return d; } }
+  function save(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  function apply() {
+    var pkg = pkgEl.value.trim(), act = actEl.value.trim().replace(/^\./, "") || "StartActivity";
+    var ok = PKG_RE.test(pkg);
+    pkgEl.setAttribute("aria-invalid", ok ? "false" : "true");
+    hint.hidden = ok;
+    if (!ok) return;
+    save("meta-doc-pkg", pkg); save("meta-doc-act", act);
+    tpls.forEach(function (t) {
+      var text = t.src.split("{{PKG}}").join(pkg).split("{{PATH}}").join(pkg.replace(/\./g, "/")).split("{{ACT}}").join(act);
+      t.el.textContent = text;
+      if (t.el.tagName === "CODE" && t.el.parentNode.tagName === "PRE" && window.hljs) {
+        t.el.removeAttribute("data-highlighted");
+        try { window.hljs.highlightElement(t.el); } catch (e) {}
+      }
+    });
+  }
+
+  pkgEl.value = load("meta-doc-pkg", pkgEl.value);
+  actEl.value = load("meta-doc-act", actEl.value);
+  pkgEl.addEventListener("input", apply);
+  actEl.addEventListener("input", apply);
+
+  if (window.hljs) {
+    Array.prototype.forEach.call(document.querySelectorAll("pre code:not([data-tpl])"), function (c) { try { window.hljs.highlightElement(c); } catch (e) {} });
+  }
+  apply();
+
+  Array.prototype.forEach.call(document.querySelectorAll(".copy"), function (b) {
+    b.addEventListener("click", function () {
+      var code = b.closest(".code").querySelector("pre code");
+      var text = code.textContent;
+      var done = function () { b.textContent = "Скопійовано"; b.classList.add("ok"); setTimeout(function () { b.textContent = "Копіювати"; b.classList.remove("ok"); }, 1500); };
+      var sel = function () { var r = document.createRange(), s = window.getSelection(); r.selectNodeContents(code); s.removeAllRanges(); s.addRange(r); b.textContent = "Виділено — Ctrl/⌘+C"; };
+      try { navigator.clipboard.writeText(text).then(done, sel); } catch (e) { sel(); }
+    });
+  });
+
+  var boxes = Array.prototype.slice.call(document.querySelectorAll("#checks input"));
+  var state = {};
+  try { state = JSON.parse(load("meta-doc-checks", "{}")) || {}; } catch (e) { state = {}; }
+  function prog() {
+    var n = boxes.filter(function (b) { return b.checked; }).length;
+    document.getElementById("prog").textContent = "Виконано " + n + " з " + boxes.length;
+  }
+  boxes.forEach(function (b) {
+    b.checked = !!state[b.id];
+    b.addEventListener("change", function () { state[b.id] = b.checked; save("meta-doc-checks", JSON.stringify(state)); prog(); });
+  });
+  prog();
+})();
+</script>

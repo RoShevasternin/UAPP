@@ -37,7 +37,7 @@
 **ПЕРШИМ ДІЛОМ прочитай цілком**:
 
 ```
-/Users/admin/Apps/UAPP/docs/ETALON_MIGRATION.md
+/Users/admin/Apps/UAPP/docs/procedures/ETALON_MIGRATION.md
 ```
 
 Шлях абсолютний навмисно: сесія стартує в теці конкретної гри, і відносний
@@ -61,8 +61,15 @@
 
 Зроблені пачки лежать поруч із процедурою:
 
-- `/Users/admin/Apps/UAPP/docs/DEV_TASKS_2026-09-08.md` — вхідна задача
-- `/Users/admin/Apps/UAPP/docs/PUSH_FIX_2026-09-08.md` — готове рішення для девів
+- `/Users/admin/Apps/UAPP/docs/for-devs/push-fix-08-09-2026/DEV_TASKS.md` — вхідна задача
+- `/Users/admin/Apps/UAPP/docs/for-devs/push-fix-08-09-2026/PUSH_FIX.md` — готове рішення для девів
+
+## Карта `docs/`
+
+Повна карта — `docs/README.md`. Коротко: `procedures/` (процедури, зокрема міграція до
+еталона), `patches/` (сторінки-патчі), `for-devs/<тема>-дд-мм-рррр/` (інструкції й рішення
+для розробників інших апок — туди ж нові пачки від серверної команди), `research/` (звіти й
+брифи), `claude-memory/` (пам'ять, не переносити — на неї веде симлінк).
 
 ## Дослідження й брифи — `docs/research/`
 
