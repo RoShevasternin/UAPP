@@ -64,8 +64,8 @@ class App: Application() {
     }
 
     private fun initMetaFromCache() {
-        val meta = MetaManager.resolve(AdConfig.remoteConfig?.meta) ?: return
-        MetaManager.initialize(this, meta.appId!!, meta.clientToken!!)
+        val meta = AdConfig.remoteConfig?.meta ?: return
+        if (meta.isValid) MetaManager.initialize(this, meta.appId!!, meta.clientToken!!)
     }
 
     private fun initNavigationCounter() {

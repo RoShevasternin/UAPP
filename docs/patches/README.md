@@ -61,4 +61,4 @@ icon `code`.
 | № | що | ігри | сторінка | стан |
 |---|---|---|---|---|
 | 01 | Meta SDK поруч із TikTok ([запис](01-meta-sdk.md)) | T5 RBX Boss, еталон | https://claude.ai/artifact/DT1VQTRqKQiqfpZrRRpi43 | T5 вставлено + бібліотеки T5 оновлено; еталон відкладено |
-| 02 | Тестові ключі Meta для debug + інструкція ([запис](02-meta-test-keys.md)) | T5 RBX Boss | https://claude.ai/artifact/KFsw6S28gUK1xdfpY6AVN8 | вставлено, Meta приймає події |
+| 02 | Тестові ключі Meta для debug + інструкція ([запис](02-meta-test-keys.md)) | T5 RBX Boss | https://claude.ai/artifact/KFsw6S28gUK1xdfpY6AVN8 | вставлено, перевірено, відкочено на прохання |

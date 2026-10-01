@@ -411,8 +411,8 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     }
 
     private fun initMeta(model: RemoteConfigModel) {
-        val meta = MetaManager.resolve(model.meta)
-        if (meta == null) {
+        val meta = model.meta
+        if (meta == null || !meta.isValid) {
             log("Meta config missing/invalid — skip init")
             return
         }
