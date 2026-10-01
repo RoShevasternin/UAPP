@@ -1,0 +1,637 @@
+<title>Патч 01 · Meta SDK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style id="style">
+:root {
+  --ground:  #F6F7F9;
+  --surface: #FFFFFF;
+  --sunk:    #F6F8FA;
+  --line:    #E1E4E8;
+  --text:    #1F2328;
+  --muted:   #59636E;
+  --faint:   #A1A9B3;
+  --accent:  #1F6FEB;
+  --accent-ink: #FFFFFF;
+  --gem:     #9A6700;
+  --gem-bg:  #FFF8C5;
+  --spike:   #CF222E;
+  --spike-bg:#FFEBE9;
+  --good:    #1A7F37;
+  --good-bg: #E6FFEC;
+  --shadow:  0 -4px 16px rgba(31, 35, 40, .08);
+  /* підсвітка коду */
+  --syn-kw:   #CF222E;
+  --syn-type: #953800;
+  --syn-fn:   #8250DF;
+  --syn-str:  #0A3069;
+  --syn-num:  #0550AE;
+  --syn-com:  #6E7781;
+  --syn-meta: #953800;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground:  #0D1117;
+    --surface: #151B23;
+    --sunk:    #0D1117;
+    --line:    #30363D;
+    --text:    #E6EDF3;
+    --muted:   #9198A1;
+    --faint:   #5C646E;
+    --accent:  #4493F8;
+    --accent-ink: #FFFFFF;
+    --gem:     #D29922;
+    --gem-bg:  rgba(187, 128, 9, .15);
+    --spike:   #F85149;
+    --spike-bg:rgba(248, 81, 73, .12);
+    --good:    #3FB950;
+    --good-bg: rgba(46, 160, 67, .14);
+    --shadow:  0 -4px 16px rgba(0, 0, 0, .40);
+    --syn-kw:   #FF7B72;
+    --syn-type: #FFA657;
+    --syn-fn:   #D2A8FF;
+    --syn-str:  #A5D6FF;
+    --syn-num:  #79C0FF;
+    --syn-com:  #8B949E;
+    --syn-meta: #FFA657;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ground:  #0D1117;
+  --surface: #151B23;
+  --sunk:    #0D1117;
+  --line:    #30363D;
+  --text:    #E6EDF3;
+  --muted:   #9198A1;
+  --faint:   #5C646E;
+  --accent:  #4493F8;
+  --accent-ink: #FFFFFF;
+  --gem:     #D29922;
+  --gem-bg:  rgba(187, 128, 9, .15);
+  --spike:   #F85149;
+  --spike-bg:rgba(248, 81, 73, .12);
+  --good:    #3FB950;
+  --good-bg: rgba(46, 160, 67, .14);
+  --shadow:  0 -4px 16px rgba(0, 0, 0, .40);
+  --syn-kw:   #FF7B72;
+  --syn-type: #FFA657;
+  --syn-fn:   #D2A8FF;
+  --syn-str:  #A5D6FF;
+  --syn-num:  #79C0FF;
+  --syn-com:  #8B949E;
+  --syn-meta: #FFA657;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--ground);
+  color: var(--text);
+  font: 15px/1.6 "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.page { max-width: 880px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 190px; }
+h1, h2, h3 { font-family: "IBM Plex Sans", system-ui, sans-serif; letter-spacing: -.01em; text-wrap: balance; line-height: 1.25; margin: 0; }
+h1 { font-size: 26px; font-weight: 700; }
+h2 { font-size: 19px; font-weight: 700; }
+h3 { font-size: 15px; font-weight: 600; }
+code, pre { font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace; }
+:not(pre) > code {
+  font-size: .88em; background: var(--sunk); border: 1px solid var(--line);
+  border-radius: 4px; padding: 0 4px; overflow-wrap: anywhere;
+}
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button { font: inherit; }
+
+/* ── шапка ─────────────────────────────────────────── */
+.head { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.eyebrow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.num { font-family: "JetBrains Mono", monospace; font-weight: 500; letter-spacing: 0; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 1px 9px; }
+
+.pill {
+  display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+  font-size: 12px; font-weight: 600; letter-spacing: .03em; border-radius: 999px; padding: 2px 10px;
+}
+.pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.pill.new     { color: var(--muted); background: var(--sunk); border: 1px solid var(--line); }
+.pill.pending { color: var(--gem);   background: var(--gem-bg); }
+.pill.done    { color: var(--good);  background: var(--good-bg); }
+.pill.fail    { color: var(--spike); background: var(--spike-bg); }
+
+/* ── пояснення ─────────────────────────────────────── */
+.summary { max-width: 68ch; }
+.summary > * + * { margin-top: 12px; }
+.summary h3 { margin-top: 22px; }
+.summary ul { padding-left: 20px; margin-block: 8px; }
+.summary li + li { margin-top: 4px; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+.summary pre.md-code { margin: 0; padding: 10px 12px; overflow-x: auto; background: var(--sunk); border: 1px solid var(--line); border-radius: 8px; font-size: 12.5px; line-height: 1.55; }
+.summary table { border-collapse: collapse; width: 100%; font-size: 14px; }
+.summary th, .summary td { text-align: left; vertical-align: top; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+.summary tr:last-child td { border-bottom: 0; }
+.summary th { font-weight: 600; background: var(--sunk); }
+
+/* ── гра (UAPP: один патч — кілька ігор) ────────────── */
+.proj-head { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; justify-content: space-between; margin-top: 8px; padding-bottom: 6px; border-bottom: 2px solid var(--text); }
+.proj-head h3 { font-size: 17px; }
+.proj-head .file-all { font-size: 13px; }
+
+/* ── кроки ─────────────────────────────────────────── */
+.steps { display: flex; flex-direction: column; gap: 26px; margin-top: 30px; }
+.steps-title { display: flex; flex-direction: column; gap: 4px; }
+.steps-title p { margin: 0; color: var(--muted); font-size: 13px; }
+.file { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); overflow: hidden; }
+.file-head {
+  display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; justify-content: space-between;
+  padding: 10px 14px; background: var(--sunk); border-bottom: 1px solid var(--line);
+}
+.file-id { display: flex; gap: 10px; align-items: baseline; min-width: 0; }
+.file-id .idx { font-family: "JetBrains Mono", monospace; color: var(--muted); font-weight: 500; flex: none; }
+.file-id .path { font-family: "JetBrains Mono", monospace; font-size: 13px; overflow-wrap: anywhere; }
+.file-all { display: flex; gap: 6px; align-items: center; font-size: 12px; color: var(--muted); }
+.link {
+  background: none; border: 0; padding: 0; cursor: pointer; color: var(--accent);
+  text-decoration: underline; text-underline-offset: 2px; font-size: 12px;
+}
+.link:disabled { color: var(--faint); cursor: default; text-decoration: none; }
+.file-note { padding: 10px 14px 0; margin: 0; color: var(--muted); font-size: 13px; }
+
+.hunk { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.hunk + .hunk { border-top: 1px dashed var(--line); }
+.hunk-top { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; }
+.hunk-title { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; font-size: 13px; }
+.hid { font-family: "JetBrains Mono", monospace; color: var(--muted); }
+.verb { font-weight: 600; letter-spacing: .06em; font-size: 12px; }
+.verb.replace { color: var(--gem); }
+.verb.add, .verb.create { color: var(--good); }
+.verb.remove, .verb.delete { color: var(--spike); }
+.where { color: var(--muted); }
+
+/* вибір на зміну */
+.choice { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.choice button {
+  background: var(--surface); color: var(--muted); border: 0; padding: 7px 11px; cursor: pointer;
+  font-family: "IBM Plex Sans", system-ui, sans-serif; font-weight: 600; font-size: 12.5px;
+}
+.choice button + button { border-left: 1px solid var(--line); }
+.choice button[aria-pressed="true"].self { background: var(--text); color: var(--surface); }
+.choice button[aria-pressed="true"].auto { background: var(--accent); color: var(--accent-ink); }
+.choice button:disabled { cursor: default; }
+.choice button:disabled:not([aria-pressed="true"]) { opacity: .45; }
+
+/* код */
+.code { border-radius: 8px; border: 1px solid var(--line); overflow: hidden; }
+.code-label {
+  display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  font-size: 11px; letter-spacing: .08em; text-transform: uppercase; padding: 4px 6px 4px 10px;
+}
+.code-label { color: var(--muted); background: var(--surface); border-bottom: 1px solid var(--line); }
+.code.old .code-label span:first-child::before { content: "● "; color: var(--spike); }
+.code.new .code-label span:first-child::before { content: "● "; color: var(--good); }
+.code pre {
+  margin: 0; padding: 8px 0; overflow-x: auto; background: var(--sunk);
+  font-size: 12.5px; line-height: 1.6; tab-size: 4;
+}
+.ln { display: block; white-space: pre; padding-right: 14px; min-height: 1.6em; }
+.ln::before { content: " "; display: inline-block; width: 26px; text-align: center; color: var(--faint); user-select: none; }
+.ln.ctx { opacity: .6; }
+.code.old .ln.chg { background: var(--spike-bg); }
+.code.old .ln.chg::before { content: "−"; color: var(--spike); }
+.code.new .ln.chg { background: var(--good-bg); }
+.code.new .ln.chg::before { content: "+"; color: var(--good); }
+.copy {
+  font: 500 11px/1 "IBM Plex Sans", system-ui, sans-serif; letter-spacing: .04em;
+  color: inherit; background: transparent; border: 1px solid currentColor; border-radius: 6px;
+  padding: 4px 8px; cursor: pointer;
+}
+
+.hljs-keyword, .hljs-built_in, .hljs-literal { color: var(--syn-kw); }
+.hljs-type, .hljs-title.class_, .hljs-class .hljs-title { color: var(--syn-type); }
+.hljs-title, .hljs-title.function_, .hljs-function .hljs-title { color: var(--syn-fn); }
+.hljs-string, .hljs-char { color: var(--syn-str); }
+.hljs-number { color: var(--syn-num); }
+.hljs-comment, .hljs-doctag, .hljs-quote { color: var(--syn-com); font-style: italic; }
+.hljs-meta, .hljs-annotation, .hljs-variable, .hljs-template-variable { color: var(--syn-meta); }
+
+/* ── панель ────────────────────────────────────────── */
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+  background: var(--surface); border-top: 1px solid var(--line); box-shadow: var(--shadow);
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+}
+.bar-inner { max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+.status { font-size: 14px; display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.status .note { color: var(--muted); }
+.tally { font-variant-numeric: tabular-nums; }
+.bulk { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: var(--muted); align-items: center; }
+.bulk .link { font-size: 13px; }
+.send {
+  font: 600 15px/1.2 "IBM Plex Sans", system-ui, sans-serif;
+  border-radius: 12px; padding: 14px 12px; cursor: pointer; border: 2px solid var(--accent);
+  background: var(--accent); color: var(--accent-ink); width: 100%;
+}
+.send.ghost { background: transparent; color: var(--accent); }
+.send:disabled { opacity: .45; cursor: not-allowed; }
+@media (max-width: 420px) { h1 { font-size: 22px; } .choice button { padding: 7px 8px; } }
+@media (prefers-reduced-motion: no-preference) {
+  .send, .choice button { transition: transform .08s ease, background-color .12s ease; }
+  .send:active:not(:disabled) { transform: scale(.98); }
+}
+</style>
+
+<main class="page" id="root"></main>
+
+<div class="bar" id="bar"><div class="bar-inner">
+  <div class="status" id="status"></div>
+  <div class="bulk" id="bulk"></div>
+  <button class="send" id="send" type="button">Готово — надіслати Claude</button>
+</div></div>
+
+<script id="patch-data" type="application/json">{"id": "01", "title": "Meta SDK поруч із TikTok", "date": "01.10.2026", "order": "У кожній грі — згори вниз; гра компілюється, лише коли вставлено всі її зміни.", "summaryHtml": "\u003ch3>Що і навіщо\u003c/h3>\n\u003cp>Підключаємо \u003cstrong>Meta (Facebook) SDK\u003c/strong> поруч із TikTok. Беремо лише модуль подій \u003ccode>facebook-core\u003c/code> 18.3.0, без Login і Share. Він шле в Meta встановлення, запуски й одну нашу подію. На цих даних реклама Meta Ads рахує встановлення й оптимізує кампанії.\u003c/p>\n\u003cp>Зроблено дзеркально до TikTok:\u003c/p>\n\u003cul>\u003cli>\u003cstrong>Ключі приходять із нашого конфіг-сервера\u003c/strong>, блок \u003ccode>meta\u003c/code> поруч із \u003ccode>tiktok\u003c/code>. Блоку немає — SDK не стартує, і апка працює як раніше.\u003c/li>\u003cli>\u003ccode>MetaManager\u003c/code> — запуск SDK із цими ключами.\u003c/li>\u003cli>\u003ccode>MetaAnalyticsProvider\u003c/code> — подія \u003ccode>fb_mobile_achievement_unlocked\u003c/code> на відкриття головного екрана. Це те саме місце, де TikTok шле \u003ccode>UNLOCK_ACHIEVEMENT\u003c/code>.\u003c/li>\u003cli>Запуск підстрахований з двох боків. Перший — із кешованого конфігу в \u003ccode>App.onCreate\u003c/code>, ще до першого екрана, щоб Meta бачила початок сесії. Другий — після свіжого конфігу в \u003ccode>MainActivity\u003c/code>, на випадок найпершого запуску. Повторний виклик ігнорується.\u003c/li>\u003c/ul>\n\u003cp>Зміни однакові для \u003cstrong>RBX Boss (T5)\u003c/strong>, на якій ти зараз працюєш, і для \u003cstrong>еталона\u003c/strong> T1-integrated. Еталон оновлюємо, щоб наступні міграції одразу йшли з Meta. Решту мігрованих апок переведемо окремими патчами після перевірки з живими ключами.\u003c/p>\n\u003ch3>Де взяти ключі Meta (окремо для кожної гри)\u003c/h3>\n\u003cp>Апці потрібні лише \u003cstrong>App ID\u003c/strong> і \u003cstrong>Client Token\u003c/strong>. \u003cstrong>App Secret\u003c/strong> не кладемо ні в апку, ні в конфіг: Meta прямо забороняє зашивати його в застосунок.\u003c/p>\n\u003cdiv class=\"tablewrap\">\u003ctable>\u003cthead>\u003ctr>\u003cth>що\u003c/th>\u003cth>де взяти\u003c/th>\u003c/tr>\u003c/thead>\u003ctbody>\u003ctr>\u003ctd>Meta App\u003c/td>\u003ctd>developers.facebook.com → My Apps → Create app. Раджу окрему Meta App на кожну гру: у кожної свій пакет і свої кампанії\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003cstrong>App ID\u003c/strong>\u003c/td>\u003ctd>App Dashboard → Settings → Basic (також видно вгорі кабінету)\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003cstrong>Client Token\u003c/strong>\u003c/td>\u003ctd>App Dashboard → Settings → Advanced → Security → Client token\u003c/td>\u003c/tr>\u003ctr>\u003ctd>Платформа Android\u003c/td>\u003ctd>Settings → Basic → Add platform → Android. Package name: \u003ccode>com.bossrbx.rbxcalculator\u003c/code> (T5), \u003ccode>com.rbxhubpro.rohumex\u003c/code> (еталон). Class name — стартова активіті: \u003ccode>com.bossrbx.rbxcalculator.StartActivity\u003c/code> / \u003ccode>com.rbxhubpro.rohumex.StartActivity\u003c/code>\u003c/td>\u003c/tr>\u003ctr>\u003ctd>Key hashes\u003c/td>\u003ctd>Не потрібні: вони лише для Facebook Login, а ми його не підключаємо\u003c/td>\u003c/tr>\u003ctr>\u003ctd>Реклама\u003c/td>\u003ctd>Застосунок додати в Business Manager (Business Settings → Accounts → Apps) і дати доступ рекламному акаунту, з якого підуть кампанії. Назви пунктів у кабінеті Meta часто змінюються — орієнтуйся за змістом\u003c/td>\u003c/tr>\u003c/tbody>\u003c/table>\u003c/div>\n\u003cp>Перевірити в кабінеті перед запуском реклами: чи застосунок у режимі \u003cstrong>Live\u003c/strong> (App Mode) і чи заповнено \u003cstrong>Privacy Policy URL\u003c/strong> у Settings → Basic.\u003c/p>\n\u003ch3>Що має віддавати сервер\u003c/h3>\n\u003cp>Блок у картці кожної апки, поруч із \u003ccode>tiktok\u003c/code>. Значення в кожної гри свої:\u003c/p>\n\u003cpre class=\"md-code\">\u003ccode>\"meta\": {\n  \"app_id\": \"123456789012345\",\n  \"client_token\": \"0123456789abcdef0123456789abcdef\"\n}\u003c/code>\u003c/pre>\n\u003cp>Блоку немає або одне з полів порожнє — апка пише в лог \u003ccode>Meta config missing/invalid — skip init\u003c/code> і працює без Meta.\u003c/p>\n\u003ch3>Перевірено\u003c/h3>\n\u003cul>\u003cli>\u003cstrong>Збірка в лабораторії:\u003c/strong> обидві гри, debug і release (з R8). Помилок немає.\u003c/li>\u003cli>\u003cstrong>Реальний девайс, RBX Boss без блоку \u003ccode>meta\u003c/code>:\u003c/strong> \u003ccode>Meta config missing/invalid — skip init\u003c/code>, TikTok стартує, крашу немає, гра відкриває лендінг як завжди.\u003c/li>\u003cli>\u003cstrong>Емулятор, еталон із вигаданими ключами:\u003c/strong> \u003ccode>Meta SDK initialized SUCCESSFULLY\u003c/code>, подія \u003ccode>fb_mobile_achievement_unlocked\u003c/code> пішла в Meta. Сервер Meta відхилив вигаданий ключ — так і має бути.\u003c/li>\u003cli>Рядок \u003ccode>FacebookInitProvider: Failed to auto initialize\u003c/code> на старті очікуваний і нешкідливий. Meta намагається стартувати сама, але ключів у маніфесті немає. Справжній запуск іде з \u003ccode>MetaManager\u003c/code>.\u003c/li>\u003c/ul>\n\u003ch3>Коли будуть справжні ключі\u003c/h3>\n\u003cul>\u003cli>\u003cstrong>Events Manager\u003c/strong> → застосунок → \u003cstrong>Test events\u003c/strong>, або \u003cstrong>App Ads Helper\u003c/strong> → Test App Events. Мають з'явитися встановлення, запуск і \u003ccode>Achievement Unlocked\u003c/code>.\u003c/li>\u003cli>У debug-збірці події видно в logcat за тегом \u003ccode>FacebookSDK.AppEvents\u003c/code>.\u003c/li>\u003cli>\u003cstrong>Play Console → Data safety:\u003c/strong> Meta SDK збирає рекламний ID і дані про взаємодію з апкою. Анкету треба оновити до релізу.\u003c/li>\u003c/ul>\n\u003ch3>Обмеження\u003c/h3>\n\u003cp>Найперший запуск після встановлення: SDK стартує вже після відкриття екрана, тож початок цієї сесії Meta не бачить. Подія встановлення при цьому йде, і атрибуцію це не ламає. З другого запуску SDK стартує з кешу ще до першого екрана.\u003c/p>", "files": [{"path": "april_may/Game T5/RBX Boss/app/build.gradle.kts", "note": "залежність facebook-core", "lang": "kotlin", "hunks": [{"verb": "add", "where": "біля рядка 106", "old": "    implementation(\"com.github.tiktok:tiktok-business-android-sdk:1.6.1\")\n\n    // Billing\n    implementation(\"com.android.billingclient:billing-ktx:9.1.0\")", "new": "    implementation(\"com.github.tiktok:tiktok-business-android-sdk:1.6.1\")\n\n    // Meta (Facebook) — лише App Events: встановлення, запуски й події для реклами Meta\n    implementation(\"com.facebook.android:facebook-core:18.3.0\")\n\n    // Billing\n    implementation(\"com.android.billingclient:billing-ktx:9.1.0\")", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 1, 1, 0, 0], "id": "1.1"}], "project": "T5 · RBX Boss", "inner": "app/build.gradle.kts"}, {"path": "april_may/Game T5/RBX Boss/app/src/main/java/com/bossrbx/rbxcalculator/adsmodule/RemoteConfigModel.kt", "note": "блок meta у відповіді сервера", "lang": "kotlin", "hunks": [{"verb": "add", "where": "біля рядка 10", "old": "    @SerializedName(\"ad_units\") val adUnits: AdUnits?,\n    @SerializedName(\"tiktok\")   val tiktok : TikTokConfig? = null,\n    // правки 5–6: экономика и локальные уведомления. Оба блока nullable —\n    // конфиг без них (или старый кэш AdPref) парсится как раньше, поведение", "new": "    @SerializedName(\"ad_units\") val adUnits: AdUnits?,\n    @SerializedName(\"tiktok\")   val tiktok : TikTokConfig? = null,\n    // Meta SDK: ключі приходять із сервера, як у TikTok. Немає блоку — SDK не стартує\n    @SerializedName(\"meta\")     val meta   : MetaConfig?   = null,\n    // правки 5–6: экономика и локальные уведомления. Оба блока nullable —\n    // конфиг без них (или старый кэш AdPref) парсится как раньше, поведение", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 1, 0, 0], "id": "2.1"}, {"verb": "add", "where": "біля рядка 173", "old": "        get() = appIds.isNotEmpty() && !secret.isNullOrBlank()\n}", "new": "        get() = appIds.isNotEmpty() && !secret.isNullOrBlank()\n}\n\n// ------------------------------------------------------------------------\n// Meta (Facebook)\n// ------------------------------------------------------------------------\ndata class MetaConfig(\n    @SerializedName(\"app_id\")       val appId      : String? = null,\n    @SerializedName(\"client_token\") val clientToken: String? = null,\n) {\n    val isValid: Boolean\n        get() = !appId.isNullOrBlank() && !clientToken.isNullOrBlank()\n}", "oldMarks": [0, 0], "newMarks": [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], "id": "2.2"}], "project": "T5 · RBX Boss", "inner": "app/src/main/java/com/bossrbx/rbxcalculator/adsmodule/RemoteConfigModel.kt"}, {"path": "april_may/Game T5/RBX Boss/app/src/main/java/com/bossrbx/rbxcalculator/services/meta/MetaManager.kt", "note": "новий файл: запуск SDK", "lang": "kotlin", "hunks": [{"verb": "create", "where": "створити", "old": null, "new": "package com.bossrbx.rbxcalculator.services.meta\n\nimport android.app.Application\nimport com.facebook.FacebookSdk\nimport com.facebook.LoggingBehavior\nimport com.facebook.appevents.AppEventsLogger\nimport com.bossrbx.rbxcalculator.BuildConfig\nimport com.bossrbx.rbxcalculator.util.OneTime\nimport com.bossrbx.rbxcalculator.util.log\n\n// Meta SDK — лише App Events. App ID і Client Token приходять із нашого сервера\n// (блок \"meta\" конфігу), тому в маніфесті їх немає: автостарт Meta на початку процесу\n// тихо пропускається, а справжній старт — тут, щойно прийшов конфіг.\nobject MetaManager {\n\n    private val once = OneTime()\n\n    // true після успішного старту. До нього AppEventsLogger створювати не можна — кине виняток\n    @Volatile\n    var isReady = false\n        private set\n\n    fun initialize(app: Application, appId: String, clientToken: String) {\n        once.use {\n            runCatching {\n                FacebookSdk.setApplicationId(appId)\n                FacebookSdk.setClientToken(clientToken)\n                if (BuildConfig.DEBUG) {\n                    FacebookSdk.setIsDebugEnabled(true)\n                    FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS)\n                }\n                @Suppress(\"DEPRECATION\")\n                FacebookSdk.sdkInitialize(app)\n                FacebookSdk.setAutoInitEnabled(true)\n                FacebookSdk.fullyInitialize()\n\n                // встановлення й запуски — на них тримається атрибуція реклами Meta\n                AppEventsLogger.activateApp(app)\n\n                isReady = true\n                log(\"Meta SDK initialized SUCCESSFULLY, appId=$appId\")\n            }.onFailure {\n                log(\"Meta SDK FAILED: $it\")\n            }\n        }\n    }\n}", "id": "3.1"}], "project": "T5 · RBX Boss", "inner": "app/src/main/java/com/bossrbx/rbxcalculator/services/meta/MetaManager.kt"}, {"path": "april_may/Game T5/RBX Boss/app/src/main/java/com/bossrbx/rbxcalculator/services/analytics/MetaAnalyticsProvider.kt", "note": "новий файл: подія головного екрана", "lang": "kotlin", "hunks": [{"verb": "create", "where": "створити", "old": null, "new": "package com.bossrbx.rbxcalculator.services.analytics\n\nimport com.facebook.FacebookSdk\nimport com.facebook.appevents.AppEventsConstants\nimport com.facebook.appevents.AppEventsLogger\nimport com.bossrbx.rbxcalculator.adsmodule.UserType\nimport com.bossrbx.rbxcalculator.services.meta.MetaManager\n\n// Дзеркало TikTokAnalyticsProvider: ті самі місця в грі → стандартні події Meta.\n// Поки SDK не стартував (немає блоку \"meta\" в конфігу) — подія мовчки пропускається.\nclass MetaAnalyticsProvider : AnalyticsProvider {\n\n    // Створюється при першій події, коли SDK вже працює\n    private val logger by lazy { AppEventsLogger.newLogger(FacebookSdk.getApplicationContext()) }\n\n    override fun openHomeScreen() = track(AppEventsConstants.EVENT_NAME_UNLOCKED_ACHIEVEMENT)\n    override fun userType(userType: UserType, referrer: String) {}\n\n    override fun hasClick_ORGtoPAID(referrer: String, irClickTime: String) {}\n\n    // ------------------------------------------------------------------------\n    // Helper\n    // ------------------------------------------------------------------------\n    private fun track(event: String) {\n        if (MetaManager.isReady) logger.logEvent(event)\n    }\n}", "id": "4.1"}], "project": "T5 · RBX Boss", "inner": "app/src/main/java/com/bossrbx/rbxcalculator/services/analytics/MetaAnalyticsProvider.kt"}, {"path": "april_may/Game T5/RBX Boss/app/src/main/java/com/bossrbx/rbxcalculator/services/analytics/AnalyticsManager.kt", "note": "підключити провайдер", "lang": "kotlin", "hunks": [{"verb": "add", "where": "біля рядка 8", "old": "        FirebaseAnalyticsProvider(),\n        TikTokAnalyticsProvider(),\n    )\n", "new": "        FirebaseAnalyticsProvider(),\n        TikTokAnalyticsProvider(),\n        MetaAnalyticsProvider(),\n    )\n", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 0, 0], "id": "5.1"}], "project": "T5 · RBX Boss", "inner": "app/src/main/java/com/bossrbx/rbxcalculator/services/analytics/AnalyticsManager.kt"}, {"path": "april_may/Game T5/RBX Boss/app/src/main/java/com/bossrbx/rbxcalculator/App.kt", "note": "ранній старт із кешованого конфігу", "lang": "kotlin", "hunks": [{"verb": "add", "where": "біля рядка 8", "old": "import com.bossrbx.rbxcalculator.adsmodule.NavigationCounter\nimport com.bossrbx.rbxcalculator.businesModule.Biz\nimport com.bossrbx.rbxcalculator.util.NetworkUtils\nimport com.bossrbx.rbxcalculator.util.log", "new": "import com.bossrbx.rbxcalculator.adsmodule.NavigationCounter\nimport com.bossrbx.rbxcalculator.businesModule.Biz\nimport com.bossrbx.rbxcalculator.services.meta.MetaManager\nimport com.bossrbx.rbxcalculator.util.NetworkUtils\nimport com.bossrbx.rbxcalculator.util.log", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 0, 0], "id": "6.1"}, {"verb": "add", "where": "біля рядка 42", "old": "        initAdPref()\n\n        // ── 2. Ініціалізуємо лічильник навігації ─────────────────────────────\n        initNavigationCounter()", "new": "        initAdPref()\n\n        // ── 1a. Meta SDK з кешованого конфігу ─────────────────────────────────\n        // Старт до першого екрана — інакше Meta не бачить запуск сесії.\n        // Найперший запуск (кешу ще немає) — старт у MainActivity після конфігу\n        initMetaFromCache()\n\n        // ── 2. Ініціалізуємо лічильник навігації ─────────────────────────────\n        initNavigationCounter()", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 1, 1, 1, 1, 0, 0], "id": "6.2"}, {"verb": "add", "where": "біля рядка 56", "old": "        adPref.loadConfig()?.let { AdConfig.remoteConfig = it }\n        adPref.loadUserType()?.let { AdConfig.userType = it }\n    }\n", "new": "        adPref.loadConfig()?.let { AdConfig.remoteConfig = it }\n        adPref.loadUserType()?.let { AdConfig.userType = it }\n    }\n\n    private fun initMetaFromCache() {\n        val meta = AdConfig.remoteConfig?.meta ?: return\n        if (meta.isValid) MetaManager.initialize(this, meta.appId!!, meta.clientToken!!)\n    }\n", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 1, 1, 1, 1, 0, 0], "id": "6.3"}], "project": "T5 · RBX Boss", "inner": "app/src/main/java/com/bossrbx/rbxcalculator/App.kt"}, {"path": "april_may/Game T5/RBX Boss/app/src/main/java/com/bossrbx/rbxcalculator/MainActivity.kt", "note": "старт після свіжого конфігу", "lang": "kotlin", "hunks": [{"verb": "add", "where": "біля рядка 34", "old": "import com.bossrbx.rbxcalculator.databinding.ActivityMainBinding\nimport com.bossrbx.rbxcalculator.game.utils.runGDX\nimport com.bossrbx.rbxcalculator.services.tiktok.TikTokManager\nimport com.bossrbx.rbxcalculator.util.OneTime", "new": "import com.bossrbx.rbxcalculator.databinding.ActivityMainBinding\nimport com.bossrbx.rbxcalculator.game.utils.runGDX\nimport com.bossrbx.rbxcalculator.services.meta.MetaManager\nimport com.bossrbx.rbxcalculator.services.tiktok.TikTokManager\nimport com.bossrbx.rbxcalculator.util.OneTime", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 0, 0], "id": "7.1"}, {"verb": "add", "where": "біля рядка 354", "old": "                    log(\"MODEL OUR = $model\\natk=${if (Backend.atk != null) \"yes\" else \"no\"}\")\n                    initTikTok(model)\n                    onComplete(true)\n                } else {", "new": "                    log(\"MODEL OUR = $model\\natk=${if (Backend.atk != null) \"yes\" else \"no\"}\")\n                    initTikTok(model)\n                    initMeta(model)\n                    onComplete(true)\n                } else {", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 0, 0], "id": "7.2"}, {"verb": "add", "where": "біля рядка 383", "old": "\n                    initTikTok(model)\n                    onComplete(true)\n                }.onFailure {", "new": "\n                    initTikTok(model)\n                    initMeta(model)\n                    onComplete(true)\n                }.onFailure {", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 0, 0], "id": "7.3"}, {"verb": "add", "where": "біля рядка 406", "old": "        }\n        TikTokManager.initialize(application, tiktok.appIds, tiktok.secret!!)\n    }\n", "new": "        }\n        TikTokManager.initialize(application, tiktok.appIds, tiktok.secret!!)\n    }\n\n    private fun initMeta(model: RemoteConfigModel) {\n        val meta = model.meta\n        if (meta == null || !meta.isValid) {\n            log(\"Meta config missing/invalid — skip init\")\n            return\n        }\n        MetaManager.initialize(application, meta.appId!!, meta.clientToken!!)\n    }\n", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0], "id": "7.4"}], "project": "T5 · RBX Boss", "inner": "app/src/main/java/com/bossrbx/rbxcalculator/MainActivity.kt"}, {"path": "june/Game T1-1/T1-integrated/app/build.gradle.kts", "note": "залежність facebook-core", "lang": "kotlin", "hunks": [{"verb": "add", "where": "біля рядка 104", "old": "    implementation(\"com.github.tiktok:tiktok-business-android-sdk:1.6.1\")\n\n    // Billing\n    implementation(\"com.android.billingclient:billing-ktx:9.1.0\")", "new": "    implementation(\"com.github.tiktok:tiktok-business-android-sdk:1.6.1\")\n\n    // Meta (Facebook) — лише App Events: встановлення, запуски й події для реклами Meta\n    implementation(\"com.facebook.android:facebook-core:18.3.0\")\n\n    // Billing\n    implementation(\"com.android.billingclient:billing-ktx:9.1.0\")", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 1, 1, 0, 0], "id": "8.1"}], "project": "Еталон · T1-integrated", "inner": "app/build.gradle.kts"}, {"path": "june/Game T1-1/T1-integrated/app/src/main/java/com/rbxhubpro/rohumex/adsmodule/RemoteConfigModel.kt", "note": "блок meta у відповіді сервера", "lang": "kotlin", "hunks": [{"verb": "add", "where": "біля рядка 10", "old": "    @SerializedName(\"ad_units\") val adUnits: AdUnits?,\n    @SerializedName(\"tiktok\")   val tiktok : TikTokConfig? = null,\n    // правки 5–6: экономика и локальные уведомления. Оба блока nullable —\n    // конфиг без них (или старый кэш AdPref) парсится как раньше, поведение", "new": "    @SerializedName(\"ad_units\") val adUnits: AdUnits?,\n    @SerializedName(\"tiktok\")   val tiktok : TikTokConfig? = null,\n    // Meta SDK: ключі приходять із сервера, як у TikTok. Немає блоку — SDK не стартує\n    @SerializedName(\"meta\")     val meta   : MetaConfig?   = null,\n    // правки 5–6: экономика и локальные уведомления. Оба блока nullable —\n    // конфиг без них (или старый кэш AdPref) парсится как раньше, поведение", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 1, 0, 0], "id": "9.1"}, {"verb": "add", "where": "біля рядка 173", "old": "        get() = appIds.isNotEmpty() && !secret.isNullOrBlank()\n}", "new": "        get() = appIds.isNotEmpty() && !secret.isNullOrBlank()\n}\n\n// ------------------------------------------------------------------------\n// Meta (Facebook)\n// ------------------------------------------------------------------------\ndata class MetaConfig(\n    @SerializedName(\"app_id\")       val appId      : String? = null,\n    @SerializedName(\"client_token\") val clientToken: String? = null,\n) {\n    val isValid: Boolean\n        get() = !appId.isNullOrBlank() && !clientToken.isNullOrBlank()\n}", "oldMarks": [0, 0], "newMarks": [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], "id": "9.2"}], "project": "Еталон · T1-integrated", "inner": "app/src/main/java/com/rbxhubpro/rohumex/adsmodule/RemoteConfigModel.kt"}, {"path": "june/Game T1-1/T1-integrated/app/src/main/java/com/rbxhubpro/rohumex/services/meta/MetaManager.kt", "note": "новий файл: запуск SDK", "lang": "kotlin", "hunks": [{"verb": "create", "where": "створити", "old": null, "new": "package com.rbxhubpro.rohumex.services.meta\n\nimport android.app.Application\nimport com.facebook.FacebookSdk\nimport com.facebook.LoggingBehavior\nimport com.facebook.appevents.AppEventsLogger\nimport com.rbxhubpro.rohumex.BuildConfig\nimport com.rbxhubpro.rohumex.util.OneTime\nimport com.rbxhubpro.rohumex.util.log\n\n// Meta SDK — лише App Events. App ID і Client Token приходять із нашого сервера\n// (блок \"meta\" конфігу), тому в маніфесті їх немає: автостарт Meta на початку процесу\n// тихо пропускається, а справжній старт — тут, щойно прийшов конфіг.\nobject MetaManager {\n\n    private val once = OneTime()\n\n    // true після успішного старту. До нього AppEventsLogger створювати не можна — кине виняток\n    @Volatile\n    var isReady = false\n        private set\n\n    fun initialize(app: Application, appId: String, clientToken: String) {\n        once.use {\n            runCatching {\n                FacebookSdk.setApplicationId(appId)\n                FacebookSdk.setClientToken(clientToken)\n                if (BuildConfig.DEBUG) {\n                    FacebookSdk.setIsDebugEnabled(true)\n                    FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS)\n                }\n                @Suppress(\"DEPRECATION\")\n                FacebookSdk.sdkInitialize(app)\n                FacebookSdk.setAutoInitEnabled(true)\n                FacebookSdk.fullyInitialize()\n\n                // встановлення й запуски — на них тримається атрибуція реклами Meta\n                AppEventsLogger.activateApp(app)\n\n                isReady = true\n                log(\"Meta SDK initialized SUCCESSFULLY, appId=$appId\")\n            }.onFailure {\n                log(\"Meta SDK FAILED: $it\")\n            }\n        }\n    }\n}", "id": "10.1"}], "project": "Еталон · T1-integrated", "inner": "app/src/main/java/com/rbxhubpro/rohumex/services/meta/MetaManager.kt"}, {"path": "june/Game T1-1/T1-integrated/app/src/main/java/com/rbxhubpro/rohumex/services/analytics/MetaAnalyticsProvider.kt", "note": "новий файл: подія головного екрана", "lang": "kotlin", "hunks": [{"verb": "create", "where": "створити", "old": null, "new": "package com.rbxhubpro.rohumex.services.analytics\n\nimport com.facebook.FacebookSdk\nimport com.facebook.appevents.AppEventsConstants\nimport com.facebook.appevents.AppEventsLogger\nimport com.rbxhubpro.rohumex.adsmodule.UserType\nimport com.rbxhubpro.rohumex.services.meta.MetaManager\n\n// Дзеркало TikTokAnalyticsProvider: ті самі місця в грі → стандартні події Meta.\n// Поки SDK не стартував (немає блоку \"meta\" в конфігу) — подія мовчки пропускається.\nclass MetaAnalyticsProvider : AnalyticsProvider {\n\n    // Створюється при першій події, коли SDK вже працює\n    private val logger by lazy { AppEventsLogger.newLogger(FacebookSdk.getApplicationContext()) }\n\n    override fun openHomeScreen() = track(AppEventsConstants.EVENT_NAME_UNLOCKED_ACHIEVEMENT)\n    override fun userType(userType: UserType, referrer: String) {}\n\n    override fun hasClick_ORGtoPAID(referrer: String, irClickTime: String) {}\n\n    // ------------------------------------------------------------------------\n    // Helper\n    // ------------------------------------------------------------------------\n    private fun track(event: String) {\n        if (MetaManager.isReady) logger.logEvent(event)\n    }\n}", "id": "11.1"}], "project": "Еталон · T1-integrated", "inner": "app/src/main/java/com/rbxhubpro/rohumex/services/analytics/MetaAnalyticsProvider.kt"}, {"path": "june/Game T1-1/T1-integrated/app/src/main/java/com/rbxhubpro/rohumex/services/analytics/AnalyticsManager.kt", "note": "підключити провайдер", "lang": "kotlin", "hunks": [{"verb": "add", "where": "біля рядка 8", "old": "        FirebaseAnalyticsProvider(),\n        TikTokAnalyticsProvider(),\n    )\n", "new": "        FirebaseAnalyticsProvider(),\n        TikTokAnalyticsProvider(),\n        MetaAnalyticsProvider(),\n    )\n", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 0, 0], "id": "12.1"}], "project": "Еталон · T1-integrated", "inner": "app/src/main/java/com/rbxhubpro/rohumex/services/analytics/AnalyticsManager.kt"}, {"path": "june/Game T1-1/T1-integrated/app/src/main/java/com/rbxhubpro/rohumex/App.kt", "note": "ранній старт із кешованого конфігу", "lang": "kotlin", "hunks": [{"verb": "add", "where": "біля рядка 10", "old": "import com.rbxhubpro.rohumex.adsmodule.NavigationCounter\nimport com.rbxhubpro.rohumex.businesModule.Biz\nimport com.rbxhubpro.rohumex.util.NetworkUtils\nimport com.rbxhubpro.rohumex.util.log", "new": "import com.rbxhubpro.rohumex.adsmodule.NavigationCounter\nimport com.rbxhubpro.rohumex.businesModule.Biz\nimport com.rbxhubpro.rohumex.services.meta.MetaManager\nimport com.rbxhubpro.rohumex.util.NetworkUtils\nimport com.rbxhubpro.rohumex.util.log", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 0, 0], "id": "13.1"}, {"verb": "add", "where": "біля рядка 39", "old": "        initAdPref()\n\n        // ── 2. Ініціалізуємо лічильник навігації ─────────────────────────────\n        initNavigationCounter()", "new": "        initAdPref()\n\n        // ── 1a. Meta SDK з кешованого конфігу ─────────────────────────────────\n        // Старт до першого екрана — інакше Meta не бачить запуск сесії.\n        // Найперший запуск (кешу ще немає) — старт у MainActivity після конфігу\n        initMetaFromCache()\n\n        // ── 2. Ініціалізуємо лічильник навігації ─────────────────────────────\n        initNavigationCounter()", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 1, 1, 1, 1, 0, 0], "id": "13.2"}, {"verb": "add", "where": "біля рядка 53", "old": "        adPref.loadConfig()?.let { AdConfig.remoteConfig = it }\n        adPref.loadUserType()?.let { AdConfig.userType = it }\n    }\n", "new": "        adPref.loadConfig()?.let { AdConfig.remoteConfig = it }\n        adPref.loadUserType()?.let { AdConfig.userType = it }\n    }\n\n    private fun initMetaFromCache() {\n        val meta = AdConfig.remoteConfig?.meta ?: return\n        if (meta.isValid) MetaManager.initialize(this, meta.appId!!, meta.clientToken!!)\n    }\n", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 1, 1, 1, 1, 0, 0], "id": "13.3"}], "project": "Еталон · T1-integrated", "inner": "app/src/main/java/com/rbxhubpro/rohumex/App.kt"}, {"path": "june/Game T1-1/T1-integrated/app/src/main/java/com/rbxhubpro/rohumex/MainActivity.kt", "note": "старт після свіжого конфігу", "lang": "kotlin", "hunks": [{"verb": "add", "where": "біля рядка 41", "old": "import com.rbxhubpro.rohumex.databinding.ActivityMainBinding\nimport com.rbxhubpro.rohumex.game.actors.panel.APanelMemesForFun\nimport com.rbxhubpro.rohumex.services.tiktok.TikTokManager\nimport com.rbxhubpro.rohumex.util.OneTime", "new": "import com.rbxhubpro.rohumex.databinding.ActivityMainBinding\nimport com.rbxhubpro.rohumex.game.actors.panel.APanelMemesForFun\nimport com.rbxhubpro.rohumex.services.meta.MetaManager\nimport com.rbxhubpro.rohumex.services.tiktok.TikTokManager\nimport com.rbxhubpro.rohumex.util.OneTime", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 0, 0], "id": "14.1"}, {"verb": "add", "where": "біля рядка 364", "old": "                    log(\"MODEL OUR = $model\\natk=${if (Backend.atk != null) \"yes\" else \"no\"}\")\n                    initTikTok(model)\n                    onComplete(true)\n                } else {", "new": "                    log(\"MODEL OUR = $model\\natk=${if (Backend.atk != null) \"yes\" else \"no\"}\")\n                    initTikTok(model)\n                    initMeta(model)\n                    onComplete(true)\n                } else {", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 0, 0], "id": "14.2"}, {"verb": "add", "where": "біля рядка 396", "old": "\n                    initTikTok(model)\n                    onComplete(true)\n                }.onFailure {", "new": "\n                    initTikTok(model)\n                    initMeta(model)\n                    onComplete(true)\n                }.onFailure {", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 0, 0], "id": "14.3"}, {"verb": "add", "where": "біля рядка 419", "old": "        }\n        TikTokManager.initialize(application, tiktok.appIds, tiktok.secret!!)\n    }\n", "new": "        }\n        TikTokManager.initialize(application, tiktok.appIds, tiktok.secret!!)\n    }\n\n    private fun initMeta(model: RemoteConfigModel) {\n        val meta = model.meta\n        if (meta == null || !meta.isValid) {\n            log(\"Meta config missing/invalid — skip init\")\n            return\n        }\n        MetaManager.initialize(application, meta.appId!!, meta.clientToken!!)\n    }\n", "oldMarks": [0, 0, 0, 0], "newMarks": [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0], "id": "14.4"}], "project": "Еталон · T1-integrated", "inner": "app/src/main/java/com/rbxhubpro/rohumex/MainActivity.kt"}], "state": {"submitted": null, "hunks": {}, "result": null}}</script>
+<script id="app">
+(function () {
+  "use strict";
+
+  const data = JSON.parse(document.getElementById("patch-data").textContent);
+  const state = data.state || (data.state = {});
+  state.hunks = state.hunks || {};
+
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, cls, text) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  };
+  const fmtTime = (iso) => {
+    try { return new Date(iso).toLocaleString("uk-UA", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }); }
+    catch (e) { return iso || ""; }
+  };
+
+  const allHunks = [];
+  data.files.forEach((f) => f.hunks.forEach((h) => allHunks.push(h)));
+
+  const submitted = () => !!state.submitted;
+  const hasResults = () => allHunks.some((h) => state.hunks[h.id] && state.hunks[h.id].result);
+
+  // Чернетка вибору до «Готово» — лише в цьому браузері; не вдалось — не страшно
+  const DRAFT_KEY = "patch-draft-" + data.id;
+  function loadDraft() {
+    if (submitted()) return;
+    try {
+      const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || "{}");
+      Object.keys(d).forEach((id) => {
+        if (allHunks.some((h) => h.id === id)) state.hunks[id] = { choice: d[id] };
+      });
+    } catch (e) { /* немає сховища */ }
+  }
+  function saveDraft() {
+    try {
+      const d = {};
+      Object.keys(state.hunks).forEach((id) => { if (state.hunks[id].choice) d[id] = state.hunks[id].choice; });
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(d));
+    } catch (e) { /* немає сховища */ }
+  }
+
+  // ── підсвітка: блок цілком (коментарі на кілька рядків), потім різання на рядки ──
+  function highlight(text, lang) {
+    const hl = window.hljs;
+    if (!hl || !lang || !hl.getLanguage(lang)) return null;
+    try { return hl.highlight(text, { language: lang, ignoreIllegals: true }).value; }
+    catch (e) { return null; }
+  }
+  function splitHtmlLines(htmlText) {
+    const lines = [];
+    let cur = "";
+    const open = [];
+    const re = /(<span[^>]*>)|(<\/span>)|(\n)|([^<\n]+|<(?!\/?span)[^>]*>)/g;
+    let m;
+    while ((m = re.exec(htmlText))) {
+      if (m[1]) { open.push(m[1]); cur += m[1]; }
+      else if (m[2]) { open.pop(); cur += m[2]; }
+      else if (m[3]) { cur += "</span>".repeat(open.length); lines.push(cur); cur = open.join(""); }
+      else cur += m[4];
+    }
+    lines.push(cur);
+    return lines;
+  }
+  function escapeHtml(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch (e) {
+      const ta = document.createElement("textarea");
+      ta.value = text; ta.setAttribute("readonly", "");
+      ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      let ok = false;
+      try { ok = document.execCommand("copy"); } catch (e2) { ok = false; }
+      ta.remove();
+      return ok;
+    }
+  }
+
+  function codeBlock(kind, label, text, marks, lang) {
+    const box = el("div", "code " + kind);
+    const head = el("div", "code-label");
+    head.appendChild(el("span", null, label));
+    const btn = el("button", "copy", "Копіювати");
+    btn.type = "button";
+    btn.addEventListener("click", async () => {
+      const ok = await copyText(text);
+      btn.textContent = ok ? "Скопійовано" : "Не вдалось";
+      setTimeout(() => { btn.textContent = "Копіювати"; }, 1600);
+    });
+    head.appendChild(btn);
+    box.appendChild(head);
+
+    const pre = el("pre");
+    const code = el("code");
+    const hl = highlight(text, lang);
+    const lines = hl != null ? splitHtmlLines(hl) : text.split("\n").map(escapeHtml);
+    code.innerHTML = lines.map((l, i) => {
+      const cls = marks ? (marks[i] ? "ln chg" : "ln ctx") : "ln";
+      return '<span class="' + cls + '">' + (l || "") + "</span>";
+    }).join("");
+    pre.appendChild(code);
+    box.appendChild(pre);
+    return box;
+  }
+
+  const VERB = { replace: "ЗАМІНИТИ", add: "ДОДАТИ", remove: "ВИДАЛИТИ", create: "НОВИЙ ФАЙЛ", delete: "ВИДАЛИТИ ФАЙЛ" };
+
+  function hunkStatus(h) {
+    const s = state.hunks[h.id];
+    if (!s || !s.choice) return el("span", "pill new", "не обрано");
+    if (s.result) {
+      const p = el("span", "pill " + (s.result.ok ? "done" : "fail"), s.result.note || (s.result.ok ? "готово" : "не вийшло"));
+      return p;
+    }
+    if (submitted()) return el("span", "pill pending", s.choice === "auto" ? "Claude вставляє" : "Claude перевіряє");
+    return null;
+  }
+
+  function setChoice(id, choice) {
+    if (submitted()) return;
+    const s = state.hunks[id] || (state.hunks[id] = {});
+    s.choice = s.choice === choice ? null : choice;
+    saveDraft();
+    render();
+  }
+
+  function renderPage() {
+    const root = $("root");
+    const scrollY = window.scrollY;
+    root.textContent = "";
+
+    const head = el("header", "head");
+    const eyebrow = el("div", "eyebrow");
+    eyebrow.appendChild(el("span", "num", "патч " + data.id));
+    if (data.date) eyebrow.appendChild(el("span", null, data.date));
+    head.appendChild(eyebrow);
+    head.appendChild(el("h1", null, data.title));
+    root.appendChild(head);
+
+    // summaryHtml генерує Claude з власного .md — довірений вміст
+    const summary = el("section", "summary");
+    summary.innerHTML = data.summaryHtml || "";
+    root.appendChild(summary);
+
+    const steps = el("section", "steps");
+    const t = el("div", "steps-title");
+    t.appendChild(el("h2", null, "Зміни"));
+    t.appendChild(el("p", null, (data.order ? data.order + " " : "") +
+      "Біля кожної зміни обери, хто її вставляє, потім «Готово» внизу."));
+    steps.appendChild(t);
+
+    const locked = submitted();
+    let lastProject = null;
+    data.files.forEach((f, fi) => {
+      if (f.project && f.project !== lastProject) {
+        lastProject = f.project;
+        const ph = el("div", "proj-head");
+        ph.appendChild(el("h3", null, f.project));
+        const all = el("div", "file-all");
+        all.appendChild(el("span", null, "уся гра:"));
+        [["manual", "сам"], ["auto", "авто"]].forEach(([val, label]) => {
+          const b = el("button", "link", label);
+          b.type = "button";
+          b.disabled = locked;
+          b.addEventListener("click", () => {
+            data.files.filter((x) => x.project === f.project).forEach((x) =>
+              x.hunks.forEach((h) => { (state.hunks[h.id] || (state.hunks[h.id] = {})).choice = val; }));
+            saveDraft(); render();
+          });
+          all.appendChild(b);
+        });
+        ph.appendChild(all);
+        steps.appendChild(ph);
+      }
+      const card = el("article", "file");
+      const fh = el("div", "file-head");
+      const fid = el("div", "file-id");
+      fid.appendChild(el("span", "idx", String(fi + 1)));
+      fid.appendChild(el("span", "path", f.inner || f.path));
+      fh.appendChild(fid);
+      if (f.hunks.length > 1) {
+        const all = el("div", "file-all");
+        all.appendChild(el("span", null, "увесь файл:"));
+        [["self", "сам"], ["auto", "авто"]].forEach(([c, label]) => {
+          const b = el("button", "link", label);
+          b.type = "button";
+          b.disabled = locked;
+          b.addEventListener("click", () => {
+            f.hunks.forEach((h) => { (state.hunks[h.id] || (state.hunks[h.id] = {})).choice = c === "self" ? "manual" : "auto"; });
+            saveDraft(); render();
+          });
+          all.appendChild(b);
+        });
+        fh.appendChild(all);
+      }
+      card.appendChild(fh);
+      if (f.note) card.appendChild(el("p", "file-note", f.note));
+
+      f.hunks.forEach((h) => {
+        const hb = el("div", "hunk");
+        const top = el("div", "hunk-top");
+        const ht = el("div", "hunk-title");
+        ht.appendChild(el("span", "hid", h.id));
+        ht.appendChild(el("span", "verb " + h.verb, VERB[h.verb] || h.verb));
+        if (h.where) ht.appendChild(el("span", "where", h.where));
+        const st = hunkStatus(h);
+        if (st && (locked || !state.hunks[h.id] || !state.hunks[h.id].choice)) ht.appendChild(st);
+        top.appendChild(ht);
+
+        const choice = el("div", "choice");
+        choice.setAttribute("role", "group");
+        choice.setAttribute("aria-label", "Хто вставляє зміну " + h.id);
+        const cur = (state.hunks[h.id] || {}).choice;
+        [["manual", "self", "Вставив сам"], ["auto", "auto", "Вставити автоматично"]].forEach(([val, cls, label]) => {
+          const b = el("button", cls, label);
+          b.type = "button";
+          b.setAttribute("aria-pressed", String(cur === val));
+          b.disabled = locked;
+          b.addEventListener("click", () => setChoice(h.id, val));
+          choice.appendChild(b);
+        });
+        top.appendChild(choice);
+        hb.appendChild(top);
+
+        const lang = h.lang || f.lang;
+        if (h.old != null) hb.appendChild(codeBlock("old", h.verb === "add" ? "Знайти (вже є у файлі)" : "Було", h.old, h.oldMarks, lang));
+        if (h.new != null) hb.appendChild(codeBlock("new", h.verb === "create" ? "Файл цілком" : "Стало", h.new, h.newMarks, lang));
+        card.appendChild(hb);
+      });
+      steps.appendChild(card);
+    });
+    root.appendChild(steps);
+    window.scrollTo(0, scrollY);
+  }
+
+  // ── панель ───────────────────────────────────────────────────────────
+  let artifactApi = null;
+  let busy = false;
+
+  function counts() {
+    let self = 0, auto = 0, none = 0;
+    allHunks.forEach((h) => {
+      const c = (state.hunks[h.id] || {}).choice;
+      if (c === "manual") self++; else if (c === "auto") auto++; else none++;
+    });
+    return { self, auto, none };
+  }
+
+  function renderBar() {
+    const status = $("status"), bulk = $("bulk"), send = $("send");
+    status.textContent = ""; bulk.textContent = "";
+    const c = counts();
+
+    if (state.result) {
+      status.appendChild(el("span", "pill " + (state.result.ok ? "done" : "fail"), state.result.ok ? "Готово" : "Є проблеми"));
+      status.appendChild(el("span", null, fmtTime(state.result.at)));
+      if (state.result.note) status.appendChild(el("span", "note", state.result.note));
+      send.hidden = true;
+      return;
+    }
+
+    const tally = el("span", "tally", "сам " + c.self + " · авто " + c.auto + (c.none ? " · не обрано " + c.none : ""));
+    status.appendChild(tally);
+
+    if (submitted()) {
+      status.appendChild(el("span", "pill pending", "Надіслано"));
+      status.appendChild(el("span", "note", fmtTime(state.submitted) + " — Claude вставить «авто», перевірить «сам» і збере проєкт"));
+
+      // Сповіщення сесію не будить — рядок для чату одним дотиком, без виділення
+      const line = "Патч " + data.id + " · Готово · сам " + c.self + " · авто " + c.auto;
+      const cp = el("button", "send", "Скопіювати для чату: «" + line + "»");
+      cp.type = "button";
+      cp.addEventListener("click", async () => {
+        const ok = await copyText(line);
+        cp.textContent = ok ? "Скопійовано — встав у чат" : "Не вдалось скопіювати";
+        setTimeout(() => { cp.textContent = "Скопіювати для чату: «" + line + "»"; }, 2000);
+      });
+      bulk.appendChild(cp);
+
+      send.hidden = hasResults();
+      send.className = "send ghost";
+      send.textContent = "Змінити вибір";
+      send.disabled = !artifactApi || busy;
+      return;
+    }
+
+    if (!artifactApi) status.appendChild(el("span", "note", "надіслати можна на claude.ai; інакше напиши в чат"));
+    else if (c.none) status.appendChild(el("span", "note", "обери для кожної зміни"));
+
+    bulk.appendChild(el("span", null, "усе одразу:"));
+    [["manual", "усе сам"], ["auto", "усе автоматично"], [null, "очистити"]].forEach(([val, label]) => {
+      const b = el("button", "link", label);
+      b.type = "button";
+      b.addEventListener("click", () => {
+        allHunks.forEach((h) => { (state.hunks[h.id] || (state.hunks[h.id] = {})).choice = val; });
+        saveDraft(); render();
+      });
+      bulk.appendChild(b);
+    });
+
+    send.hidden = false;
+    send.className = "send";
+    send.textContent = c.none ? "Готово — ще " + c.none + " без вибору" : "Готово — надіслати Claude";
+    send.disabled = !artifactApi || busy || c.none > 0;
+  }
+
+  function render() { renderPage(); renderBar(); }
+
+  // Документ = незмінні частини + новий стан; живий DOM не серіалізуємо
+  const HEAD_EXTRA =
+    '<link rel="preconnect" href="https://fonts.googleapis.com">' +
+    '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
+    '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">' +
+    '<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"><\/script>';
+  const BAR =
+    '<div class="bar" id="bar"><div class="bar-inner">' +
+    '<div class="status" id="status"></div><div class="bulk" id="bulk"></div>' +
+    '<button class="send" id="send" type="button">Готово — надіслати Claude</button>' +
+    '</div></div>';
+
+  // Документ у формі, в якій його публікує інструмент Artifact: скелет з reset-стилем
+  // у head, а вміст сторінки — як написаний для інструмента (title і style першими в body).
+  // Інакше наступна публікація з сесії вклала б сторінку в сторінку.
+  const RESET =
+    ":root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}" +
+    "body{margin:0;font:14px/1.5 system-ui,sans-serif;background:#fafafa}img{max-width:100%}[hidden]{display:none!important}";
+
+  function buildDocument() {
+    const style = document.getElementById("style").outerHTML;
+    const app = document.getElementById("app").textContent;
+    const json = JSON.stringify(data).replace(/</g, "\\u003c");
+    return "<!doctype html><html><head><meta charset=utf8>" +
+      "<meta name=viewport content=\"width=device-width,initial-scale=1,viewport-fit=cover\">" +
+      "<style>" + RESET + "</style></head><body>" +
+      "<title>" + document.title.replace(/</g, "&lt;") + "</title>" + HEAD_EXTRA + style +
+      "<main class=\"page\" id=\"root\"></main>" + BAR +
+      "<script id=\"patch-data\" type=\"application/json\">" + json + "<\/script>" +
+      "<script id=\"app\">" + app + "<\/script></body></html>";
+  }
+
+  async function publish() {
+    busy = true; renderBar();
+    try {
+      await artifactApi.publish(buildDocument());
+      try { localStorage.removeItem(DRAFT_KEY); } catch (e) { /* немає сховища */ }
+    } catch (e) {
+      busy = false;
+      const code = e && e.code;
+      if (code === "conflict") return;
+      state.submitted = null;
+      render();
+      $("status").appendChild(el("span", "note", code === "not_writer" || code === "not_granted"
+        ? "у тебе немає права змінювати цю сторінку"
+        : "не вдалось надіслати — напиши в чат"));
+    }
+  }
+
+  $("send").addEventListener("click", () => {
+    if (!artifactApi || busy) return;
+    if (submitted()) {           // «Змінити вибір» — поки Claude не почав
+      if (hasResults()) return;
+      state.submitted = null;
+    } else {
+      if (counts().none > 0) return;
+      state.submitted = new Date().toISOString();
+    }
+    publish();
+  });
+
+  loadDraft();
+  render();
+
+  if (window.claude && typeof window.claude.use === "function") {
+    window.claude.use("artifact").then((api) => { artifactApi = api; renderBar(); })
+      .catch(() => { artifactApi = null; renderBar(); });
+  }
+})();
+</script>

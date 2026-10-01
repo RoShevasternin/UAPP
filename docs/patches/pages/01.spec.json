@@ -1,0 +1,78 @@
+{
+ "id": "01",
+ "short": "Meta SDK",
+ "title": "Meta SDK поруч із TikTok",
+ "date": "01.10.2026",
+ "order": "У кожній грі — згори вниз; гра компілюється, лише коли вставлено всі її зміни.",
+ "summary_md": "pages/01.summary.md",
+ "proj": "/Users/admin/Apps/UAPP/",
+ "lab": "/private/tmp/claude-501/-Users-admin-Apps-UAPP/bf9ff05a-300d-48c8-84c0-7266f6e2d397/scratchpad/lab01/UAPP/",
+ "projects": [
+  {
+   "prefix": "april_may/Game T5/RBX Boss/",
+   "label": "T5 · RBX Boss"
+  },
+  {
+   "prefix": "june/Game T1-1/T1-integrated/",
+   "label": "Еталон · T1-integrated"
+  }
+ ],
+ "files": [
+  {
+   "path": "april_may/Game T5/RBX Boss/app/build.gradle.kts",
+   "note": "залежність facebook-core"
+  },
+  {
+   "path": "april_may/Game T5/RBX Boss/app/src/main/java/com/bossrbx/rbxcalculator/adsmodule/RemoteConfigModel.kt",
+   "note": "блок meta у відповіді сервера"
+  },
+  {
+   "path": "april_may/Game T5/RBX Boss/app/src/main/java/com/bossrbx/rbxcalculator/services/meta/MetaManager.kt",
+   "note": "новий файл: запуск SDK"
+  },
+  {
+   "path": "april_may/Game T5/RBX Boss/app/src/main/java/com/bossrbx/rbxcalculator/services/analytics/MetaAnalyticsProvider.kt",
+   "note": "новий файл: подія головного екрана"
+  },
+  {
+   "path": "april_may/Game T5/RBX Boss/app/src/main/java/com/bossrbx/rbxcalculator/services/analytics/AnalyticsManager.kt",
+   "note": "підключити провайдер"
+  },
+  {
+   "path": "april_may/Game T5/RBX Boss/app/src/main/java/com/bossrbx/rbxcalculator/App.kt",
+   "note": "ранній старт із кешованого конфігу"
+  },
+  {
+   "path": "april_may/Game T5/RBX Boss/app/src/main/java/com/bossrbx/rbxcalculator/MainActivity.kt",
+   "note": "старт після свіжого конфігу"
+  },
+  {
+   "path": "june/Game T1-1/T1-integrated/app/build.gradle.kts",
+   "note": "залежність facebook-core"
+  },
+  {
+   "path": "june/Game T1-1/T1-integrated/app/src/main/java/com/rbxhubpro/rohumex/adsmodule/RemoteConfigModel.kt",
+   "note": "блок meta у відповіді сервера"
+  },
+  {
+   "path": "june/Game T1-1/T1-integrated/app/src/main/java/com/rbxhubpro/rohumex/services/meta/MetaManager.kt",
+   "note": "новий файл: запуск SDK"
+  },
+  {
+   "path": "june/Game T1-1/T1-integrated/app/src/main/java/com/rbxhubpro/rohumex/services/analytics/MetaAnalyticsProvider.kt",
+   "note": "новий файл: подія головного екрана"
+  },
+  {
+   "path": "june/Game T1-1/T1-integrated/app/src/main/java/com/rbxhubpro/rohumex/services/analytics/AnalyticsManager.kt",
+   "note": "підключити провайдер"
+  },
+  {
+   "path": "june/Game T1-1/T1-integrated/app/src/main/java/com/rbxhubpro/rohumex/App.kt",
+   "note": "ранній старт із кешованого конфігу"
+  },
+  {
+   "path": "june/Game T1-1/T1-integrated/app/src/main/java/com/rbxhubpro/rohumex/MainActivity.kt",
+   "note": "старт після свіжого конфігу"
+  }
+ ]
+}

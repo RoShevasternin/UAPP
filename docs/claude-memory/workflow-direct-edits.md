@@ -8,7 +8,9 @@ metadata:
   modified: 2026-09-04T00:00:00.000Z
 ---
 
-**Current rule: edit the project directly.** Change files in place, then build,
+**UAPP, з 01.10.2026: замінено на сторінки-патчі — див. [[uapp-patch-page-flow]].** Нижче — старе правило; з нього лишається урок: усе, що даємо на вибір, спершу зібрано й перевірено на девайсі в лабораторії, і нічого не кладемо всередину source root.
+
+**Old rule: edit the project directly.** Change files in place, then build,
 install and screenshot on the connected device to prove it works. Show a
 `git diff` after each step; he reviews the full diff in GitHub Desktop before
 committing (I never run git commands).

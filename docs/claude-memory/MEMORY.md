@@ -1,5 +1,5 @@
 - [UAPP: employer & repo layout](uapp-employer-and-repo.md) — one git repo, many unrelated company games; prefix per-game facts
-- [Workflow: direct edits + verify on device](workflow-direct-edits.md) — edit in place, build, install, screenshot; show diffs, never paste-back
+- [Workflow: direct edits + verify on device](workflow-direct-edits.md) — СТАРЕ для UAPP (з 01.10 — сторінки-патчі); урок: перевіряти в лабораторії до видачі
 - [Mindora: don't repack atlas from CLI](mindora-texturepacker-cli.md) — TexturePacker CLI is unlicensed and watermarks; atlas working copy is often newer than HEAD
 - [UAPP: правки сервера → еталон → бекпорт](uapp-server-patch-backport.md) — businesModule копіюється, не шариться; пропустив бекпорт — апки розходяться
 - [UAPP: баланс при міграції — завжди з нуля](uapp-balance-reset-default.md) — рішення користувача для всього парку, не питати
@@ -18,3 +18,5 @@
 - [Пам'ять у репо](memory-in-repo.md) — docs/claude-memory + симлінк з ~/.claude; два акаунти; після змін коміт і пуш; без особистих оцінок (репо публічне)
 - [TikTok: звіт для менеджера](tiktok-competitor-analysis.md) — 30.09.2026, доробка звіту Nasuf, 3 мови; копія docs/research/tiktok-30-09-2026/; як оновити
 - [Home Launcher PoC](home-launcher-poc.md) — лаунчер-PoC + артефакт-презентація з інтерактивним телефоном (30.09.2026); далі інтерактиви до інших функцій
+- [UAPP: сторінки-патчі](uapp-patch-page-flow.md) — зміни коду лише через сторінку з вибором «сам / авто»; «Патч NN · Готово» в чаті = читай і роби
+- [UAPP: Meta SDK](uapp-meta-sdk.md) — патч 01 (T5 + еталон), ключі з сервера, події як у TikTok; що далі
