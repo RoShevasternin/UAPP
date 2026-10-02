@@ -17,7 +17,7 @@
 - [UAPP: вертикалі й брифи](uapp-verticals-briefs.md) — 1 RBX, 2 стрімінги (Тарас), 3 TikTok (Nasuf); Ігор ставить сиру задачу → бриф
 - [Пам'ять у репо](memory-in-repo.md) — docs/claude-memory + симлінк з ~/.claude; два акаунти; після змін коміт і пуш; без особистих оцінок (репо публічне)
 - [TikTok: звіт для менеджера](tiktok-competitor-analysis.md) — 30.09.2026, доробка звіту Nasuf, 3 мови; копія docs/research/tiktok-30-09-2026/; як оновити
-- [Home Launcher PoC](home-launcher-poc.md) — лаунчер-PoC + артефакт-презентація з інтерактивним телефоном (30.09.2026); далі інтерактиви до інших функцій
+- [PoC-лендінг: тести Android](home-launcher-poc.md) — Тест 1 Default Home App, Тест 2 зарядка, Тест 3 асистент (02.10.2026); DreamService викинуто; таймлайн покадрово
 - [UAPP: сторінки-патчі](uapp-patch-page-flow.md) — зміни коду лише через сторінку з вибором «сам / авто»; «Патч NN · Готово» в чаті = читай і роби
 - [UAPP: Meta SDK](uapp-meta-sdk.md) — патч 01 (T5 + еталон), ключі з сервера, події як у TikTok; що далі
 - [Стрімінги: звіт для менеджера](streaming-competitor-analysis.md) — 02.10.2026, скорочена версія звіту Тараса, 3 мови; копія docs/research/streaming-02-10-2026/
