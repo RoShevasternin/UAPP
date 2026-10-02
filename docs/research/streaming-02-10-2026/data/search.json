@@ -1,0 +1,1623 @@
+{
+ "collected": "2026-10-02",
+ "queries": [
+  "free netflix",
+  "netflix gift card",
+  "free youtube premium",
+  "free spotify premium",
+  "free disney plus",
+  "free subscription rewards",
+  "watch ads earn rewards",
+  "earn gift cards",
+  "play games earn gift cards",
+  "rewards app gift cards"
+ ],
+ "top_n": 30,
+ "results": [
+  {
+   "pkg": "com.google.android.youtube",
+   "title": "YouTube",
+   "installs": 23578794426,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.android.chrome",
+   "title": "Google Chrome",
+   "installs": 22988243533,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.google.android.apps.maps",
+   "title": "Google Maps",
+   "installs": 22422769828,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.google.android.apps.photos",
+   "title": "Google Photos",
+   "installs": 14636932502,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.google.android.apps.docs",
+   "title": "Google Drive",
+   "installs": 14502695333,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.google.android.apps.tachyon",
+   "title": "Google Meet",
+   "installs": 13813297209,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.whatsapp",
+   "title": "WhatsApp Messenger",
+   "installs": 12361119157,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.facebook.katana",
+   "title": "Facebook",
+   "installs": 12120718950,
+   "queries": [
+    "free youtube premium",
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.google.android.videos",
+   "title": "Google TV",
+   "installs": 12103554857,
+   "queries": [
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "com.google.android.apps.messaging",
+   "title": "Google Messages",
+   "installs": 11673380349,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.google.android.apps.youtube.music",
+   "title": "YouTube Music",
+   "installs": 8031920811,
+   "queries": [
+    "free youtube premium",
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.instagram.android",
+   "title": "Instagram",
+   "installs": 7775605747,
+   "queries": [
+    "free youtube premium",
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.zhiliaoapp.musically",
+   "title": "TikTok - Videos, Shop & LIVE",
+   "installs": 4698828616,
+   "queries": [
+    "free youtube premium",
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.snapchat.android",
+   "title": "Snapchat",
+   "installs": 4290346488,
+   "queries": [
+    "free youtube premium",
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.facebook.lite",
+   "title": "Facebook Lite",
+   "installs": 4242761110,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.google.android.apps.books",
+   "title": "Google Play Books & Audiobooks",
+   "installs": 3849379525,
+   "queries": [
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.netflix.mediaclient",
+   "title": "Netflix",
+   "installs": 3603188446,
+   "queries": [
+    "free netflix",
+    "netflix gift card",
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "com.spotify.music",
+   "title": "Spotify: Music and Podcasts",
+   "installs": 3142248402,
+   "queries": [
+    "free youtube premium",
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "org.telegram.messenger",
+   "title": "Telegram",
+   "installs": 2994259820,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.whatsapp.w4b",
+   "title": "WhatsApp Business",
+   "installs": 2294591373,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.google.android.apps.walletnfcrel",
+   "title": "Google Wallet",
+   "installs": 2146811177,
+   "queries": [
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.lemon.lvoverseas",
+   "title": "CapCut - Video Editor",
+   "installs": 2017165686,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.roblox.client",
+   "title": "Roblox",
+   "installs": 1707440940,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.pinterest",
+   "title": "Pinterest",
+   "installs": 1612525769,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.openai.chatgpt",
+   "title": "ChatGPT",
+   "installs": 1606165805,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.einnovation.temu",
+   "title": "Temu: Shop Like a Billionaire",
+   "installs": 1185927882,
+   "queries": [
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.amazon.mShop.android.shopping",
+   "title": "Amazon Shopping",
+   "installs": 1107351066,
+   "queries": [
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "com.zzkko",
+   "title": "SHEIN-Shopping Online",
+   "installs": 1025746140,
+   "queries": [
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "com.flipkart.android",
+   "title": "Flipkart Online Shopping App",
+   "installs": 1019408061,
+   "queries": [
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.google.android.apps.youtube.kids",
+   "title": "YouTube Kids",
+   "installs": 972665963,
+   "queries": [
+    "free youtube premium",
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "com.amazon.avod.thirdpartyclient",
+   "title": "Prime Video",
+   "installs": 921602240,
+   "queries": [
+    "free netflix",
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "com.shazam.android",
+   "title": "Shazam: Find Music & Concerts",
+   "installs": 847367804,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.instagram.barcelona",
+   "title": "Threads",
+   "installs": 688256483,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.dywx.larkplayer",
+   "title": "Lark Player:Music Player & MP3",
+   "installs": 606430764,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.disney.disneyplus",
+   "title": "Disney+",
+   "installs": 594468525,
+   "queries": [
+    "free spotify premium",
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "com.google.android.youtube.tv",
+   "title": "YouTube for Android TV",
+   "installs": 592336120,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.mercadolibre",
+   "title": "Mercado Libre: Compras online",
+   "installs": 540083840,
+   "queries": [
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.netflix.ninja",
+   "title": "Netflix",
+   "installs": 500926846,
+   "queries": [
+    "free netflix",
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.soundcloud.android",
+   "title": "SoundCloud: Discover Music",
+   "installs": 462676148,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.amazon.mp3",
+   "title": "Amazon Music: Songs & Podcasts",
+   "installs": 394105543,
+   "queries": [
+    "netflix gift card",
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.google.android.apps.youtube.creator",
+   "title": "YouTube Studio",
+   "installs": 383139388,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "deezer.android.app",
+   "title": "Deezer: Music & Podcast Player",
+   "installs": 377273673,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.pandora.android",
+   "title": "Pandora - Music & Podcasts",
+   "installs": 311771278,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "tv.pluto.android",
+   "title": "Pluto TV: Watch Free Movies/TV",
+   "installs": 292400915,
+   "queries": [
+    "free netflix"
+   ]
+  },
+  {
+   "pkg": "com.crunchyroll.crunchyroid",
+   "title": "Crunchyroll: Anime Streaming",
+   "installs": 252123523,
+   "queries": [
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "com.radio.pocketfm",
+   "title": "Pocket FM: Audio Dramas",
+   "installs": 236276545,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.tubitv",
+   "title": "Tubi: Free Movies & Live TV",
+   "installs": 234517060,
+   "queries": [
+    "free netflix",
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "com.wbd.stream",
+   "title": "HBO Max: Stream TV & Movies",
+   "installs": 220920251,
+   "queries": [
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "com.apple.android.music",
+   "title": "Apple Music",
+   "installs": 204091760,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.audiomack",
+   "title": "Audiomack: Music Downloader",
+   "installs": 192206698,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.valvesoftware.android.steam.community",
+   "title": "Steam",
+   "installs": 179956258,
+   "queries": [
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.spotify.tv.android",
+   "title": "Spotify: Music & Podcasts",
+   "installs": 135239923,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.google.android.apps.paidtasks",
+   "title": "Google Opinion Rewards",
+   "installs": 128043010,
+   "queries": [
+    "earn gift cards",
+    "rewards app gift cards"
+   ]
+  },
+  {
+   "pkg": "com.plexapp.android",
+   "title": "Plex: Find Movies & TV Shows",
+   "installs": 114872725,
+   "queries": [
+    "free netflix"
+   ]
+  },
+  {
+   "pkg": "com.hulu.plus",
+   "title": "Hulu: Stream TV shows & movies",
+   "installs": 109556135,
+   "queries": [
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "com.espn.score_center",
+   "title": "ESPN",
+   "installs": 108447726,
+   "queries": [
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "com.gameloft.android.ANMP.GloftDYHM",
+   "title": "Disney Magic Kingdoms",
+   "installs": 107966712,
+   "queries": [
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "com.clearchannel.iheartradio.controller",
+   "title": "iHeart: Music, Radio, Podcasts",
+   "installs": 98408623,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "online.cashemall.app",
+   "title": "Cash’em All - Earn Rewards",
+   "installs": 80372234,
+   "queries": []
+  },
+  {
+   "pkg": "com.google.android.apps.youtube.music.pwa",
+   "title": "YouTube Music for Chromebook",
+   "installs": 74471580,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.peacocktv.peacockandroid",
+   "title": "Peacock TV: Stream TV & Movies",
+   "installs": 63756204,
+   "queries": [
+    "free netflix"
+   ]
+  },
+  {
+   "pkg": "us.current.android",
+   "title": "Make Money: Play to Earn Cash",
+   "installs": 58395420,
+   "queries": []
+  },
+  {
+   "pkg": "com.mistplay.mistplay",
+   "title": "MISTPLAY: Play to Earn Money",
+   "installs": 55607973,
+   "queries": [
+    "netflix gift card",
+    "earn gift cards",
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.cbs.app",
+   "title": "Paramount+",
+   "installs": 48924649,
+   "queries": [
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "fm.anchor.android",
+   "title": "Spotify for Creators",
+   "installs": 45318235,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.justplay.app",
+   "title": "JustPlay: Earn Money or Donate",
+   "installs": 40140267,
+   "queries": [
+    "earn gift cards",
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.aspiro.tidal",
+   "title": "TIDAL Music: HiFi sound",
+   "installs": 37435293,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.freecash.app2",
+   "title": "Freecash: Earn Money",
+   "installs": 35173736,
+   "queries": [
+    "earn gift cards",
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.sirius",
+   "title": "SiriusXM: Music, Sports & Talk",
+   "installs": 34962397,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.google.android.apps.youtube.unplugged",
+   "title": "YouTube TV: Live TV & more",
+   "installs": 34299089,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.fetchrewards.fetchrewards.hop",
+   "title": "Fetch: Earn Rewards Every Day",
+   "installs": 30572647,
+   "queries": [
+    "netflix gift card",
+    "free subscription rewards",
+    "earn gift cards",
+    "play games earn gift cards",
+    "rewards app gift cards"
+   ]
+  },
+  {
+   "pkg": "com.google.android.youtube.tvunplugged",
+   "title": "YouTube TV: Live TV & more",
+   "installs": 26054513,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.burakgon.gamebooster3",
+   "title": "Richie Games - Play & Earn",
+   "installs": 24864637,
+   "queries": [
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.ibotta.android",
+   "title": "Ibotta: Save & Earn Cash Back",
+   "installs": 24396397,
+   "queries": [
+    "earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.disney.emojimatch_goo",
+   "title": "Disney Emoji Blitz Game",
+   "installs": 23425838,
+   "queries": [
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "com.affinity.rewarded_play",
+   "title": "Rewarded Play: Play and Earn",
+   "installs": 23260237,
+   "queries": [
+    "free subscription rewards",
+    "play games earn gift cards",
+    "rewards app gift cards"
+   ]
+  },
+  {
+   "pkg": "cashgiraffe.app",
+   "title": "Cash Giraffe: Real Money Games",
+   "installs": 22971692,
+   "queries": [
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "in.krosbits.musicolet",
+   "title": "Musicolet Music Player",
+   "installs": 21677001,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.appnana.android.giftcardrewards",
+   "title": "AppNana: Gift Cards Rewards",
+   "installs": 20460892,
+   "queries": [
+    "rewards app gift cards"
+   ]
+  },
+  {
+   "pkg": "com.bestplay.app",
+   "title": "BestPlay: Play Games & Earn",
+   "installs": 19840638,
+   "queries": [
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.prodege.swagbucksmobile",
+   "title": "Swagbucks Play Games + Surveys",
+   "installs": 18463263,
+   "queries": [
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "de.empfohlen",
+   "title": "Testerup: Test & Earn Rewards",
+   "installs": 16751660,
+   "queries": [
+    "free subscription rewards",
+    "earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.weward",
+   "title": "WeWard - Walk & Earn Rewards",
+   "installs": 16332273,
+   "queries": [
+    "earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.gspl.mrewards",
+   "title": "mRewards - Games & Earn Money",
+   "installs": 13853071,
+   "queries": []
+  },
+  {
+   "pkg": "com.netflix.NGP.ProjectKraken",
+   "title": "Squid Game: Unleashed",
+   "installs": 12529049,
+   "queries": [
+    "free netflix"
+   ]
+  },
+  {
+   "pkg": "com.disney.wdw.android",
+   "title": "My Disney Experience",
+   "installs": 11243818,
+   "queries": [
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "com.appkarma.app",
+   "title": "AppKarma Rewards & Gift Cards",
+   "installs": 10185939,
+   "queries": [
+    "rewards app gift cards"
+   ]
+  },
+  {
+   "pkg": "dev.netlob.spotistats",
+   "title": "stats.fm for Spotify",
+   "installs": 10155359,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.onefinance.one",
+   "title": "OnePay – Mobile Banking",
+   "installs": 9949929,
+   "queries": [
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.spotify.s4a",
+   "title": "Spotify for Artists",
+   "installs": 9490745,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "music.ytstream.youtify",
+   "title": "Joytify - Music & Playlists",
+   "installs": 9444987,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.netflix.NGP.BloonsTDSix",
+   "title": "Bloons TD 6 NETFLIX",
+   "installs": 8555763,
+   "queries": [
+    "free netflix"
+   ]
+  },
+  {
+   "pkg": "com.infoscout.receipthog",
+   "title": "Receipt Hog: Cash for Receipts",
+   "installs": 8295748,
+   "queries": [
+    "earn gift cards"
+   ]
+  },
+  {
+   "pkg": "net.playtowingames.casino",
+   "title": "Play To Win: Real Money Games",
+   "installs": 8278507,
+   "queries": [
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.xpp.tubeAssistant",
+   "title": "Float Tube- Float Video Player",
+   "installs": 8040811,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.disney.wdpro.dlr",
+   "title": "Disneyland®",
+   "installs": 8016980,
+   "queries": [
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "io.playtime",
+   "title": "MONEY CASH - Play Games & Earn",
+   "installs": 7456545,
+   "queries": [
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.play.lucky.real.earn.money.free.fun.games.play.reward.income",
+   "title": "PlayWell: Play to Earn Money",
+   "installs": 7426562,
+   "queries": [
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.excentus.frn.android",
+   "title": "Fuel Rewards® program",
+   "installs": 6979703,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "com.kashkick.kashkickapp",
+   "title": "KashKick: Get paid to have fun",
+   "installs": 6698334,
+   "queries": [
+    "earn gift cards",
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "ai.bohemian.goldensurveys",
+   "title": "Golden Surveys - Earn Rewards",
+   "installs": 6002913,
+   "queries": [
+    "earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.joinhoney.honeyandroid",
+   "title": "PayPal Honey: Coupons, Rewards",
+   "installs": 5720514,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "com.gameloft.anmp.disney.speedstorm",
+   "title": "Disney Speedstorm",
+   "installs": 5295385,
+   "queries": [
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "com.netflix.NGP.Saga",
+   "title": "Netflix Stories",
+   "installs": 4577115,
+   "queries": [
+    "free netflix"
+   ]
+  },
+  {
+   "pkg": "com.embeepay.mpm",
+   "title": "BrandBee: Earn Gift Cards",
+   "installs": 4363036,
+   "queries": [
+    "free subscription rewards",
+    "earn gift cards",
+    "play games earn gift cards",
+    "rewards app gift cards"
+   ]
+  },
+  {
+   "pkg": "com.webmarketing.exxonmpl",
+   "title": "Exxon Mobil Rewards+",
+   "installs": 4174343,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "com.theoremreach.wizardbucks",
+   "title": "Playful Rewards: Play & Earn",
+   "installs": 4129366,
+   "queries": [
+    "free subscription rewards",
+    "play games earn gift cards",
+    "rewards app gift cards"
+   ]
+  },
+  {
+   "pkg": "com.zap.surveys",
+   "title": "Zap Surveys: Earn Easy Money",
+   "installs": 3972057,
+   "queries": [
+    "earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.scrambly",
+   "title": "Scrambly: Play to Earn Rewards",
+   "installs": 3899172,
+   "queries": [
+    "free subscription rewards",
+    "earn gift cards",
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.qmee.mobile",
+   "title": "Qmee: Paid Survey Cash Rewards",
+   "installs": 3660901,
+   "queries": [
+    "earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.primeopinion.appname",
+   "title": "Prime Opinion: Earn Money App",
+   "installs": 3655009,
+   "queries": [
+    "earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.money.time",
+   "title": "MoneyTime - Play & Earn Money",
+   "installs": 3642416,
+   "queries": [
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.pogotech.pogocash",
+   "title": "Pogo: Earn Cash & Rewards",
+   "installs": 3271803,
+   "queries": [
+    "earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.netflix.NGP.Snakeio",
+   "title": "Snake.io NETFLIX",
+   "installs": 3243569,
+   "queries": [
+    "free netflix"
+   ]
+  },
+  {
+   "pkg": "com.playnearn",
+   "title": "Snakzy: Play Games, Earn Money",
+   "installs": 3136228,
+   "queries": [
+    "earn gift cards",
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.netflix.NGP.Solitaire",
+   "title": "Classic Solitaire NETFLIX",
+   "installs": 3123787,
+   "queries": [
+    "free netflix"
+   ]
+  },
+  {
+   "pkg": "com.google.android.apps.automotive.youtube",
+   "title": "YouTube",
+   "installs": 2931032,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "com.habit.record.reward.tracker",
+   "title": "DailyGift: Earn Reward",
+   "installs": 2916536,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "app.com.cardlaxy",
+   "title": "CardCosmic: Sell Gift Cards",
+   "installs": 2896703,
+   "queries": [
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "in.mcash.app",
+   "title": "mCash - Rewards & Gift Cards",
+   "installs": 2807207,
+   "queries": [
+    "rewards app gift cards"
+   ]
+  },
+  {
+   "pkg": "com.gco.gamecashouts",
+   "title": "Game Cashouts – Play & Earn",
+   "installs": 2631453,
+   "queries": [
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "tyr.rewards",
+   "title": "Try Rewards: Play & Earn",
+   "installs": 2512888,
+   "queries": [
+    "earn gift cards",
+    "play games earn gift cards",
+    "rewards app gift cards"
+   ]
+  },
+  {
+   "pkg": "com.cardtonic.app",
+   "title": "Cardtonic: Virtual & Gift Card",
+   "installs": 2475845,
+   "queries": [
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.spotify.kids",
+   "title": "Spotify Kids",
+   "installs": 2410871,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.eureka.android",
+   "title": "Eureka: Earn money for surveys",
+   "installs": 2221638,
+   "queries": [
+    "earn gift cards"
+   ]
+  },
+  {
+   "pkg": "co.vybs.app",
+   "title": "VYBS: Play & Earn Rewards",
+   "installs": 2070484,
+   "queries": [
+    "free subscription rewards",
+    "earn gift cards",
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.netflix.NGP.Pandora",
+   "title": "Netflix Puzzled",
+   "installs": 1890784,
+   "queries": [
+    "free netflix",
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.playstack.balatro.android",
+   "title": "Balatro",
+   "installs": 1840201,
+   "queries": [
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.netflix.NGP.ZenPinball",
+   "title": "Pinball Masters NETFLIX",
+   "installs": 1707408,
+   "queries": [
+    "free netflix"
+   ]
+  },
+  {
+   "pkg": "com.netflix.kids",
+   "title": "Netflix Playground: Kids Games",
+   "installs": 1695750,
+   "queries": [
+    "free netflix",
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.earnstar.games.earn.money",
+   "title": "EarnStar: Play Games & Earn",
+   "installs": 1653078,
+   "queries": [
+    "earn gift cards",
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "win.free.gift.cards.make.money.cash.game.v6",
+   "title": "Win Gift Cards - Redeem Codes",
+   "installs": 1625925,
+   "queries": [
+    "rewards app gift cards"
+   ]
+  },
+  {
+   "pkg": "io.prorewards.twa",
+   "title": "ProRewards : Earn Gift Cards",
+   "installs": 1574358,
+   "queries": [
+    "earn gift cards",
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.getcopper.copper",
+   "title": "Copper: Earn Cash & Rewards",
+   "installs": 1509883,
+   "queries": [
+    "free subscription rewards",
+    "earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.lootup",
+   "title": "LootUp: Easy Cash Rewards",
+   "installs": 1345609,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "com.yihua.giftcard",
+   "title": "Giftcard8-Sell Gift Cards",
+   "installs": 1285587,
+   "queries": [
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.disney.cruise.sept_goo",
+   "title": "Disney Cruise Line Navigator",
+   "installs": 1269651,
+   "queries": [
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "com.netflix.NGP.Oxenfree",
+   "title": "OXENFREE: Netflix Edition",
+   "installs": 1245623,
+   "queries": [
+    "free netflix"
+   ]
+  },
+  {
+   "pkg": "com.alternativedatadotcom.rewardme",
+   "title": "RewardMe - Shop & Earn Rewards",
+   "installs": 1167306,
+   "queries": [
+    "earn gift cards"
+   ]
+  },
+  {
+   "pkg": "live.teekamsuthar.mutify",
+   "title": "Mutify - Mute annoying ads",
+   "installs": 1104172,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "myappfreesrl.com.myappfree",
+   "title": "MyAppFree: Play & Earn Money",
+   "installs": 1071141,
+   "queries": [
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.prezzee.prezzee",
+   "title": "Prezzee eGift cards",
+   "installs": 1051056,
+   "queries": [
+    "earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.netflix.NGP.CatsSoup",
+   "title": "Cats & Soup Netflix Edition",
+   "installs": 1023080,
+   "queries": [
+    "free netflix",
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.netflix.NGP.Spiritfarer",
+   "title": "Spiritfarer: Netflix Edition",
+   "installs": 922017,
+   "queries": [
+    "free netflix"
+   ]
+  },
+  {
+   "pkg": "com.disney.disneystore_goo",
+   "title": "Disney Store",
+   "installs": 767868,
+   "queries": [
+    "free disney plus"
+   ]
+  },
+  {
+   "pkg": "com.app.apexpay",
+   "title": "Apexpay - Redeem Gift Cards",
+   "installs": 750224,
+   "queries": [
+    "rewards app gift cards"
+   ]
+  },
+  {
+   "pkg": "com.topgiftcard.app",
+   "title": "Top Gift Card",
+   "installs": 722592,
+   "queries": [
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.paytronix.client.android.app.gpm",
+   "title": "fas REWARDS®",
+   "installs": 679233,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "com.playbackrewards.app",
+   "title": "Playback: Get Paid to Play",
+   "installs": 663533,
+   "queries": [
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.sayu.rewards11",
+   "title": "Rewards 11 - Play & Earn more",
+   "installs": 646890,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "com.netflix.NGP.CountryFriends",
+   "title": "Country Friends",
+   "installs": 624761,
+   "queries": [
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.pengupace",
+   "title": "PenguPace: Rewards for Steps",
+   "installs": 568876,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "io.attaindata.boomerang",
+   "title": "Frisbee: Rewards for Receipts",
+   "installs": 561734,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "com.cashcow.app",
+   "title": "CashCow - Play & Earn Money",
+   "installs": 554237,
+   "queries": [
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "ai.bohemian.rewardroo",
+   "title": "RewardRoo: Play & earn rewards",
+   "installs": 526648,
+   "queries": [
+    "free subscription rewards",
+    "earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.netflix.NGP.TheUltimatum",
+   "title": "The Ultimatum: Choices NETFLIX",
+   "installs": 525824,
+   "queries": [
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.surveymonkey.rewards",
+   "title": "SurveyMonkey Rewards",
+   "installs": 476576,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "com.netflix.NGP.WildThingsAnimalAdventures",
+   "title": "Wild Things Animal Adventures",
+   "installs": 457432,
+   "queries": [
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.netflix.NGP.LegoDuploNetflix",
+   "title": "LEGO® DUPLO® World NETFLIX",
+   "installs": 411657,
+   "queries": [
+    "free netflix",
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.playrewards.center",
+   "title": "PlayRewards: Play for Rewards",
+   "installs": 290479,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "com.netflix.NGP.SpiritCrossing",
+   "title": "Spirit Crossing NETFLIX",
+   "installs": 282203,
+   "queries": [
+    "free netflix",
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.merryfield",
+   "title": "Merryfield Everyday Rewards",
+   "installs": 278667,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "com.musis.musis",
+   "title": "Musis - Rate Music for Spotify",
+   "installs": 262234,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "com.groupgifting.android",
+   "title": "eGifter – Online Gift Cards",
+   "installs": 251822,
+   "queries": [
+    "rewards app gift cards"
+   ]
+  },
+  {
+   "pkg": "com.paytronix.client.android.app.fiftyfourthstreet",
+   "title": "Five Four Rewards",
+   "installs": 247290,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "com.buff.play",
+   "title": "Buff Play - Play to Earn",
+   "installs": 236638,
+   "queries": [
+    "earn gift cards",
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.nift.niftgift",
+   "title": "Nift - Enjoy a Gift!",
+   "installs": 231829,
+   "queries": [
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "video.tube.rn",
+   "title": "VideoTube - Block video ads",
+   "installs": 220930,
+   "queries": [
+    "free youtube premium"
+   ]
+  },
+  {
+   "pkg": "io.magicplay.pushparty",
+   "title": "Push Party - Earn Real Money",
+   "installs": 216446,
+   "queries": [
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.kinoli.giftcardgranny",
+   "title": "Gift Card Granny",
+   "installs": 215701,
+   "queries": [
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.sodacrew.sodagift",
+   "title": "SodaGift - Earn, Save, Gift",
+   "installs": 184476,
+   "queries": [
+    "earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.prodege.SBShop",
+   "title": "Tada: Cash Back Rewards",
+   "installs": 171392,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "com.apptopia.glynt",
+   "title": "Glynt - Earn Rewards",
+   "installs": 154986,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "am.trackify",
+   "title": "Trackify for Spotify Stats",
+   "installs": 153677,
+   "queries": [
+    "free spotify premium"
+   ]
+  },
+  {
+   "pkg": "ai.oc.experience.yeswayrewards",
+   "title": "Yesway & Allsup’s Rewards",
+   "installs": 145121,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "digital.paddy.subs",
+   "title": "Cancel Subscriptions - Subee",
+   "installs": 118116,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "com.mba.giftme",
+   "title": "GiftMe - Gift Cards & Rewards",
+   "installs": 103915,
+   "queries": [
+    "netflix gift card",
+    "earn gift cards",
+    "rewards app gift cards"
+   ]
+  },
+  {
+   "pkg": "com.outsitenetworks.sunstop",
+   "title": "SunStop Rewards",
+   "installs": 90242,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "com.dev.earnmoneywatchingads",
+   "title": "Earn Money Watching Ads",
+   "installs": 67713,
+   "queries": [
+    "watch ads earn rewards"
+   ]
+  },
+  {
+   "pkg": "com.upromise.app",
+   "title": "Upromise: Cash Back Rewards",
+   "installs": 59217,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "com.taplane.neweasyrewards",
+   "title": "Easy Rewards: Try Apps & Earn",
+   "installs": 57026,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "com.clipearn.app",
+   "title": "Earn Money: Watch Ads Videos",
+   "installs": 36267,
+   "queries": [
+    "watch ads earn rewards"
+   ]
+  },
+  {
+   "pkg": "com.openrewards",
+   "title": "Open Rewards: Shop Local",
+   "installs": 33509,
+   "queries": [
+    "free subscription rewards"
+   ]
+  },
+  {
+   "pkg": "com.crunchyroll.gv.gift.game",
+   "title": "Crunchyroll: Gift",
+   "installs": 21877,
+   "queries": [
+    "netflix gift card"
+   ]
+  },
+  {
+   "pkg": "com.dev.getpaidwatchingads",
+   "title": "Get Paid Watching Ads",
+   "installs": 21540,
+   "queries": [
+    "watch ads earn rewards"
+   ]
+  },
+  {
+   "pkg": "co.taplane.bountyhunter",
+   "title": "Bounty Hunter: Earn Gift Cards",
+   "installs": 17873,
+   "queries": [
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.crossmind.rewards.game.earn.money.test",
+   "title": "TestMyApps: Play & Earn Cards",
+   "installs": 15680,
+   "queries": [
+    "play games earn gift cards"
+   ]
+  },
+  {
+   "pkg": "com.dev.adreward",
+   "title": "Earn Money By Watching Ads",
+   "installs": 6477,
+   "queries": [
+    "watch ads earn rewards"
+   ]
+  },
+  {
+   "pkg": "com.ss.watch.video.earn.coin",
+   "title": "Daily Rewards: Watch Ads Video",
+   "installs": 5666,
+   "queries": [
+    "watch ads earn rewards"
+   ]
+  },
+  {
+   "pkg": "com.adcoreapp.adcore",
+   "title": "Earn Money - With Ads",
+   "installs": 4466,
+   "queries": [
+    "watch ads earn rewards"
+   ]
+  },
+  {
+   "pkg": "com.app.demsafiwatchadsandearnmoneysk",
+   "title": "Watch Ads & Earn Money",
+   "installs": 1547,
+   "queries": [
+    "watch ads earn rewards"
+   ]
+  },
+  {
+   "pkg": "com.app.demsafiapprewardhubwatchearncashsk",
+   "title": "RewardHub: Watch Ads Earn Cash",
+   "installs": 277,
+   "queries": [
+    "watch ads earn rewards"
+   ]
+  },
+  {
+   "pkg": "com.app.demsafigetmoneyforwatadssk",
+   "title": "Get Money For Watching Ads",
+   "installs": 254,
+   "queries": [
+    "watch ads earn rewards"
+   ]
+  },
+  {
+   "pkg": "com.app.demsafifastearnmoneywatchadssk",
+   "title": "Fast Earn Money Watch Ads",
+   "installs": 237,
+   "queries": [
+    "watch ads earn rewards"
+   ]
+  },
+  {
+   "pkg": "com.mahdevlabs.giftcard_wallet",
+   "title": "GiftResv: Gift Card Wallet",
+   "installs": 13,
+   "queries": [
+    "netflix gift card"
+   ]
+  }
+ ]
+}

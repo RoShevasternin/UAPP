@@ -1,0 +1,841 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- Жива версія: https://claude.ai/artifact/CPjEDiKFgmF2cdMFouV4z7 · Копія від 02.10.2026. Правиш артефакт — перезбережи й цей файл. -->
+<title>Стрімінги за рекламу</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Unbounded:wght@500;700&display=swap">
+<style>
+/* Layout: липка панель VELDAN з мовами, звітна колонка 1120px. Відповідь зверху, далі калькулятор, вибір сервісу, шлях до виплати поруч із цитатою, графік скарг поруч із карткою застосунку.
+   Та сама система, що в SMS-звіті: жовтий = реклама і гроші, бірюзовий = дії людини, червоний = проблеми й ризики. */
+:root{
+  --paper:#F2F3F5; --surface:#FFFFFF; --ink:#141722; --ink-2:#4A5064; --muted:#6B7184; --line:#DADDE3; --grid:#E7E9ED;
+  --ad:#F2BF0A; --ad-ink:#241C00; --ad-soft:#FFF3C4;
+  --user:#0E7A62; --user-ink:#FFFFFF; --user-soft:#DDF1EB;
+  --risk:#B3372B; --risk-soft:#FBE8E5; --on-risk:#FFFFFF;
+  --bar:#BCC1CC; --bar-em:#141722;
+  --bezel:#1A1C22;
+  --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E1015; --surface:#161920; --ink:#E8EAF0; --ink-2:#B0B5C3; --muted:#8B91A2; --line:#2A2E39; --grid:#21252E;
+    --ad-soft:#3A3211; --user:#3DB396; --user-ink:#05231B; --user-soft:#10302A; --risk:#FF7A6A; --risk-soft:#3B1D1A; --on-risk:#2A0D09;
+    --bar:#4A5060; --bar-em:#E8EAF0; --bezel:#000000;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E1015; --surface:#161920; --ink:#E8EAF0; --ink-2:#B0B5C3; --muted:#8B91A2; --line:#2A2E39; --grid:#21252E;
+  --ad-soft:#3A3211; --user:#3DB396; --user-ink:#05231B; --user-soft:#10302A; --risk:#FF7A6A; --risk-soft:#3B1D1A; --on-risk:#2A0D09;
+  --bar:#4A5060; --bar-em:#E8EAF0; --bezel:#000000;
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:400 16px/1.6 var(--f-body);margin:0}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+button{font:inherit;color:inherit}
+section{scroll-margin-top:64px}
+.wrap{max-width:1120px;margin-inline:auto;padding-inline:clamp(16px,4vw,40px)}
+.k{font:500 11.5px/1.35 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+h2{font:500 clamp(22px,3.2vw,32px)/1.15 var(--f-display);letter-spacing:-.015em;margin:0;text-wrap:balance}
+h3,h4{text-wrap:balance}
+.num{font-variant-numeric:tabular-nums}
+
+/* top bar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:color-mix(in srgb,var(--paper) 90%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar-in{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:10px}
+.bar-left{display:flex;align-items:center;gap:14px;min-width:0}
+.brand{font:700 15px/1 var(--f-display);letter-spacing:.22em;white-space:nowrap}
+.bar-k{font-size:13px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:14px;border-left:1px solid var(--line)}
+@media (max-width:520px){.bar-k{display:none}}
+.langs{display:inline-flex;gap:2px;padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--surface);flex:none}
+.langs button{appearance:none;border:0;background:none;color:var(--ink-2);font:600 12px/1 var(--f-mono);letter-spacing:.06em;padding:8px 10px;border-radius:7px;cursor:pointer}
+.langs button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+/* header */
+.top{padding-block:clamp(28px,6vw,64px) clamp(24px,4vw,40px)}
+h1{font:700 clamp(30px,5.4vw,56px)/1.05 var(--f-display);letter-spacing:-.025em;margin:14px 0 18px;max-width:17ch;text-wrap:balance}
+.lede{font-size:clamp(17px,2.1vw,20px);line-height:1.5;color:var(--ink-2);max-width:64ch;margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:10px 24px;margin:22px 0 0;padding:0;list-style:none;font-size:14px;color:var(--ink-2)}
+.legend li{display:flex;align-items:center;gap:8px}
+.tag{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 5px;border-radius:6px;font:600 12px/1 var(--f-mono);flex:none}
+.tag.ok{background:var(--ink);color:var(--paper)}
+.tag.guess{border:1.5px dashed var(--muted);color:var(--ink-2)}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.toc a{font-size:14px;text-decoration:none;padding:6px 12px;border:1px solid var(--line);border-radius:999px;color:var(--ink-2);background:var(--surface)}
+.toc a:hover{border-color:var(--ink-2);color:var(--ink)}
+
+/* blocks */
+.block{padding-block:clamp(40px,6vw,72px);border-top:1px solid var(--line)}
+.block.alt{background:var(--surface)}
+.block-head{display:grid;gap:10px;margin-bottom:28px;max-width:72ch}
+.block-head p{margin:0;color:var(--ink-2)}
+
+/* summary */
+.sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
+.sm{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px;display:grid;gap:8px;align-content:start;min-width:0}
+.sm h3{font:600 17px/1.3 var(--f-body);margin:0;display:flex;gap:10px;align-items:flex-start}
+.sm h3 .tag{margin-top:1px}
+.sm p{margin:0;font-size:15px;color:var(--ink-2)}
+.sm.us{border:1.5px solid var(--ink)}
+.sm .go{font-size:14px;font-weight:500;justify-self:start}
+
+/* segmented controls */
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;background:var(--paper);border:1px solid var(--line);border-radius:12px;max-width:100%}
+.seg button{appearance:none;border:0;background:none;color:var(--ink-2);font:500 14px/1.25 var(--f-body);padding:8px 13px;border-radius:9px;cursor:pointer}
+.seg button[aria-pressed="true"],.seg button[aria-selected="true"]{background:var(--ink);color:var(--paper)}
+.block.alt .seg{background:var(--paper)}
+
+/* demand */
+.dem{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(20px,3vw,36px);align-items:start}
+@media (max-width:900px){.dem{grid-template-columns:minmax(0,1fr)}}
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(16px,3vw,22px);min-width:0;position:relative}
+.chart-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.chart-top h3{font:600 16px/1.3 var(--f-body);margin:0}
+.bars{display:grid;gap:2px}
+.brow{appearance:none;border:0;background:none;text-align:left;width:100%;display:grid;grid-template-columns:minmax(0,9.6em) minmax(0,1fr) 4.6em;gap:10px;align-items:center;font-size:14px;padding:7px 8px;border-radius:8px;cursor:pointer}
+.brow:hover{background:var(--paper)}
+.brow[aria-pressed="true"]{background:var(--paper);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.brow .lab{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink-2)}
+.brow[aria-pressed="true"] .lab{color:var(--ink);font-weight:600}
+.bplot{height:14px;position:relative;background-image:linear-gradient(to right,var(--grid) 1px,transparent 1px);background-size:25% 100%;box-shadow:inset -1px 0 0 var(--grid)}
+.bplot i{position:absolute;left:0;top:1px;bottom:1px;background:var(--bar);border-radius:0 4px 4px 0;min-width:2px}
+.brow[aria-pressed="true"] .bplot i{background:var(--bar-em)}
+.bplot .ref{position:absolute;top:-4px;bottom:-4px;width:0;border-left:2px dashed var(--muted)}
+.brow .val{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}
+.axis{display:grid;grid-template-columns:minmax(0,9.6em) minmax(0,1fr) 4.6em;gap:10px;font:500 11px/1 var(--f-mono);color:var(--muted);margin-top:8px;padding-inline:8px}
+.ticks{position:relative;height:12px}
+.ticks span{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap;font-variant-numeric:tabular-nums}
+.ticks span:first-child{transform:none}
+.ticks span:last-child{transform:translateX(-100%)}
+.chart-note{margin:14px 0 0;font-size:13px;color:var(--muted)}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);font-size:12.5px;line-height:1.45;padding:8px 10px;border-radius:8px;max-width:250px;z-index:5}
+.dir{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(18px,3vw,24px);display:grid;gap:16px;min-width:0}
+.dir-head{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;justify-content:space-between}
+.dir-head h3{font:500 clamp(19px,2.4vw,23px)/1.2 var(--f-display);margin:0;letter-spacing:-.01em}
+.dir-stats{font:500 13px/1.3 var(--f-mono);color:var(--muted)}
+.verd{display:inline-flex;align-items:center;gap:6px;font:600 11.5px/1 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;padding:6px 9px;border-radius:999px;white-space:nowrap}
+.verd.ok{background:var(--ink);color:var(--paper)}
+.verd.mixed{border:1.5px dashed var(--ink-2);color:var(--ink)}
+.verd.bad{background:var(--risk);color:var(--on-risk)}
+.dl{display:grid;gap:12px;margin:0}
+.dl div{display:grid;grid-template-columns:minmax(0,10em) minmax(0,1fr);gap:4px 16px;padding-bottom:12px;border-bottom:1px solid var(--grid)}
+.dl div:last-child{border-bottom:0;padding-bottom:0}
+@media (max-width:560px){.dl div{grid-template-columns:minmax(0,1fr)}}
+.dl dt{font:500 12px/1.5 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.dl dd{margin:0;font-size:15px}
+.hooks{display:flex;flex-wrap:wrap;gap:6px}
+.hk{font:500 13px/1.2 var(--f-mono);padding:5px 9px;border-radius:7px;background:var(--ad-soft);color:var(--ink);border:1px solid color-mix(in srgb,var(--ad) 55%,transparent)}
+.dd-money{display:flex;gap:8px;align-items:flex-start}
+.coin{flex:none;width:18px;height:18px;border-radius:50%;background:var(--ad);color:var(--ad-ink);display:grid;place-items:center;font:700 11px/1 var(--f-mono);margin-top:3px}
+.alist{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.alist li{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--grid);font-size:14px}
+.alist li:last-child{border-bottom:0}
+.alist a{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.alist .n{font-variant-numeric:tabular-nums;color:var(--ink-2);font-size:13px}
+.ico{width:28px;height:28px;border-radius:7px;background:var(--grid);display:block;object-fit:cover}
+.ico.lg{width:40px;height:40px;border-radius:10px}
+
+/* hooks board */
+.motives{display:grid;gap:10px}
+.mv{background:var(--surface);border:1px solid var(--line);border-radius:16px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr) minmax(0,1.3fr) auto;gap:14px 22px;padding:16px 20px;align-items:start}
+@media (max-width:900px){.mv{grid-template-columns:minmax(0,1fr) auto}.mv .c2,.mv .c3{grid-column:1/-1}}
+.mv h3{font:600 16.5px/1.3 var(--f-body);margin:0}
+.mv .sub{font-size:13.5px;color:var(--ink-2);margin:2px 0 0}
+.mv .c3 p{margin:0;font-size:14.5px;color:var(--ink-2)}
+.mv .lbl{font:500 11px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.arrowcol{display:none}
+.words{margin-top:26px;display:grid;grid-template-columns:minmax(0,1fr);gap:0;max-width:720px}
+.words h3{font:600 16px/1.3 var(--f-body);margin:0 0 10px}
+.wrow{display:grid;grid-template-columns:minmax(0,15em) minmax(0,1fr) 3.4em;gap:10px;align-items:center;font-size:14px;padding:5px 0}
+.wrow .bplot{height:12px}
+.wrow .val{text-align:right;font-variant-numeric:tabular-nums}
+
+/* simulation */
+.sim-tabs{margin-top:22px}
+.sim{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:clamp(22px,4vw,56px);margin-top:26px;align-items:start}
+@media (max-width:820px){.sim{grid-template-columns:minmax(0,1fr)}}
+.device{display:flex;flex-direction:column;align-items:center;gap:12px;min-width:0}
+.phone{width:280px;max-width:100%;aspect-ratio:300/669;background:var(--bezel);border-radius:40px;padding:8px;box-shadow:0 0 0 1px var(--line),0 30px 60px -30px rgba(8,10,16,.5)}
+.phone img{display:block;width:100%;height:100%;object-fit:cover;border-radius:33px;background:#000}
+.pager{display:flex;align-items:center;gap:10px}
+.pbtn{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 16px;cursor:pointer;font-weight:500;font-size:14px}
+.pbtn:disabled{opacity:.4;cursor:default}
+.pcount{font:500 13px/1 var(--f-mono);color:var(--muted);min-width:4.5em;text-align:center}
+.sim-note{font-size:12.5px;color:var(--muted);text-align:center;margin:0;max-width:300px}
+.panel{display:grid;gap:18px;min-width:0}
+.ph{display:flex;gap:14px;align-items:center}
+.ph h3{font:600 20px/1.2 var(--f-body);margin:0}
+.ph .meta{font-size:13.5px;color:var(--ink-2);margin:2px 0 0}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.step{appearance:none;width:100%;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:12px 14px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 12px;cursor:pointer}
+.step[aria-current="step"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.step .no{font:500 13px/1.5 var(--f-mono);color:var(--muted)}
+.step b{font-weight:600}
+.step p{margin:0;grid-column:2;font-size:14.5px;color:var(--ink-2)}
+.mark{display:inline-flex;align-items:center;gap:5px;font:600 10.5px/1 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;padding:4px 7px;border-radius:5px;margin-left:8px;vertical-align:2px}
+.mark.money{background:var(--ad);color:var(--ad-ink)}
+.mark.user{background:var(--user);color:var(--user-ink)}
+.mark.risk{background:var(--risk);color:var(--on-risk)}
+.mark.ok{background:var(--ink);color:var(--paper)}
+.kv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px;margin:0}
+.kv div{display:grid;gap:2px;padding:9px 0;border-bottom:1px solid var(--grid);font-size:14px}
+.kv dt{color:var(--muted);font:500 11.5px/1.4 var(--f-mono);letter-spacing:.05em;text-transform:uppercase}
+.kv dd{margin:0}
+@media (max-width:560px){.kv{grid-template-columns:minmax(0,1fr)}}
+.sim-legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13.5px;color:var(--ink-2);margin:14px 0 0;padding:0;list-style:none}
+.sim-legend .mark{margin-left:0}
+
+/* exchange */
+.ex{margin-top:clamp(40px,6vw,64px);display:grid;gap:22px}
+.ex h3{font:500 clamp(19px,2.4vw,23px)/1.2 var(--f-display);margin:0}
+.ex > p{margin:0;color:var(--ink-2);max-width:70ch}
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;counter-reset:f;position:relative}
+@media (max-width:860px){.flow{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.flow{grid-template-columns:minmax(0,1fr)}}
+.flow li{counter-increment:f;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;gap:6px;align-content:start;position:relative}
+.flow li::before{content:counter(f);font:600 12px/1 var(--f-mono);width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--paper);border:1px solid var(--line);color:var(--ink-2)}
+.flow b{font-size:15px;line-height:1.3}
+.flow span{font-size:13.5px;color:var(--ink-2)}
+.flow li.loss{background:var(--risk-soft);border-color:color-mix(in srgb,var(--risk) 35%,transparent)}
+.flow .mark{margin:4px 0 0;justify-self:start}
+.loop{font-size:13.5px;color:var(--ink-2);display:flex;gap:8px;align-items:center}
+.calc{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(16px,3vw,22px);display:grid;gap:14px;max-width:760px}
+.calc label{font-weight:600}
+.calc-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px}
+.calc input[type=range]{flex:1;min-width:180px;accent-color:var(--ink)}
+.calc output{font:600 22px/1 var(--f-display);min-width:3.5em;font-variant-numeric:tabular-nums}
+.calc-res{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:560px){.calc-res{grid-template-columns:minmax(0,1fr)}}
+.cr{border-radius:12px;padding:12px 14px;display:grid;gap:4px}
+.cr.u{background:var(--user-soft)}
+.cr.m{background:var(--ad-soft)}
+.cr b{font:600 20px/1.2 var(--f-display);font-variant-numeric:tabular-nums}
+.cr span{font-size:14px;color:var(--ink-2)}
+.calc small{color:var(--muted);font-size:13px}
+
+/* heatmap */
+.hm-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+.hm{border-collapse:separate;border-spacing:3px;width:100%;min-width:760px;font-size:13.5px}
+.hm th{font:500 11px/1.25 var(--f-mono);letter-spacing:.03em;color:var(--muted);text-align:center;padding:10px 6px;vertical-align:bottom}
+.hm th.rh{text-align:left;font:500 14px/1.3 var(--f-body);color:var(--ink);letter-spacing:0;padding:6px 10px;white-space:nowrap;vertical-align:middle}
+.hm th.rh small{display:block;color:var(--muted);font:500 11px/1.3 var(--f-mono)}
+.hm tr.ctl th.rh{color:var(--ink-2)}
+.hm td{padding:0}
+.cell{appearance:none;width:100%;min-height:42px;border:0;border-radius:6px;cursor:pointer;font:600 13.5px/1 var(--f-body);font-variant-numeric:tabular-nums;color:var(--ink)}
+.cell[aria-pressed="true"]{outline:2px solid var(--ink);outline-offset:1px}
+.hm-scale{display:flex;align-items:center;gap:8px;font:500 11.5px/1 var(--f-mono);color:var(--muted);margin-top:12px}
+.hm-scale i{display:block;width:140px;height:10px;border-radius:3px;background:linear-gradient(to right,var(--surface),color-mix(in srgb,var(--risk) 72%,var(--surface)));box-shadow:inset 0 0 0 1px var(--line)}
+.reads{margin:22px 0 0;padding-left:1.1em;display:grid;gap:8px;max-width:78ch}
+.reads li{color:var(--ink-2)}
+.reads b{color:var(--ink)}
+.qhead{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;margin:30px 0 14px}
+.qhead h3{font:600 18px/1.3 var(--f-body);margin:0}
+.qhead span{color:var(--muted);font-size:14px}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:10px;align-content:start;min-width:0;margin:0}
+.qcard.hit{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font:500 12px/1.3 var(--f-mono);color:var(--muted)}
+.qmeta b{color:var(--ink);font-family:var(--f-body);font-size:13.5px;font-weight:600}
+.qcard blockquote{margin:0;font-size:14.5px;line-height:1.5}
+.qcard .tr{margin:0;font-size:14.5px;color:var(--ink-2)}
+.qth{display:flex;flex-wrap:wrap;gap:5px}
+.qth span{font:500 11px/1 var(--f-mono);padding:4px 6px;border-radius:5px;background:var(--risk-soft);color:var(--ink)}
+.empty{color:var(--muted);font-size:14.5px;margin:0}
+
+/* table */
+.tctl{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-bottom:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);font:500 13.5px/1 var(--f-body);padding:8px 11px;border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.search{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 12px;font:inherit;font-size:14px;min-width:0;width:220px;max-width:100%;color:var(--ink)}
+.shown{font:500 12.5px/1 var(--f-mono);color:var(--muted)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+table.apps{border-collapse:collapse;width:100%;min-width:1080px;font-size:14px}
+table.apps th,table.apps td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--grid);vertical-align:top}
+table.apps th{font:500 11px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+table.apps th button{appearance:none;border:0;background:none;padding:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;display:inline-flex;gap:4px;align-items:center}
+table.apps th button[data-on="1"]{color:var(--ink)}
+table.apps td.num,table.apps th.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+table.apps tr:last-child td{border-bottom:0}
+.appcell{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start;min-width:200px}
+.appcell a{font-weight:600;line-height:1.3}
+.appcell small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.hookcell{color:var(--ink-2);min-width:220px;max-width:300px;font-size:13.5px}
+.pill{display:inline-block;font:500 11px/1.2 var(--f-mono);padding:3px 6px;border-radius:5px;margin:0 4px 4px 0;white-space:nowrap}
+.pill.ad{background:var(--ad-soft);color:var(--ink);border:1px solid color-mix(in srgb,var(--ad) 55%,transparent)}
+.pill.th{background:var(--risk-soft);color:var(--ink)}
+.pill.flag{background:var(--risk);color:var(--on-risk)}
+.pill.add{background:var(--user-soft);color:var(--ink)}
+.pill.dir{background:var(--paper);color:var(--ink-2);border:1px solid var(--line)}
+.moneycell{min-width:150px;font-size:13px;color:var(--ink-2)}
+
+/* money */
+.models{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.model{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px;display:grid;gap:10px;align-content:start}
+.model h3{font:600 17px/1.3 var(--f-body);margin:0}
+.model .who{font:500 12px/1.4 var(--f-mono);color:var(--muted);letter-spacing:.03em}
+.model p{margin:0;font-size:14.5px;color:var(--ink-2)}
+.model .rk{font-size:14px;color:var(--ink);background:var(--risk-soft);border-radius:10px;padding:8px 10px}
+.law{margin:24px 0 0;background:var(--ad-soft);border-radius:14px;padding:16px 18px;max-width:80ch;font-size:15.5px}
+.sdkbox{margin-top:30px;display:grid;gap:12px}
+.sdkbox h3{font:600 17px/1.3 var(--f-body);margin:0}
+.sdkbox > p{margin:0;color:var(--ink-2);font-size:14.5px;max-width:75ch}
+.sdkrow{display:grid;grid-template-columns:minmax(0,11em) 3em minmax(0,1fr);gap:12px;align-items:start;padding:10px 0;border-bottom:1px solid var(--grid);font-size:14px}
+@media (max-width:560px){.sdkrow{grid-template-columns:minmax(0,1fr) 3em}.sdkrow ul{grid-column:1/-1}}
+.sdkrow b{font-weight:600}
+.sdkrow .cnt{font:600 14px/1.5 var(--f-mono);text-align:right}
+.sdk{display:flex;flex-wrap:wrap;gap:5px;margin:0;padding:0;list-style:none}
+.sdk li{font:500 11.5px/1 var(--f-mono);padding:5px 7px;border-radius:6px;border:1px solid var(--line);background:var(--surface)}
+.sdk li.adn{background:var(--ad-soft);border-color:color-mix(in srgb,var(--ad) 55%,transparent)}
+
+/* notes */
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px}
+.nt{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:clamp(16px,3vw,22px);display:grid;gap:12px;align-content:start;min-width:0}
+.nt h3{font:600 17px/1.3 var(--f-body);margin:0}
+.nt-row{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start}
+.nt-row p{margin:0;font-size:14.5px}
+.nt-row .lb{display:block;font:500 11px/1.4 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.nt-row .chk{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;background:var(--user-soft);color:var(--user);font:700 13px/1 var(--f-mono)}
+
+/* us */
+.lessons{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.ls{border-left:3px solid var(--user);padding:4px 0 4px 14px}
+.ls b{display:block;font-size:16px;margin-bottom:2px}
+.ls p{margin:0;font-size:14.5px;color:var(--ink-2)}
+.ideas{display:grid;gap:14px;margin-top:34px}
+.idea{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(18px,3vw,24px);display:grid;gap:14px}
+.idea-head{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
+.idea-head h3{font:500 clamp(18px,2.3vw,21px)/1.25 var(--f-display);margin:0}
+.lvl{font:600 11.5px/1 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;padding:6px 9px;border-radius:999px}
+.lvl.low{background:var(--user-soft);color:var(--ink)}
+.lvl.mid{background:var(--ad-soft);color:var(--ink)}
+.lvl.high{background:var(--risk-soft);color:var(--ink)}
+.idea .dl div{grid-template-columns:minmax(0,9em) minmax(0,1fr)}
+@media (max-width:560px){.idea .dl div{grid-template-columns:minmax(0,1fr)}}
+.nope{margin-top:30px;display:grid;gap:10px;max-width:84ch}
+.nope h3{font:600 18px/1.3 var(--f-body);margin:0}
+.nope ul{margin:0;padding-left:1.1em;display:grid;gap:8px}
+.nope li{color:var(--ink-2)}
+.nope b{color:var(--ink)}
+.verdict{background:var(--surface);border:1.5px solid var(--ink);border-radius:18px;padding:clamp(18px,3vw,26px);display:grid;gap:10px;margin-top:30px;max-width:84ch}
+.verdict h3{font:500 clamp(19px,2.4vw,23px)/1.25 var(--f-display);margin:0;display:flex;gap:10px;align-items:center}
+.verdict p{margin:0}
+
+/* sources */
+.src-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(24px,4vw,48px)}
+@media (max-width:860px){.src-grid{grid-template-columns:minmax(0,1fr)}}
+.src-grid h3{font:600 17px/1.3 var(--f-body);margin:0 0 10px}
+.plain{margin:0;padding-left:1.1em;display:grid;gap:8px;font-size:15px}
+.plain li{color:var(--ink-2)}
+.sources{margin:0;padding:0;list-style:none}
+.sources li{padding:10px 0;border-bottom:1px solid var(--grid);font-size:15px}
+.sources small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+footer{padding-block:34px 44px;color:var(--muted);font-size:13.5px;border-top:1px solid var(--line)}
+@media (prefers-reduced-motion:no-preference){.phone img{transition:opacity .18s ease}}
+/* streaming report additions */
+.verdict.big{margin:0 0 22px;max-width:none;border-width:2px}
+.verdict.big h2{font:500 clamp(22px,3vw,30px)/1.2 var(--f-display);max-width:30ch}
+.verdict.big p{color:var(--ink-2);max-width:78ch;font-size:16px}
+.lbl{font:500 11.5px/1.4 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;display:block}
+.cgrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(18px,3vw,32px);align-items:start}
+@media (max-width:860px){.cgrid{grid-template-columns:minmax(0,1fr)}}
+.calc{max-width:none}
+.crow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr) 4.2em;gap:12px;align-items:center}
+@media (max-width:560px){.crow{grid-template-columns:minmax(0,1fr) 4em}.crow input{grid-column:1/-1;grid-row:2}}
+.crow label{font-size:14.5px;font-weight:500}
+.crow input[type=range]{width:100%;accent-color:var(--ink)}
+.crow output{font:600 15px/1 var(--f-mono);text-align:right;font-variant-numeric:tabular-nums}
+.cout{display:grid;gap:12px}
+.cout .cr b{font-size:clamp(26px,3.4vw,34px)}
+.cmp{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.cmp p{margin:0;font-size:14.5px}
+#svc{margin-bottom:16px}
+.route{max-width:860px}
+.route .dl dd b{font-weight:600}
+#path .sim{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);margin-top:0}
+@media (max-width:820px){#path .sim{grid-template-columns:minmax(0,1fr)}}
+#ppanel{position:sticky;top:76px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(16px,3vw,22px)}
+.breaks{background:var(--risk-soft);border-radius:12px;padding:12px 14px}
+.breaks p{margin:0}
+.breaks .lbl{margin-bottom:4px}
+.brow.ctl .bplot i{background:var(--user)}
+.ph h3 a{text-decoration:none}
+.ph h3 a:hover{text-decoration:underline}
+.qgrid.one{grid-template-columns:minmax(0,1fr)}
+table.apps{min-width:820px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;margin:0;max-width:none}
+.rule{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;display:grid;gap:10px;margin:0;align-content:start}
+.rule blockquote{margin:0;font:500 16px/1.45 var(--f-body);background:var(--risk-soft);border-radius:10px;padding:12px 14px}
+.rule figcaption{font:500 12.5px/1.3 var(--f-mono)}
+.rule p{margin:0;font-size:14.5px;color:var(--ink-2)}
+.gono{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:700px){.gono{grid-template-columns:minmax(0,1fr)}}
+.gn{border-radius:16px;padding:18px 20px}
+.gn.go{background:var(--user-soft)}
+.gn.no{background:var(--risk-soft)}
+.gn h3{font:600 17px/1.3 var(--f-body);margin:0 0 8px}
+.gn ul{margin:0;padding-left:1.1em;display:grid;gap:8px;font-size:15px}
+.sub-h{font:600 18px/1.3 var(--f-body);margin:34px 0 12px}
+.need{list-style:none;margin:0;padding:0;counter-reset:n;display:grid;gap:0;max-width:880px}
+.need li{counter-increment:n;display:grid;grid-template-columns:2.2em minmax(0,11em) minmax(0,1fr);gap:6px 14px;padding:12px 0;border-top:1px solid var(--line);font-size:15px}
+.need li::before{content:counter(n);font:500 14px/1.6 var(--f-mono);color:var(--muted)}
+.need li b{font-weight:600}
+.need li span{color:var(--ink-2)}
+@media (max-width:560px){.need li{grid-template-columns:2.2em minmax(0,1fr)}.need li span{grid-column:2}}
+</style>
+
+<div class="topbar">
+  <div class="wrap topbar-in">
+    <div class="bar-left"><span class="brand">VELDAN</span><span class="bar-k" data-i18n="bar.k"></span></div>
+    <div class="langs" role="group" data-i18n-aria="langs" aria-label="Мова">
+      <button type="button" data-lang="uk" aria-pressed="true" lang="uk" title="Українська">УКР</button>
+      <button type="button" data-lang="ru" aria-pressed="false" lang="ru" title="Русский">РУС</button>
+      <button type="button" data-lang="en" aria-pressed="false" lang="en" title="English">ENG</button>
+    </div>
+  </div>
+</div>
+
+<header class="top wrap">
+  <p class="k" data-i18n="hdr.eyebrow"></p>
+  <h1 data-i18n="hdr.h1"></h1>
+  <p class="lede" data-i18n="hdr.lede"></p>
+  <ul class="legend">
+    <li><span class="tag ok">✔</span><span data-i18n="hdr.ok"></span></li>
+    <li><span class="tag guess">◌</span><span data-i18n="hdr.guess"></span></li>
+  </ul>
+  <nav class="toc" id="toc" data-i18n-aria="toc" aria-label="Розділи"></nav>
+</header>
+
+<section class="block alt" id="short" aria-labelledby="short-h">
+  <div class="wrap">
+    <div class="verdict big"><p class="k" data-i18n="v.k"></p><h2 id="short-h" data-i18n="v.h"></h2><p data-i18n="v.p"></p></div>
+    <div class="sum" id="sum"></div>
+  </div>
+</section>
+
+<section class="block" id="calc" aria-labelledby="calc-h">
+  <div class="wrap">
+    <div class="block-head"><h2 id="calc-h" data-i18n="calc.h"></h2><p data-i18n="calc.p"></p></div>
+    <div class="cgrid">
+      <div class="calc">
+        <div><p class="lbl" data-i18n="calc.reward"></p><div class="seg" id="rpre" role="group" data-i18n-aria="calc.reward"></div></div>
+        <div class="crow"><label for="ecpm" data-i18n="calc.ecpm"></label><input type="range" id="ecpm" min="5" max="40" step="1" value="15"><output id="ecpmv" for="ecpm"></output></div>
+        <div class="crow"><label for="share" data-i18n="calc.share"></label><input type="range" id="share" min="20" max="100" step="5" value="50"><output id="sharev" for="share"></output></div>
+        <div class="crow"><label for="cap" data-i18n="calc.cap"></label><input type="range" id="cap" min="5" max="60" step="5" value="20"><output id="capv" for="cap"></output></div>
+        <small data-i18n="calc.note"></small>
+      </div>
+      <div class="cout">
+        <div class="cr m"><b id="oads"></b><span data-i18n="calc.o1"></span></div>
+        <div class="cr m"><b id="ohours"></b><span data-i18n="calc.o2"></span></div>
+        <div class="cr u"><b id="odays"></b><span data-i18n="calc.o3"></span></div>
+        <div class="cmp"><span class="tag ok">✔</span><p data-i18n="calc.offer"></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block alt" id="routes" aria-labelledby="routes-h">
+  <div class="wrap">
+    <div class="block-head"><h2 id="routes-h" data-i18n="rt.h"></h2><p data-i18n="rt.p"></p></div>
+    <div class="seg" id="svc" role="tablist" data-i18n-aria="rt.h"></div>
+    <article class="dir route" id="rcard" aria-live="polite"></article>
+  </div>
+</section>
+
+<section class="block" id="path" aria-labelledby="path-h">
+  <div class="wrap">
+    <div class="block-head"><h2 id="path-h" data-i18n="pt.h"></h2><p data-i18n="pt.p"></p></div>
+    <div class="sim">
+      <ol class="steps" id="psteps"></ol>
+      <div class="panel" id="ppanel" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<section class="block alt" id="apps" aria-labelledby="apps-h">
+  <div class="wrap">
+    <div class="block-head"><h2 id="apps-h" data-i18n="ap.h"></h2><p data-i18n="ap.p"></p></div>
+    <div class="dem">
+      <div class="chart" id="bchart">
+        <div class="chart-top"><h3 data-i18n="ap.ch"></h3></div>
+        <div class="bars" id="bars"></div>
+        <div class="axis"><span></span><div class="ticks" id="bticks"></div><span></span></div>
+        <p class="chart-note" data-i18n="ap.note"></p>
+      </div>
+      <article class="dir" id="acard" aria-live="polite"></article>
+    </div>
+    <div class="tablewrap" style="margin-top:28px"><table class="apps" id="atable"></table></div>
+  </div>
+</section>
+
+<section class="block" id="rules" aria-labelledby="rules-h">
+  <div class="wrap">
+    <div class="block-head"><h2 id="rules-h" data-i18n="ru.h"></h2><p data-i18n="ru.p"></p></div>
+    <div class="rules" id="rlist"></div>
+  </div>
+</section>
+
+<section class="block alt" id="notes" aria-labelledby="notes-h">
+  <div class="wrap">
+    <div class="block-head"><h2 id="notes-h" data-i18n="notes.h"></h2><p data-i18n="notes.p"></p></div>
+    <div class="notes" id="nlist"></div>
+  </div>
+</section>
+
+<section class="block" id="us" aria-labelledby="us-h">
+  <div class="wrap">
+    <div class="block-head"><h2 id="us-h" data-i18n="us.h"></h2><p data-i18n="us.p"></p></div>
+    <div class="gono">
+      <div class="gn go"><h3 data-i18n="go.h"></h3><ul id="golist"></ul></div>
+      <div class="gn no"><h3 data-i18n="no.h"></h3><ul id="nolist"></ul></div>
+    </div>
+    <h3 class="sub-h" data-i18n="need.h"></h3>
+    <ol class="need" id="need"></ol>
+    <div class="verdict"><h3><span class="tag guess">◌</span><span data-i18n="rec.h"></span></h3><p data-i18n="rec.p"></p></div>
+  </div>
+</section>
+
+<section class="block alt" id="src" aria-labelledby="src-h">
+  <div class="wrap">
+    <div class="block-head"><h2 id="src-h" data-i18n="src.h"></h2></div>
+    <div class="src-grid">
+      <div>
+        <h3 data-i18n="src.m"></h3><ul class="plain" id="method"></ul>
+        <h3 style="margin-top:26px" data-i18n="src.c"></h3><ul class="plain" id="changes"></ul>
+      </div>
+      <div><h3 data-i18n="src.s"></h3><ul class="sources" id="sources"></ul></div>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap" data-i18n="foot"></div></footer>
+
+<script>
+(function(){
+"use strict";
+const APPS = [{"p":"com.gspl.mrewards","n":"mRewards - Games & Earn Money","dev":"Game Master's","i":13853071,"s":3.45,"r":195924,"h1":36.1,"h5":57.2,"rel":"Feb 13, 2022","upd":"Jun 29, 2026","ads":true,"iap":"","nn":86,"blk":34,"th":{"scam":10,"payout":26,"ads":9,"tracking":5,"rate":3,"account":5,"catalog":1},"taras":true,"ic":"data:image/webp;base64,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"},{"p":"com.buff.play","n":"Buff Play - Play to Earn","dev":"Buff Technologies ltd.","i":236638,"s":4.59,"r":4445,"h1":2.8,"h5":75.3,"rel":"Nov 29, 2024","upd":"Apr 29, 2026","ads":false,"iap":"","nn":140,"blk":50,"th":{"payout":41,"scam":20,"tracking":5,"ads":6,"rate":6,"account":14,"catalog":3},"taras":true,"ic":"data:image/webp;base64,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"},{"p":"com.freecash.app2","n":"Freecash: Earn Money","dev":"Freecash","i":35173736,"s":4.53,"r":537712,"h1":8.5,"h5":83.6,"rel":"Apr 12, 2022","upd":"Sep 25, 2026","ads":false,"iap":"","nn":197,"blk":60,"th":{"payout":50,"rate":24,"scam":24,"account":15,"ads":14,"tracking":7,"catalog":1},"taras":true,"ic":"data:image/webp;base64,UklGRlgFAABXRUJQVlA4TEwFAAAvP8APACK68v8pspX3f45L5sd13cf9uLu7Swez02d6Q8jcYXKcxiN7Ay4OqXUIL+BkmlnEiU7V1ZDasHF7hVtD6PJHUs23Sq6tbcce7e8p06V0cgB2xlPaNirbRuWS3wmMbdu2bduSHACAIUkBOQfbGKutcq9t2zzbtm3ztbbt/k+Ak2SeZ9WRaWMWasEmvEcLsbDLSshm6gyN3KNwJLN5ot3QRPuhR7D/Hm/aO6DSoBtgqTiRqQMOvDDnLro2g77vof+HPqL7S1PDziokOzJLgh6M9zmK3m5C8a2vWysvF1ZeLGz/2MEBmJl+TcLTEmAKZWraFfBc+7B6iN9ZYs8Ue5rgrW9bWHCPRGDkDLizQS14Lz6dbpCWCePLeslr71bwYGrK5X8YKVrg2bwxUWzm/piz/oG65Jw8uTdH1YMFWYo6c1BaeFJYcPyD/Lyj9roHXjA18ZJMZIQMVM/KB/fGl43Gtnlniq5nj/DdrgelVAt6exTXytfC18xTJSk9tcsLJkedk0mMCFPo/ekN187vvSrOVlwugBhYCRJYYTIeGsHUoPffLwfOMmrEYsDIkBMawIiIpLG9H1x6einC/asZjNpJ5mfeFlNiCLJw0O9DkfdtErSAnzz101UvVYRC9qBObZf5WpvM4g7WLnvr8jgOqM3KDYRIHjdx9hcArLxajEgPmIm2K0SXptCbTfR6wxO9Wkc/DwBb6lSpwWQmzvwCgOVns0l2M0z23MKJP+B7AqejJZDiCGmBb+HeuG8rrxbirA8TyeFcy8/nKiEVKG3pFd+E8R15akhu6cl0mitkapAIhzB7oGv3y849L33s2vOya9fLeK/yGO87lMhPrrGT37O4kB+RAieITRz1bH42cabIcpCQE/nQletTLTIoZ0e+qZTxLxboIlgulyv/h4zMT1MX/gJIc4/Feb5hnHNG8XXQBKa6H+/MKL6aUso4WSoB8rCWrg2PargjvOWQ75lpjOFW3ejRMkzueq9SGSfO9GB5eoIvQ5eDHOF7/6qztgYARve+l0iUkI2Z0Mcf360wZMaTd3+Mf8A5ZxJx7thPABje+04gkmF39yiaHnJ2asjZ/f2pIWde2d/j9OAzfcqvYJzmuNdfLLgKBDIG3NeiFf08BH/Rv8P+7l3HeJhm3/y0To4K3NtPFsHv+fP/r2ZWmEm2zc/r5ExURsH3qfN/Cnh65P2Nz+vkNNAY0enbzq+9TNtiGaRHEjK2v2yRU0F9Yg/W6rvl1oHV1UVaTTmoqQBFaytAfSmokZChBuy7l4CchqQArPoy2MgVJyconilqIYHvUCZTBxdecQ1sfS6QiBjBktx9O1/h1AgRAmlBPf8PjlB2TCGjj1suZ9EFiUYkLNeJHTj4AUMrKBYpDz744IPPM87ZwYMGpBA75O7emgV3shArMCPBjGD5BFaLHDj00Qs9XR5t1jeoakjtjcNq+1WaGOdXD6gaVjfZ78T6+i/o+z64Fx5ORln0YJyoHZlBPgFVIr/0KL7ydEbGUyrzrb1aAu90v+o8LSTDaZALUCVi8OgXvI0ncwlxhw+nJG6/XfVqW3H363coIU6DB6qED5/4hgW7J4Y39/zZ3P0HnRsHTy292CBFDBRy4jTIJaBKVO+eN1iY6O/BwNHPdXlKM+dNDzuRSY7T4NtGtiqOwrwj1vLbzup79up71/7111/XXtu2+v4LL7xw7bX2qrtKeiEyoPJ04fUsSWr5CHOSzFKkD4uB0/QIrpmrkdP7/PPPP3Xq/BbeOOnkU1rQkPHSZOHD7yhBKpXKr5VfK973f/NwyHgpM/o6xWf8XOw="},{"p":"com.mistplay.mistplay","n":"MISTPLAY: Play to Earn Money","dev":"MISTPLAY","i":55607973,"s":4.4,"r":1057213,"h1":6.7,"h5":70.1,"rel":"Jul 2, 2016","upd":"Oct 1, 2026","ads":true,"iap":"","nn":188,"blk":45,"th":{"payout":41,"scam":11,"tracking":4,"ads":10,"account":7,"rate":9},"taras":true,"ic":"data:image/webp;base64,UklGRu4EAABXRUJQVlA4IOIEAABQGACdASpAAEAAPmkwk0ekIqGhKBQKAIANCWwAg3M7HwH5GeyzZ/7nu0Z44Y22670D3ZPSRvD+8rf4igibZXshkF/yO5SWyn9E4mPqr/jvxA9nP8XeaL8H853+F/Kr+gfIrnref/977hf6x/7nr0+jl+wCvwGJIbBaD15r2Q1BEsYDJCA7MrE/U+AWGxIohaMpS6BGN3zAQYTI16oOg+F6lB6o/IWgwQtuxB15+YHL+MXM/lUL5T1sfdTf99pCFmEK3muR6YUf2vxiAAD+++B7/sTanS1r4iLV90Bq3K03B49oU///7anfYCrvU1b0Eb6grfIr+ZQpeblKPuEQ+Ks5iZw5I2yYQYPaTXXGd55D+/FwqwksV18ulELhIlubOINCsQzm3zjUNgk0BwJpiRxHnefBqbP0g0CPwXT2fWA8nrxITBzJNFU7MItJ1gSxy1C4fF+Xwcja2QY7xTY//nRdt2CBOCj841nkX4pXr2NbpG1uUvOOZyAF/d4Rr13VKPmwUP7cuk7fpJrtSMO/cJnHj1MoaTVxZJnTKEqMsr8lwxDFUVQj6YLAsUQvnltcFLp/gZXd6JPCVGuBUPCodt3XCv7xEqmuN+uMMufnwKoNxcAg6ze+ajpnXb0SowqhD5XpUY/y5YLUE76NmXmZZbZXxVQX+GQCxov6UhU14JKnnw+3NmQLJdrd8yRtwSBNhXcJffzedLmUv50aQCl+3N/8gR+bsg4+x6FDlL70Z9iuSdMzy4ky+wp5n6iA9mQrN4ae8hE6rViZxrTD6pFqLFc+vwzDJVhhUQbCrXkl5VBIpgGSLCib/DEYx5DHcibi/6YcYChcnhfqCbRZ5fbYCV27TWL8j/NHNS8UhZ5szUQSYfbYhSMrSj9fgFUweWVv6NZoC0wP4ObsqyhwKhWeuVYh+lIR1KR5tj3+kyzlu3tKA/K6s6rhwNAek7X3AJn8hyCDLp6wEHysah33vMUARsrXd1OKr9btPGCyQQTgMarXvmeO07nAD7yEJAKr20mM/tnBUSHBpRztT9e/R3uel716Zl1NiSWhJh2npoHiaaCLe51ZoW3EOs1LKQxkBrDGhHryiwIT34iGhlRWvahjr0qVTLSLcSD+Cbam/arY9RePYMI6VxOlC9+oUDMBWb0S2v8vbdWfs5+vc2iVKc1ud1Laq96zjpsH6YOhQUsvIPCXKzar/7EaCnkAqcc2AmC0zg6mL+LHXYJT66myqXPpvoHiBZ30nICMu68JYzzVphsrNrIxBP2BWVEY35KKCezGlRhnzpp/Qslb7gcSY88TWhBZWuXqxmmjWokPq2WF31LinEalZAyVGsP+WoEmjufCCWNz/7J8SC//gb5fBQmnMhmvRLiS4oH9ivd53Bf0sR4QXmeYOLdUS7mG16Jwc3t7MZKl21V8PnyZwQa7UcMv5wZoUis8rKfhiGnCgjkhqbl2bvM7kitsr87v00v/i4H8ospbWKVihBiHIbnrwmcdP86a6v8OSrK8Pr5xWXqXUz4DXekwj/DUjrfyZDkB32IUDnilEQlkezQHSJ1nEAaTyLngABjin9E06Nfq00ew0Ogf22kjZulvfA+RX0rK7/bRvYXEfX37Ont407FA4+vz56zgkYMBxk/P8ToofTAeZlh88v0h35z9xvP+XK3LNka8UgAAAA=="},{"p":"com.prodege.swagbucksmobile","n":"Swagbucks Play Games + Surveys","dev":"Prodege","i":18463263,"s":4.16,"r":450543,"h1":10.2,"h5":60.9,"rel":"Oct 9, 2013","upd":"Sep 18, 2026","ads":true,"iap":"","nn":175,"blk":43,"th":{"payout":29,"tracking":6,"rate":11,"ads":7,"account":14,"scam":17},"taras":true,"ic":"data:image/webp;base64,UklGRkQEAABXRUJQVlA4IDgEAADwFACdASpAAEAAPmkokkWkIiGYDAZ8QAaEtgBmghDfp82/Hf8QOjg5nMnu1icB4mfSA/jHoA/aDqAegB+4HWEegt5cXsL/uT+1HtDVjVozSB6OOwHaS3gAYKZD4qfyv/YewF/Kv7N6S3q8/Zz2FP11WWhAmqqATX1pdyBia4ELOdu1EzlFs72Cl8NyyT5ABknrUOzMxwgExcvS4jadVeZGPNqntmx0KpcS5nnxoCuLUAD+7U3f/7wtc+1H82P//LuEOkNnbg0ksbyr6e3Y66pIw+O4R8RBYAeAthtmO47YsAlNyXjLxBwJhK0yfQ1g57Z8bZNi2Zo6mUKJW5aZjL21H9guCyAXw7YxsN51mHAoN4XQ1NwFqWHGwavr0FB2ZiNAUyYBy8jPZvtpD7Hcz78I6zunlVtXm0PV/xPmTfvX3AfxEjw4VN6+zX9P+7Hx4ckqTK/BDBXZ+EmjDgfz7ERM4fxSD4hCyyEfMlBznU4UaMR8UEVhUqu0qZDUzeYATwUaVn1TdFguVbtFS1gcl4aXsB/Q9FrvY29NPSY0WWW5yQYBZsnO1L1JPq8tipZBhTSs2qi7UZP/ykJcvWh3SbXzxt/dNCmszqm0AqinimQra3gu12bzW89BIZ+Q0YVXvlYXBhLenCEIui2qH2UpFoivqLUi/gVBXzp+Mh6bpn451A69/boBu+9CrFwVRfeBlubzAOPEpuJV6xWNDLCpGPhHAdh67r/i49zsujgZyRK64OfG+SETLCshD8r+RwDYiPwt8ja95JOLRQDSA1Yar3MaGNHxD8oDTN87cnhqV4CxFMDGFELSK4G5EThPY0UfH+5vkI1cf3/oZuOZxF2zyeQOkk76bZOtU41ZGTkUg9eNrzNq//8SkQDXZIgNndtcPikYvP0Og4Gx9V6LTiyn53HynzxWYtfvMcjFqIV6BZFkO7KngFJ60GdMB7uXDveaiNHKZIfJxuiqSg9nu8qd1GyzMuXR4qd4lD3cQKCoh+cIvGYKbTDoLYj2LOlbd2fhTa0KJXBrGstGNtuc4BmrdX0jJhYJaLPtln2BttzZ33qS+Nqp9GefS7fBi3Kc2+iZ+Gf9etzjoqN5tTJO1zSYeimjpffhl+JcwIjmFVnwC0AxeY+6UAhW++2xoJ3mbsK/JckhEGAcmLtq6TMfXhsplYBdhqq9d5Wt9DJ+tFU98uicob9h/0E+bBBTfl/DvQKYI5DKm7B1iQxfj4wv/J2qD3kc0r2hct1O/Ba862fnGlUkjL4RkXSXaSJaN5+mAUlYox0QVz+fYARpG3z0l1GqN74zTPILPZdo/CUmjvLctEfS+vCA52yhuUrdJaqSKyQchcbO7/O3F+eSQlYszz61HOqrHsEXxKPCzcJwADI3c3PvgnO4mto8PPeTo64bmjiLsXGDCiQRACu+Lxve7yQW9spqohZZWzQAAAA="},{"p":"com.affinity.rewarded_play","n":"Rewarded Play: Play and Earn","dev":"Influence Mobile, Inc.","i":23260237,"s":4.2,"r":247935,"h1":10.9,"h5":66.1,"rel":"Feb 13, 2019","upd":"Sep 1, 2026","ads":true,"iap":"","nn":159,"blk":30,"th":{"account":8,"payout":21,"ads":13,"rate":11,"scam":14,"tracking":2},"taras":true,"ic":"data:image/webp;base64,UklGRmQOAABXRUJQVlA4WAoAAAAIAAAAPwAAPwAAVlA4TBwOAAAvP8APAAlFbRtJSmd+KX/Ce2CI6H/yUQRG41LkVFikIVEbdnDKcRZuY9tWlf3d3XC+xzhEzC+B/mO3VwY1sI0kyUkXFoWJpTX5x0IIFwKWFsXGbRtJnKO72pndyv9/42LR/4Q/bpb+Fkr6NoCSmVNKKQwZvdoTlIF8lHYpqy1hkvqeUHJ6gUB4Q38bAHYFeP4Epq42HWCXgi+C62+4AVzWb7Ws8zlUY9jnKQB8Udt2ONq2bet+VFXY7j5zcly2bd62bWPaxuR9T9q2bdv3fdpGu/tEOqkkVcexjztddaTGxVkPtG2btm3bVsy19aHVJ7dt27Zt27Zt27Zt27a5bM85Rx/oo7daLGH/f0iS9Pn8/hGZXcqqse05zSyutm+2ed+Tbdxs23viaWdvtq1mbWcxI+IbDhxJcpoeLuyRxnDBfOGz/e0KcP9KcMLvwf0tUfc7yP0TKASeQGWgofsGh0lZoIFBzqJW/FkKA4P7hi6eUqsz/G+60xhBFwJ/pkgQIECCW2ocll+lC3FfVC3q8ogaLQwEgfwgvUAAAMiQwkFRxiNr3JU6Roun1Gjwt9QSDe6DthLuqrEEBRAs8G+pEsAqCAApr65MSoJxCA5xc4wk4UaZYbiYQA5VAztYHmVJnlTpQAGAweG4laH0gWoCADisw82FhQIIfhk6CKAw0JAjzmQKA29FCjsZRV+umScexS1FPzNo4lehDM8hFs9gCgAEgu1yANm9hqbU2Frbe+764oqddBZNxLNRANP9y9n+8od9Py4TuppTZsMIT6RDgBhV/EJiCAAQqKgAoBjjPcoCAIMYW0yzkiHgPH55Ni4700uXl5fO+eqX21NuZ9qlRDJABADpXjG7onncxe2rPz580LTuFZ+hVJU97Qma4PemFRGUIAAACFdJ8AhtDR0cQFN+Yqwgm2b57fPTOODuffWr/f81E1wnnQzMZxKyD1qgBIhQt2vmwk8YPe8Yv7adeMjTNnzwk1RlNsU4T4tD7j0InQkAoBihooYrtXH1B6s5yabZ4gfnqQ1nVor6gs3n2pJYXanWsBre3PJ2SYJsdRHL+/vypWZ8tC0+9DmTH/ioapT+7p2/kAKo9HCP/h+GjM0Ac+HH567JQzFKq05lZFHE5nrlRiQEAqAAAm32guvabniZmXy8m3/oc6Y++CGqUQUGSCtIrt+myPRYM9Sc+vVZu7GNJEUncYUI0KqzLpTR+YbtSMwYgoLMD+0GV0ZDU8YXsfdRFx70vKkPf4tqlH5gvt+HfUA09KWJq/zwXDeum+1rEVaSKJAAnNykbEuuLgDBojdjJ4AUCi10tPP/sXrx3llLPqamKRXKVXl6cQ7XWJUGbWqcWt8zhWUabQjEFIwAV0gBKAhKEQFAgsX83zd7+4mL/ciMvQgyDNMqTS564bntL7rueUc9/pcX/GpXH7ZScVyVZ6TnAk36cg2V0RprrWxIkEKkWmglHWAZKBUAVk8TBKhAyvrBK0tbi3j3SRSxS7sTPaVd9sCP/fs1L1n858OSHE49+x/15f0oqlIqFIp84AqQxcX/S4XG3DC3SdhwElQoqmwFRZBQSAUIKmhKL0oFxHJQnttWdlg1jr17/xU/W5ldgAgdtTSb2fy258V/2tz52Bc+4s9vPP/Nn5l93eWjZ99Mu65wpatyVb7T8plr0KjX4Bh3OqgUDiXpSVgR7r5wGAGCFE/N6rcEAJyV4aYMPy9unCzXn3DHWf95xNbrfdCMvbKtj/8/f8RP3tM74/KZH99Uv8Sp3R97/B+v8KHp995QvXR/5rgh6TgoFQWabTSZTEghzW6nW0lREu04nN7r3K6846Nc93+SgQgfzPhb5ix9os9tG9Yfft//XeeZwWKmnUc+dm/8rN3fb/Cynq2nHv3kb17gS8/414umX7OQS/fJDq4bINytDkOBzCVDa+MtdSppHYii0kkonRh0jl6Ax/+Az72f0S3AfHV1vFvAZ6sa8qTkm+oX2ksCOAc2KW0tqpus7P+HqNYJ89e/+E/vuNuL9n3enZ981sh09+eXevtv7/gluZjaiYaiW9aX3/5qt7ORJ99ssXH3weP2/DOy0qEUlWanCDkyZnnNG//Kd98O+Nf5+OEV8+YvzxIBF8QXqzMAZ5W3Vn2i9zfi0RnK0EzDBx4QT8+5hW94x++fmxd//OT3/vpLfvsRd1QvPEkqvBgUbizK9O+DvPubbny7B9+8S6T4/d+NGUAaSR817eBudt0C8PHi9V8AtO7YsUzdAHZWO5/lDC/GB6pD7k12y0J14bbfetwnHvm5pw+ffvG/N3LJUvfEw990w+8OahdKIobpqDTTUXOU5R9+N7z+Pcw3wYDm/Aj50z8qLsUUDRWPMHBJY7Z4/fd5/71588hCdaXw3RpfkYCD1b6b6Y0C+jrVy+34sRd/+7UveUw7qWifOpnNP9uonDMBLSNNCdzhRj/8TniDe/rJF/gkQfm3f3Wn5lPaaQ3TC44M2A/mvLQDFqozISzenOGTmK0G1mXs84nyedWdOO+045r/fcRnrtSl8RcH/c73HT3HYOFKKQ2hO5LyD74T3OCHOt8GPgasG7RRM/zjPyzVqc5S9589u2CqTSzYZ7pDLelMkEoZJ6RRKpz8I5yO5xRXqHTOb+/+r+t/cOXwAVt43i/feLFDoSPQrgn8J/z0O8F1f8D2xdA/CyM+dOWsOf3O4Ni7tDj+9xuiVY4ub287eqeCu/5w71e86CHve9jPLzlydIOAioEDkCKIAkdb9JbcdbV2zc/iJul2P/Q1J/dBIa20VHB4b9/wc7n937T36SV/ITWnd75n7Sq+pKsnq59+T+VuYIQiCPjQQx8AhncOYWfSJUsNgQAgECBACgCinTFZ6oBUaqADNEgVQNhCNOAyNk/9vDvrKXrzjXsPOhyHR91v5MIPZbqPqelknMMJO5Gus/ovlYaLUsNSO1fZmY9sbcVLh83V5cjmZmVx4vTq/7tLx5PrW0HVwq7zptrU+kZvmE5O92vb/dD8wtby+dbK7ujGpeVx4+Rh/02G4zWHrgVzTlWsjc0W9s6zU19/hdm+0IODB106X/v662q36eenv2y0mymIKk6mXAicmLSGi6lokIKoQKQkKIAoCg1QSEWDlEQlIlUEBZA0FQGztji+UYZNCs+4hXlcSdnB0KSoKMFAqakfaSaAqMljRGsStBb79e1Ox3IFRZHTVDRVIVMUg1Myw24BBgt2xn0HhaNUivRbp4CFLU0cnG7/wdGlz0wBlMNLO4ZOFI6FMq3WgaxQmzggcDNStOXpf1u217v/valcQzcYBFIa1gQOrhAU6feuRCLKGgMW2+6MxoO8+vF7kxc9W9p10DjHf8+95KlHvPK4NNU1ByA8tX1qbGdNC4Wn2fekFYqy6FSlP93wueGau/46NUe0mgyYIcPT3Qsu8eepu4hkYFaqstidSXWWlqYARQS7StYIW0N8e9c9jce+9qe9cSMYjk/86bqhc+0vnnpJe30bOJ2q2Y9iytUUvPvv4Y1/ztiyy6iMbGpdnNlSZkYVIoGsIAI89GY8+o/LDVf6p8i2z93y+7vXs/62f+zwC7/5+G3bGwgc/euntwGZCtiGRdW8XDcuz3uqmwwPto2eQVDkL1yF5QFvoKjsHbRETv0vkSKYCUPabx58WefARnxoMf31ZhQALGAy0NfpHUiipQkRBQBo1MQoBBQhRBD8r6d1ai/B9f7mJ+1e9rKitPNKsPIdv7rvmq/subb9DWUK6G8A9OKtfWzEOPwr1YzF/xmh2uiMDfoIueWNQ2BAwuXprueeXHfZU+fd9H+P/Mnh2S9BUaJMyVpJeGeNG6PFGB/DbzdAcTmqydtspnXyk4e/etaddt4FbVDN9Vbde3Du9f96z/N/+eL1v61/aqUzMlCkYT1TABcJZ/NoqnCBqa4qQ/kvFE5r+tXLL65d8OfXX370V5ekmzPTRhHb59Fhx4953c/G76ObkXmvwgRh0AgM2rF4CZUDXoad0ZOQB5/Wfn7tLP5va9fXb/z7W+9I5x2lNbv6ycsUmSzCZt4aLEyY53RaBcVpS2dE4E0XvSMvPLi87XskKOvMRO219Qn+/Y03mDZoVf2sx9neHeBIq5+kzpZmOJBWMGV9GaXKR2K69M5H5d1Hl9z0n2c9fREbtatdy/q5AiV0DsyEfVgBASHacXsrw0yCBZurqjzoDZNZbv0qo+c67cYudWLTjYbnHrX35D/sjV5wULqxnXWlP531HOwMAOjoZlc78CFW9lE5T2ZnjvTMiwUpbAl8sINF47JLRIYJuejWfzv/Jn8BZpjAhuseJwB9MZPLEzxuF2Yxm1l4yE/jYcepYnTQHfUPBgqHg99fnDzuUmOEAjc6/e/rj//gRM4IM3KlAG2l5ixtSlHsE6TE0sCAaYclSmrbw/PV821P/+XqPd+44buXWhx7fUoKDJDg5DbjCwQioCBhCgwQIZwa8PE/G2/9RAKaqQW+WlQVvlAXvS68bz56JlaVdZCiJEy7IuA+ke0U9kNRVZXB+yZJan7LjT2wGDpZjfz4d6O3eY1OdzoLKpPKLZcAEQCNEIhozK+eIiBnQcT2abT1SreyZ8arCkEi82w8+5ORpnWbfgzd8vTAkKqhybgxURWFBSJrYsrlUFHDrWK7Kzk57PJKW5z2z26WU24yrVuA4VTSS50MtWKoVQutcTW6tFbeWdUXtN72WtomKCYdEp1ak694cfTelyEaRVCIRgHEpCkh0LBqQQgRDUKISaMAaBATqu+qoUPUtPLhty7dC7O4EBSUNnRyjrbrdUEVoKQKAoSAAAImMnn9UE36pWZxIQT3nSAACHhYEwBFWElGIgAAAElJKgAIAAAAAQAxAQIABwAAABoAAAAAAAAAUGljYXNhAAA="},{"p":"com.justplay.app","n":"JustPlay: Earn Money or Donate","dev":"JustPlay GmbH","i":40140267,"s":4.43,"r":1739898,"h1":5.9,"h5":72.5,"rel":"Nov 11, 2020","upd":"Sep 23, 2026","ads":true,"iap":"","nn":181,"blk":36,"th":{"ads":43,"account":1,"payout":34,"rate":24,"scam":15,"tracking":1},"taras":true,"ic":"data:image/webp;base64,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"},{"p":"online.cashemall.app","n":"Cash’em All - Earn Rewards","dev":"Cash'em All","i":80372234,"s":4.46,"r":1439781,"h1":4.0,"h5":71.6,"rel":"Jun 25, 2020","upd":"Sep 15, 2026","ads":true,"iap":"","nn":144,"blk":44,"th":{"payout":35,"rate":10,"scam":15,"account":3,"tracking":9,"ads":8},"taras":true,"ic":"data:image/webp;base64,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"},{"p":"us.current.android","n":"Make Money: Play to Earn Cash","dev":"Mode Mobile","i":58395420,"s":4.47,"r":3588824,"h1":2.9,"h5":68.6,"rel":"Aug 28, 2018","upd":"Sep 26, 2026","ads":true,"iap":"$2.99 - $99.99","nn":128,"blk":43,"th":{"account":29,"payout":27,"scam":22,"rate":9,"ads":14},"taras":true,"ic":"data:image/webp;base64,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"},{"p":"com.google.android.apps.paidtasks","n":"Google Opinion Rewards","dev":"Google LLC","i":128043010,"s":4.51,"r":3765730,"h1":4.8,"h5":75.0,"rel":"Nov 5, 2013","upd":"Sep 29, 2026","ads":false,"iap":"","nn":122,"blk":7,"th":{"scam":2,"rate":8,"payout":4,"tracking":2,"ads":2,"catalog":1,"account":2},"taras":true,"ic":"data:image/webp;base64,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"},{"p":"tyr.rewards","n":"Try Rewards: Play & Earn","dev":"Tyrads","i":2512888,"s":4.18,"r":223144,"h1":14.1,"h5":68.4,"rel":"Oct 20, 2022","upd":"Oct 1, 2026","ads":true,"iap":"","nn":175,"blk":66,"th":{"payout":50,"scam":22,"account":30,"tracking":5,"rate":7,"ads":2},"taras":false,"ic":"data:image/webp;base64,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"},{"p":"com.earnstar.games.earn.money","n":"EarnStar: Play Games & Earn","dev":"Earn Star AB","i":1653078,"s":4.37,"r":92424,"h1":7.4,"h5":71.2,"rel":"Apr 11, 2025","upd":"Sep 25, 2026","ads":false,"iap":"","nn":184,"blk":57,"th":{"payout":44,"account":8,"scam":21,"tracking":15,"rate":11,"ads":6},"taras":false,"ic":"data:image/webp;base64,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"},{"p":"myappfreesrl.com.myappfree","n":"MyAppFree: Play & Earn Money","dev":"MyFreeApp.io","i":1071141,"s":4.54,"r":9169,"h1":6.0,"h5":79.1,"rel":"Dec 4, 2015","upd":"Sep 25, 2026","ads":true,"iap":"","nn":117,"blk":61,"th":{"account":26,"scam":15,"payout":26,"tracking":29,"rate":14,"ads":6},"taras":false,"ic":"data:image/webp;base64,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"}];
+const LANGS=["uk","ru","en"]; let L=0;
+const T = {
+"bar.k":["Конкурентний аналіз · стрімінги за рекламу","Конкурентный анализ · стриминги за рекламу","Competitive analysis · streaming for ads"],
+"langs":["Мова","Язык","Language"],"toc":["Розділи","Разделы","Sections"],
+"hdr.eyebrow":["Google Play (США) · 02.10.2026 · Дослідження: Тарас · Підготував VELDAN","Google Play (США) · 02.10.2026 · Исследование: Тарас · Подготовил VELDAN","Google Play (US) · 2 Oct 2026 · Research: Taras · Prepared by VELDAN"],
+"hdr.h1":["Netflix за рекламу: як це працює насправді","Netflix за рекламу: как это работает на самом деле","Netflix for ads: how it really works"],
+"hdr.lede":["Чи можна дати користувачу Netflix, YouTube Premium чи Spotify за ігри й рекламу, хто так уже робить і що з цього вийде в нас. Коротка версія дослідження Тараса з перевіреними цифрами.","Можно ли дать пользователю Netflix, YouTube Premium или Spotify за игры и рекламу, кто так уже делает и что из этого выйдет у нас. Короткая версия исследования Тараса с проверенными цифрами.","Can we give users Netflix, YouTube Premium or Spotify for games and ads, who already does it, and what it would mean for us. A short version of Taras’s research with verified numbers."],
+"hdr.ok":["Підтверджено: картка Play, відгуки, офіційні довідки й правила","Подтверждено: карточка Play, отзывы, официальные справки и правила","Confirmed: Play listing, reviews, official help pages and policies"],
+"hdr.guess":["Припущення: не перевірено, поруч написано, як перевірити","Предположение: не проверено, рядом написано, как проверить","Assumption: not verified, with a note on how to check"],
+"toc.items":[["Відповідь","Скільки реклами","Що отримає людина","Шлях до виплати","Застосунки","Правила","Тонкощі","Що робимо ми","Джерела"],["Ответ","Сколько рекламы","Что получит человек","Путь к выплате","Приложения","Правила","Тонкости","Что делаем мы","Источники"],["Answer","How many ads","What the user gets","Path to payout","Apps","Rules","Fine print","What we do","Sources"]],
+"v.k":["Відповідь за 30 секунд","Ответ за 30 секунд","The 30-second answer"],
+"v.h":["«Netflix за рекламу» ніхто не дає. Дають подарункові картки, і живуть не з реклами, а з оферів.","«Netflix за рекламу» никто не даёт. Дают подарочные карты, и живут не с рекламы, а с офферов.","Nobody gives “Netflix for ads”. They give gift cards, and they live on offers, not ads."],
+"v.p":["Ринок — це reward-платформи на десятки мільйонів встановлень: людина грає в партнерські ігри, отримує бали й міняє їх на картку. Стрімінг — лише назва на лендінгу або одна з карток у каталозі. Для нас: картки за AdMob-рекламу заборонені, місяць підписки за рекламу не окупається, тож шлях можливий лише як reward-платформа з офервол-партнером.","Рынок — это reward-платформы на десятки миллионов установок: человек играет в партнёрские игры, получает баллы и меняет их на карту. Стриминг — лишь название на лендинге или одна из карт в каталоге. Для нас: карты за AdMob-рекламу запрещены, месяц подписки за рекламу не окупается, поэтому путь возможен только как reward-платформа с офферволл-партнёром.","The market is reward platforms with tens of millions of installs: people play partner games, earn points and swap them for a card. Streaming is only a landing-page headline or one card in the catalog. For us: gift cards for AdMob ads are prohibited and a month of subscription doesn’t pay back from ads, so the only path is a reward platform with an offerwall partner."],
+"more":["Детальніше","Подробнее","Details"],
+
+"calc.h":["Скільки реклами коштує підписка","Сколько рекламы стоит подписка","How many ads a subscription costs"],
+"calc.p":["Рахуємо лише rewarded-рекламу. Посуньте повзунки: видно, скільки роликів має подивитися людина, щоб ми окупили картку.","Считаем только rewarded-рекламу. Подвигайте ползунки: видно, сколько роликов должен посмотреть человек, чтобы мы окупили карту.","Rewarded ads only. Move the sliders to see how many videos a person must watch for us to pay for the card."],
+"calc.reward":["Нагорода","Награда","Reward"],
+"calc.ecpm":["Дохід на 1000 показів (eCPM) ◌","Доход на 1000 показов (eCPM) ◌","Revenue per 1,000 views (eCPM) ◌"],
+"calc.share":["Частка доходу на нагороду","Доля дохода на награду","Share of revenue spent on the reward"],
+"calc.cap":["Реклами на день у однієї людини","Рекламы в день у одного человека","Ads per person per day"],
+"calc.note":["◌ eCPM — припущення, підставте наш із RBX-ігор. Ролик рахуємо як 30 секунд. Ціни підписок змінюються, тому нагорода задана сумою картки, а не «місяцем».","◌ eCPM — предположение, подставьте наш из RBX-игр. Ролик считаем как 30 секунд. Цены подписок меняются, поэтому награда задана суммой карты, а не «месяцем».","◌ eCPM is an assumption; use ours from the RBX games. A video counts as 30 seconds. Subscription prices change, so the reward is a card amount, not a “month”."],
+"calc.o1":["роликів має подивитися одна людина","роликов должен посмотреть один человек","videos one person must watch"],
+"calc.o2":["годин реклами","часов рекламы","hours of ads"],
+"calc.o3":["днів до нагороди при такому ліміті на день","дней до награды при таком лимите в день","days to the reward at this daily limit"],
+"calc.offer":["Для порівняння: Freecash на сторінці «безкоштовний Netflix» оцінює один ігровий офер у Monopoly Go до $215. Гроші в цьому ринку приносять офери, а не реклама.","Для сравнения: Freecash на странице «бесплатный Netflix» оценивает один игровой оффер в Monopoly Go до $215. Деньги на этом рынке приносят офферы, а не реклама.","For comparison: Freecash’s “free Netflix” page values a single Monopoly Go game offer at up to $215. In this market the money comes from offers, not ads."],
+"preset":["${v}","${v}","${v}"],
+
+"rt.h":["Що людина отримає насправді","Что человек получит на самом деле","What the user actually gets"],
+"rt.p":["Жоден стрімінг не дає «місяць» стороннім застосункам. Можна видати лише картку або баланс, а далі людина сама платить за підписку. Оберіть сервіс.","Ни один стриминг не даёт «месяц» сторонним приложениям. Можно выдать только карту или баланс, а дальше человек сам платит за подписку. Выберите сервис.","No streaming service sells a “month” to third-party apps. You can only give a card or balance; the user then pays for the subscription. Pick a service."],
+"r.route":["Маршрут","Маршрут","Route"],"r.why":["Чому так","Почему так","Why"],"r.do":["Що робити нам","Что делать нам","What we do"],
+"st.ok":["Можна","Можно","Possible"],"st.mid":["Умовно","Условно","Conditional"],"st.no":["Ні","Нет","No"],
+
+"pt.h":["Шлях до виплати: де губиться нагорода","Путь к выплате: где теряется награда","The path to payout: where the reward gets lost"],
+"pt.p":["Типовий шлях у reward-платформі. Кроки складено з офіційних умов Freecash і відгуків. Натисніть крок: видно, що там ламається, і цитату людини, з якою це сталося.","Типичный путь в reward-платформе. Шаги составлены из официальных условий Freecash и отзывов. Нажмите шаг: видно, что там ломается, и цитату человека, с которым это случилось.","A typical path in a reward platform, built from Freecash’s official terms and reviews. Click a step to see what breaks there and a quote from someone it happened to."],
+"pt.breaks":["Що ламається","Что ломается","What breaks"],
+"mk.money":["Гроші","Деньги","Money"],"mk.user":["Людина","Человек","User"],"mk.risk":["Пастка","Ловушка","Trap"],"mk.ok":["Нагорода","Награда","Reward"],
+
+"ap.h":["13 застосунків: обіцяють і не віддають","13 приложений: обещают и не отдают","13 apps: they promise and don’t pay out"],
+"ap.p":["Десять із дослідження Тараса й три, що згадують стрімінги в описі. Натисніть рядок, щоб побачити застосунок і цитати.","Десять из исследования Тараса и три, упоминающие стриминги в описании. Нажмите строку, чтобы увидеть приложение и цитаты.","Ten from Taras’s research plus three that mention streaming in their listing. Click a row to see the app and quotes."],
+"ap.ch":["Негативні відгуки про те, що нагороду не віддали","Негативные отзывы о том, что награду не отдали","Negative reviews saying the reward wasn’t paid"],
+"ap.note":["Частка відгуків на 1–2★ за 2025–2026 роки (довших за 60 символів), де пишуть про виплату, незараховані завдання або бан чи перевірку акаунта. Груба оцінка за словами-маркерами. Google Opinion Rewards — чесний контроль.","Доля отзывов на 1–2★ за 2025–2026 годы (длиннее 60 символов), где пишут о выплате, незачтённых заданиях или бане либо проверке аккаунта. Грубая оценка по словам-маркерам. Google Opinion Rewards — честный контроль.","Share of 1–2★ reviews from 2025–2026 (over 60 characters) about payouts, uncredited tasks, or account bans and verification. A rough keyword estimate. Google Opinion Rewards is the honest control."],
+"a.inst":["встановлень","установок","installs"],"a.stream":["Згадка стрімінгу","Упоминание стриминга","Streaming mention"],"a.model":["Модель","Модель","Model"],"a.quotes":["Що пишуть","Что пишут","What users say"],
+"a.taras":["у Тараса","у Тараса","from Taras"],"a.add":["додано","добавлено","added"],
+"col.app":["Застосунок","Приложение","App"],"col.inst":["Встановлень","Установок","Installs"],"col.score":["Оцінка","Оценка","Rating"],"col.one":["1★","1★","1★"],"col.blk":["Не віддали","Не отдали","Not paid"],"col.stream":["Стрімінг в описі","Стриминг в описании","Streaming in listing"],"col.upd":["Оновлено","Обновлено","Updated"],
+"q.store":["Play США","Play США","US Play"],
+
+"ru.h":["Три правила, які вирішують усе","Три правила, которые решают всё","Three rules that decide everything"],
+"ru.p":["Дослівні рядки з чинних правил, перевірено 02.10.2026.","Дословные строки из действующих правил, проверено 02.10.2026.","Verbatim lines from current policies, checked on 2 Oct 2026."],
+"ru.mean":["Що це означає для нас","Что это значит для нас","What it means for us"],
+
+"notes.h":["Тонкощі","Тонкости","Fine print"],
+"notes.p":["Деталі, які легко пропустити. Для кожної: що побачили, що це може означати і як перевірити.","Детали, которые легко пропустить. Для каждой: что увидели, что это может значить и как проверить.","Details that are easy to miss. For each: what we saw, what it may mean and how to check."],
+"n.fact":["Факт","Факт","Fact"],"n.mean":["Що це може означати","Что это может значить","What it may mean"],"n.check":["Як перевірити","Как проверить","How to check"],
+
+"us.h":["Що робимо ми","Что делаем мы","What we do"],
+"us.p":["Рішення для Ігоря: що можна, чого не можна і що потрібно, щоб спробувати.","Решение для Игоря: что можно, чего нельзя и что нужно, чтобы попробовать.","The decision for Igor: what’s allowed, what isn’t and what it takes to try."],
+"go.h":["Можна","Можно","Can do"],"no.h":["Не можна","Нельзя","Can’t do"],
+"need.h":["Що потрібно для пілота","Что нужно для пилота","What a pilot needs"],
+"rec.h":["Рекомендація","Рекомендация","Recommendation"],
+"rec.p":["У наші RBX-ігри картки не додаємо: монетки всередині гри AdMob дозволяє, а картки — ні. Якщо вертикаль цікава, то окремим продуктом-платформою з офервол-партнером і однією карткою Google Play на одному ринку. Спершу письмове «так» від рекламного партнера й котирування від постачальника карток, потім пілот із лімітом бюджету.","В наши RBX-игры карты не добавляем: монеты внутри игры AdMob разрешает, а карты — нет. Если вертикаль интересна, то отдельным продуктом-платформой с офферволл-партнёром и одной картой Google Play на одном рынке. Сначала письменное «да» от рекламного партнёра и котировка от поставщика карт, потом пилот с лимитом бюджета.","No gift cards in our RBX games: AdMob allows in-game coins but not cards. If the vertical is interesting, build a separate platform product with an offerwall partner and one Google Play card in one market. First a written “yes” from the ad partner and a quote from a card supplier, then a budget-capped pilot."],
+
+"src.h":["Метод і джерела","Метод и источники","Method & sources"],"src.m":["Як збирали дані","Как собирали данные","How the data was collected"],"src.c":["Що змінено порівняно з версією Тараса","Что изменено по сравнению с версией Тараса","What changed from Taras’s version"],"src.s":["Джерела","Источники","Sources"],
+"foot":["Дослідження: Тарас. Перевірка, доповнення і звіт: підготував VELDAN · 02.10.2026. Дані Google Play (США) на дату збору.","Исследование: Тарас. Проверка, дополнение и отчёт: подготовил VELDAN · 02.10.2026. Данные Google Play (США) на дату сбора.","Research: Taras. Review, additions and report prepared by VELDAN · 2 Oct 2026. Google Play (US) data as of the collection date."]
+};
+
+const SUM=[
+ {tag:"ok",go:"apps",h:["Прямої обіцянки майже немає","Прямого обещания почти нет","Direct promises are rare"],p:["Пошук «free netflix», «free spotify premium», «free youtube premium» у Play США видає лише офіційні застосунки. Стрімінг згадують в описах 5 reward-застосунків як одну з карток каталогу. Найбільший із них, mRewards (13,9 млн), має найгіршу оцінку в списку: 3,45★.","Поиск «free netflix», «free spotify premium», «free youtube premium» в Play США выдаёт только официальные приложения. Стриминг упоминают в описаниях 5 reward-приложений как одну из карт каталога. Крупнейшее из них, mRewards (13,9 млн), имеет худшую оценку в списке: 3,45★.","Searching “free netflix”, “free spotify premium”, “free youtube premium” in US Play returns only the official apps. Five reward apps mention streaming in their listing as one card in the catalog. The largest, mRewards (13.9M), has the worst rating on the list: 3.45★."]},
+ {tag:"ok",go:"calc",h:["Реклама підписку не окупає","Реклама подписку не окупает","Ads don’t pay for a subscription"],p:["Картка на $15 при eCPM $15 і половині доходу на нагороду — це 2 000 роликів, або майже 17 годин реклами на одну людину. Ринок живе з оферів: Freecash оцінює один офер у грі до $215.","Карта на $15 при eCPM $15 и половине дохода на награду — это 2 000 роликов, или почти 17 часов рекламы на одного человека. Рынок живёт с офферов: Freecash оценивает один оффер в игре до $215.","A $15 card at a $15 eCPM with half the revenue going to the reward means 2,000 videos, almost 17 hours of ads per person. The market lives on offers: Freecash values one game offer at up to $215."]},
+ {tag:"ok",go:"rules",h:["Картки за AdMob-рекламу заборонені","Карты за AdMob-рекламу запрещены","Gift cards for AdMob ads are prohibited"],p:["Правила AdMob відносять подарункові картки до «прямих грошових» нагород, які не можна давати за rewarded-рекламу за жодних умов. Монетки всередині гри дозволені з умовами.","Правила AdMob относят подарочные карты к «прямым денежным» наградам, которые нельзя давать за rewarded-рекламу ни при каких условиях. Монеты внутри игры разрешены с условиями.","AdMob’s rules class gift cards as “direct monetary” rewards that can never be given for rewarded ads. In-game coins are allowed, with conditions."]},
+ {tag:"ok",go:"routes",h:["Spotify видати вже неможливо","Spotify выдать уже невозможно","Spotify is no longer possible"],p:["Spotify припинив продаж подарункових карток. Реальні маршрути: картка Google Play для YouTube Premium, Apple для Apple Music, Netflix-картка через B2B-постачальника.","Spotify прекратил продажу подарочных карт. Реальные маршруты: карта Google Play для YouTube Premium, Apple для Apple Music, Netflix-карта через B2B-поставщика.","Spotify stopped selling gift cards. Real routes: a Google Play card for YouTube Premium, Apple for Apple Music, a Netflix card via a B2B supplier."]},
+ {tag:"ok",go:"path",h:["Головна скарга — «не віддали»","Главная жалоба — «не отдали»","The top complaint is “didn’t pay”"],p:["У 30–66 % негативних відгуків пишуть, що нагороду не отримали: бан перед виплатою, підняли поріг, гра не зарахувала прогрес, вимагають ID і селфі. У чесного Google Opinion Rewards таких лише 7 %.","В 30–66 % негативных отзывов пишут, что награду не получили: бан перед выплатой, подняли порог, игра не засчитала прогресс, требуют ID и селфи. У честного Google Opinion Rewards таких лишь 7 %.","30–66% of negative reviews say the reward never came: a ban before payout, a raised threshold, untracked game progress, ID and selfie checks. Honest Google Opinion Rewards has just 7%."]},
+ {tag:"guess",go:"us",us:true,h:["Що робимо ми","Что делаем мы","What we do"],p:["У RBX-ігри картки не додаємо. Якщо йти у вертикаль — окремою reward-платформою з офервол-партнером, карткою Google Play і пілотом на одному ринку.","В RBX-игры карты не добавляем. Если идти в вертикаль — отдельной reward-платформой с офферволл-партнёром, картой Google Play и пилотом на одном рынке.","No gift cards in the RBX games. If we enter the vertical, do it as a separate reward platform with an offerwall partner, a Google Play card and a single-market pilot."]}
+];
+
+const PRESETS=[5,10,15,25];
+
+const SERVICES=[
+ {k:"yt",n:"YouTube Premium",st:"ok",route:["Картка Google Play → баланс Google Play → оплата Premium","Карта Google Play → баланс Google Play → оплата Premium","Google Play card → Google Play balance → pay for Premium"],
+  why:["Довідка YouTube прямо каже, що погашений код поповнює баланс Google Play, яким можна платити за YouTube Premium. Картки Google Play є в каталогах постачальників (Tango, Tremendous, Giftbit).","Справка YouTube прямо говорит, что погашенный код пополняет баланс Google Play, которым можно платить за YouTube Premium. Карты Google Play есть в каталогах поставщиков (Tango, Tremendous, Giftbit).","YouTube Help says a redeemed code adds to the Google Play balance, which can pay for YouTube Premium. Google Play cards are in supplier catalogs (Tango, Tremendous, Giftbit)."],
+  todo:["Найпростіший кандидат для пілота. Видаємо номінал ($5 / $10), а не «місяць Premium».","Самый простой кандидат для пилота. Выдаём номинал ($5 / $10), а не «месяц Premium».","The simplest pilot candidate. Give a face value ($5 / $10), not “a month of Premium”."]},
+ {k:"nf",n:"Netflix",st:"mid",route:["Netflix-картка від B2B-постачальника → баланс акаунта Netflix","Netflix-карта от B2B-поставщика → баланс аккаунта Netflix","Netflix card from a B2B supplier → Netflix account balance"],
+  why:["Netflix приймає подарункові картки, але сам нічого стороннім застосункам не продає. Freecash на сторінці «Free Netflix Gift Cards» пише, що Netflix у нього не пряма опція виведення.","Netflix принимает подарочные карты, но сам ничего сторонним приложениям не продаёт. Freecash на странице «Free Netflix Gift Cards» пишет, что Netflix у него не прямая опция вывода.","Netflix accepts gift cards but sells nothing to third-party apps. Freecash’s “Free Netflix Gift Cards” page says Netflix isn’t a direct cash-out option."],
+  todo:["◌ Лише після підтвердження постачальником: країна, валюта, мінімальний номінал.","◌ Только после подтверждения поставщиком: страна, валюта, минимальный номинал.","◌ Only after a supplier confirms country, currency and minimum value."]},
+ {k:"am",n:"Apple Music",st:"mid",route:["Картка Apple → баланс Apple ID → Apple Music","Карта Apple → баланс Apple ID → Apple Music","Apple card → Apple ID balance → Apple Music"],
+  why:["Apple називає Apple Music серед того, за що можна платити карткою. Apple-картки є в каталозі Swagbucks і в B2B-постачальників.","Apple называет Apple Music среди того, за что можно платить картой. Apple-карты есть в каталоге Swagbucks и у B2B-поставщиков.","Apple lists Apple Music among things the card pays for. Apple cards are in Swagbucks’s catalog and B2B catalogs."],
+  todo:["◌ Кандидат після тестового погашення на акаунті цільової країни.","◌ Кандидат после тестового погашения на аккаунте целевой страны.","◌ A candidate after a test redemption on a target-country account."]},
+ {k:"dp",n:"Disney+",st:"mid",route:["Картка Disney → лише прямий білінг Disney+ у США","Карта Disney → только прямой биллинг Disney+ в США","Disney card → direct Disney+ billing in the US only"],
+  why:["За довідкою Disney+ (у Тараса): лише картка США, від $25, лише прямий білінг. Картка Disney у Swagbucks описує покупки товарів, а не Disney+.","По справке Disney+ (у Тараса): только карта США, от $25, только прямой биллинг. Карта Disney в Swagbucks описывает покупки товаров, а не Disney+.","Per Disney+ Help (via Taras): US card only, $25 minimum, direct billing only. Swagbucks’s Disney card describes merchandise, not Disney+."],
+  todo:["◌ Не обирати першим: дорогий мінімальний номінал і вузькі умови.","◌ Не выбирать первым: дорогой минимальный номинал и узкие условия.","◌ Not first: high minimum value and narrow terms."]},
+ {k:"pv",n:"Prime Video",st:"no",route:["Картка Amazon ≠ Prime Video","Карта Amazon ≠ Prime Video","Amazon card ≠ Prime Video"],
+  why:["Картка Amazon — це гроші на покупки, вона не дає Prime чи Prime Video автоматично. Робочого маршруту від reward-картки до підписки не знайдено.","Карта Amazon — это деньги на покупки, она не даёт Prime или Prime Video автоматически. Рабочего маршрута от reward-карты к подписке не найдено.","An Amazon card is shopping credit; it doesn’t give Prime or Prime Video automatically. No working route from a reward card to the subscription was found."],
+  todo:["Не обіцяти.","Не обещать.","Don’t promise it."]},
+ {k:"sp",n:"Spotify",st:"no",route:["Нових карток немає","Новых карт нет","No new cards"],
+  why:["Довідка Spotify: «Spotify gift cards are no longer available for purchase». Раніше куплені картки діють, нових кодів не буде. При цьому Buff Play, mRewards, Try Rewards і MyAppFree досі згадують Spotify.","Справка Spotify: «Spotify gift cards are no longer available for purchase». Ранее купленные карты действуют, новых кодов не будет. При этом Buff Play, mRewards, Try Rewards и MyAppFree до сих пор упоминают Spotify.","Spotify Help: “Spotify gift cards are no longer available for purchase”. Old cards still work; no new codes. Yet Buff Play, mRewards, Try Rewards and MyAppFree still mention Spotify."],
+  todo:["Не обіцяти.","Не обещать.","Don’t promise it."]}
+];
+
+const STEPS=[
+ {mk:"risk",h:["Обіцянка","Обещание","Promise"],p:["Лендінг «Free Netflix Gift Cards». Насправді — каталог карток і гроші.","Лендинг «Free Netflix Gift Cards». На самом деле — каталог карт и деньги.","A “Free Netflix Gift Cards” landing. In reality: a card catalog and cash."],
+  b:["Freecash сам пише: «While Netflix isn’t a direct option». Людина приходить за Netflix, а отримує бали.","Freecash сам пишет: «While Netflix isn’t a direct option». Человек приходит за Netflix, а получает баллы.","Freecash itself says: “While Netflix isn’t a direct option”. People come for Netflix and get points."],q:null},
+ {mk:"money",h:["Офер","Оффер","Offer"],p:["«Встанови гру й дійди до рівня N» — за це платить рекламодавець гри.","«Установи игру и дойди до уровня N» — за это платит рекламодатель игры.","“Install the game and reach level N” — paid for by the game’s advertiser."],
+  b:["Великі офери вимагають тижнів гри або покупок у грі. Людина часто повертає собі лише свої ж витрати.","Крупные офферы требуют недель игры или покупок в игре. Человек часто возвращает себе лишь свои же траты.","Big offers take weeks of play or in-game purchases. Users often just get their own spending back."],
+  q:{app:"Try Rewards",st:2,dt:"18.05.2026",lk:35,en:"it doesn’t pay you more than what you would pay to meet the achievements required. so you put in 10 and get 10 back",uk:"Платить не більше, ніж ти витратиш, щоб виконати умови: вклав 10 — отримав 10.",ru:"Платит не больше, чем ты потратишь, чтобы выполнить условия: вложил 10 — получил 10."}},
+ {mk:"risk",h:["Трекінг","Трекинг","Tracking"],p:["Гра має «повідомити» платформу, що рівень пройдено.","Игра должна «сообщить» платформе, что уровень пройден.","The game must “report” to the platform that the level is done."],
+  b:["Прогрес не зараховується, людина пише тікети зі скріншотами. Відповідь «рекламодавець змінив умови».","Прогресс не засчитывается, человек пишет тикеты со скриншотами. Ответ «рекламодатель изменил условия».","Progress isn’t credited; users file tickets with screenshots. The answer: “the advertiser changed the terms”."],
+  q:{app:"MyAppFree",st:1,dt:"02.10.2025",lk:58,en:"I played it for around 19$ straight worth of payout. It stopped tracking my progress less than an hour in.",uk:"Награв приблизно на $19, а менш ніж за годину гра перестала зараховувати прогрес.",ru:"Наиграл примерно на $19, а меньше чем через час игра перестала засчитывать прогресс."}},
+ {mk:"risk",h:["Поріг","Порог","Threshold"],p:["Вивести можна лише з певної суми.","Вывести можно только с определённой суммы.","You can cash out only above a set amount."],
+  b:["Freecash: перший вивід від $5–$20. За відгуками: Try Rewards — $20, EarnStar — $35, Rewarded Play підняв ціну картки до 75 000 балів, Mistplay сховав картки $10 і $15 за платний рівень.","Freecash: первый вывод от $5–$20. По отзывам: Try Rewards — $20, EarnStar — $35, Rewarded Play поднял цену карты до 75 000 баллов, Mistplay спрятал карты $10 и $15 за платный уровень.","Freecash: first cash-out from $5–$20. Per reviews: Try Rewards $20, EarnStar $35, Rewarded Play raised a card to 75,000 points, Mistplay locked $10 and $15 cards behind a paid tier."],
+  q:{app:"Mistplay",st:1,dt:"25.09.2026",lk:627,en:"They have recently locked lower value gift cards ($10 & $15) behind a paywall.",uk:"Нещодавно вони сховали дешеві картки ($10 і $15) за пейвол.",ru:"Недавно они спрятали дешёвые карты ($10 и $15) за пейвол."}},
+ {mk:"risk",h:["Перевірка","Проверка","Verification"],p:["Freecash: email, документ і селфі перед першим виводом.","Freecash: email, документ и селфи перед первым выводом.","Freecash: email, ID document and selfie before the first cash-out."],
+  b:["Саме тут найчастіше бан «за підозру в шахрайстві» — після місяців гри, перед виплатою.","Именно здесь чаще всего бан «по подозрению в мошенничестве» — после месяцев игры, перед выплатой.","This is where the “suspected fraud” ban usually lands — after months of play, right before payout."],
+  q:{app:"Make Money (Mode)",st:1,dt:"24.09.2026",lk:1494,en:"THIS APP TAKES ALL YOUR POINTS AFTER YOU WORKED HARD TO EARN THEM...THEY SUSPEND YOUR ACCOUNT, SAYING IT’S SUSPECTED FRAUD",uk:"ЗАСТОСУНОК ЗАБИРАЄ ВСІ БАЛИ, ЯКІ ТИ ТЯЖКО ЗАРОБИВ… БЛОКУЄ АКАУНТ НІБИТО ЗА ПІДОЗРУ В ШАХРАЙСТВІ.",ru:"ПРИЛОЖЕНИЕ ЗАБИРАЕТ ВСЕ БАЛЛЫ, КОТОРЫЕ ТЫ С ТРУДОМ ЗАРАБОТАЛ… БЛОКИРУЕТ АККАУНТ ЯКОБЫ ПО ПОДОЗРЕНИЮ В МОШЕННИЧЕСТВЕ."}},
+ {mk:"risk",h:["Очікування","Ожидание","Waiting"],p:["Rewarded Play обіцяє картку за 48 годин, Swagbucks для деяких карток — до 15 робочих днів.","Rewarded Play обещает карту за 48 часов, Swagbucks для некоторых карт — до 15 рабочих дней.","Rewarded Play promises a card within 48 hours; Swagbucks up to 15 business days for some cards."],
+  b:["Великі бонуси «висять» на утриманні.","Крупные бонусы «висят» на удержании.","Large bonuses sit “on hold”."],
+  q:{app:"EarnStar",st:1,dt:"24.08.2026",lk:10,en:"any meaningful milestone or bonus there is an automatic 7 day pending hold",uk:"На будь-який вагомий етап чи бонус автоматично ставлять утримання на 7 днів.",ru:"На любой значимый этап или бонус автоматически ставят удержание на 7 дней."}},
+ {mk:"ok",h:["Картка","Карта","Card"],p:["Код приходить на email, людина сама активує його в сервісі.","Код приходит на email, человек сам активирует его в сервисе.","The code arrives by email; the user redeems it in the service."],
+  b:["Доходять не всі: у 30–66 % негативних відгуків пишуть, що нагороди не отримали.","Доходят не все: в 30–66 % негативных отзывов пишут, что награду не получили.","Not everyone gets here: 30–66% of negative reviews say the reward never came."],q:null}
+];
+
+const AQ={
+ "com.gspl.mrewards":{stream:["Netflix, Spotify прямо в описі","Netflix, Spotify прямо в описании","Netflix and Spotify in the listing"],model:["Ігри, опитування, відео за монети","Игры, опросы, видео за монеты","Games, surveys, videos for coins"],q:[{st:1,dt:"19.08.2026",lk:6,en:"the ‘Watch Video’ feature gives only 2 coins per video, which is very low. It takes too much time to collect enough coins for withdrawal",uk:"За перегляд відео — лише 2 монети. Щоб назбирати на вивід, треба дуже багато часу.",ru:"За просмотр видео — всего 2 монеты. Чтобы накопить на вывод, нужно очень много времени."},{st:1,dt:"21.08.2026",lk:10,en:"this app dosent work now dont give any giftcards so dont waste your time",uk:"Застосунок більше не працює, жодних карток не дає, не гайте час.",ru:"Приложение больше не работает, никаких карт не даёт, не тратьте время."}]},
+ "com.buff.play":{stream:["Spotify у каталозі","Spotify в каталоге","Spotify in the catalog"],model:["Ігрові офери","Игровые офферы","Game offers"],q:[{st:1,dt:"24.10.2025",lk:59,en:"I get enough points to finally cash in $10 & then I’m told there’s been a permanent ban on my account without a reason",uk:"Нарешті назбирав на $10 — і мені кажуть, що акаунт заблоковано назавжди без пояснень.",ru:"Наконец накопил на $10 — и мне говорят, что аккаунт заблокирован навсегда без объяснений."}]},
+ "com.freecash.app2":{stream:["Netflix на лендінгу, не в Play","Netflix на лендинге, не в Play","Netflix on a landing page, not in Play"],model:["Ігрові офери, опитування","Игровые офферы, опросы","Game offers, surveys"],q:[{st:1,dt:"30.09.2026",lk:3,en:"my account was restricted… from being able to cashout but not from playing and building up more points",uk:"Мені заблокували вивід, але не гру: бали можна й далі накопичувати.",ru:"Мне заблокировали вывод, но не игру: баллы можно и дальше копить."}]},
+ "com.mistplay.mistplay":{stream:["Spotify лише у французькій картці","Spotify только во французской карточке","Spotify only in the French listing"],model:["Ігрові офери","Игровые офферы","Game offers"],q:[{st:1,dt:"25.09.2026",lk:627,en:"They have recently locked lower value gift cards ($10 & $15) behind a paywall.",uk:"Нещодавно сховали дешеві картки ($10 і $15) за пейвол.",ru:"Недавно спрятали дешёвые карты ($10 и $15) за пейвол."}]},
+ "com.prodege.swagbucksmobile":{stream:["Disney і Apple у каталозі","Disney и Apple в каталоге","Disney and Apple in the catalog"],model:["Опитування, ігри, кешбек","Опросы, игры, кешбэк","Surveys, games, cashback"],q:[{st:2,dt:"17.06.2026",lk:14,en:"earned 14,000 points over a month period… only to have them ripped from me because I needed to “verify” I did the tasks",uk:"За місяць заробив 14 000 балів — і їх забрали, бо треба «підтвердити», що завдання виконав я.",ru:"За месяц заработал 14 000 баллов — и их забрали, потому что нужно «подтвердить», что задания выполнил я."}]},
+ "com.affinity.rewarded_play":{stream:["Немає","Нет","None"],model:["Ігри, відео","Игры, видео","Games, videos"],q:[{st:1,dt:"23.09.2026",lk:122,en:"In what world is it an exciting update to raise the amount of points needed for a gift card to 75,000",uk:"З якого дива «чудове оновлення» — це підняти ціну картки до 75 000 балів?",ru:"С каких пор «отличное обновление» — это поднять цену карты до 75 000 баллов?"}]},
+ "com.justplay.app":{stream:["Немає","Нет","None"],model:["Ігри й реклама","Игры и реклама","Games and ads"],q:[{st:1,dt:"29.09.2026",lk:4,en:"I just got 2¢ for earning 5,400,000 loyalty coins.",uk:"Отримав 2 центи за 5 400 000 монет лояльності.",ru:"Получил 2 цента за 5 400 000 монет лояльности."}]},
+ "online.cashemall.app":{stream:["Немає","Нет","None"],model:["Ігрові офери","Игровые офферы","Game offers"],q:[{st:1,dt:"20.04.2026",lk:21,en:"I am currently sitting on 90,000 coins… the app is ‘booming’ with an error screen every time I try to cash out.",uk:"У мене 90 000 монет, а при кожній спробі вивести застосунок видає помилку.",ru:"У меня 90 000 монет, а при каждой попытке вывести приложение выдаёт ошибку."}]},
+ "us.current.android":{stream:["Немає (радіо ≠ Spotify)","Нет (радио ≠ Spotify)","None (radio ≠ Spotify)"],model:["Музика, відео, офери + покупки","Музыка, видео, офферы + покупки","Music, videos, offers + purchases"],q:[{st:1,dt:"24.09.2026",lk:1494,en:"THIS APP TAKES ALL YOUR POINTS AFTER YOU WORKED HARD TO EARN THEM...THEY SUSPEND YOUR ACCOUNT, SAYING IT’S SUSPECTED FRAUD",uk:"Забирає всі зароблені бали й блокує акаунт нібито за підозру в шахрайстві.",ru:"Забирает все заработанные баллы и блокирует аккаунт якобы по подозрению в мошенничестве."}]},
+ "com.google.android.apps.paidtasks":{stream:["Непрямо: баланс Play → YouTube Premium","Косвенно: баланс Play → YouTube Premium","Indirect: Play balance → YouTube Premium"],model:["Опитування від Google","Опросы от Google","Google surveys"],q:[{st:2,dt:"21.08.2026",lk:4,en:"It would be good if you even got a survey once a month. I haven’t had any in at least 4 months. Even then, you often only get 14 cents each.",uk:"Добре, якби хоч раз на місяць було опитування. У мене не було жодного 4 місяці, а платять часто по 14 центів.",ru:"Хорошо бы хоть раз в месяц был опрос. У меня не было ни одного 4 месяца, а платят часто по 14 центов."}]},
+ "tyr.rewards":{stream:["Spotify у каталозі","Spotify в каталоге","Spotify in the catalog"],model:["Ігрові офери","Игровые офферы","Game offers"],q:[{st:2,dt:"18.05.2026",lk:35,en:"it doesn’t pay you more than what you would pay to meet the achievements required. so you put in 10 and get 10 back",uk:"Платить не більше, ніж витратиш на умови: вклав 10 — отримав 10.",ru:"Платит не больше, чем потратишь на условия: вложил 10 — получил 10."},{st:2,dt:"23.08.2026",lk:28,en:"now need $20 to cash out, not worth my time",uk:"Тепер вивести можна лише від $20 — не варто мого часу.",ru:"Теперь вывести можно только от $20 — не стоит моего времени."}]},
+ "com.earnstar.games.earn.money":{stream:["Netflix у каталозі","Netflix в каталоге","Netflix in the catalog"],model:["Ігрові офери","Игровые офферы","Game offers"],q:[{st:1,dt:"24.08.2026",lk:10,en:"any meaningful milestone or bonus there is an automatic 7 day pending hold",uk:"На кожен вагомий етап чи бонус — автоматичне утримання на 7 днів.",ru:"На каждый значимый этап или бонус — автоматическое удержание на 7 дней."},{st:1,dt:"15.08.2026",lk:11,en:"You have to earn $35 before you can withdraw.",uk:"Вивести можна лише після $35.",ru:"Вывести можно только после $35."}]},
+ "myappfreesrl.com.myappfree":{stream:["Spotify у каталозі","Spotify в каталоге","Spotify in the catalog"],model:["Ігрові офери","Игровые офферы","Game offers"],q:[{st:1,dt:"02.10.2025",lk:58,en:"I played it for around 19$ straight worth of payout. It stopped tracking my progress less than an hour in.",uk:"Награв приблизно на $19, а менш ніж за годину гра перестала зараховувати прогрес.",ru:"Наиграл примерно на $19, а меньше чем через час игра перестала засчитывать прогресс."}]}
+};
+
+const RULES=[
+ {src:"AdMob · Rewarded ads",url:"https://support.google.com/admob/answer/7313578?hl=en",q:"Direct monetary items may not be offered as rewards under any circumstance.",
+  m:["До «прямих грошових» AdMob прямо відносить готівку, криптовалюту й подарункові картки. Монетки й бали без виводу дозволені з умовами. Тобто наші RBX-монетки — так, картка Netflix за rewarded-рекламу AdMob — ні.","К «прямым денежным» AdMob прямо относит наличные, криптовалюту и подарочные карты. Монеты и баллы без вывода разрешены с условиями. То есть наши RBX-монеты — да, карта Netflix за rewarded-рекламу AdMob — нет.","AdMob explicitly lists cash, crypto and gift cards as “direct monetary” items. Coins and points with no cash-out are allowed with conditions. So our RBX coins: yes; a Netflix card for AdMob rewarded ads: no."]},
+ {src:"Google Play · Deceptive behavior",url:"https://support.google.com/googleplay/android-developer/answer/17006354?hl=en",q:"We don’t allow apps that contain false or misleading information or claims",
+  m:["Обіцянка «Netflix безкоштовно» без чітких умов, порогу й країни — підстава для видалення. Опис має збігатися з тим, що реально є в каталозі.","Обещание «Netflix бесплатно» без чётких условий, порога и страны — основание для удаления. Описание должно совпадать с тем, что реально есть в каталоге.","A “free Netflix” promise without clear terms, threshold and country is grounds for removal. The listing must match what is actually in the catalog."]},
+ {src:"Google Play · Intellectual property",url:"https://support.google.com/googleplay/android-developer/answer/9888072?hl=en",q:"We don’t allow apps that infringe on others’ trademarks.",
+  m:["Netflix чи Spotify у назві й іконці — ризик скарги правовласника. Дисклеймер «not affiliated» сам дозволу не дає.","Netflix или Spotify в названии и иконке — риск жалобы правообладателя. Дисклеймер «not affiliated» сам разрешения не даёт.","Netflix or Spotify in the name or icon risks a rights-holder complaint. A “not affiliated” disclaimer doesn’t grant permission."]}
+];
+
+const NOTES=[
+ {h:["Сторінка «безкоштовний Netflix» сама пише, що Netflix немає","Страница «бесплатный Netflix» сама пишет, что Netflix нет","The “free Netflix” page itself says there’s no Netflix"],
+  f:["Freecash: заголовок «How to Get Free Netflix Gift Cards», а нижче — «While Netflix isn’t a direct option». Там же список номіналів Netflix і примітка, що доступність залежить від регіону.","Freecash: заголовок «How to Get Free Netflix Gift Cards», а ниже — «While Netflix isn’t a direct option». Там же список номиналов Netflix и примечание, что доступность зависит от региона.","Freecash: the headline “How to Get Free Netflix Gift Cards”, then “While Netflix isn’t a direct option”. The page also lists Netflix values and notes availability depends on region."],
+  m:["Стрімінг — приманка для пошуку й реклами, а не продукт.","Стриминг — приманка для поиска и рекламы, а не продукт.","Streaming is bait for search and ads, not the product."],
+  c:["Зареєструвати тестовий акаунт і подивитися каталог виводу для США.","Зарегистрировать тестовый аккаунт и посмотреть каталог вывода для США.","Register a test account and look at the US cash-out catalog."]},
+ {h:["Пряма обіцянка Netflix б’є по оцінці","Прямое обещание Netflix бьёт по оценке","A direct Netflix promise hurts the rating"],
+  f:["mRewards прямо пише «Free Netflix subscription» і «Spotify Membership coupon». У нього 3,45★ і 36,1 % одиниць — найгірше в списку. В інших платформ без такої обіцянки 4,2–4,6★.","mRewards прямо пишет «Free Netflix subscription» и «Spotify Membership coupon». У него 3,45★ и 36,1 % единиц — худшее в списке. У других платформ без такого обещания 4,2–4,6★.","mRewards directly promises a “Free Netflix subscription” and a “Spotify Membership coupon”. It has 3.45★ and 36.1% 1★, the worst on the list. Platforms without such a promise score 4.2–4.6★."],
+  m:["Конкретна обіцянка створює конкретне очікування, і розчарування б’є сильніше.","Конкретное обещание создаёт конкретное ожидание, и разочарование бьёт сильнее.","A specific promise creates a specific expectation, so disappointment hits harder."],
+  c:["Порівняти динаміку оцінки mRewards до і після появи цієї фрази в описі.","Сравнить динамику оценки mRewards до и после появления этой фразы в описании.","Compare mRewards’s rating before and after the phrase appeared in its listing."]},
+ {h:["Платформи переходять до «плати, щоб вивести»","Платформы переходят к «плати, чтобы вывести»","Platforms are moving to “pay to cash out”"],
+  f:["Mistplay сховав картки $10 і $15 за платний рівень (627 лайків під відгуком, 25.09.2026); інший відгук: без покупок не дістатися рівня Silver, а без нього немає нагород.","Mistplay спрятал карты $10 и $15 за платный уровень (627 лайков под отзывом, 25.09.2026); другой отзыв: без покупок не дойти до уровня Silver, а без него нет наград.","Mistplay locked $10 and $15 cards behind a paid tier (627 likes on the review, 25 Sep 2026); another review says Silver tier needs purchases and there are no rewards without it."],
+  m:["Видача карток дорога навіть лідерам, і вони перекладають її на користувачів.","Выдача карт дорога даже лидерам, и они перекладывают её на пользователей.","Payouts are expensive even for leaders, and they push the cost onto users."],
+  c:["Пройти шлях до першої картки в Mistplay на тестовому акаунті.","Пройти путь до первой карты в Mistplay на тестовом аккаунте.","Walk the path to the first card in Mistplay on a test account."]},
+ {h:["Чесна модель існує, але дає копійки","Честная модель существует, но даёт копейки","An honest model exists, but pays pennies"],
+  f:["Google Opinion Rewards (128 млн): лише 7 % негативних відгуків про невиплату. Скаржаться на інше: опитувань мало, часто по 14 центів.","Google Opinion Rewards (128 млн): всего 7 % негативных отзывов о невыплате. Жалуются на другое: опросов мало, часто по 14 центов.","Google Opinion Rewards (128M): only 7% of negative reviews are about non-payment. The complaint is different: few surveys, often 14 cents each."],
+  m:["Якщо платити чесно, сума маленька. Великі суми в інших — з оферів і з тих, кому не виплатили.","Если платить честно, сумма маленькая. Большие суммы у других — с офферов и с тех, кому не выплатили.","Paying honestly means small amounts. Big amounts elsewhere come from offers and from users who weren’t paid."],
+  c:["Порахувати з офервол-партнером реальний дохід на активного користувача.","Посчитать с офферволл-партнёром реальный доход на активного пользователя.","Model real revenue per active user with an offerwall partner."]},
+ {h:["Spotify досі обіцяють, хоча карток немає","Spotify до сих пор обещают, хотя карт нет","Spotify is still promised, though cards are gone"],
+  f:["Spotify більше не продає подарункові картки. Buff Play, mRewards, Try Rewards і MyAppFree досі згадують Spotify в описі в Play США.","Spotify больше не продаёт подарочные карты. Buff Play, mRewards, Try Rewards и MyAppFree до сих пор упоминают Spotify в описании в Play США.","Spotify no longer sells gift cards. Buff Play, mRewards, Try Rewards and MyAppFree still mention Spotify in their US Play listings."],
+  m:["Описи не встигають за каталогом — або каталог не відповідає опису.","Описания не успевают за каталогом — или каталог не соответствует описанию.","Listings lag behind the catalog, or the catalog doesn’t match the listing."],
+  c:["Перевірити в каталозі Buff Play, чи є Spotify насправді.","Проверить в каталоге Buff Play, есть ли Spotify на самом деле.","Check whether Buff Play’s catalog actually has Spotify."]},
+ {h:["Поправки до звіту Тараса","Поправки к отчёту Тараса","Corrections to Taras’s report"],
+  f:["Встановлення були діапазоном, точний лічильник Play більший: Cash’em All 80,4 млн замість «50 млн+», Freecash 35,2 млн замість «10 млн+». Відгуків було 200 (по 20), тепер ~3 700. Додано EarnStar, Try Rewards і MyAppFree: вони теж згадують стрімінги.","Установки были диапазоном, точный счётчик Play больше: Cash’em All 80,4 млн вместо «50 млн+», Freecash 35,2 млн вместо «10 млн+». Отзывов было 200 (по 20), теперь ~3 700. Добавлены EarnStar, Try Rewards и MyAppFree: они тоже упоминают стриминги.","Installs were ranges; the exact Play counter is higher: Cash’em All 80.4M instead of “50M+”, Freecash 35.2M instead of “10M+”. Reviews were 200 (20 each), now ~3,700. Added EarnStar, Try Rewards and MyAppFree, which also mention streaming."],
+  m:["Висновки Тараса це не змінює, але ринок більший, а скарги видно чіткіше.","Выводы Тараса это не меняет, но рынок больше, а жалобы видны чётче.","Taras’s conclusions stand, but the market is bigger and the complaints are clearer."],
+  c:["Усі цифри перезібрано 02.10.2026.","Все цифры пересобраны 02.10.2026.","All numbers re-collected on 2 Oct 2026."]}
+];
+
+const GO=[
+ ["Картка Google Play (→ YouTube Premium) або Apple (→ Apple Music) як нагорода в окремому reward-продукті.","Карта Google Play (→ YouTube Premium) или Apple (→ Apple Music) как награда в отдельном reward-продукте.","A Google Play card (→ YouTube Premium) or Apple card (→ Apple Music) as the reward in a separate reward product."],
+ ["Дохід з оферволу (ігрові офери, опитування), а не з AdMob rewarded.","Доход с офферволла (игровые офферы, опросы), а не с AdMob rewarded.","Revenue from an offerwall (game offers, surveys), not AdMob rewarded."],
+ ["Монетки й бали всередині наших RBX-ігор, як зараз.","Монеты и баллы внутри наших RBX-игр, как сейчас.","Coins and points inside our RBX games, as now."]
+];
+const NO=[
+ ["Давати подарункові картки за AdMob rewarded-рекламу.","Давать подарочные карты за AdMob rewarded-рекламу.","Giving gift cards for AdMob rewarded ads."],
+ ["Обіцяти «місяць Netflix / Spotify» і ставити їхні назви чи логотипи в назву й іконку.","Обещать «месяц Netflix / Spotify» и ставить их названия или логотипы в название и иконку.","Promising “a month of Netflix / Spotify” or using their names or logos in the title and icon."],
+ ["Spotify і Prime Video як нагорода: маршруту немає.","Spotify и Prime Video как награда: маршрута нет.","Spotify and Prime Video as rewards: there’s no route."]
+];
+const NEED=[
+ [["Рекламний партнер","Рекламный партнёр","Ad partner"],["Офервол-партнер і письмове підтвердження, що картки як нагорода дозволені саме в нашій схемі.","Офферволл-партнёр и письменное подтверждение, что карты как награда разрешены именно в нашей схеме.","An offerwall partner and written confirmation that gift-card rewards are allowed in our exact setup."]],
+ [["Постачальник карток","Поставщик карт","Card supplier"],["B2B з API: Tango, Tremendous або Giftbit. За публічними умовами — номінал без плати за платформу; Giftbit +2,9 % при поповненні карткою (у Тараса ◌). Потрібне котирування.","B2B с API: Tango, Tremendous или Giftbit. По публичным условиям — номинал без платы за платформу; Giftbit +2,9 % при пополнении картой (у Тараса ◌). Нужна котировка.","A B2B supplier with an API: Tango, Tremendous or Giftbit. Public terms: face value, no platform fee; Giftbit +2.9% when funding by card (per Taras ◌). We need a quote."]],
+ [["Бюджет і резерв","Бюджет и резерв","Budget and reserve"],["Гроші на картки наперед: нагороду видаємо раніше, ніж отримуємо оплату за офер.","Деньги на карты заранее: награду выдаём раньше, чем получаем оплату за оффер.","Card money up front: we pay the reward before the offer revenue arrives."]],
+ [["Чесні правила","Честные правила","Honest rules"],["Курс, поріг, перевірка й строк видачі — до першої дії. Поріг після заробітку не піднімаємо.","Курс, порог, проверка и срок выдачи — до первого действия. Порог после заработка не поднимаем.","Rate, threshold, verification and delivery time shown before the first action. No raising the threshold after users earn."]],
+ [["Пілот","Пилот","Pilot"],["Один ринок, одна картка ($5 Google Play), ліміт бюджету. Міряємо: частку виданих нагород, час до першої нагороди, вартість однієї виданої нагороди, звернення в підтримку.","Один рынок, одна карта ($5 Google Play), лимит бюджета. Меряем: долю выданных наград, время до первой награды, стоимость одной выданной награды, обращения в поддержку.","One market, one card ($5 Google Play), a capped budget. Measure: share of rewards delivered, time to first reward, cost per delivered reward, support tickets."]]
+];
+const METHOD=[
+ ["Дата збору: 02.10.2026. Магазин: Google Play США (gl=US, hl=en_US).","Дата сбора: 02.10.2026. Магазин: Google Play США (gl=US, hl=en_US).","Collected on 2 Oct 2026. Store: Google Play US (gl=US, hl=en_US)."],
+ ["Пошук: 10 запитів (free netflix, netflix gift card, free youtube premium, free spotify premium, free disney plus, earn gift cards та ін.), перші 30 результатів, 195 карток.","Поиск: 10 запросов (free netflix, netflix gift card, free youtube premium, free spotify premium, free disney plus, earn gift cards и др.), первые 30 результатов, 195 карточек.","Search: 10 queries (free netflix, netflix gift card, free youtube premium, free spotify premium, free disney plus, earn gift cards, etc.), first 30 results, 195 listings."],
+ ["Картки Play: точний лічильник встановлень, оцінка, гістограма, дати, опис.","Карточки Play: точный счётчик установок, оценка, гистограмма, даты, описание.","Play listings: exact install counter, rating, histogram, dates, description."],
+ ["Відгуки: ~3 700 унікальних (найновіші 1★, 2★, 5★). Для частки «не віддали» — 1 996 відгуків на 1–2★ за 2025–2026 роки, довших за 60 символів; словник англійських слів-маркерів, груба оцінка.","Отзывы: ~3 700 уникальных (новейшие 1★, 2★, 5★). Для доли «не отдали» — 1 996 отзывов на 1–2★ за 2025–2026 годы длиннее 60 символов; словарь английских слов-маркеров, грубая оценка.","Reviews: ~3,700 unique (newest 1★, 2★, 5★). The “not paid” share uses 1,996 1–2★ reviews from 2025–2026 over 60 characters, tagged by English keywords — a rough estimate."],
+ ["Правила й довідки AdMob, Google Play, Spotify, YouTube, Freecash перевірено дослівно 02.10.2026.","Правила и справки AdMob, Google Play, Spotify, YouTube, Freecash проверены дословно 02.10.2026.","AdMob, Google Play, Spotify, YouTube and Freecash pages checked verbatim on 2 Oct 2026."],
+ ["Що не робили ні ми, ні Тарас: не встановлювали застосунки, не реєструвались, не отримували нагород, не запитували котирування в постачальників.","Чего не делали ни мы, ни Тарас: не устанавливали приложения, не регистрировались, не получали наград, не запрашивали котировки у поставщиков.","What neither we nor Taras did: install the apps, register, receive rewards, or request supplier quotes."]
+];
+const CHANGES=[
+ ["Звіт скорочено до відповіді й рішення; деталі — по кліку.","Отчёт сокращён до ответа и решения; детали — по клику.","Cut down to the answer and the decision; details on click."],
+ ["Точні встановлення замість діапазонів, ~3 700 відгуків замість 200, +3 застосунки.","Точные установки вместо диапазонов, ~3 700 отзывов вместо 200, +3 приложения.","Exact installs instead of ranges, ~3,700 reviews instead of 200, +3 apps."],
+ ["Перевірено: у пошуку Play США за «free netflix» і подібними запитами немає сторонніх застосунків із прямою обіцянкою.","Проверено: в поиске Play США по «free netflix» и похожим запросам нет сторонних приложений с прямым обещанием.","Checked: US Play search for “free netflix” and similar returns no third-party apps with a direct promise."],
+ ["Нове: калькулятор у годинах реклами, вибір сервісу з маршрутом, шлях до виплати з цитатами, рішення «можна / не можна».","Новое: калькулятор в часах рекламы, выбор сервиса с маршрутом, путь к выплате с цитатами, решение «можно / нельзя».","New: a calculator in hours of ads, a service picker with routes, the payout path with quotes, a can / can’t decision."],
+ ["Три мови: УКР, РУС, ENG.","Три языка: УКР, РУС, ENG.","Three languages: UKR, RUS, ENG."]
+];
+const SOURCES=[
+ ["https://streaming-rewards-research.mrkolombo.chatgpt.site/",["Дослідження Тараса (оригінал)","Исследование Тараса (оригинал)","Taras’s research (original)"],["Повна версія з таблицями","Полная версия с таблицами","Full version with tables"]],
+ ["https://claude.ai/artifact/9Fh7k46NUXF4BcRC7Y3jdk",["Бриф вертикалі 2","Бриф вертикали 2","Vertical 2 brief"],["Постановка задачі","Постановка задачи","The task"]],
+ ["https://support.google.com/admob/answer/7313578?hl=en",["AdMob: Rewarded ads policy","AdMob: Rewarded ads policy","AdMob: Rewarded ads policy"],["Картки — «прямі грошові» нагороди","Карты — «прямые денежные» награды","Gift cards are “direct monetary” rewards"]],
+ ["https://support.google.com/googleplay/android-developer/answer/17006354?hl=en",["Google Play: Deceptive behavior","Google Play: Deceptive behavior","Google Play: Deceptive behavior"],["Оманливі обіцянки","Обманчивые обещания","Misleading claims"]],
+ ["https://support.google.com/googleplay/android-developer/answer/9888072?hl=en",["Google Play: Intellectual property","Google Play: Intellectual property","Google Play: Intellectual property"],["Торговельні марки","Торговые марки","Trademarks"]],
+ ["https://support.spotify.com/us/article/gift-cards/",["Spotify: gift cards","Spotify: gift cards","Spotify: gift cards"],["Продаж припинено","Продажа прекращена","No longer sold"]],
+ ["https://support.google.com/youtube/answer/7259382?hl=en",["YouTube: gift card or code","YouTube: gift card or code","YouTube: gift card or code"],["Баланс Google Play → Premium","Баланс Google Play → Premium","Google Play balance → Premium"]],
+ ["https://freecash.com/academy/en/cashout/netflix-giftcard-free",["Freecash: Free Netflix Gift Cards","Freecash: Free Netflix Gift Cards","Freecash: Free Netflix Gift Cards"],["«Netflix isn’t a direct option», офер до $215","«Netflix isn’t a direct option», оффер до $215","“Netflix isn’t a direct option”, offer up to $215"]],
+ ["https://freecash.com/academy/en/support/withdrawal/issues/first-cashout-requirements",["Freecash: first cashout","Freecash: first cashout","Freecash: first cashout"],["Email, ID, селфі, поріг $5–$20","Email, ID, селфи, порог $5–$20","Email, ID, selfie, $5–$20 threshold"]],
+ ["https://www.tangocard.com/reward-program-api",["Tango Card API","Tango Card API","Tango Card API"],["Постачальник карток","Поставщик карт","Card supplier"]],
+ ["https://www.tremendous.com/gift-card-api",["Tremendous API","Tremendous API","Tremendous API"],["Постачальник карток","Поставщик карт","Card supplier"]],
+ ["https://www.giftbit.com/pricing",["Giftbit pricing","Giftbit pricing","Giftbit pricing"],["Постачальник карток","Поставщик карт","Card supplier"]]
+];
+
+/* helpers */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const t=k=>{const v=T[k];return v?(v[L]!=null?v[L]:v[0]):k};
+const tr=a=>Array.isArray(a)?(a[L]!=null?a[L]:a[0]):a;
+const dec=x=>L===2?String(x):String(x).replace(".",",");
+const pct=v=>L===2?v+"%":dec(v)+" %";
+const grp=n=>L===2?n.toLocaleString("en-US"):n.toLocaleString("en-US").replace(/,/g," ");
+function fmtI(n){ if(L===2){ if(n>=1e6) return (n/1e6).toFixed(1)+"M"; return Math.round(n/1e3)+"K"; } const u=L===0?["млн","тис."]:["млн","тыс."]; if(n>=1e6) return dec((n/1e6).toFixed(1))+" "+u[0]; return Math.round(n/1e3)+" "+u[1]; }
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function fmtD(s){ if(!s) return "—"; const d=new Date(s+" UTC"); if(isNaN(d)) return s; const dd=String(d.getUTCDate()).padStart(2,"0"), mm=String(d.getUTCMonth()+1).padStart(2,"0"); return L===2? d.getUTCDate()+" "+MON[d.getUTCMonth()]+" "+d.getUTCFullYear() : dd+"."+mm+"."+d.getUTCFullYear(); }
+const play=p=>"https://play.google.com/store/apps/details?id="+encodeURIComponent(p)+"&gl=US";
+const icon=(a,c)=>a&&a.ic?'<img class="ico'+(c?" "+c:"")+'" src="'+a.ic+'" alt="" width="28" height="28" loading="lazy">':'<span class="ico'+(c?" "+c:"")+'"></span>';
+const stars=n=>"★".repeat(n)+"☆".repeat(5-n);
+function qcard(q,app){ return '<figure class="qcard"><div class="qmeta"><b>'+esc(app||q.app)+'</b><span>'+stars(q.st)+'</span><span>'+esc(q.dt)+'</span><span>👍 '+q.lk+'</span><span>'+esc(t("q.store"))+'</span></div><blockquote lang="en">'+esc(q.en)+'</blockquote>'+(L<2?'<p class="tr">'+esc(L===0?q.uk:q.ru)+'</p>':'')+'</figure>'; }
+
+function applyStatic(){
+  document.documentElement.lang=LANGS[L];
+  document.querySelectorAll("[data-i18n]").forEach(el=>{el.innerHTML=t(el.dataset.i18n)});
+  document.querySelectorAll("[data-i18n-aria]").forEach(el=>{el.setAttribute("aria-label",t(el.dataset.i18nAria))});
+  document.querySelectorAll(".langs button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===LANGS[L])));
+  const ids=["short","calc","routes","path","apps","rules","notes","us","src"];
+  $("#toc").innerHTML=ids.map((id,i)=>'<a href="#'+id+'">'+esc(T["toc.items"][L][i])+'</a>').join("");
+}
+function renderSum(){
+  $("#sum").innerHTML=SUM.map(s=>'<article class="sm'+(s.us?" us":"")+'"><h3><span class="tag '+s.tag+'">'+(s.tag==="ok"?"✔":"◌")+'</span><span>'+esc(tr(s.h))+'</span></h3><p>'+esc(tr(s.p))+'</p><a class="go" href="#'+s.go+'">'+esc(t("more"))+' →</a></article>').join("");
+}
+
+/* calculator */
+let reward=15;
+function renderCalc(){
+  $("#rpre").innerHTML=PRESETS.map(v=>'<button type="button" data-v="'+v+'" aria-pressed="'+(v===reward)+'">$'+v+'</button>').join("");
+  calc();
+}
+function calc(){
+  const e=+$("#ecpm").value, sh=+$("#share").value/100, cap=+$("#cap").value;
+  $("#ecpmv").textContent="$"+e; $("#sharev").textContent=pct(Math.round(sh*100)); $("#capv").textContent=cap;
+  const ads=Math.ceil(reward*1000/(e*sh)), hrs=ads*30/3600, days=Math.ceil(ads/cap);
+  $("#oads").textContent=grp(ads);
+  $("#ohours").textContent=dec(hrs<10?hrs.toFixed(1):Math.round(hrs));
+  $("#odays").textContent=grp(days);
+}
+
+/* services */
+let svc="yt";
+function renderSvc(){
+  $("#svc").innerHTML=SERVICES.map(s=>'<button type="button" role="tab" data-k="'+s.k+'" aria-selected="'+(s.k===svc)+'">'+esc(s.n)+'</button>').join("");
+  const s=SERVICES.find(x=>x.k===svc), cls=s.st==="ok"?"ok":s.st==="mid"?"mixed":"bad", ico=s.st==="ok"?"✔ ":s.st==="mid"?"◐ ":"✗ ";
+  $("#rcard").innerHTML='<div class="dir-head"><h3>'+esc(s.n)+'</h3><span class="verd '+cls+'">'+ico+esc(t("st."+s.st))+'</span></div><dl class="dl"><div><dt>'+esc(t("r.route"))+'</dt><dd><b>'+esc(tr(s.route))+'</b></dd></div><div><dt>'+esc(t("r.why"))+'</dt><dd>'+esc(tr(s.why))+'</dd></div><div><dt>'+esc(t("r.do"))+'</dt><dd>'+esc(tr(s.todo))+'</dd></div></dl>';
+}
+
+/* path */
+let pi=3;
+function renderPath(){
+  $("#psteps").innerHTML=STEPS.map((s,i)=>'<li><button type="button" class="step" data-i="'+i+'"'+(i===pi?' aria-current="step"':'')+'><span class="no">'+(i+1)+'</span><span><b>'+esc(tr(s.h))+'</b><span class="mark '+s.mk+'">'+esc(t("mk."+s.mk))+'</span></span><p>'+esc(tr(s.p))+'</p></button></li>').join("");
+  const s=STEPS[pi];
+  $("#ppanel").innerHTML='<p class="k">'+(pi+1)+' · '+esc(tr(s.h))+'</p><div class="breaks"><p class="lbl">'+esc(t("pt.breaks"))+'</p><p>'+esc(tr(s.b))+'</p></div>'+(s.q?qcard(s.q):'');
+}
+
+/* apps */
+let cur="com.freecash.app2";
+function renderApps(){
+  const rows=APPS.slice().sort((a,b)=>b.blk-a.blk);
+  $("#bars").innerHTML=rows.map(a=>'<button type="button" class="brow'+(a.p==="com.google.android.apps.paidtasks"?" ctl":"")+'" data-p="'+a.p+'" aria-pressed="'+(a.p===cur)+'"><span class="lab">'+esc(a.n.split(/[:\-–]/)[0].trim())+'</span><span class="bplot"><i style="width:'+Math.max(1,100*a.blk/80)+'%"></i></span><span class="val">'+esc(pct(a.blk))+'</span></button>').join("");
+  $("#bticks").innerHTML=[0,20,40,60,80].map((v,i)=>'<span style="left:'+(i*25)+'%">'+esc(pct(v))+'</span>').join("");
+  const a=APPS.find(x=>x.p===cur), q=AQ[cur];
+  $("#acard").innerHTML='<div class="ph">'+icon(a,"lg")+'<div><h3><a href="'+play(a.p)+'" target="_blank" rel="noopener">'+esc(a.n)+'</a></h3><p class="meta">'+esc(fmtI(a.i))+' '+esc(t("a.inst"))+' · ★ '+esc(dec(a.s))+' · 1★ '+esc(pct(dec(a.h1)))+' · '+esc(a.taras?t("a.taras"):t("a.add"))+'</p></div></div>'+
+    '<dl class="dl"><div><dt>'+esc(t("a.stream"))+'</dt><dd>'+esc(tr(q.stream))+'</dd></div><div><dt>'+esc(t("a.model"))+'</dt><dd>'+esc(tr(q.model))+'</dd></div></dl>'+
+    '<p class="lbl">'+esc(t("a.quotes"))+'</p><div class="qgrid one">'+q.q.map(x=>qcard(x,a.n.split(/[:\-–]/)[0].trim())).join("")+'</div>';
+  const cols=[["col.app",""],["col.inst","num"],["col.score","num"],["col.one","num"],["col.blk","num"],["col.stream",""],["col.upd","num"]];
+  $("#atable").innerHTML='<thead><tr>'+cols.map(c=>'<th class="'+c[1]+'">'+esc(t(c[0]))+'</th>').join("")+'</tr></thead><tbody>'+APPS.slice().sort((x,y)=>y.i-x.i).map(a=>'<tr><td><div class="appcell">'+icon(a)+'<div><a href="'+play(a.p)+'" target="_blank" rel="noopener">'+esc(a.n)+'</a><small>'+esc(a.dev)+(a.taras?'':' · <span class="pill add">'+esc(t("a.add"))+'</span>')+'</small></div></div></td><td class="num">'+esc(fmtI(a.i))+'</td><td class="num">'+esc(dec(a.s))+'</td><td class="num">'+esc(pct(dec(a.h1)))+'</td><td class="num">'+esc(pct(a.blk))+'</td><td class="hookcell">'+esc(tr(AQ[a.p].stream))+'</td><td class="num">'+esc(fmtD(a.upd))+'</td></tr>').join("")+'</tbody>';
+}
+
+function renderRest(){
+  $("#rlist").innerHTML=RULES.map(r=>'<figure class="rule"><blockquote lang="en">“'+esc(r.q)+'”</blockquote><figcaption><a href="'+r.url+'" target="_blank" rel="noopener">'+esc(r.src)+'</a></figcaption><p><span class="lbl">'+esc(t("ru.mean"))+'</span>'+esc(tr(r.m))+'</p></figure>').join("");
+  $("#nlist").innerHTML=NOTES.map(n=>'<article class="nt"><h3>'+esc(tr(n.h))+'</h3><div class="nt-row"><span class="tag ok">✔</span><p><span class="lb">'+esc(t("n.fact"))+'</span>'+esc(tr(n.f))+'</p></div><div class="nt-row"><span class="tag guess">◌</span><p><span class="lb">'+esc(t("n.mean"))+'</span>'+esc(tr(n.m))+'</p></div><div class="nt-row"><span class="chk" aria-hidden="true">?</span><p><span class="lb">'+esc(t("n.check"))+'</span>'+esc(tr(n.c))+'</p></div></article>').join("");
+  $("#golist").innerHTML=GO.map(x=>'<li>'+esc(tr(x))+'</li>').join("");
+  $("#nolist").innerHTML=NO.map(x=>'<li>'+esc(tr(x))+'</li>').join("");
+  $("#need").innerHTML=NEED.map(x=>'<li><b>'+esc(tr(x[0]))+'</b><span>'+esc(tr(x[1]))+'</span></li>').join("");
+  $("#method").innerHTML=METHOD.map(m=>'<li>'+esc(tr(m))+'</li>').join("");
+  $("#changes").innerHTML=CHANGES.map(m=>'<li>'+esc(tr(m))+'</li>').join("");
+  $("#sources").innerHTML=SOURCES.map(s=>'<li><a href="'+s[0]+'" target="_blank" rel="noopener">'+esc(tr(s[1]))+'</a><small>'+esc(tr(s[2]))+'</small></li>').join("");
+}
+
+function renderAll(){ applyStatic(); renderSum(); renderCalc(); renderSvc(); renderPath(); renderApps(); renderRest(); }
+function setLang(c,save){ const i=LANGS.indexOf(c); if(i<0) return; L=i; renderAll(); if(save){ try{localStorage.setItem("st-lang",c)}catch(e){} } }
+document.querySelector(".langs").addEventListener("click",e=>{const b=e.target.closest("button[data-lang]"); if(b) setLang(b.dataset.lang,true)});
+$("#rpre").addEventListener("click",e=>{const b=e.target.closest("button[data-v]"); if(!b) return; reward=+b.dataset.v; renderCalc();});
+["ecpm","share","cap"].forEach(id=>$("#"+id).addEventListener("input",calc));
+$("#svc").addEventListener("click",e=>{const b=e.target.closest("button[data-k]"); if(!b) return; svc=b.dataset.k; renderSvc();});
+$("#psteps").addEventListener("click",e=>{const b=e.target.closest(".step"); if(!b) return; pi=+b.dataset.i; renderPath();});
+$("#bars").addEventListener("click",e=>{const b=e.target.closest(".brow"); if(!b) return; cur=b.dataset.p; renderApps();});
+let start="uk"; const h=(location.hash||"").slice(1);
+if(LANGS.includes(h)) start=h; else { try{const s=localStorage.getItem("st-lang"); if(LANGS.includes(s)) start=s;}catch(e){} }
+setLang(start,false);
+window.addEventListener("hashchange",()=>{const x=(location.hash||"").slice(1); if(LANGS.includes(x)) setLang(x,true);});
+})();
+</script>
