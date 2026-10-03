@@ -1,0 +1,20 @@
+<resources>
+    <style name="Theme.DialerPoC" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/screen_bg</item>
+    </style>
+
+    <!-- Call screen: fixed dark, no action bar, drawn edge to edge over the keyguard. -->
+    <style name="Theme.DialerPoC.Call" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/call_bg</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <!-- White text with a soft shadow stays readable on the dark background. -->
+    <style name="CardText">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:shadowColor">#99000000</item>
+        <item name="android:shadowRadius">4</item>
+        <item name="android:shadowDy">1</item>
+    </style>
+</resources>

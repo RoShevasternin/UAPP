@@ -1,0 +1,5 @@
+<resources>
+    <color name="screen_bg">#0E1116</color>
+    <!-- The call screen is its own world: always dark, whatever the system theme. -->
+    <color name="call_bg">#0A0F14</color>
+</resources>

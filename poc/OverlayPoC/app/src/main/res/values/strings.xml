@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Overlay PoC</string>
+
+    <!-- Status strip -->
+    <string name="status_granted">✅ Дозвіл на накладання надано</string>
+    <string name="status_not_granted">⚠️ Дозволу на накладання немає</string>
+    <string name="status_running">Плаваюча кулька показана</string>
+    <string name="status_stopped">Плаваюча кулька вимкнена</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title">Поверх інших додатків</string>
+    <string name="onboarding_text">Надайте дозвіл — і застосунок покаже плаваючу кульку, яку видно поверх будь-якої іншої програми. Кульку можна перетягувати, тап розгортає картку, а тап по картці відкриває посилання.</string>
+    <string name="action_grant">Надати дозвіл на відображення поверх інших додатків</string>
+
+    <!-- Controls -->
+    <string name="controls_text">Дозвіл є. Плаваючу кульку можна увімкнути або вимкнути — вона лишається на екрані, навіть коли ви вийдете із застосунку. Довгий тап по кульці прибирає її.</string>
+    <string name="action_start">Запустити плаваючу кульку</string>
+    <string name="action_stop">Прибрати плаваючу кульку</string>
+    <string name="action_close">Закрити</string>
+    <string name="action_collapse">Згорнути</string>
+
+    <!-- Floating bubble (collapsed) -->
+    <string name="bubble_desc">Відкрити картку</string>
+
+    <!-- Floating card (expanded) -->
+    <string name="card_text">Ето шок ти глянь как можно</string>
+    <string name="card_hint">Торкніться, щоб перейти</string>
+
+    <!-- Foreground service -->
+    <string name="service_title">Плаваюча кулька активна</string>
+    <string name="service_text">Торкніться, щоб відкрити налаштування застосунку.</string>
+    <string name="channel_service">Плаваюча кулька</string>
+
+    <!-- Errors -->
+    <string name="no_browser">Браузер не знайдено</string>
+    <string name="no_overlay_settings">Налаштування накладання недоступні на цьому пристрої</string>
+</resources>

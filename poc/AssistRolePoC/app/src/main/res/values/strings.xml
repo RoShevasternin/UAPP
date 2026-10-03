@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Assist PoC</string>
+
+    <!-- Status strip -->
+    <string name="status_assistant">✅ Асистент за замовчуванням</string>
+    <string name="status_not_assistant">⚠️ Ще не асистент за замовчуванням</string>
+    <string name="assist_triggers">Викликів жестом асистента: %1$d</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title">Асистент за замовчуванням</string>
+    <string name="onboarding_text">Призначте цей застосунок цифровим асистентом — і він відкриватиметься довгим натисканням кнопки «Додому» або свайпом з нижнього кута екрана.</string>
+    <string name="action_set_assistant">Встановити додатком-асистентом за замовчуванням</string>
+    <string name="action_open_settings">Відкрити налаштування асистента</string>
+    <string name="action_change">Змінити асистента</string>
+
+    <!-- Content card -->
+    <string name="card_text">Ето шок ти глянь как можно</string>
+    <string name="card_hint">Торкніться, щоб перейти</string>
+
+    <!-- Errors -->
+    <string name="no_browser">Браузер не знайдено</string>
+    <string name="no_assist_settings">Налаштування асистента недоступні на цьому пристрої</string>
+</resources>

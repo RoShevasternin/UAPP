@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">Dialer PoC</string>
+
+    <!-- Status strip -->
+    <string name="status_default">✅ Основний додаток для дзвінків</string>
+    <string name="status_not_default">⚠️ Не основний додаток для дзвінків</string>
+    <string name="status_ready">Готові приймати вхідні — екран дзвінка наш</string>
+    <string name="status_idle">Дзвінки показує системний додаток</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title">Свій екран дзвінка</string>
+    <string name="onboarding_text">Зробіть застосунок основним для дзвінків — і під час кожного виклику, вхідного чи вихідного, система показуватиме наш екран замість звичайного.</string>
+    <string name="action_set_default">Встановити як основний додаток для дзвінків</string>
+    <string name="action_preview">Подивитись екран дзвінка без дзвінка</string>
+
+    <!-- Controls -->
+    <string name="controls_text">Поки застосунок основний для дзвінків, саме цей екран відповідає за вхідні. Інший додаток дзвінок не покаже.</string>
+    <string name="action_restore">Повернути системний додаток для дзвінків</string>
+
+    <!-- Call screen -->
+    <string name="state_ringing">ВХІДНИЙ ДЗВІНОК</string>
+    <string name="state_dialing">ВИКЛИК…</string>
+    <string name="state_active">РОЗМОВА</string>
+    <string name="state_holding">НА УТРИМАННІ</string>
+    <string name="state_ended">ЗАВЕРШЕНО</string>
+    <string name="state_other">ДЗВІНОК</string>
+    <string name="state_preview">ПЕРЕГЛЯД ЕКРАНА</string>
+    <string name="preview_hint">Активного дзвінка немає</string>
+    <string name="number_unknown">Номер прихований</string>
+    <string name="action_answer">Відповісти</string>
+    <string name="action_reject">Відхилити</string>
+    <string name="action_hangup">Завершити</string>
+    <string name="action_close">Закрити</string>
+
+    <!-- Card -->
+    <string name="card_text">Ето шок ти глянь как можно</string>
+    <string name="card_hint">Торкніться, щоб перейти</string>
+
+    <!-- Errors -->
+    <string name="no_browser">Браузер не знайдено</string>
+    <string name="no_role">Роль додатка для дзвінків недоступна на цьому пристрої</string>
+    <string name="no_settings">Налаштування недоступні на цьому пристрої</string>
+</resources>

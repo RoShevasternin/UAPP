@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Charging PoC</string>
+
+    <!-- Content card -->
+    <string name="home_card_text">Ето шок ти глянь как можно</string>
+    <string name="home_card_hint">Торкніться, щоб перейти</string>
+
+    <!-- Charging notification -->
+    <string name="launch_title">ОГО, Я КАК МОГУ 🔌</string>
+    <string name="launch_text">Ето шок ти глянь как можно — торкніться, щоб відкрити</string>
+
+    <!-- Foreground-service (silent, ongoing) -->
+    <string name="monitor_running_title">Стежу за зарядкою</string>
+    <string name="monitor_running_text">Повідомлю, щойно під\'єднаєш кабель.</string>
+
+    <!-- Notification channels -->
+    <string name="channel_ongoing">Фоновий моніторинг зарядки</string>
+    <string name="channel_launch">Сповіщення про зарядку</string>
+    <string name="channel_launch_desc">Сповіщення, що з\'являється при під\'єднанні зарядки.</string>
+
+    <!-- Errors -->
+    <string name="no_browser">Браузер не знайдено</string>
+</resources>

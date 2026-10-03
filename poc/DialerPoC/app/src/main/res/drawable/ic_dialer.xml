@@ -1,0 +1,13 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#0A1A14"
+        android:pathData="M0,0h108v108h-108z" />
+    <!-- A handset, tilted the way a dialer icon usually is. -->
+    <path
+        android:fillColor="#5FD39B"
+        android:pathData="M38,30 l10,-4 a4,4 0 0 1 5,2 l6,12 a4,4 0 0 1 -1,5 l-6,5 a34,34 0 0 0 16,16 l5,-6 a4,4 0 0 1 5,-1 l12,6 a4,4 0 0 1 2,5 l-4,10 a6,6 0 0 1 -6,4 C58,84 24,50 24,36 a6,6 0 0 1 4,-6 z" />
+</vector>

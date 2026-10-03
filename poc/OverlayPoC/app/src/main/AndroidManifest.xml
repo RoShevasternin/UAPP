@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        The only permission the user actually grants, and it is a special one:
+        it is not a runtime dialog but a dedicated Settings screen.
+    -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <!-- Keeps the process alive so the floating window is not torn down. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- targetSdk >= 34: a foreground service must declare a typed permission. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+
+    <!-- Package visibility (API 30+): without these, resolveActivity() sees nothing. -->
+    <queries>
+        <!-- Xiaomi Security Center, which owns the per-app overlay switch on MIUI. -->
+        <package android:name="com.miui.securitycenter" />
+
+        <!-- Lets the app discover a Custom Tabs provider. -->
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_overlay"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.OverlayPoC">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--
+            There is no overlay-specific foreground service type, so specialUse it is.
+            The floating window itself lives in the WindowManager, not in this service —
+            the service only keeps the process (and therefore the window) alive.
+        -->
+        <service
+            android:name=".FloatingOverlayService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Keeps a user-dismissible floating window on screen (PoC)." />
+        </service>
+    </application>
+</manifest>

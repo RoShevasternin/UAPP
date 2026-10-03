@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    BUBBLE state — a Messenger-style chat head.
+
+    The padding around the circle is deliberate: it is the shadow room for the
+    elevation, and without it the drop shadow is clipped by the window bounds.
+    The whole root is the drag handle, so there is nothing clickable inside it.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="6dp">
+
+    <ImageView
+        android:id="@+id/bubbleImage"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bubble_bg"
+        android:contentDescription="@string/bubble_desc"
+        android:elevation="8dp"
+        android:padding="1dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/home_banner" />
+</FrameLayout>
