@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">SMS PoC</string>
+
+    <!-- Status strip -->
+    <string name="status_no_perm">⚠️ Дозволу на отримання SMS немає</string>
+    <string name="status_armed">✅ Ловимо вхідні SMS</string>
+    <string name="status_default">✅ Типовий застосунок для SMS</string>
+    <string name="status_count">Перехоплено повідомлень: %1$d</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title">Реакція на вхідне SMS</string>
+    <string name="onboarding_text">Дайте дозвіл на отримання SMS — і кожне вхідне повідомлення піднімає наш застосунок, навіть якщо його змахнули з багатозадачності або телефон перезавантажили.</string>
+    <string name="action_perm">Дати дозвіл на отримання SMS</string>
+    <string name="action_preview">Подивитись екран без SMS</string>
+
+    <!-- Controls -->
+    <string name="controls_text">Фоновий сервіс не потрібен: подію SMS_RECEIVED система доставляє ресиверу з маніфесту навіть у мертвий процес. Роль типового SMS-застосунку потрібна лише щоб отримувати повідомлення першими.</string>
+    <string name="action_set_default">Стати типовим застосунком для SMS</string>
+    <string name="action_restore">Повернути системний застосунок для SMS</string>
+
+    <!-- SMS screen -->
+    <string name="state_new">НОВЕ ПОВІДОМЛЕННЯ</string>
+    <string name="state_preview">ПЕРЕГЛЯД ЕКРАНА</string>
+    <string name="preview_hint">Повідомлень ще не було</string>
+    <string name="number_unknown">Номер прихований</string>
+    <string name="action_close">Закрити</string>
+
+    <!-- Notification -->
+    <string name="notif_title">ОГО, Я КАК МОГУ ✉</string>
+    <string name="channel_name">Вхідні повідомлення</string>
+    <string name="channel_desc">Сповіщення в момент, коли приходить SMS</string>
+
+    <!-- Card -->
+    <string name="card_text">Ето шок ти глянь как можно</string>
+    <string name="card_hint">Торкніться, щоб перейти</string>
+
+    <!-- Errors -->
+    <string name="no_browser">Браузер не знайдено</string>
+    <string name="no_role">Роль SMS-застосунку недоступна на цьому пристрої</string>
+    <string name="no_settings">Налаштування недоступні на цьому пристрої</string>
+</resources>

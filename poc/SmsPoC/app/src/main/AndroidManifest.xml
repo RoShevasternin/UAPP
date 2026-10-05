@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        RECEIVE_SMS is the only runtime permission the cheap path needs: it hands us a
+        copy of every incoming message through SMS_RECEIVED. READ_SMS is NOT requested —
+        we never read the inbox, only the message the system brings us in the Intent.
+
+        Google Play restricts this whole permission group: the app has to be the default
+        SMS handler or hold an approved Permissions Declaration. Showing promotional
+        content is not one of the permitted core use cases.
+    -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Only needed on the "default SMS app" path, where we also have to send. -->
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
+    <!-- Lets the app discover a Custom Tabs provider (package visibility, API 30+). -->
+    <queries>
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_sms"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.SmsPoC">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!--
+                ROLE_SMS is only offered to an app that declares ALL FOUR of the
+                entries the platform expects from a messaging app: this SENDTO
+                activity, the SMS_DELIVER receiver, the WAP_PUSH_DELIVER receiver
+                and the RESPOND_VIA_MESSAGE service. Miss one and the app simply
+                never appears in the "SMS app" picker — the same trap as the
+                missing ACTION_DIAL filter in DialerPoC.
+            -->
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="sms" />
+                <data android:scheme="smsto" />
+                <data android:scheme="mms" />
+                <data android:scheme="mmsto" />
+            </intent-filter>
+        </activity>
+
+        <!--
+            The screen with the card. Opened from the notification, never from the
+            receiver: starting an activity from the background is blocked since API 29.
+        -->
+        <activity
+            android:name=".SmsActivity"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.SmsPoC.Sms" />
+
+        <!--
+            The whole point of the test. A manifest receiver is normally ignored since
+            API 26, but SMS_RECEIVED is on the short list of implicit broadcasts that
+            are exempt from the background limits: the system starts this receiver even
+            when our process is dead — after a swipe from recents, after a reboot, with
+            no foreground service and no Xiaomi autostart.
+
+            android:permission guards the filter so only the system can deliver it.
+        -->
+        <receiver
+            android:name=".SmsReceiver"
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Default-SMS-app path: the message reaches us FIRST and nobody else shows it. -->
+        <receiver
+            android:name=".SmsDeliverReceiver"
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_DELIVER" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".WapPushDeliverReceiver"
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_WAP_PUSH">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
+                <data android:mimeType="application/vnd.wap.mms-message" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Required for the role; answering a call with a text goes through it. -->
+        <service
+            android:name=".RespondViaMessageService"
+            android:exported="true"
+            android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE">
+            <intent-filter>
+                <action android:name="android.intent.action.RESPOND_VIA_MESSAGE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="sms" />
+                <data android:scheme="smsto" />
+                <data android:scheme="mms" />
+                <data android:scheme="mmsto" />
+            </intent-filter>
+        </service>
+    </application>
+</manifest>
