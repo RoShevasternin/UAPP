@@ -1,0 +1,783 @@
+<title>Music Home Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: phone mockup (sticky, left) + scenario panel with steps, controls and event log (right); notes below. Stacks on phones. */
+:root{
+  --bg:#f3f5f1; --surface:#ffffff; --fg:#17201a; --muted:#5d6b61; --line:#dde3dc;
+  --accent:#1f9d55; --accent-soft:#e2f4e8; --warn:#b7791f; --warn-soft:#fdf3e1; --bad:#c0392b; --bad-soft:#fbe9e7;
+  --frame:#1b1f1c;
+  --f-display:"Unbounded", "Onest", system-ui, sans-serif;
+  --f-body:"Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  /* phone UI: deliberately one dark world in both page themes */
+  --ph-bg:#0e1311; --ph-card:#18201c; --ph-card2:#212b26; --ph-fg:#eef4ef; --ph-muted:#93a399; --ph-accent:#5ee39a; --ph-accent-ink:#06210f; --ph-warn:#f2b45a; --ph-bad:#ff7a6b;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101412; --surface:#171d1a; --fg:#e8eee9; --muted:#9aa89f; --line:#27302b;
+    --accent:#4fd18a; --accent-soft:#16301f; --warn:#e8b25d; --warn-soft:#2d2414; --bad:#ff8a7a; --bad-soft:#331a17;
+    --frame:#000; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101412; --surface:#171d1a; --fg:#e8eee9; --muted:#9aa89f; --line:#27302b;
+  --accent:#4fd18a; --accent-soft:#16301f; --warn:#e8b25d; --warn-soft:#2d2414; --bad:#ff8a7a; --bad-soft:#331a17;
+  --frame:#000; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--f-body);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:28px 56px;display:flex;flex-direction:column;gap:28px}
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px}
+.by{font:600 12px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+h1{font:700 clamp(26px,4vw,40px)/1.1 var(--f-display);margin:6px 0 0;text-wrap:balance;letter-spacing:-.01em}
+h1 em{font-style:normal;color:var(--accent)}
+.lede{color:var(--muted);max-width:62ch;margin:8px 0 0}
+.tag{display:inline-block;font:600 11px/1 var(--f-mono);padding:6px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent);letter-spacing:.04em}
+
+.stage{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:32px;align-items:start}
+@media (max-width:860px){.stage{grid-template-columns:minmax(0,1fr)}}
+.phone-col{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);display:flex;flex-direction:column;align-items:center;gap:10px}
+@media (max-width:860px){.phone-col{position:static}}
+.hint{font-size:12.5px;color:var(--muted);text-align:center;max-width:320px}
+
+/* ---------- phone ---------- */
+.phone{width:min(340px,100%);aspect-ratio:9/19;max-width:100%;border:10px solid var(--frame);border-radius:46px;background:var(--ph-bg);color:var(--ph-fg);position:relative;overflow:hidden;box-shadow:0 30px 60px -30px rgba(10,30,20,.45);font-family:var(--f-body)}
+.sb{position:absolute;top:0;left:0;right:0;height:30px;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font:600 12px var(--f-body);z-index:5;color:var(--ph-fg)}
+.sb .cam{position:absolute;left:50%;top:8px;width:12px;height:12px;border-radius:50%;background:#000;transform:translateX(-50%)}
+.view{position:absolute;top:30px;bottom:44px;left:0;right:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+.view::-webkit-scrollbar{display:none}
+.nav{position:absolute;bottom:0;left:0;right:0;height:44px;display:flex;justify-content:space-around;align-items:center;background:rgba(0,0,0,.35);z-index:5}
+.nav button{background:none;border:0;color:var(--ph-fg);width:64px;height:36px;border-radius:18px;cursor:pointer;display:grid;place-items:center}
+.nav button:hover{background:rgba(255,255,255,.08)}
+.nav button:focus-visible{outline:2px solid var(--ph-accent)}
+.nav svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
+.nav button.home.pulse{animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(94,227,154,.0)}50%{box-shadow:0 0 0 6px rgba(94,227,154,.35)}}
+.toast{position:absolute;left:50%;bottom:60px;transform:translateX(-50%);background:#2d3631;color:#eef4ef;font-size:12px;padding:8px 14px;border-radius:18px;white-space:nowrap;z-index:9;max-width:92%;overflow:hidden;text-overflow:ellipsis;transition:opacity .25s}
+.toast[hidden]{display:none}
+.toast .ic{display:inline-block;width:14px;height:14px;border-radius:3px;background:var(--ph-accent);vertical-align:-2px;margin-right:6px}
+
+.pad{padding:12px 16px 20px;display:flex;flex-direction:column;gap:12px}
+.wall{min-height:100%;background:radial-gradient(120% 70% at 20% 0%,#1e3b2d 0%,transparent 60%),radial-gradient(90% 60% at 100% 100%,#2a2440 0%,transparent 60%),var(--ph-bg)}
+.wall.stock{background:linear-gradient(160deg,#3b4a7a,#1d2340 60%,#121528)}
+.clock{font:500 54px/1 var(--f-display);letter-spacing:-.03em;margin-top:18px}
+.date{color:var(--ph-muted);font-size:13px}
+.pcard{background:var(--ph-card);border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.pcard.clip{background:linear-gradient(180deg,#1f3a2b,#18201c);border:1px solid rgba(94,227,154,.35);animation:rise .35s ease-out}
+@keyframes rise{from{transform:translateY(8px);opacity:.3}to{transform:none;opacity:1}}
+.eyebrow{font:600 10px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ph-muted)}
+.clip .eyebrow{color:var(--ph-accent)}
+.ptitle{font-weight:600;font-size:14px;line-height:1.3;overflow-wrap:anywhere}
+.psub{font-size:12px;color:var(--ph-muted);overflow-wrap:anywhere}
+.row{display:flex;gap:8px;align-items:center}
+.row.between{justify-content:space-between}
+.pbtn{border:0;border-radius:12px;padding:9px 12px;font:600 13px var(--f-body);cursor:pointer;background:var(--ph-card2);color:var(--ph-fg)}
+.pbtn.pri{background:var(--ph-accent);color:var(--ph-accent-ink)}
+.pbtn.ghost{background:transparent;color:var(--ph-muted)}
+.pbtn:focus-visible{outline:2px solid var(--ph-accent);outline-offset:2px}
+.pbtn.grow{flex:1}
+.chip{font:600 10px/1 var(--f-mono);padding:4px 6px;border-radius:5px;background:rgba(94,227,154,.15);color:var(--ph-accent);letter-spacing:.04em}
+.chip.warn{background:rgba(242,180,90,.15);color:var(--ph-warn)}
+.chip.bad{background:rgba(255,122,107,.15);color:var(--ph-bad)}
+.bar{height:5px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--ph-accent);border-radius:3px;transition:width .2s linear}
+.cover{width:44px;height:44px;border-radius:10px;flex:none;display:grid;place-items:center;font:700 16px var(--f-display);color:rgba(255,255,255,.9)}
+.cover.big{width:100%;height:auto;aspect-ratio:1;border-radius:22px;font-size:64px;max-width:100%}
+.mini{display:flex;gap:10px;align-items:center;cursor:pointer}
+.mini .meta{flex:1;min-width:0}
+.mini .ptitle,.trk .ptitle{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.round{width:38px;height:38px;border-radius:50%;border:0;background:var(--ph-accent);color:var(--ph-accent-ink);display:grid;place-items:center;cursor:pointer;flex:none}
+.round svg{width:16px;height:16px;fill:currentColor}
+.round.lg{width:64px;height:64px}
+.round.lg svg{width:24px;height:24px}
+.round.sec{background:var(--ph-card2);color:var(--ph-fg)}
+.recent{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.recent button{background:none;border:0;padding:0;color:var(--ph-fg);text-align:left;cursor:pointer;min-width:0}
+.recent .cover{width:100%;height:auto;aspect-ratio:1;font-size:22px}
+.recent span{display:block;font-size:11px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dock{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;background:rgba(255,255,255,.07);border-radius:22px;padding:10px 8px}
+.apps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 6px}
+.app{background:none;border:0;color:var(--ph-fg);display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;font-size:10.5px;padding:0;min-width:0}
+.app i{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font:700 15px var(--f-display);font-style:normal;color:#fff}
+.app span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.app.new i{box-shadow:0 0 0 2px var(--ph-accent)}
+.handle{align-self:center;background:none;border:0;color:var(--ph-muted);font-size:11px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.handle b{display:block;width:34px;height:4px;border-radius:2px;background:var(--ph-muted)}
+.sectitle{font:600 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ph-muted);margin-top:4px}
+.trk{display:flex;gap:10px;align-items:center;padding:6px 0;background:none;border:0;color:var(--ph-fg);width:100%;text-align:left;cursor:pointer}
+.trk .meta{flex:1;min-width:0}
+.trk.on .ptitle{color:var(--ph-accent)}
+.apphead{display:flex;justify-content:space-between;align-items:center}
+.apphead h3{font:700 18px var(--f-display);margin:0}
+.tabs{display:flex;gap:6px}
+.tabs button{flex:1;background:var(--ph-card);border:0;color:var(--ph-muted);border-radius:10px;padding:8px;font:600 12px var(--f-body);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--ph-card2);color:var(--ph-fg)}
+.field{display:flex;gap:6px;background:var(--ph-card);border-radius:14px;padding:6px}
+.field input{flex:1;min-width:0;background:transparent;border:0;color:var(--ph-fg);font:13px var(--f-body);padding:6px 8px;outline:none}
+.field input::placeholder{color:var(--ph-muted)}
+.res{border-radius:14px;padding:10px 12px;font-size:12.5px;background:var(--ph-card);display:flex;flex-direction:column;gap:6px}
+.res.bad{border:1px solid rgba(255,122,107,.4)}
+.res.ok{border:1px solid rgba(94,227,154,.35)}
+.mono{font-family:var(--f-mono);font-size:11px;color:var(--ph-muted);overflow-wrap:anywhere}
+.sheet{position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;z-index:8}
+.sheet .box{background:#232b27;width:100%;border-radius:22px 22px 0 0;padding:20px 18px 18px;display:flex;flex-direction:column;gap:12px}
+.sheet h4{margin:0;font:600 16px var(--f-body);text-wrap:balance}
+.opt{display:flex;align-items:center;gap:10px;padding:8px;border-radius:12px;background:none;border:0;color:var(--ph-fg);cursor:pointer;width:100%;text-align:left;font:14px var(--f-body)}
+.opt[aria-checked="true"]{background:rgba(94,227,154,.1)}
+.opt .radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--ph-muted);flex:none}
+.opt[aria-checked="true"] .radio{border:5px solid var(--ph-accent)}
+.msgs{display:flex;flex-direction:column;gap:8px;padding:10px 12px 20px}
+.msg{max-width:84%;background:#22302a;border-radius:16px 16px 16px 4px;padding:8px 10px;font-size:13px}
+.msg.me{align-self:flex-end;background:#2c4a8a;border-radius:16px 16px 4px 16px}
+.msg a{color:#9cd4ff;text-decoration:underline;cursor:pointer;overflow-wrap:anywhere;background:none;border:0;padding:0;font:inherit;text-align:left}
+.msg small{display:block;color:var(--ph-muted);font-size:10px;margin-top:2px}
+.chathead{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#17211c;border-bottom:1px solid rgba(255,255,255,.06)}
+.ava{width:34px;height:34px;border-radius:50%;background:#e07a5f;display:grid;place-items:center;font-weight:700;font-size:13px}
+.onb{min-height:100%;display:flex;flex-direction:column;justify-content:space-between;padding:26px 20px 22px;gap:18px;background:radial-gradient(100% 60% at 50% 0%,#1f3a2b,transparent 70%),var(--ph-bg)}
+.onb h2{font:700 24px/1.15 var(--f-display);margin:0;text-wrap:balance}
+.onb ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;font-size:13.5px;color:#cfdad2}
+.onb li{display:flex;gap:10px}
+.onb li b{color:var(--ph-accent);font-family:var(--f-mono);font-size:12px;padding-top:2px}
+.seek{display:flex;flex-direction:column;gap:4px}
+.seek .row{font:11px var(--f-mono);color:var(--ph-muted)}
+.empty{color:var(--ph-muted);font-size:12.5px;text-align:center;padding:16px 8px}
+
+/* ---------- panel ---------- */
+.panel{display:flex;flex-direction:column;gap:18px;min-width:0}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.box h2{font:600 16px var(--f-display);margin:0;letter-spacing:-.005em}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.steps li{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start}
+.steps .n{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:600 12px var(--f-mono);border:1.5px solid var(--line);color:var(--muted)}
+.steps li.done .n{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.steps li.cur .n{border-color:var(--accent);color:var(--accent)}
+.steps b{display:block;font-weight:600}
+.steps span{color:var(--muted);font-size:13.5px}
+.ctrls{display:flex;flex-wrap:wrap;gap:8px}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:9px 14px;font:600 13.5px var(--f-body);cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.inline{display:flex;gap:8px;flex-wrap:wrap}
+.inline input{flex:1 1 220px;min-width:0;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:10px;padding:9px 12px;font:13.5px var(--f-mono)}
+.inline input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.small{font-size:13px;color:var(--muted);margin:0}
+.log{font:12px/1.55 var(--f-mono);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;height:260px;overflow:auto;display:flex;flex-direction:column;gap:2px}
+.log div{display:grid;grid-template-columns:62px 1fr;gap:8px}
+.log time{color:var(--muted);font-variant-numeric:tabular-nums}
+.log .k{color:var(--accent);font-weight:600}
+.log .w{color:var(--warn);font-weight:600}
+.log .x{color:var(--bad);font-weight:600}
+.log p{margin:0;overflow-wrap:anywhere}
+.clipnow{font:12.5px var(--f-mono);background:var(--bg);border:1px dashed var(--line);border-radius:10px;padding:8px 12px;overflow-wrap:anywhere;color:var(--muted)}
+.clipnow b{color:var(--fg);font-weight:600}
+
+.notes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@media (max-width:860px){.notes{grid-template-columns:minmax(0,1fr)}}
+.notes ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.notes code,.box code{font:12.5px var(--f-mono);background:var(--bg);padding:1px 5px;border-radius:5px;overflow-wrap:anywhere}
+.f{color:var(--accent);font-weight:700}
+.h{color:var(--warn);font-weight:700}
+.tblwrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.pill{display:inline-block;font:600 11px/1 var(--f-mono);padding:5px 7px;border-radius:6px}
+.pill.ok{background:var(--accent-soft);color:var(--accent)}
+.pill.no{background:var(--bad-soft);color:var(--bad)}
+.pill.mid{background:var(--warn-soft);color:var(--warn)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="by">Підготував VELDAN · 06.10.2026 · категорія Tools</div>
+      <h1>Music Home — <em>прототип</em></h1>
+      <p class="lede">Завантажувач музики з легальних посилань + свій головний екран. Скопіював лінк будь-де, натиснув «Додому» — і там уже картка «Завантажити». Інтерфейс апки англійською (під маркет), пояснення українською.</p>
+    </div>
+    <span class="tag">PROTOTYPE · не LibGDX</span>
+  </header>
+
+  <section class="stage">
+    <div class="phone-col">
+      <div class="phone" id="phone" aria-label="Телефон-прототип">
+        <div class="sb"><span id="sbTime">9:41</span><span class="cam"></span><span>5G ▮▮▮ 82%</span></div>
+        <div class="view" id="view"></div>
+        <div class="toast" id="toast" hidden></div>
+        <div id="overlay"></div>
+        <nav class="nav">
+          <button type="button" data-act="back" aria-label="Назад"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <button type="button" data-act="home" class="home" id="homeBtn" aria-label="Додому"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/></svg></button>
+          <button type="button" data-act="recents" aria-label="Недавні"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg></button>
+        </nav>
+      </div>
+      <p class="hint">Кнопки внизу телефона працюють: ◁ назад, ○ «Додому», ▢ недавні.</p>
+    </div>
+
+    <div class="panel">
+      <div class="box">
+        <h2>Сценарій</h2>
+        <ol class="steps" id="steps">
+          <li data-s="1"><span class="n">1</span><div><b>Зробити головним екраном</b><span>Відкрий нову іконку Music Home → «Set as Home screen» → системний діалог ролі.</span></div></li>
+          <li data-s="2"><span class="n">2</span><div><b>Скопіювати лінк в іншій апці</b><span>У Messenger тапни по посиланню — воно потрапить у буфер. Або встав свій лінк нижче.</span></div></li>
+          <li data-s="3"><span class="n">3</span><div><b>Натиснути «Додому»</b><span>Лаунчер отримує фокус, читає буфер і показує картку, якщо лінк можна завантажити.</span></div></li>
+          <li data-s="4"><span class="n">4</span><div><b>Завантажити</b><span>Прогрес видно прямо на головному екрані, апку відкривати не треба.</span></div></li>
+          <li data-s="5"><span class="n">5</span><div><b>Слухати</b><span>Тап по треку → плеєр. Звук синтезується в браузері, справжні файли не качаються.</span></div></li>
+        </ol>
+        <div class="ctrls">
+          <button class="btn" type="button" data-act="open-messenger">Відкрити Messenger</button>
+          <button class="btn pri" type="button" data-act="home">○ Додому</button>
+          <button class="btn" type="button" data-act="reset">Скинути все</button>
+        </div>
+      </div>
+
+      <div class="box">
+        <h2>Буфер обміну</h2>
+        <div class="clipnow" id="clipNow">порожньо</div>
+        <form class="inline" id="clipForm">
+          <input id="clipInput" type="text" placeholder="Встав свій лінк і натисни «У буфер»" aria-label="Свій лінк" autocomplete="off">
+          <button class="btn" type="submit">У буфер</button>
+        </form>
+        <p class="small">Спробуй різне: пряме <code>.mp3</code>, Google Drive, Dropbox, RSS подкасту, YouTube чи Spotify. Заборонені джерела апка ігнорує мовчки, без картки.</p>
+      </div>
+
+      <div class="box">
+        <div class="row between" style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+          <h2>Журнал подій Android</h2>
+          <button class="btn" type="button" data-act="clear-log">Очистити</button>
+        </div>
+        <div class="log" id="log" aria-live="polite"></div>
+        <p class="small">Тут імена реальних API, які викличе апка. <span class="f">Зелене</span> — ключові події, <span class="h">бурштинове</span> — пастки.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="box">
+    <h2>Джерела: що качаємо, а що ні</h2>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>Посилання</th><th>Що робить апка</th><th>Статус</th></tr></thead>
+        <tbody>
+          <tr><td>Пряме посилання <code>.mp3 .m4a .aac .ogg .opus .flac .wav</code></td><td>Качає як є, назва з імені файлу або тегів ID3</td><td><span class="pill ok">качаємо</span></td></tr>
+          <tr><td>Google Drive <code>/file/d/&lt;id&gt;/view</code></td><td>Перетворює на <code>uc?export=download&amp;id=&lt;id&gt;</code></td><td><span class="pill ok">качаємо</span></td></tr>
+          <tr><td>Dropbox <code>?dl=0</code></td><td>Міняє на <code>?dl=1</code></td><td><span class="pill ok">качаємо</span></td></tr>
+          <tr><td>OneDrive <code>1drv.ms</code></td><td>Іде за редиректом і додає <code>download=1</code></td><td><span class="pill mid">перевірити на девайсі</span></td></tr>
+          <tr><td>RSS подкасту</td><td>Показує список епізодів, качає <code>&lt;enclosure&gt;</code></td><td><span class="pill ok">качаємо</span></td></tr>
+          <tr><td>Будь-яка інша сторінка</td><td>Запит <code>HEAD</code>: якщо <code>Content-Type: audio/*</code>, то качаємо, інакше пояснюємо, що це не аудіофайл</td><td><span class="pill mid">за типом</span></td></tr>
+          <tr><td>YouTube, YouTube Music, Spotify, SoundCloud, Apple Music, Deezer, VK, TikTok</td><td>Картки на Home немає. Якщо вставити вручну, пояснюємо, що сервіс не дозволяє завантаження</td><td><span class="pill no">ніколи</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="notes">
+    <div class="box">
+      <h2>Що перевірити на девайсі</h2>
+      <ul>
+        <li><span class="f">✔</span> Android 10+ дає читати буфер лише апці у фокусі. Тому читаємо в <code>onWindowFocusChanged(true)</code>, а не в <code>onResume</code>: там фокусу ще немає і повертається <code>null</code>.</li>
+        <li><span class="f">✔</span> Android 12+ показує тост «Music Home pasted from your clipboard» на кожен <code>getPrimaryClip()</code>. Щоб не спамити, спершу дивимось <code>getPrimaryClipDescription().timestamp</code> (без тосту) і читаємо текст лише коли кліп новий.</li>
+        <li><span class="h">◌</span> Android 12+ має <code>ClipDescription.getConfidenceScore(TYPE_URL)</code>: можна зрозуміти, що в буфері лінк, не читаючи його. Перевірити, чи класифікація встигає до натискання «Додому».</li>
+        <li><span class="h">◌</span> MIUI/HyperOS може мати власну заборону на буфер для фонових апок. Заміряти на Redmi, як у тестах 1–4.</li>
+        <li><span class="f">✔</span> Апка має працювати й без ролі HOME (кнопка «Not now»): тоді картка з'являється при відкритті самої апки. Це вимога Play: основна функція не має залежати від ролі.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h2>Як ляже на LibGDX</h2>
+      <ul>
+        <li>Екрани прототипу → <code>AdvancedScreen</code>: <code>HomeScreen</code>, <code>LibraryScreen</code>, <code>DownloadsScreen</code>, <code>PlayerScreen</code>, <code>OnboardingScreen</code>. Перемикання через <code>NavigationManager</code>.</li>
+        <li>Усе Android-специфічне — через інтерфейс у <code>gdxGame</code>, який реалізує <code>AndroidLauncher</code>: буфер, <code>DownloadManager</code>, <code>RoleManager</code>, список застосунків (<code>LauncherApps</code>), запуск апок.</li>
+        <li>Музика у фоні — не через <code>Gdx.audio</code>, а через окремий <code>MediaSessionService</code> (Media3), інакше звук помре разом з екраном.</li>
+        <li>У маніфесті <code>AndroidLauncher</code>: <code>HOME</code> + <code>DEFAULT</code>, <code>singleTask</code>, <code>stateNotNeeded</code>, <code>clearTaskOnLaunch</code> — як у HomeLauncher-PoC. Плюс <code>ACTION_SEND text/plain</code> для «Поділитися → Music Home».</li>
+        <li><code>businesModule</code> і <code>adsmodule</code> підключаємо з еталона на етапі перенесення, як у решти апок.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+"use strict";
+var $ = function(s){return document.querySelector(s)};
+var view = $("#view"), overlay = $("#overlay"), logEl = $("#log"), toastEl = $("#toast");
+
+/* ---------- link resolver (переноситься в апку як є) ---------- */
+var AUDIO_EXT = ["mp3","m4a","aac","ogg","opus","flac","wav"];
+var BLOCKED = [
+  [/(^|\.)youtube\.com$|(^|\.)youtu\.be$/, "YouTube"],
+  [/(^|\.)spotify\.com$|^spotify\.link$/, "Spotify"],
+  [/(^|\.)soundcloud\.com$/, "SoundCloud"],
+  [/^music\.apple\.com$/, "Apple Music"],
+  [/(^|\.)deezer\.com$|^deezer\.page\.link$/, "Deezer"],
+  [/(^|\.)vk\.com$|(^|\.)vk\.ru$/, "VK"],
+  [/(^|\.)tiktok\.com$/, "TikTok"],
+  [/^music\.yandex\./, "Yandex Music"]
+];
+function resolveLink(raw){
+  var s = String(raw||"").trim();
+  var m = s.match(/https?:\/\/\S+|www\.\S+/i);
+  if(!m) return {kind:"invalid"};
+  s = m[0].replace(/[),.;!?]+$/,"");
+  if(/^www\./i.test(s)) s = "https://" + s;
+  var u; try{ u = new URL(s); }catch(e){ return {kind:"invalid"}; }
+  var host = u.hostname.toLowerCase().replace(/^(www|m)\./,"");
+  for(var i=0;i<BLOCKED.length;i++) if(BLOCKED[i][0].test(host)) return {kind:"blocked", service:BLOCKED[i][1], url:s, host:host};
+  var last = decodeURIComponent(u.pathname.split("/").pop()||"");
+  var ext = (last.match(/\.([a-z0-9]{2,4})$/i)||[])[1]; ext = ext ? ext.toLowerCase() : "";
+  if(host === "drive.google.com"){
+    var id = (u.pathname.match(/\/file\/d\/([\w-]+)/)||[])[1] || u.searchParams.get("id");
+    if(id) return {kind:"gdrive", label:"Google Drive", url:s, host:host, direct:"https://drive.google.com/uc?export=download&id="+id};
+  }
+  if(/(^|\.)dropbox\.com$/.test(host)){
+    u.searchParams.set("dl","1");
+    return {kind:"dropbox", label:"Dropbox", url:s, host:host, direct:u.toString(), file:last};
+  }
+  if(host === "1drv.ms" || /onedrive\.live\.com$/.test(host)) return {kind:"onedrive", label:"OneDrive", url:s, host:host, direct:"(redirect) …&download=1"};
+  if(AUDIO_EXT.indexOf(ext) >= 0) return {kind:"direct", label:ext.toUpperCase(), url:s, host:host, direct:s, file:last};
+  if(/\.(rss|xml)$/.test(last) || /\/(feed|rss)\/?$/.test(u.pathname) || /^feeds?\./.test(host)) return {kind:"rss", label:"Podcast RSS", url:s, host:host};
+  return {kind:"unknown", url:s, host:host};
+}
+function downloadable(r){ return ["direct","gdrive","dropbox","onedrive","rss"].indexOf(r.kind) >= 0; }
+function titleFrom(file){
+  var t = (file||"").replace(/\.[a-z0-9]{2,4}$/i,"").replace(/[-_]+/g," ").trim();
+  return t ? t.replace(/\b\w/g,function(c){return c.toUpperCase()}) : "Shared audio";
+}
+
+/* ---------- sample content ---------- */
+var CHAT = [
+  {me:false, text:"yo, our new demo is up 🔥", t:"18:02"},
+  {me:false, link:"https://cdn.lofi-loops.net/free/night-drive.mp3", t:"18:02"},
+  {me:true, text:"nice, and the rehearsal?", t:"18:04"},
+  {me:false, link:"https://drive.google.com/file/d/1A2b3C4d5E6f7G8hRehearsal/view?usp=sharing", t:"18:05"},
+  {me:false, link:"https://www.dropbox.com/s/k2x9q7/band-demo-v3.wav?dl=0", t:"18:05"},
+  {me:true, text:"also this one is fire", t:"18:07"},
+  {me:true, link:"https://youtu.be/q9Xb3rT_lofi", t:"18:07"},
+  {me:false, link:"https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC", t:"18:08"},
+  {me:false, text:"my fav podcast btw", t:"18:10"},
+  {me:false, link:"https://feeds.indiehour.fm/indie-hour.rss", t:"18:10"}
+];
+var NAMES = {
+  "1A2b3C4d5E6f7G8hRehearsal": ["Rehearsal 14 Oct", "The Garage Band", "m4a"]
+};
+var EPISODES = [
+  {title:"Ep. 112 — Bedroom pop on a budget", artist:"Indie Hour", dur:2840, size:41},
+  {title:"Ep. 111 — Mixing vocals at home", artist:"Indie Hour", dur:3120, size:45},
+  {title:"Ep. 110 — Touring without a label", artist:"Indie Hour", dur:2615, size:38}
+];
+var APPS = [
+  ["Phone","#2f80ed","P"],["Messages","#27ae60","M"],["Chrome","#e0a800","C"],["Camera","#555","◎"],
+  ["Messenger","#2c4a8a","✉"],["Gallery","#c0392b","G"],["Settings","#5d6d7e","⚙"],["Calendar","#8e44ad","31"],
+  ["Clock","#16a085","⏱"],["Files","#d35400","F"],["Maps","#1e8449","⌖"],["Music Home","#123d27","♪"]
+];
+
+/* ---------- state ---------- */
+var S;
+var uid = 10;
+function fresh(){
+  return {
+    installed:true, opened:false, isHome:false,
+    screen:"stock", tab:"library", appInput:"", appRes:null,
+    clip:null, clipTs:0, seenTs:0, card:null, cardHandled:{},
+    downloads:[],
+    library:[
+      {id:1, title:"Sunday Morning Tape", artist:"Example · Jamendo CC-BY", dur:204, size:4.7, hue:28, seed:3, fmt:"MP3"},
+      {id:2, title:"Pines", artist:"Example · Internet Archive", dur:251, size:6.1, hue:190, seed:7, fmt:"OGG"}
+    ],
+    now:null, playing:false, pos:0,
+    steps:{}, prev:[]
+  };
+}
+
+/* ---------- log ---------- */
+function log(text, cls){
+  var d = new Date(); var t = String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")+":"+String(d.getSeconds()).padStart(2,"0");
+  var row = document.createElement("div");
+  row.innerHTML = '<time>'+t+'</time><p'+(cls?' class="'+cls+'"':'')+'></p>';
+  row.querySelector("p").textContent = text;
+  logEl.appendChild(row); logEl.scrollTop = logEl.scrollHeight;
+}
+var toastTimer;
+function toast(text, sysIcon){
+  toastEl.innerHTML = (sysIcon?'<span class="ic"></span>':'') ;
+  toastEl.appendChild(document.createTextNode(text));
+  toastEl.hidden = false; clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ toastEl.hidden = true; }, 2400);
+}
+function step(n){ if(!S.steps[n]){ S.steps[n] = true; } paintSteps(); }
+function paintSteps(){
+  var cur = 0;
+  for(var i=1;i<=5;i++){ if(!S.steps[i]){ cur = i; break; } }
+  document.querySelectorAll("#steps li").forEach(function(li){
+    var n = +li.dataset.s;
+    li.classList.toggle("done", !!S.steps[n]);
+    li.classList.toggle("cur", n === cur);
+  });
+  $("#homeBtn").classList.toggle("pulse", cur === 3 && S.isHome);
+}
+
+/* ---------- helpers ---------- */
+function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]}); }
+function fmtTime(sec){ sec = Math.max(0,Math.floor(sec)); return Math.floor(sec/60)+":"+String(sec%60).padStart(2,"0"); }
+function coverStyle(t){ return 'background:linear-gradient(135deg,hsl('+t.hue+' 70% 55%),hsl('+((t.hue+50)%360)+' 55% 28%))'; }
+function cover(t, big){ return '<div class="cover'+(big?' big':'')+'" style="'+coverStyle(t)+'">'+esc(t.title.replace(/^Ep\.\s*/,"").charAt(0))+'</div>'; }
+var ICON_PLAY = '<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg>';
+var ICON_PAUSE = '<svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>';
+var ICON_PREV = '<svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zM20 5L9 12l11 7z"/></svg>';
+var ICON_NEXT = '<svg viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM4 5l11 7-11 7z"/></svg>';
+function kindChip(r){
+  if(r.kind==="blocked") return '<span class="chip bad">'+esc(r.service)+'</span>';
+  if(r.kind==="unknown") return '<span class="chip warn">WEB PAGE</span>';
+  return '<span class="chip">'+esc(r.label)+'</span>';
+}
+function trackFromResolved(r){
+  var title, artist = r.host, fmt = (r.label||"MP3"), size = +(3 + Math.random()*6).toFixed(1);
+  if(r.kind==="gdrive"){ var id=(r.direct.match(/id=([\w-]+)/)||[])[1]; var n=NAMES[id]; title = n?n[0]:"Drive audio"; artist = n?n[1]:"Google Drive"; fmt = n?n[2].toUpperCase():"MP3"; }
+  else if(r.kind==="dropbox"){ title = titleFrom(r.file); artist = "Dropbox"; fmt = (r.file.split(".").pop()||"mp3").toUpperCase(); if(fmt==="WAV") size = +(28+Math.random()*10).toFixed(1); }
+  else if(r.kind==="onedrive"){ title = "OneDrive audio"; artist = "OneDrive"; }
+  else { title = titleFrom(r.file); if(fmt==="FLAC"||fmt==="WAV") size = +(25+Math.random()*12).toFixed(1); }
+  return {id:++uid, title:title, artist:artist, dur:150+Math.floor(Math.random()*120), size:size, hue:Math.floor(Math.random()*360), seed:Math.floor(Math.random()*40), fmt:fmt};
+}
+
+/* ---------- screens ---------- */
+function render(){
+  overlay.innerHTML = "";
+  var h = "";
+  switch(S.screen){
+    case "stock": h = scrStock(); break;
+    case "drawer": h = scrDrawer(); break;
+    case "home": h = scrHome(); break;
+    case "onboard": h = scrOnboard(); break;
+    case "app": h = scrApp(); break;
+    case "feed": h = scrFeed(); break;
+    case "player": h = scrPlayer(); break;
+    case "messenger": h = scrMessenger(); break;
+    case "other": h = scrOther(); break;
+  }
+  var a = document.activeElement, keep = a && a.id==="appInput" ? [a.selectionStart, a.selectionEnd] : null;
+  view.innerHTML = h;
+  if(S.sheet) overlay.innerHTML = S.sheet();
+  var inp = $("#appInput"); if(inp){ inp.value = S.appInput; if(keep){ inp.focus(); try{ inp.setSelectionRange(keep[0], keep[1]); }catch(e){} } }
+}
+function appGrid(list){
+  return '<div class="apps">'+list.map(function(a){
+    var isUs = a[0]==="Music Home";
+    return '<button type="button" class="app'+(isUs && !S.opened?' new':'')+'" data-act="launch" data-app="'+esc(a[0])+'"><i style="background:'+a[1]+'">'+a[2]+'</i><span>'+esc(a[0])+'</span></button>';
+  }).join("")+'</div>';
+}
+function scrStock(){
+  return '<div class="wall stock"><div class="pad"><div class="clock">'+clockStr()+'</div><div class="date">'+dateStr()+' · System Launcher</div>'+
+    '<div style="height:24px"></div>'+appGrid(APPS)+
+    (S.isHome?'':'<p class="psub" style="text-align:center;margin-top:10px">Це стоковий лаунчер телефона. Music Home щойно встановлено — іконка з зеленим обідком.</p>')+
+    '</div></div>';
+}
+function scrDrawer(){
+  return '<div class="wall"><div class="pad"><div class="row between"><span class="sectitle">All apps</span><button class="pbtn ghost" type="button" data-act="go-home">Close</button></div>'+appGrid(APPS)+'</div></div>';
+}
+function scrHome(){
+  var h = '<div class="wall"><div class="pad"><div><div class="clock">'+clockStr()+'</div><div class="date">'+dateStr()+'</div></div>';
+  if(S.card){
+    var r = S.card;
+    h += '<div class="pcard clip"><div class="row between"><span class="eyebrow">Link from clipboard</span>'+kindChip(r)+'</div>'+
+      '<div class="ptitle">'+esc(r.kind==="rss"?"Podcast feed found":"Audio link found")+'</div><div class="psub">'+esc(r.url)+'</div>'+
+      '<div class="row"><button class="pbtn pri grow" type="button" data-act="card-go">'+(r.kind==="rss"?"Choose episode":"Download")+'</button><button class="pbtn ghost" type="button" data-act="card-dismiss">Dismiss</button></div></div>';
+  }
+  h += downloadsBlock(true);
+  if(S.now){ h += '<div class="pcard">'+miniPlayer()+'</div>'; }
+  h += '<div class="sectitle">Recently downloaded</div>';
+  var rec = S.library.slice(-3).reverse();
+  h += rec.length ? '<div class="recent">'+rec.map(function(t){return '<button type="button" data-act="play" data-id="'+t.id+'">'+cover(t)+'<span>'+esc(t.title)+'</span></button>';}).join("")+'</div>' : '<div class="empty">Nothing yet</div>';
+  h += '<div style="flex:1"></div><button class="handle" type="button" data-act="drawer"><b></b>All apps</button>';
+  h += '<div class="dock">'+[APPS[0],APPS[1],APPS[2],APPS[4],APPS[11]].map(function(a){
+    return '<button type="button" class="app" data-act="launch" data-app="'+esc(a[0])+'"><i style="background:'+a[1]+'">'+a[2]+'</i></button>';}).join("")+'</div>';
+  return h + '</div></div>';
+}
+function downloadsBlock(compact){
+  var act = S.downloads.filter(function(d){return d.status!=="done"});
+  if(!act.length) return compact ? "" : '<div class="empty">No active downloads. Paste a link above.</div>';
+  return '<div class="pcard"><span class="eyebrow">Downloading · '+act.length+'</span>'+act.map(function(d){
+    return '<div class="row" style="gap:10px">'+cover(d.track)+'<div style="flex:1;min-width:0"><div class="row between"><span class="ptitle" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(d.track.title)+'</span><span class="mono">'+Math.floor(d.p)+'%</span></div>'+
+      '<div class="bar"><i style="width:'+d.p+'%"></i></div><div class="mono">'+(d.p*d.track.size/100).toFixed(1)+' / '+d.track.size+' MB · '+d.speed.toFixed(1)+' MB/s</div></div></div>';
+  }).join("")+'</div>';
+}
+function miniPlayer(){
+  var t = S.now;
+  return '<div class="mini" data-act="open-player">'+cover(t)+'<div class="meta"><div class="ptitle">'+esc(t.title)+'</div><div class="psub">'+esc(t.artist)+' · '+fmtTime(S.pos)+' / '+fmtTime(t.dur)+'</div>'+
+    '<div class="bar" style="margin-top:6px"><i style="width:'+(S.pos/t.dur*100)+'%"></i></div></div><button class="round" type="button" data-act="toggle" aria-label="Play/Pause">'+(S.playing?ICON_PAUSE:ICON_PLAY)+'</button></div>';
+}
+function scrOnboard(){
+  return '<div class="onb"><div style="display:flex;flex-direction:column;gap:16px"><span class="eyebrow" style="color:var(--ph-accent)">Music Home</span><h2>Copy a link anywhere. Find it on your Home screen.</h2>'+
+    '<ul><li><b>01</b><span>Copy a link to an audio file, a cloud share or a podcast feed.</span></li><li><b>02</b><span>Press Home — a card offers to download it.</span></li><li><b>03</b><span>Your music, downloads and apps live on one screen.</span></li></ul>'+
+    '<p class="psub">Works with direct audio links, Google Drive, Dropbox, OneDrive and podcast RSS. Streaming services like YouTube and Spotify are not supported.</p></div>'+
+    '<div style="display:flex;flex-direction:column;gap:8px"><button class="pbtn pri" type="button" data-act="ask-role">Set as Home screen</button><button class="pbtn ghost" type="button" data-act="skip-role">Not now</button></div></div>';
+}
+function scrApp(){
+  var h = '<div class="pad"><div class="apphead"><h3>Music Home</h3><span class="chip'+(S.isHome?'':' warn')+'">'+(S.isHome?'HOME ON':'HOME OFF')+'</span></div>';
+  h += '<form class="field" id="appForm"><input id="appInput" type="text" placeholder="Paste a link to audio…" autocomplete="off" aria-label="Link"><button class="pbtn" type="button" data-act="app-paste">Paste</button><button class="pbtn pri" type="submit">Get</button></form>';
+  if(S.appRes) h += resolverBox(S.appRes);
+  h += '<div class="tabs" role="tablist"><button type="button" role="tab" data-act="tab" data-tab="library" aria-selected="'+(S.tab==="library")+'">Library · '+S.library.length+'</button><button type="button" role="tab" data-act="tab" data-tab="downloads" aria-selected="'+(S.tab==="downloads")+'">Downloads</button></div>';
+  if(S.tab==="library"){
+    h += S.library.length ? S.library.slice().reverse().map(trackRow).join("") : '<div class="empty">Your library is empty.</div>';
+  } else {
+    h += downloadsBlock(false);
+    var done = S.downloads.filter(function(d){return d.status==="done"});
+    if(done.length) h += '<div class="sectitle">Finished</div>' + done.slice().reverse().map(function(d){return trackRow(d.track)}).join("");
+  }
+  if(!S.isHome) h += '<button class="pbtn" type="button" data-act="ask-role" style="margin-top:6px">Set as Home screen</button>';
+  if(S.now) h += '<div class="pcard" style="position:sticky;bottom:0">'+miniPlayer()+'</div>';
+  return h + '</div>';
+}
+function trackRow(t){
+  return '<button type="button" class="trk'+(S.now&&S.now.id===t.id?' on':'')+'" data-act="play" data-id="'+t.id+'">'+cover(t)+'<div class="meta"><div class="ptitle">'+esc(t.title)+'</div><div class="psub">'+esc(t.artist)+' · '+fmtTime(t.dur)+' · '+t.fmt+' · '+t.size+' MB</div></div></button>';
+}
+function resolverBox(r){
+  if(r.kind==="invalid") return '<div class="res bad"><b>That’s not a link.</b><span class="psub">Paste a full address that starts with https://</span></div>';
+  if(r.kind==="blocked") return '<div class="res bad"><div class="row between"><b>'+esc(r.service)+' doesn’t allow downloads</b>'+kindChip(r)+'</div><span class="psub">Its terms forbid saving tracks outside the official app. Try a direct audio link or a file shared from your cloud.</span></div>';
+  if(r.kind==="unknown") return '<div class="res bad"><div class="row between"><b>This page isn’t an audio file</b>'+kindChip(r)+'</div><span class="psub">We checked the link and the server returned a web page (text/html). Open the page and copy the link to the file itself.</span><span class="mono">HEAD '+esc(r.host)+' → Content-Type: text/html</span></div>';
+  if(r.kind==="rss") return '<div class="res ok"><div class="row between"><b>Podcast feed</b>'+kindChip(r)+'</div><button class="pbtn pri" type="button" data-act="open-feed">Show episodes</button></div>';
+  return '<div class="res ok"><div class="row between"><b>Ready to download</b>'+kindChip(r)+'</div><span class="mono">'+esc(r.direct)+'</span><button class="pbtn pri" type="button" data-act="app-download">Download</button></div>';
+}
+function scrFeed(){
+  return '<div class="pad"><div class="apphead"><h3>Indie Hour</h3><button class="pbtn ghost" type="button" data-act="back">Back</button></div><span class="psub">feeds.indiehour.fm · 3 latest episodes</span>'+
+    EPISODES.map(function(e,i){ return '<div class="pcard"><div class="ptitle">'+esc(e.title)+'</div><div class="psub">'+fmtTime(e.dur)+' · '+e.size+' MB · MP3</div><button class="pbtn pri" type="button" data-act="ep" data-i="'+i+'">Download episode</button></div>'; }).join("")+'</div>';
+}
+function scrPlayer(){
+  var t = S.now; if(!t) return scrApp();
+  return '<div class="pad" style="gap:18px"><div class="row between"><button class="pbtn ghost" type="button" data-act="back">⌄ Close</button><span class="eyebrow">Now playing</span><span class="chip">'+t.fmt+'</span></div>'+
+    cover(t,true)+'<div><div class="ptitle" style="font-size:18px">'+esc(t.title)+'</div><div class="psub">'+esc(t.artist)+'</div></div>'+
+    '<div class="seek"><div class="bar"><i style="width:'+(S.pos/t.dur*100)+'%"></i></div><div class="row between"><span>'+fmtTime(S.pos)+'</span><span>-'+fmtTime(t.dur-S.pos)+'</span></div></div>'+
+    '<div class="row" style="justify-content:center;gap:22px"><button class="round sec" type="button" data-act="prev" aria-label="Previous">'+ICON_PREV+'</button><button class="round lg" type="button" data-act="toggle" aria-label="Play/Pause">'+(S.playing?ICON_PAUSE:ICON_PLAY)+'</button><button class="round sec" type="button" data-act="next" aria-label="Next">'+ICON_NEXT+'</button></div>'+
+    '<p class="psub" style="text-align:center">Sound is synthesized in the browser for the demo.</p></div>';
+}
+function scrMessenger(){
+  return '<div class="chathead"><div class="ava">KT</div><div><div class="ptitle">Kyle (band)</div><div class="psub">online</div></div></div><div class="msgs">'+
+    CHAT.map(function(m,i){
+      var body = m.link ? '<button type="button" class="link" data-act="copy" data-i="'+i+'" style="color:#9cd4ff;text-decoration:underline;background:none;border:0;padding:0;font:inherit;text-align:left;cursor:pointer;overflow-wrap:anywhere">'+esc(m.link)+'</button>' : esc(m.text);
+      return '<div class="msg'+(m.me?' me':'')+'">'+body+'<small>'+m.t+(m.link?' · tap to copy':'')+'</small></div>';
+    }).join("")+'</div>';
+}
+function scrOther(){
+  return '<div class="wall stock"><div class="pad" style="align-items:center;justify-content:center;min-height:100%"><div class="app"><i style="background:'+S.otherColor+';width:72px;height:72px;border-radius:20px">'+S.otherIcon+'</i></div><div class="ptitle">'+esc(S.otherName)+'</div><div class="psub">Demo app. Press ○ to go Home.</div></div></div>';
+}
+function clockStr(){ var d=new Date(); return d.getHours()+":"+String(d.getMinutes()).padStart(2,"0"); }
+function dateStr(){ return new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"}); }
+
+/* ---------- role sheet ---------- */
+function roleSheet(){
+  var sel = S.roleChoice || "music";
+  return '<div class="sheet"><div class="box"><h4>Set Music Home as your default home app?</h4>'+
+    '<button type="button" class="opt" role="radio" aria-checked="'+(sel==="music")+'" data-act="role-pick" data-v="music"><span class="radio"></span>Music Home</button>'+
+    '<button type="button" class="opt" role="radio" aria-checked="'+(sel==="sys")+'" data-act="role-pick" data-v="sys"><span class="radio"></span>System Launcher</button>'+
+    '<div class="row" style="justify-content:flex-end"><button class="pbtn ghost" type="button" data-act="role-cancel">Cancel</button><button class="pbtn pri" type="button" data-act="role-ok">Set as default</button></div></div></div>';
+}
+
+/* ---------- actions ---------- */
+function go(screen){ if(S.screen!==screen){ S.prev.push(S.screen); } S.screen = screen; render(); }
+function pressHome(){
+  S.sheet = null;
+  if(!S.isHome){
+    log("HOME → System Launcher (роль HOME не наша)", "w");
+    S.prev = []; S.screen = "stock"; render(); return;
+  }
+  log("onNewIntent(ACTION_MAIN, CATEGORY_HOME)", "k");
+  S.prev = []; S.screen = "home"; render();
+  log("onResume() · clipboard ще недоступний — немає фокусу");
+  setTimeout(function(){ log("onWindowFocusChanged(hasFocus=true)"); checkClipboard("home"); }, 120);
+}
+function checkClipboard(where){
+  if(!S.clip){ log("getPrimaryClipDescription() → null, буфер порожній"); return; }
+  if(S.clipTs === S.seenTs){ log("ClipDescription.timestamp не змінився → пропускаємо, тосту немає"); return; }
+  log("ClipDescription.timestamp="+S.clipTs+" новий → getPrimaryClip()", "k");
+  S.seenTs = S.clipTs;
+  toast("Music Home pasted from your clipboard", true);
+  log("Android 12+: системний тост «pasted from your clipboard»", "w");
+  var r = resolveLink(S.clip);
+  log("LinkResolver → "+r.kind+(r.service?" ("+r.service+")":""));
+  if(downloadable(r)){
+    if(where==="home"){ S.card = r; step(3); render(); log("Картка «Link from clipboard» показана", "k"); }
+    else { S.appInput = S.clip; S.appRes = r; render(); }
+  } else if(r.kind==="blocked"){
+    log("Заблоковане джерело — картку не показуємо", "w");
+  } else if(r.kind==="unknown"){
+    log("Не аудіо за URL; HEAD-запит лише після явної дії користувача", "w");
+  }
+}
+function setClip(text){
+  S.clip = text; S.clipTs = Date.now();
+  $("#clipNow").innerHTML = '<b>'+esc(text)+'</b>';
+  log('ClipboardManager.setPrimaryClip("'+(text.length>48?text.slice(0,48)+"…":text)+'") — в іншій апці');
+  step(2);
+}
+function startDownload(r, track){
+  var t = track || trackFromResolved(r);
+  var d = {id:t.id, track:t, p:0, speed:1.2+Math.random()*2.4, status:"running"};
+  S.downloads.push(d);
+  log("DownloadManager.enqueue("+(r?r.direct||r.url:"enclosure")+") → id="+d.id, "k");
+  log("Сповіщення системи: «Downloading "+t.title+"»");
+  step(4);
+}
+function tickDownloads(){
+  var changed = false;
+  S.downloads.forEach(function(d){
+    if(d.status!=="running") return;
+    d.speed = Math.max(.6, d.speed + (Math.random()-.5)*.4);
+    d.p = Math.min(100, d.p + d.speed/d.track.size*100*0.25);
+    changed = true;
+    if(d.p >= 100){
+      d.status = "done"; S.library.push(d.track);
+      log("ACTION_DOWNLOAD_COMPLETE id="+d.id+" → MediaScannerConnection.scanFile → Music/MusicHome/", "k");
+      toast("Downloaded: "+d.track.title);
+    }
+  });
+  if(changed && ["home","app"].indexOf(S.screen)>=0) render();
+}
+function play(id){
+  var t = S.library.filter(function(x){return x.id===id})[0]; if(!t) return;
+  if(!S.now || S.now.id!==id){ S.now = t; S.pos = 0; log("MediaSessionService: setMediaItem(\""+t.title+"\") · prepare()", "k"); }
+  S.playing = true; synthStart(t); step(5);
+  log("player.play() · foreground-сповіщення з керуванням");
+  go("player");
+}
+function toggle(){
+  if(!S.now) return;
+  S.playing = !S.playing;
+  if(S.playing){ synthStart(S.now); log("player.play()"); } else { synthStop(); log("player.pause()"); }
+  render();
+}
+function skip(dir){
+  if(!S.now) return;
+  var i = S.library.indexOf(S.now); var n = S.library[(i+dir+S.library.length)%S.library.length];
+  S.now = n; S.pos = 0; if(S.playing) synthStart(n);
+  log((dir>0?"seekToNext()":"seekToPrevious()")+" → "+n.title);
+  render();
+}
+function tickPlayer(){
+  if(!S.now || !S.playing) return;
+  S.pos += 1;
+  if(S.pos >= S.now.dur){ skip(1); return; }
+  if(["home","player","app"].indexOf(S.screen)>=0) render();
+}
+
+/* ---------- WebAudio synth ---------- */
+var ac = null, master = null, synthTimer = null, stepN = 0;
+function synthStart(t){
+  try{
+    if(!ac){ ac = new (window.AudioContext||window.webkitAudioContext)(); master = ac.createGain(); master.gain.value = .35; master.connect(ac.destination); }
+    ac.resume();
+  }catch(e){ return; }
+  synthStop();
+  var scale = [0,3,5,7,10,12,15,17];
+  var base = 196 * Math.pow(2, (t.seed % 7)/12);
+  var bpm = 78 + (t.seed*7) % 36;
+  var pat = []; var s = t.seed*9301+49297;
+  for(var i=0;i<16;i++){ s = (s*9301+49297)%233280; pat.push(Math.floor(s/233280*scale.length)); }
+  stepN = 0;
+  synthTimer = setInterval(function(){
+    var now = ac.currentTime;
+    var f = base * Math.pow(2, scale[pat[stepN%16]]/12);
+    blip(f, "triangle", .09, .32, now);
+    if(stepN%4===0) blip(base/2 * Math.pow(2,[0,5,7,3][(stepN/4|0)%4]/12), "sine", .16, .7, now);
+    stepN++;
+  }, 60000/bpm/2);
+}
+function blip(f, type, vol, len, at){
+  var o = ac.createOscillator(), g = ac.createGain();
+  o.type = type; o.frequency.value = f;
+  g.gain.setValueAtTime(.0001, at); g.gain.exponentialRampToValueAtTime(vol, at+.02); g.gain.exponentialRampToValueAtTime(.0001, at+len);
+  o.connect(g); g.connect(master); o.start(at); o.stop(at+len+.05);
+}
+function synthStop(){ if(synthTimer){ clearInterval(synthTimer); synthTimer = null; } }
+
+/* ---------- events ---------- */
+document.addEventListener("click", function(e){
+  var b = e.target.closest("[data-act]"); if(!b) return;
+  var a = b.dataset.act;
+  if(a==="home"){ pressHome(); return; }
+  if(a==="back"){
+    if(S.sheet){ S.sheet = null; render(); return; }
+    var p = S.prev.pop();
+    if(p){ S.screen = p; render(); } else pressHome();
+    return;
+  }
+  if(a==="recents"){ toast("Recents: demo only"); return; }
+  if(a==="open-messenger"){ S.sheet=null; go("messenger"); log("Відкрито Messenger (інша апка)"); return; }
+  if(a==="reset"){ synthStop(); S = fresh(); logEl.innerHTML = ""; $("#clipNow").textContent = "порожньо"; log("Стан скинуто. Music Home щойно встановлено."); paintSteps(); render(); return; }
+  if(a==="clear-log"){ logEl.innerHTML = ""; return; }
+  if(a==="drawer"){ go("drawer"); return; }
+  if(a==="go-home"){ pressHome(); return; }
+  if(a==="launch"){
+    var name = b.dataset.app;
+    if(name==="Music Home"){
+      if(!S.opened){ S.opened = true; log("MainActivity (LAUNCHER) · перший запуск → онбординг"); go("onboard"); }
+      else { go("app"); log("Відкрито Music Home як звичайну апку"); setTimeout(function(){ checkClipboard("app"); },120); }
+    } else if(name==="Messenger"){ go("messenger"); log("Відкрито Messenger (інша апка)"); }
+    else { var ap = APPS.filter(function(x){return x[0]===name})[0]; S.otherName=name; S.otherColor=ap[1]; S.otherIcon=ap[2]; log("LauncherApps.startMainActivity("+name+")"); go("other"); }
+    return;
+  }
+  if(a==="ask-role"){
+    log("RoleManager.createRequestRoleIntent(ROLE_HOME)", "k");
+    S.roleChoice = "music"; S.sheet = roleSheet; render(); return;
+  }
+  if(a==="role-pick"){ S.roleChoice = b.dataset.v; render(); return; }
+  if(a==="role-cancel"){ S.sheet = null; log("onActivityResult: RESULT_CANCELED", "w"); go("app"); return; }
+  if(a==="role-ok"){
+    S.sheet = null;
+    if(S.roleChoice==="music"){ S.isHome = true; log("onActivityResult: RESULT_OK · isRoleHeld(ROLE_HOME)=true", "k"); step(1); toast("Music Home is now your Home screen"); }
+    else { log("Користувач лишив System Launcher · isRoleHeld=false", "w"); }
+    go("app"); paintSteps(); return;
+  }
+  if(a==="skip-role"){ log("«Not now» — апка працює як звичайний завантажувач", "w"); go("app"); return; }
+  if(a==="copy"){
+    var m = CHAT[+b.dataset.i];
+    setClip(m.link); toast("Copied to clipboard"); return;
+  }
+  if(a==="card-go"){
+    var r = S.card; S.cardHandled[r.url] = true; S.card = null;
+    if(r.kind==="rss"){ log("Картка → відкриваємо фід"); go("feed"); }
+    else { startDownload(r); render(); }
+    return;
+  }
+  if(a==="card-dismiss"){ log("Картку закрито — для цього кліпу більше не покажемо"); S.card = null; render(); return; }
+  if(a==="app-paste"){
+    if(!S.clip){ toast("Clipboard is empty"); return; }
+    S.appInput = S.clip; S.appRes = resolveLink(S.clip); log("Paste → LinkResolver → "+S.appRes.kind); render(); return;
+  }
+  if(a==="app-download"){ startDownload(S.appRes); S.appRes = null; S.appInput = ""; S.tab = "downloads"; render(); return; }
+  if(a==="open-feed"){ S.appRes = null; S.appInput = ""; go("feed"); return; }
+  if(a==="ep"){
+    var ep = EPISODES[+b.dataset.i];
+    var t = {id:++uid, title:ep.title, artist:ep.artist, dur:ep.dur, size:ep.size, hue:150+(+b.dataset.i)*40, seed:11+(+b.dataset.i), fmt:"MP3"};
+    startDownload({direct:"<enclosure url> · "+ep.title}, t);
+    S.tab = "downloads"; S.prev = []; S.screen = S.isHome ? "home" : "app"; render(); return;
+  }
+  if(a==="tab"){ S.tab = b.dataset.tab; render(); return; }
+  if(a==="play"){ play(+b.dataset.id); return; }
+  if(a==="open-player"){ if(e.target.closest('[data-act="toggle"]')) return; go("player"); return; }
+  if(a==="toggle"){ e.stopPropagation(); toggle(); return; }
+  if(a==="prev"){ skip(-1); return; }
+  if(a==="next"){ skip(1); return; }
+});
+document.addEventListener("submit", function(e){
+  e.preventDefault();
+  if(e.target.id==="clipForm"){
+    var v = $("#clipInput").value.trim(); if(!v) return;
+    setClip(v); $("#clipInput").value = ""; toast("Copied to clipboard");
+  }
+  if(e.target.id==="appForm"){
+    var v2 = $("#appInput").value.trim(); S.appInput = v2;
+    S.appRes = resolveLink(v2); log("Get → LinkResolver → "+S.appRes.kind+(S.appRes.kind==="unknown"?" · HEAD → text/html":"")); render();
+  }
+});
+document.addEventListener("input", function(e){ if(e.target.id==="appInput") S.appInput = e.target.value; });
+
+/* ---------- boot ---------- */
+S = fresh();
+function tickClock(){ $("#sbTime").textContent = clockStr(); }
+tickClock(); setInterval(tickClock, 15000);
+setInterval(tickDownloads, 250);
+setInterval(tickPlayer, 1000);
+log("Music Home встановлено. Роль HOME у System Launcher.");
+paintSteps(); render();
+})();
+</script>
