@@ -14,7 +14,9 @@ metadata:
 Рішення користувача: джерела **тільки легальні** (прямі аудіо, Drive, Dropbox, OneDrive, RSS;
 YouTube/Spotify/SoundCloud тощо — ніколи); функція Home = **картка «лінк з буфера»** на
 головному екрані. Прототип — будь-якою технологією (зроблено vanilla HTML/JS); при
-перенесенні апка буде **на LibGDX як решта UAPP** + businesModule/adsmodule з еталона.
+перенесенні апка буде **на LibGDX з інструментами UAPP, але БЕЗ еталона** (06.10.2026: «це новий
+тип апки» — жодних businesModule/adsmodule, ETALON_MIGRATION не застосовується). Правила теки —
+`poc/TEST_APP/CLAUDE.md`; донор інструментів — `agust/Game T35/Mindora Self Test`.
 
 **How to apply:** правки прототипу — `Artifact read` URL → publish з `url`, потім перезаписати
 копію `prototype/index.html`. Основа ролі HOME — [[home-launcher-poc]].

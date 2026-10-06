@@ -287,11 +287,11 @@ th{font:600 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;col
     <div class="box">
       <h2>Як ляже на LibGDX</h2>
       <ul>
-        <li>Екрани прототипу → <code>AdvancedScreen</code>: <code>HomeScreen</code>, <code>LibraryScreen</code>, <code>DownloadsScreen</code>, <code>PlayerScreen</code>, <code>OnboardingScreen</code>. Перемикання через <code>NavigationManager</code>.</li>
+        <li>Екрани прототипу → <code>AdvancedScreen</code>, актори з префіксом <code>A</code>: <code>HomeScreen</code>, <code>LibraryScreen</code>, <code>DownloadsScreen</code>, <code>PlayerScreen</code>, <code>OnboardingScreen</code>. Перемикання через <code>NavigationManager</code>.</li>
         <li>Усе Android-специфічне — через інтерфейс у <code>gdxGame</code>, який реалізує <code>AndroidLauncher</code>: буфер, <code>DownloadManager</code>, <code>RoleManager</code>, список застосунків (<code>LauncherApps</code>), запуск апок.</li>
         <li>Музика у фоні — не через <code>Gdx.audio</code>, а через окремий <code>MediaSessionService</code> (Media3), інакше звук помре разом з екраном.</li>
         <li>У маніфесті <code>AndroidLauncher</code>: <code>HOME</code> + <code>DEFAULT</code>, <code>singleTask</code>, <code>stateNotNeeded</code>, <code>clearTaskOnLaunch</code> — як у HomeLauncher-PoC. Плюс <code>ACTION_SEND text/plain</code> для «Поділитися → Music Home».</li>
-        <li><code>businesModule</code> і <code>adsmodule</code> підключаємо з еталона на етапі перенесення, як у решти апок.</li>
+        <li>Еталона немає: без <code>businesModule</code> і <code>adsmodule</code>. Це новий тип апки, тож беремо лише інструменти LibGDX-апок UAPP (MSDF-шрифти, шейдери й vfx, звук і музика, частинки). Донор — Mindora (T35).</li>
       </ul>
     </div>
   </section>

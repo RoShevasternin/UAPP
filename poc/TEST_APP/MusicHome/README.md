@@ -20,7 +20,8 @@
 
 ## Перенесення в апку
 
-Апка буде на **LibGDX**, як решта апок UAPP (`AdvancedScreen`, `NavigationManager`,
-`gdxGame`), `businesModule` + `adsmodule` — з еталона. Прототип лише показує UX і
-логіку (`resolveLink` у прототипі переноситься як є). Музика у фоні — через
-`MediaSessionService` (Media3), а не `Gdx.audio`.
+Апка буде на **LibGDX** з інструментами UAPP (екрани, актори, групи, шейдери, звук,
+музика), **без еталона** — правила теки й донор інструментів описані в
+`../CLAUDE.md`. Прототип лише показує UX і логіку (`resolveLink` переноситься як є).
+Музика у фоні — через `MediaSessionService` (Media3), а не `Gdx.audio`: `Gdx.audio`
+стає на паузу разом з апкою.
