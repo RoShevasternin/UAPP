@@ -18,5 +18,12 @@ YouTube/Spotify/SoundCloud тощо — ніколи); функція Home = **�
 тип апки» — жодних businesModule/adsmodule, ETALON_MIGRATION не застосовується). Правила теки —
 `poc/TEST_APP/CLAUDE.md`; донор інструментів — `agust/Game T35/Mindora Self Test`.
 
+**v2 (06.10.2026):** робоча назва **Redwave: Music Downloader** (червоний бренд, лого — еквалайзер
+зі стрілкою). Прототип переписано: 8 екранів (splash, onboarding, home, discover, library, player з
+EQ і візуалізатором на Web Audio, ringtone maker, launcher), тест-план 7 сценаріїв, 6 кадрів 9:16
+для Play. Фото — CC0 StockSnap через Openverse (stocksnap.io напряму з контейнера ріже, працює
+`api.openverse.org/v1/images/<id>/thumb/?full_size=true`); список — `prototype/img/SOURCES.md`.
+Figma generate_image не чіпали — платно, кредити користувача.
+
 **How to apply:** правки прототипу — `Artifact read` URL → publish з `url`, потім перезаписати
 копію `prototype/index.html`. Основа ролі HOME — [[home-launcher-poc]].
