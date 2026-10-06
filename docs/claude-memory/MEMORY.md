@@ -16,6 +16,7 @@
 - [Користувач = VELDAN](user-is-veldan.md) — «Підготував VELDAN» зверху (шапка) у звітах, брифах і презентаціях-артефактах
 - [UAPP: вертикалі й брифи](uapp-verticals-briefs.md) — 1 RBX, 2 стрімінги (Тарас), 3 TikTok (Nasuf); Ігор ставить сиру задачу → бриф
 - [Пам'ять у репо](memory-in-repo.md) — docs/claude-memory + симлінк з ~/.claude; два акаунти; після змін коміт і пуш; без особистих оцінок (репо публічне)
+- [Хмара: мерж у main сам](uapp-cloud-merge-permission.md) — у claude.ai/code комітити, пушити, PR і merge без питань (06.10.2026); локально пуш не працює
 - [TikTok: звіт для менеджера](tiktok-competitor-analysis.md) — 30.09.2026, доробка звіту Nasuf, 3 мови; копія docs/research/tiktok-30-09-2026/; як оновити
 - [PoC-лендінг: тести Android](home-launcher-poc.md) — Тест 1 Default Home App, Тест 2 зарядка, Тест 3 асистент (02.10.2026); DreamService викинуто; таймлайн покадрово
 - [Music Home: тестова апка Tools](music-home-test-app.md) — завантажувач з легальних лінків + Home-картка з буфера; прототип-артефакт; потім LibGDX БЕЗ еталона (poc/TEST_APP/CLAUDE.md)
