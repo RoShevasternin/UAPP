@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Redwave synth (offline render)</title>
+</head>
+<body>
+<script>
+"use strict";
+/* ------------------------------------------------------------------------
+   Lo-fi synth from ../../prototype/index.html (hash, rng, mtof, CHORD, PROGS,
+   songOf, env, osc, noise, schedStep) — copied as is. Differences from the
+   prototype: OfflineAudioContext instead of a live AudioContext, no EQ /
+   analyser (bus -> master 0.5 -> destination), every 16th-note step is
+   scheduled up front, and Math.random is replaced by a seeded rng so the
+   same id always gives the same audio.
+   ------------------------------------------------------------------------ */
+function hash(str){let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function rng(seed){let a=(seed>>>0)||1;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+
+const AE={ctx:null};
+const mtof=m=>440*Math.pow(2,(m-69)/12);
+const CHORD={m7:[0,3,7,10],M7:[0,4,7,11],d7:[0,4,7,10]};
+const PROGS=[[[0,"m7"],[8,"M7"],[3,"M7"],[10,"d7"]],[[0,"m7"],[5,"m7"],[10,"d7"],[3,"M7"]],[[0,"m7"],[8,"M7"],[5,"m7"],[7,"m7"]],[[0,"M7"],[9,"m7"],[5,"M7"],[7,"d7"]]];
+function songOf(t){
+  const r=rng(hash(t.id)+11);
+  const lead=[]; for(let i=0;i<16;i++) lead.push(r()<.42?Math.floor(r()*5):null);
+  return {root:[45,46,48,50,43,41][Math.floor(r()*6)],prog:PROGS[Math.floor(r()*PROGS.length)],bpm:t.kind==="podcast"?70:74+Math.floor(r()*26),lead,kick2:r()<.5?10:7};
+}
+function env(g,t,a,peak,dec){g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(peak,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+dec);}
+function osc(type,f,t,dur,peak,a,dest){const c=AE.ctx,o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.value=f;env(g,t,a,peak,dur);o.connect(g);g.connect(dest||AE.bus);o.start(t);o.stop(t+a+dur+.05);return o;}
+function noise(t,dur,peak,type,freq){const c=AE.ctx,s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=AE.noise;f.type=type;f.frequency.value=freq;env(g,t,.003,peak,dur);s.connect(f);f.connect(g);g.connect(AE.bus);s.start(t,Math.random()*.5);s.stop(t+dur+.05);}
+function schedStep(step,t){
+  const s=AE.song,spb=60/s.bpm,st=step%16,bar=Math.floor(step/16)%4,off=s.prog[bar][0],q=s.prog[bar][1],root=s.root+off;
+  if(st===0){const lp=AE.ctx.createBiquadFilter();lp.type="lowpass";lp.frequency.value=1100;lp.connect(AE.bus);
+    CHORD[q].forEach(iv=>{osc("sawtooth",mtof(root+12+iv),t,spb*3.6,.022,.25,lp);osc("triangle",mtof(root+12+iv)*1.003,t,spb*3.6,.028,.3,lp);});}
+  if(st===0||st===6||st===10) osc("triangle",mtof(root-12+(st===6?7:0)),t,spb*.8,.26,.01);
+  if(st===0||st===s.kick2){const o=AE.ctx.createOscillator(),g=AE.ctx.createGain();o.frequency.setValueAtTime(130,t);o.frequency.exponentialRampToValueAtTime(42,t+.14);env(g,t,.004,.75,.32);o.connect(g);g.connect(AE.bus);o.start(t);o.stop(t+.4);}
+  if(st===4||st===12){noise(t,.16,.22,"bandpass",1700);osc("triangle",190,t,.08,.12,.002);}
+  if(st%2===0) noise(t+(st%4===2?spb*.06:0),.045,st%4===0?.06:.035,"highpass",7500);
+  const L=s.lead[st]; if(L!==null&&bar%2===1){const sc=[0,3,5,7,10];osc("triangle",mtof(root+24+sc[L]),t,.32,.07,.006);}
+}
+
+/* ── Offline render ──────────────────────────────────────────────────────
+   renderTrack({id, kind, seconds, channels, sampleRate, fade, peakDb})
+   -> {wavB64, bpm, root, peakBefore, gain}
+   ------------------------------------------------------------------------ */
+async function renderTrack(opt){
+  const id=opt.id, kind=opt.kind||"song", SECONDS=opt.seconds||45, SR=opt.sampleRate||44100;
+  const outCh=opt.channels||2, FADE=opt.fade==null?1.5:opt.fade, PEAK=Math.pow(10,(opt.peakDb==null?-1:opt.peakDb)/20);
+  Math.random=rng(hash(id)+99);                       // deterministic noise + hi-hat offsets
+  const c=new OfflineAudioContext(2,SR*SECONDS,SR);
+  AE.ctx=c;
+  AE.master=c.createGain(); AE.master.gain.value=.5; AE.master.connect(c.destination);
+  AE.bus=c.createGain(); AE.bus.connect(AE.master);
+  const len=c.sampleRate; AE.noise=c.createBuffer(1,len,c.sampleRate); const d=AE.noise.getChannelData(0); for(let i=0;i<len;i++) d[i]=Math.random()*2-1;
+  AE.song=songOf({id,kind});
+  const stepDur=60/AE.song.bpm/4, startAt=.06;
+  for(let step=0,t=startAt; t<SECONDS-.05; step++, t+=stepDur) schedStep(step,t);
+  const buf=await c.startRendering();
+  const L=buf.getChannelData(0), R=buf.getChannelData(1), n=L.length;
+  // channels to write: 2 = L/R, 1 = (L+R)/2
+  const chans=outCh===1?[(()=>{const m=new Float32Array(n);for(let i=0;i<n;i++)m[i]=(L[i]+R[i])/2;return m;})()]:[L,R];
+  // 1.5 s linear fade-in / fade-out
+  const fl=Math.floor(FADE*SR);
+  for(const ch of chans) for(let i=0;i<fl&&i<n;i++){const k=i/fl; ch[i]*=k; ch[n-1-i]*=k;}
+  // peak-normalize to -1 dBFS
+  let pk=0; for(const ch of chans) for(let i=0;i<n;i++){const v=Math.abs(ch[i]); if(v>pk) pk=v;}
+  const gain=pk>0?PEAK/pk:1;
+  for(const ch of chans) for(let i=0;i<n;i++) ch[i]*=gain;
+  // 16-bit PCM WAV (plain 44-byte header, no LIST/INFO chunk)
+  const nc=chans.length, dataLen=n*nc*2, ab=new ArrayBuffer(44+dataLen), v=new DataView(ab);
+  const w4=(o,s)=>{for(let i=0;i<4;i++)v.setUint8(o+i,s.charCodeAt(i));};
+  w4(0,"RIFF"); v.setUint32(4,36+dataLen,true); w4(8,"WAVE");
+  w4(12,"fmt "); v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,nc,true);
+  v.setUint32(24,SR,true); v.setUint32(28,SR*nc*2,true); v.setUint16(32,nc*2,true); v.setUint16(34,16,true);
+  w4(36,"data"); v.setUint32(40,dataLen,true);
+  let o=44;
+  for(let i=0;i<n;i++) for(let ch=0;ch<nc;ch++){let s=Math.max(-1,Math.min(1,chans[ch][i])); v.setInt16(o,s<0?Math.round(s*32768):Math.round(s*32767),true); o+=2;}
+  // base64 in chunks (avoid call-stack limits)
+  const u8=new Uint8Array(ab); let bin=""; const CH=0x8000;
+  for(let i=0;i<u8.length;i+=CH) bin+=String.fromCharCode.apply(null,u8.subarray(i,i+CH));
+  return {wavB64:btoa(bin), bpm:AE.song.bpm, root:AE.song.root, peakBefore:pk, gain};
+}
+window.renderTrack=renderTrack;
+</script>
+</body>
+</html>

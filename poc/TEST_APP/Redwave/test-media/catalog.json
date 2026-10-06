@@ -1,0 +1,145 @@
+{
+  "version": 1,
+  "tracks": [
+    {
+      "id": "t1",
+      "title": "Neon Heart",
+      "artist": "Mira Vale",
+      "license": "CC0",
+      "mood": [
+        "Chill",
+        "Lo-fi"
+      ],
+      "durationSec": 45,
+      "sizeBytes": 736588,
+      "format": "MP3",
+      "url": "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/neon-heart.mp3",
+      "cover": "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/covers/neon-heart.jpg"
+    },
+    {
+      "id": "t2",
+      "title": "Night Drive",
+      "artist": "Kaito Mori",
+      "license": "CC0",
+      "mood": [
+        "Lo-fi"
+      ],
+      "durationSec": 45,
+      "sizeBytes": 749529,
+      "format": "MP3",
+      "url": "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/night-drive.mp3",
+      "cover": "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/covers/night-drive.jpg"
+    },
+    {
+      "id": "k1",
+      "title": "Stage Lights",
+      "artist": "The Northern Static",
+      "license": "CC0",
+      "mood": [
+        "Live",
+        "Rock"
+      ],
+      "durationSec": 45,
+      "sizeBytes": 754877,
+      "format": "MP3",
+      "url": "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/stage-lights.mp3",
+      "cover": "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/covers/stage-lights.jpg"
+    },
+    {
+      "id": "k4",
+      "title": "Needle Drop",
+      "artist": "Crate Diggers Union",
+      "license": "CC0",
+      "mood": [
+        "Lo-fi",
+        "Chill"
+      ],
+      "durationSec": 45,
+      "sizeBytes": 746548,
+      "format": "MP3",
+      "url": "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/needle-drop.mp3",
+      "cover": "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/covers/needle-drop.jpg"
+    },
+    {
+      "id": "k3",
+      "title": "Blue Room",
+      "artist": "Sable Quartet",
+      "license": "CC0",
+      "mood": [
+        "Chill",
+        "Focus"
+      ],
+      "durationSec": 45,
+      "sizeBytes": 742341,
+      "format": "M4A",
+      "url": "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/blue-room.m4a",
+      "cover": "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/covers/blue-room.jpg"
+    },
+    {
+      "id": "t3",
+      "title": "Into the Smoke",
+      "artist": "Ash & Ember",
+      "license": "CC0",
+      "mood": [
+        "Focus"
+      ],
+      "durationSec": 45,
+      "sizeBytes": 1192350,
+      "format": "FLAC",
+      "url": "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/into-the-smoke.flac",
+      "cover": "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/covers/smoke.jpg"
+    },
+    {
+      "id": "k8",
+      "title": "White Noise",
+      "artist": "Static Bloom",
+      "license": "CC0",
+      "mood": [
+        "Focus",
+        "Lo-fi"
+      ],
+      "durationSec": 45,
+      "sizeBytes": 433886,
+      "format": "OGG",
+      "url": "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/white-noise.ogg",
+      "cover": "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/covers/white-noise.jpg"
+    },
+    {
+      "id": "t5",
+      "title": "Bass Theory",
+      "artist": "Lowkey Lab",
+      "license": "CC0",
+      "mood": [
+        "Workout"
+      ],
+      "durationSec": 25,
+      "sizeBytes": 2205044,
+      "format": "WAV",
+      "url": "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/bass-theory.wav",
+      "cover": "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/covers/bass-theory.jpg"
+    }
+  ],
+  "featured": [
+    {
+      "id": "f-live",
+      "title": "Live Energy",
+      "subtitle": "1 track · stage recordings",
+      "mood": "Live",
+      "cover": "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/covers/stage-lights.jpg"
+    },
+    {
+      "id": "f-night",
+      "title": "Night Drive",
+      "subtitle": "4 tracks · synth & lo-fi",
+      "mood": "Lo-fi",
+      "cover": "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/covers/night-drive.jpg"
+    },
+    {
+      "id": "f-vinyl",
+      "title": "Vinyl Sessions",
+      "subtitle": "3 tracks · warm & analog",
+      "mood": "Chill",
+      "cover": "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/covers/needle-drop.jpg"
+    }
+  ]
+}
