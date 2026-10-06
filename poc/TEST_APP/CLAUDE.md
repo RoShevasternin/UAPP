@@ -1,6 +1,7 @@
 # poc/TEST_APP — апки нового типу
 
-Тут лежать **нові апки, які не є іграми парку RBX** (перша — `MusicHome/`, категорія Tools).
+Тут лежать **нові апки, які не є іграми парку RBX** (перша — `Redwave/`, категорія Tools;
+свої правила й план переносу — `Redwave/CLAUDE.md`, `Redwave/PORTING.md`).
 Кожна апка — окрема тека, свій пакет, свій Gradle-проєкт. Кодом між собою не діляться.
 
 ## Еталона тут немає
@@ -21,7 +22,8 @@
   тільки через `NavigationManager`;
 - екрани — `game/screens/*Screen.kt`, актори з префіксом `A` (`AButton`, `APanel…`),
   розкладка — `AConstraintLayout` / `AAutoLayout`;
-- текст — MSDF (`AMsdfLabel`, `utils/font/msdf/`), кольори — `GameColor.kt`;
+- текст — MSDF (`AMsdfLabel`, `utils/font/msdf/`), кольори — `GameColor.kt`; перевіряти, чи є
+  в шрифті кирилиця, якщо апка показує текст користувача;
 - шейдери — `assets/shader/**/*.glsl`, OpenGL ES 2.0; пост-ефекти (blur, mask, roundRect) —
   через `utils/vfx/` (FBO-стек, ping-pong, кеш шейдерів);
 - звук і музика — `SoundManager` / `MusicManager` / `AudioManager`, вібро — `VibroUtil`;
@@ -36,7 +38,7 @@
 ## Порядок роботи
 
 1. Прототип — артефакт на claude.ai (будь-яка технологія, зараз HTML/JS), копія в
-   `<Апка>/prototype/`.
+   `<Апка>/prototype/`. Чиста логіка — одразу Kotlin з тестами в `<Апка>/port-kit/`.
 2. VELDAN погоджує прототип.
 3. Перенесення в LibGDX-проєкт у `<Апка>/` за стеком вище. Android-специфічне (ролі, буфер,
    завантаження, фонові сервіси) — через інтерфейс від `GDXGame` до `MainActivity`.
