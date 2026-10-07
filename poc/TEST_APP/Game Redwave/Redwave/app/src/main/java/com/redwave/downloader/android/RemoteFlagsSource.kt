@@ -11,6 +11,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigException
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.redwave.downloader.BuildConfig
 import com.redwave.downloader.core.config.RemoteFlags
+import com.redwave.downloader.core.model.RedwaveJson
 import com.redwave.downloader.util.log
 
 // ═════════════════════════════════════════════════════════════════════════════
@@ -105,6 +106,32 @@ object RemoteFlagsSource {
             if (json.isBlank()) remove("json") else putString("json", json)
         }
         publish("debug override")
+    }
+
+    // ── Debug AD_MODE (Settings → Debug) ──────────────────────────────────────
+    /** AD_MODE увімкнено: debug-підміна з рекламою, обов'язковою роллю і без Uninstall. */
+    fun isAdMode(): Boolean = debugOverride?.let { it.enabled && it.homeRequired && !it.isUninstall } == true
+
+    /**
+     * Увімкнути — підміна поверх Remote Config: реклама на «Додому» / після «Недавніх» (url з Remote
+     * Config, якщо там https, інакше google.com), роль HOME обов'язкова, видаляти з лаунчера не можна.
+     * Вимкнути — підміну прибрано, діє Remote Config. Синхронний commit: далі процес перезапускаємо.
+     */
+    fun setAdMode(on: Boolean) {
+        if (!BuildConfig.DEBUG) return
+        val flags = if (on) {
+            val remoteUrl = rc?.getValue(RemoteFlags.REMOTE_KEY)
+                ?.takeIf { it.source == FirebaseRemoteConfig.VALUE_SOURCE_REMOTE }
+                ?.let { RemoteFlags.parse(it.asString()).url }
+                ?.takeIf { it.startsWith("https://") }
+            RemoteFlags(enabled = true, url = remoteUrl ?: "https://google.com", homeRequired = true, isUninstall = false)
+        } else null
+        debugOverride = flags
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit(commit = true) {
+            if (flags == null) remove("json")
+            else putString("json", RedwaveJson.encodeToString(RemoteFlags.serializer(), flags))
+        }
+        log("AD_MODE ${if (on) "on" else "off"}: $flags")
     }
 
     fun debugLine(): String {

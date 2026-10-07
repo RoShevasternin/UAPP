@@ -68,6 +68,10 @@ interface PlatformBridge {
     fun refreshRemoteFlags(timeoutMs: Long, onDone: (RemoteFlags) -> Unit)
     /** Settings → Debug: звідки прапорці (remote / default / debug) і що в них. */
     fun remoteFlagsDebug(): String
+    /** Debug AD_MODE: реклама + роль обов'язкова + без Uninstall поверх Remote Config. */
+    fun isAdMode(): Boolean
+    /** Увімкнути / вимкнути AD_MODE і перезапустити апку (лише debug-збірка). */
+    fun setAdMode(on: Boolean)
 
     // ── Буфер ────────────────────────────────────────────────────────────────
     /**

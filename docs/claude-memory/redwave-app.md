@@ -74,4 +74,6 @@ HOME — [[home-launcher-poc]]; атласи пакує VELDAN у GUI — [[mind
   debug-кнопку вибору лаунчера прибрано. Privacy Policy — `Game Redwave/privacy-policy/`, викладено на Cloudflare: https://redwave-privacy.oyutetijep68.workers.dev/privacy (проєкт redwave-privacy; розробник STAR ADS LLC, oyutetijep68@gmail.com; без згадки реклами на «Додому» — рішення VELDAN;
   прописано в RemoteFlags.DEFAULT_PRIVACY_URL).
 - Попереджено: вимикати рекламу лише на час рев'ю — обман рев'ю (ризик бану акаунта).
+- Debug AD_MODE (Settings → Debug, лише debug-збірка): реклама + роль обов'язкова + без Uninstall поверх Remote Config,
+  перемикання перезапускає процес; на екрані-вимозі є «AD_MODE OFF». У Remote Config зараз «білі» значення.
 - Назва в маркеті має містити Launcher/Home (рішення VELDAN), конкретну ще не обрано.

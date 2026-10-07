@@ -162,6 +162,9 @@ object Copy {
         fun version(v: String) = "Redwave $v"
         const val DEBUG = "Debug build"
         const val DEBUG_RESET = "Reset onboarding"
+        const val DEBUG_AD_MODE = "AD_MODE"
+        const val DEBUG_AD_ON = "On · ad on Home, Home required, no uninstall"
+        const val DEBUG_AD_OFF = "Off · clean mode from Remote Config"
     }
 
     object Role {

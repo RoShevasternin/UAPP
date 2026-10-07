@@ -76,6 +76,8 @@ Debug-хуки (лише debug-збірка):
 ```bash
 # лаунчер без зміни дефолтного HOME + імітація лінка з буфера (adb на Android 13 не пише в буфер)
 adb shell am start -a android.intent.action.MAIN -c android.intent.category.HOME -n com.redwave.downloader/.MainActivity --es redwave.debug_clip "https://…/blue-room.m4a"
+# Settings → Debug → AD_MODE: «чорний» режим поверх Remote Config (реклама на Home, роль обов'язкова, без Uninstall),
+# перемикання перезапускає апку; вимкнути можна й з екрана-вимоги (кнопка AD_MODE OFF зліва вгорі)
 # підміна Remote Config (живе до очищення: --es redwave.debug_flags ""); у Settings → Debug видно джерело прапорців
 adb shell am start -n com.redwave.downloader/.MainActivity --es redwave.debug_flags '{"enabled":true,"url":"https://google.com","home_required":false,"is_uninstall":true}'
 ```

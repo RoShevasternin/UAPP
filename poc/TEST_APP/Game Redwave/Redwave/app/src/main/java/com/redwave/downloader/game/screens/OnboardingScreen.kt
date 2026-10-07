@@ -129,6 +129,20 @@ class OnboardingScreen : RedwaveScreen() {
             g.addActor(skip)
         }
 
+        // ── Debug: вийти з AD_MODE прямо з екрана-вимоги (до Settings без ролі не дістатись) ──
+        if (last && com.redwave.downloader.game.utils.global.IS_DEBUG && gdxGame.bridge.isAdMode()) {
+            val off = object : ATap(this) {
+                override fun addContent() {
+                    addAndFillActor(ARect(screen, 999f, GameColor.skip_0A0506, stroke = GameColor.white_18))
+                    val l = lbl("AD_MODE OFF", msdf.monoSemi(11f, GameColor.pink_FF8A98))
+                    addActor(l); l.setPosition((width - l.width) / 2f, (height - l.height) / 2f)
+                }
+            }.onClick { gdxGame.toast("Restarting…"); gdxGame.bridge.setAdMode(false) }
+            off.setSize(px(118f), px(30f))
+            off.setPosition(px(16f), h - safeStatusBarUI - px(10f) - off.height)
+            g.addActor(off)
+        }
+
         // ── Скляна картка (33 % від верху) ──
         val card = floatCard(i)
         card.setPosition((w - card.width) / 2f, h - h * 0.33f - card.height)

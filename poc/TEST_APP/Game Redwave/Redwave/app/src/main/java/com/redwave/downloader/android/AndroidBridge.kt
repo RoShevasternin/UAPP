@@ -251,6 +251,17 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
         main.post { RemoteFlagsSource.refresh(timeoutMs) { f -> runGDX { onDone(f) } } }
     }
     override fun remoteFlagsDebug(): String = RemoteFlagsSource.debugLine()
+    override fun isAdMode(): Boolean = RemoteFlagsSource.isAdMode()
+
+    /** Перезапуск процесу: новий таск через трамплін (він сам вирішить — home-таск чи звичайний). */
+    override fun setAdMode(on: Boolean) {
+        main.post {
+            RemoteFlagsSource.setAdMode(on)
+            val restart = Intent.makeRestartActivityTask(ComponentName(ctx, com.redwave.downloader.LauncherTrampoline::class.java))
+            ctx.startActivity(restart)
+            Runtime.getRuntime().exit(0)
+        }
+    }
 
     override val appVersion: String get() = runCatching {
         ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName ?: "?"

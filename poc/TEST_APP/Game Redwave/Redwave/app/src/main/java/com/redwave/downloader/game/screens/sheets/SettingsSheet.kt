@@ -40,7 +40,7 @@ class SettingsSheet(screen: AdvancedScreen) : ASheet(screen) {
 
     override val contentHeight: Float get() {
         var h = px(26f) + px(14f) + cardH + noteH + px(10f) + rowH + px(12f) + px(16f)
-        if (IS_DEBUG) h += px(22f) + px(18f) + btnH + px(10f) + px(46f)
+        if (IS_DEBUG) h += px(22f) + px(18f) + cardH + px(8f) + btnH + px(10f) + px(46f)
         return h
     }
 
@@ -97,7 +97,28 @@ class SettingsSheet(screen: AdvancedScreen) : ASheet(screen) {
             y -= px(22f) + px(18f)
             val ey = lbl(Copy.Settings.DEBUG.uppercase(), msdf.monoSemi(10.5f, GameColor.pink_FF8A98, spacing = 10f))
             ey.setPosition(0f, y + px(4f)); add(ey)
-            y -= btnH
+            // AD_MODE: «чорний» режим поверх Remote Config, перемикання перезапускає апку
+            y -= cardH
+            val adOn = gdxGame.bridge.isAdMode()
+            val adTgl = AToggle(screen, adOn)
+            val ad = object : ATap(screen, 0.985f) {
+                override fun addContent() {
+                    addAndFillActor(ARect(screen, px(16f), GameColor.white_4, stroke = GameColor.line_white_7))
+                    val t = lbl(Copy.Settings.DEBUG_AD_MODE, msdf.monoSemi(13f, GameColor.pink_FF8A98))
+                    val st = lbl(if (adOn) Copy.Settings.DEBUG_AD_ON else Copy.Settings.DEBUG_AD_OFF, msdf.regular(11.5f, GameColor.muted_A8949B))
+                    t.setPosition(px(14f), height / 2f + px(1f)); st.setPosition(px(14f), height / 2f - st.height - px(1f))
+                    adTgl.setPosition(width - px(14f) - adTgl.width, (height - adTgl.height) / 2f)
+                    addActor(t); addActor(st); addActor(adTgl)
+                }
+            }.onClick {
+                adTgl.isOn = !adOn
+                gdxGame.toast("Restarting…")
+                com.badlogic.gdx.utils.Timer.schedule(object : com.badlogic.gdx.utils.Timer.Task() {
+                    override fun run() { gdxGame.bridge.setAdMode(!adOn) }
+                }, 0.35f)
+            }
+            ad.setBounds(0f, y, w, cardH); add(ad)
+            y -= px(8f) + btnH
             val reset = AButtonGhost(screen, Copy.Settings.DEBUG_RESET, assets.ic_x).apply { setBounds(0f, y, w, btnH) }
             reset.onClick {
                 close()
