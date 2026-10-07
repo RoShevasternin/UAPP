@@ -2,7 +2,7 @@
 # After the merge to main: HEAD every test-media file on raw.githubusercontent.com and
 # print status / Content-Type / Content-Length next to the local size and first bytes.
 #   sh check_raw.sh
-BASE="https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media"
+BASE="https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media"
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$DIR" || exit 1
 for f in neon-heart.mp3 night-drive.mp3 stage-lights.mp3 needle-drop.mp3 blue-room.m4a into-the-smoke.flac \

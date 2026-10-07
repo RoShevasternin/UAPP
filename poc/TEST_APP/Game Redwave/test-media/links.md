@@ -26,37 +26,37 @@ Content-Type — те, що raw реально віддає для цього р
 
 **MP3** · 45 с · 128 kbps · ID3v2.3 + обкладинка · `audio/mpeg`
 ```
-https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/neon-heart.mp3
+https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/neon-heart.mp3
 ```
 ```
-https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/night-drive.mp3
+https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/night-drive.mp3
 ```
 ```
-https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/stage-lights.mp3
+https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/stage-lights.mp3
 ```
 ```
-https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/needle-drop.mp3
+https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/needle-drop.mp3
 ```
 
 **M4A (AAC)** · 45 с · 128 kbps · теги + обкладинка · `audio/mp4` — «Blue Room», Sable Quartet
 ```
-https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/blue-room.m4a
+https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/blue-room.m4a
 ```
 
 **FLAC** · 45 с · lossless · Vorbis comments + обкладинка · `audio/flac` — «Into the Smoke», Ash & Ember
 ```
-https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/into-the-smoke.flac
+https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/into-the-smoke.flac
 ```
 
 **OGG Vorbis** · 45 с · q4 · теги **без** вбудованої обкладинки · `audio/ogg` — «White Noise», Static Bloom.
 Перевірка фолбеку: апка показує заглушку (або обкладинку з каталогу), а не падає.
 ```
-https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/white-noise.ogg
+https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/white-noise.ogg
 ```
 
 **WAV** · 25 с · PCM 16 біт моно · **без тегів** · `audio/wav` → назва з імені файлу «Bass Theory»
 ```
-https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/bass-theory.wav
+https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/bass-theory.wav
 ```
 
 ## 2. Файл без тегів → назва з імені файлу
@@ -66,7 +66,7 @@ https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/
 без розширення, `-`/`_` → пробіл, кожне слово з великої), артист порожній / «Unknown artist»,
 обкладинка — заглушка.
 ```
-https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/untitled_demo-track.mp3
+https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/untitled_demo-track.mp3
 ```
 
 ## 3. RSS подкасту → шит фіду
@@ -76,14 +76,14 @@ https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/
 точно збігається з файлом). Raw віддає `.rss` як текст (`text/plain; charset=utf-8`, не
 `application/rss+xml`) — визначати фід за розширенням або за початком тіла (`<?xml` / `<rss`).
 ```
-https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/indie-hour.rss
+https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/indie-hour.rss
 ```
 Самі епізоди (mono 64 kbps, ID3 + обкладинка) — можна вставити й напряму:
 ```
-https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/podcast/indie-hour-ep112.mp3
+https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/podcast/indie-hour-ep112.mp3
 ```
 ```
-https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/podcast/indie-hour-ep111.mp3
+https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/podcast/indie-hour-ep111.mp3
 ```
 
 ## 4. catalog.json → Discover (dev-каталог)
@@ -95,7 +95,7 @@ https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/
 головній: там `LinkResolver` з `port-kit` бачить його як `WebPage`, і правильна реакція —
 «це не аудіофайл».
 ```
-https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/catalog.json
+https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/catalog.json
 ```
 
 ## 5. Заборонені джерела → «не дозволяє завантаження»
@@ -119,12 +119,12 @@ https://github.com/RoShevasternin/UAPP
 github.com (`text/html; charset=utf-8`). Якщо апка вірить лише розширенню — скачає HTML під
 виглядом MP3. Правильно — відмовити за Content-Type / першими байтами.
 ```
-https://github.com/RoShevasternin/UAPP/blob/main/poc/TEST_APP/Redwave/test-media/neon-heart.mp3
+https://github.com/RoShevasternin/UAPP/blob/main/poc/TEST_APP/Game%20Redwave/test-media/neon-heart.mp3
 ```
 А з `?raw=true` github.com робить два редиректи `302` (`…/raw/refs/heads/main/…` → raw) і
 віддає справжній MP3 (`audio/mpeg`). Перевірка, що апка йде за редиректами:
 ```
-https://github.com/RoShevasternin/UAPP/blob/main/poc/TEST_APP/Redwave/test-media/neon-heart.mp3?raw=true
+https://github.com/RoShevasternin/UAPP/blob/main/poc/TEST_APP/Game%20Redwave/test-media/neon-heart.mp3?raw=true
 ```
 
 ## 7. Неіснуючий файл → обробка помилки
@@ -133,13 +133,13 @@ https://github.com/RoShevasternin/UAPP/blob/main/poc/TEST_APP/Redwave/test-media
 бібліотеці. Raw: `HTTP 404`, `content-type: text/plain; charset=utf-8`, `content-length: 14`,
 тіло `404: Not Found`.
 ```
-https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/missing-track.mp3
+https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/missing-track.mp3
 ```
 
 ## 8. Як raw.githubusercontent.com віддає файли (перевірено 06.10.2026)
 
 Перевіряли `curl -sI` (HEAD) і GET з `Range` на наявних файлах: цей репо (`main.mp3`,
-`main.ogg`, `all.png`, `*.json`, `*.html`, `AndroidManifest.xml`, `poc/video.mp4`) і публічні
+`main.ogg`, `all.png`, `*.json`, `*.html`, `AndroidManifest.xml`, `poc/concept/video.mp4`) і публічні
 репо з тестовими семплами (`mathiasbynens/small`, `chromium/chromium` → `media/test/data`,
 `mozilla/gecko-dev` → `dom/media/test`, `rafaelreis-hotmart/Audio-Sample-files`,
 `anars/blank-audio`).
@@ -154,7 +154,7 @@ https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/
 | `.wav` | `audio/wav` | `mathiasbynens/small/wav.wav`, `Audio-Sample-files/sample.wav` |
 | `.aac` | `audio/aac` | `chromium/…/bear-audio-main-aac.aac` |
 | `.webm` | `audio/webm` | `mathiasbynens/small/webm.webm` |
-| `.mp4` | **`application/octet-stream`** | UAPP `poc/video.mp4`, `chromium/…/bear-flac.mp4`, `Audio-Sample-files/sample.mp4` |
+| `.mp4` | **`application/octet-stream`** | UAPP `poc/concept/video.mp4`, `chromium/…/bear-flac.mp4`, `Audio-Sample-files/sample.mp4` |
 | `.adts` | **`application/octet-stream`** | `chromium/…/sfx.adts` |
 | `.jpg` / `.png` / `.svg` | `image/jpeg` / `image/png` / `image/svg+xml` | `mathiasbynens/small`, UAPP `all.png` |
 | `.json` `.xml` `.html` `.md` | `text/plain; charset=utf-8` | UAPP `*.json`, `AndroidManifest.xml`, `docs/…/01.html`, `CLAUDE.md` |

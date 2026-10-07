@@ -193,7 +193,7 @@ raw — відкритий). Усі — SIL OFL 1.1.
 Одним запуском (Linux або macOS):
 
 ```sh
-cd poc/TEST_APP/Redwave/assets/fonts/tools
+cd "poc/TEST_APP/Game Redwave/assets/fonts/tools"
 sh build_all.sh
 ```
 

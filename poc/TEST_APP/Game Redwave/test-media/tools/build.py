@@ -22,7 +22,7 @@ from mutagen.id3 import APIC, COMM, ID3, TALB, TCON, TDRC, TIT2, TPE1
 from mutagen.mp4 import MP4, MP4Cover
 from mutagen.oggvorbis import OggVorbis
 
-BASE = "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/"
+BASE = "https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/"
 HERE = os.path.dirname(os.path.abspath(__file__))
 IMG = os.path.normpath(os.path.join(HERE, "..", "..", "prototype", "img"))
 
@@ -177,7 +177,7 @@ def main():
 
     # indie-hour.rss
     img = BASE + "covers/indie-hour.jpg"
-    link = "https://github.com/RoShevasternin/UAPP/tree/main/poc/TEST_APP/Redwave/test-media"
+    link = "https://github.com/RoShevasternin/UAPP/tree/main/poc/TEST_APP/Game%20Redwave/test-media"
     items = []
     for e in EPISODES:
         p = O(e["out"])

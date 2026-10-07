@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Indie Hour (test feed)</title>
-    <link>https://github.com/RoShevasternin/UAPP/tree/main/poc/TEST_APP/Redwave/test-media</link>
-    <atom:link href="https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/indie-hour.rss" rel="self" type="application/rss+xml"/>
+    <link>https://github.com/RoShevasternin/UAPP/tree/main/poc/TEST_APP/Game%20Redwave/test-media</link>
+    <atom:link href="https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/indie-hour.rss" rel="self" type="application/rss+xml"/>
     <description>Test podcast feed for the Redwave app: two short episodes of generated lo-fi audio (CC0). Not a real show.</description>
     <language>en</language>
     <copyright>CC0 1.0 — generated for Redwave testing</copyright>
     <lastBuildDate>Mon, 05 Oct 2026 07:00:00 GMT</lastBuildDate>
     <image>
-      <url>https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/covers/indie-hour.jpg</url>
+      <url>https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/covers/indie-hour.jpg</url>
       <title>Indie Hour (test feed)</title>
-      <link>https://github.com/RoShevasternin/UAPP/tree/main/poc/TEST_APP/Redwave/test-media</link>
+      <link>https://github.com/RoShevasternin/UAPP/tree/main/poc/TEST_APP/Game%20Redwave/test-media</link>
     </image>
     <itunes:author>Indie Hour</itunes:author>
     <itunes:summary>Test podcast feed for the Redwave app.</itunes:summary>
-    <itunes:image href="https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/covers/indie-hour.jpg"/>
+    <itunes:image href="https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/covers/indie-hour.jpg"/>
     <itunes:category text="Music"/>
     <itunes:explicit>false</itunes:explicit>
     <itunes:type>episodic</itunes:type>
@@ -24,24 +24,24 @@
       <description>How to record a bedroom-pop EP with one mic and free plugins. (Test episode: 60 s of generated lo-fi audio.)</description>
       <guid isPermaLink="false">redwave-test-indie-hour-e112</guid>
       <pubDate>Mon, 05 Oct 2026 07:00:00 GMT</pubDate>
-      <enclosure url="https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/podcast/indie-hour-ep112.mp3" length="497664" type="audio/mpeg"/>
+      <enclosure url="https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/podcast/indie-hour-ep112.mp3" length="497664" type="audio/mpeg"/>
       <itunes:duration>00:01:00</itunes:duration>
       <itunes:episode>112</itunes:episode>
       <itunes:episodeType>full</itunes:episodeType>
       <itunes:explicit>false</itunes:explicit>
-      <itunes:image href="https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/covers/indie-hour.jpg"/>
+      <itunes:image href="https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/covers/indie-hour.jpg"/>
     </item>
     <item>
       <title>Ep. 111 · Mixing vocals at home</title>
       <description>EQ, compression and reverb for home vocals. (Test episode: 60 s of generated lo-fi audio.)</description>
       <guid isPermaLink="false">redwave-test-indie-hour-e111</guid>
       <pubDate>Mon, 28 Sep 2026 07:00:00 GMT</pubDate>
-      <enclosure url="https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/podcast/indie-hour-ep111.mp3" length="497660" type="audio/mpeg"/>
+      <enclosure url="https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/podcast/indie-hour-ep111.mp3" length="497660" type="audio/mpeg"/>
       <itunes:duration>00:01:00</itunes:duration>
       <itunes:episode>111</itunes:episode>
       <itunes:episodeType>full</itunes:episodeType>
       <itunes:explicit>false</itunes:explicit>
-      <itunes:image href="https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/covers/indie-hour.jpg"/>
+      <itunes:image href="https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/covers/indie-hour.jpg"/>
     </item>
   </channel>
 </rss>

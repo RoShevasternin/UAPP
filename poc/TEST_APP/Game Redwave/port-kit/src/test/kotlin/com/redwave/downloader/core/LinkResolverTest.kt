@@ -81,7 +81,7 @@ class LinkResolverTest {
         assertIs<ResolvedLink.PodcastFeed>(r("https://feeds.indiehour.fm/indie-hour.rss"))
         assertIs<ResolvedLink.PodcastFeed>(r("https://example.com/podcast/feed/"))
         assertIs<ResolvedLink.PodcastFeed>(r("https://feed.example.com/show"))
-        assertIs<ResolvedLink.PodcastFeed>(r("https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/indie-hour.rss"))
+        assertIs<ResolvedLink.PodcastFeed>(r("https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/indie-hour.rss"))
     }
 
     @Test fun webPageAndInvalid() {

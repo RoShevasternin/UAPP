@@ -11,15 +11,30 @@
 ## З чого почати локальну сесію
 
 1. `git pull` у `/Users/admin/Apps/UAPP`.
-2. Прочитати `CLAUDE.md` (правила цієї теки) → `PORTING.md` (план і пастки) → `SCREENS.md` (екрани).
+2. Відкрити Claude в `Game Redwave/Redwave/` і прочитати `Redwave/CLAUDE.md` (правила апки) → `PORTING.md` (план і пастки) → `SCREENS.md` (екрани).
 3. Поставити VELDAN питання з `PORTING.md` → «❓ Відкриті рішення» (насамперед пакет).
 4. Ф0 з `PORTING.md` → перша збірка на девайсі.
 
 ## Що в теці
 
+Як в іграх парку (`Game T35/` → `Mindora Self Test/` + `market/` + `assets/`): **сама апка —
+лише в `Redwave/`**, усе дотичне до неї — поруч.
+
+```
+Game Redwave/
+├── Redwave/        ← апка: Android-проєкт LibGDX (поки лише CLAUDE.md)
+├── PORTING.md      ← план переносу
+├── SCREENS.md      ← екрани й компоненти
+├── prototype/      ← HTML-прототип
+├── port-kit/       ← готова Kotlin-логіка з тестами → копіюється в Redwave/
+├── assets/         ← шрифти, іконки, бренд, текстури → копіюються в Redwave/
+├── market/         ← Google Play
+└── test-media/     ← тестові треки для девайса (GitHub raw)
+```
+
 | Шлях | Що | Розмір |
 |---|---|---|
-| `CLAUDE.md` | правила проєкту для Claude: стек, конвенції, збірка, git | — |
+| `Redwave/` | апка; зараз тут лише `CLAUDE.md` — правила для Claude: стек, конвенції, збірка, git | — |
 | `PORTING.md` | архітектура, T35-донор, Gradle, маніфест, Android-бік з пастками, фази Ф0–Ф9, чекліст, Play | — |
 | `SCREENS.md` | 5 екранів + шторки + бібліотека компонентів з розмірами | — |
 | `prototype/` | HTML-прототип v2, фото CC0 (`img/SOURCES.md`, `make_assets.py`) | 0.7 МБ |
