@@ -29,6 +29,10 @@
             <category android:name="android.intent.category.BROWSABLE" />
             <data android:scheme="https" />
         </intent>
+        <!-- браузер з підтримкою Custom Tabs (CustomTabsClient.getPackageName на API 30+) -->
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService" />
+        </intent>
         <!-- дефолтні апки для дока лаунчера -->
         <intent>
             <action android:name="android.intent.action.DIAL" />

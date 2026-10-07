@@ -153,7 +153,7 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
     override fun openUrl(url: String) {
         main.post {
             try {
-                activity.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
+                activity.startInternal(Intent(Intent.ACTION_VIEW, url.toUri()))
             } catch (e: ActivityNotFoundException) {
                 log("openUrl: no app for $url")
             }
@@ -213,6 +213,7 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
                 val rm = ctx.getSystemService<RoleManager>()
                 if (rm != null && rm.isRoleAvailable(RoleManager.ROLE_HOME)) {
                     roleRequestedAt = SystemClock.elapsedRealtime()
+                    activity.internalNavigation = true
                     requestHomeRole.launch(rm.createRequestRoleIntent(RoleManager.ROLE_HOME))
                     return@post
                 }
@@ -230,7 +231,7 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
                 Intent(Settings.ACTION_SETTINGS),
             )
             for (i in intents) {
-                try { activity.startActivity(i); return@post } catch (e: ActivityNotFoundException) { }
+                try { activity.startInternal(i); return@post } catch (e: ActivityNotFoundException) { }
             }
         }
     }
@@ -241,9 +242,9 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
 
     private fun openHomeSettings() {
         try {
-            openSettings.launch(Intent(Settings.ACTION_HOME_SETTINGS))
+            activity.internalNavigation = true; openSettings.launch(Intent(Settings.ACTION_HOME_SETTINGS))
         } catch (e: ActivityNotFoundException) {
-            openSettings.launch(Intent(Settings.ACTION_SETTINGS))
+            activity.internalNavigation = true; openSettings.launch(Intent(Settings.ACTION_SETTINGS))
         }
     }
 
@@ -498,9 +499,9 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
     override fun openWriteSettings() {
         main.post {
             try {
-                activity.startActivity(Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, "package:${ctx.packageName}".toUri()))
+                activity.startInternal(Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, "package:${ctx.packageName}".toUri()))
             } catch (e: ActivityNotFoundException) {
-                activity.startActivity(Intent(Settings.ACTION_SETTINGS))
+                activity.startInternal(Intent(Settings.ACTION_SETTINGS))
             }
         }
     }
@@ -526,7 +527,7 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
                     putExtra(Intent.EXTRA_TITLE, track.title)
                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 }
-                activity.startActivity(Intent.createChooser(intent, track.title))
+                activity.startInternal(Intent.createChooser(intent, track.title))
             }.onFailure { log("shareTrack: ${it.message}") }
         }
     }

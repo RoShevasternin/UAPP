@@ -94,6 +94,9 @@ dependencies {
     implementation("androidx.media3:media3-transformer:$media3")
     implementation("androidx.media3:media3-common:$media3")
 
+    // Custom Tabs: сторінка при поверненні на Home
+    implementation("androidx.browser:browser:1.10.0")
+
     // probe + fetchText
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }

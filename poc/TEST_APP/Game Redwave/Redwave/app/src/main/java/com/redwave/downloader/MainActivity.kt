@@ -1,11 +1,15 @@
 package com.redwave.downloader
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsClient
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.badlogic.gdx.backends.android.AndroidFragmentApplication
@@ -30,6 +34,8 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     companion object {
         /** Від LauncherTrampoline: тапнули іконку — показати застосунок, а не лаунчер. */
         const val EXTRA_OPEN_APP = "redwave.open_app"
+        /** Сторінка, що сама відкривається при поверненні на Home (VELDAN, 07.10.2026). */
+        const val AUTO_TAB_URL = "https://google.com"
         private var current: java.lang.ref.WeakReference<MainActivity>? = null
     }
 
@@ -42,6 +48,35 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     private lateinit var clipWatcher: ClipWatcher
 
     private val onceInsets = AtomicBoolean(true)
+
+    // ------------------------------------------------------------------------
+    // Автовідкриття Custom Tab при поверненні на Home
+    // ------------------------------------------------------------------------
+    /**
+     * Відкрити вкладку на найближчому onResume. Вмикають: HOME-інтент (onNewIntent) і вихід
+     * в іншу апку (onStop). Вимикається ПЕРЕД запуском вкладки — закриття вкладки лишає на
+     * лаунчері, без циклу.
+     */
+    private var shouldLaunchCustomTab = false
+
+    /**
+     * Нас закрила НАША ж вкладка. Без цього onStop (спрацьовує, бо вкладка нас сховала)
+     * знову ввімкнув би автозапуск → закрив вкладку → вона знову відкрилась. «Додому» поверх
+     * нашої вкладки = закрити її, а не «повернутись з іншої апки».
+     */
+    private var ownTabInFront = false
+
+    /**
+     * Наші ж системні екрани (налаштування ролі/WRITE_SETTINGS, шер, браузер з посилання) —
+     * не «інша апка»: повернення з них не має відкривати вкладку. Ставить AndroidBridge.
+     */
+    var internalNavigation = false
+
+    /** startActivity для екранів, які Redwave відкриває сам (див. internalNavigation). */
+    fun startInternal(intent: Intent) {
+        internalNavigation = true
+        startActivity(intent)
+    }
 
     // ------------------------------------------------------------------------
     // Lifecycle
@@ -117,6 +152,42 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     override fun onResume() {
         super.onResume()
         bridge.onActivityResumed()
+
+        ownTabInFront = false
+        internalNavigation = false
+        // Лише як головний екран: відкриті з іконки, ми — звичайна апка
+        if (shouldLaunchCustomTab && bridge.isDefaultHome()) {
+            shouldLaunchCustomTab = false            // СПЕРШУ — інакше цикл
+            log("auto Custom Tab → $AUTO_TAB_URL")
+            openCustomTab(AUTO_TAB_URL)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        when {
+            internalNavigation -> {}                       // наш системний екран — не рахується
+            ownTabInFront      -> {}                       // нас сховала наша ж вкладка
+            else               -> shouldLaunchCustomTab = true   // інша апка / «Недавні»
+        }
+    }
+
+    private fun openCustomTab(url: String) {
+        ownTabInFront = true
+        val uri = url.toUri()
+        try {
+            val pkg = CustomTabsClient.getPackageName(this, null)
+            if (pkg != null) {
+                CustomTabsIntent.Builder().setShowTitle(true).build()
+                    .apply { intent.setPackage(pkg) }
+                    .launchUrl(this, uri)
+            } else {
+                startActivity(Intent(Intent.ACTION_VIEW, uri))   // браузера з Custom Tabs немає
+            }
+        } catch (e: ActivityNotFoundException) {
+            ownTabInFront = false
+            log("no app for $url")
+        }
     }
 
     override fun onDestroy() {
@@ -149,6 +220,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
             }
             intent.action == Intent.ACTION_MAIN && intent.hasCategory(Intent.CATEGORY_HOME) -> {
                 log("HOME intent (new = $isNew)")
+                if (!ownTabInFront) shouldLaunchCustomTab = true
                 bridge.emit { onHomePressed() }
             }
             intent.action == Intent.ACTION_SEND && intent.type == "text/plain" -> {
