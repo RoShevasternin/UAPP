@@ -1,21 +1,24 @@
 ---
 name: redwave-app
-description: Redwave Music Downloader — тестова апка Tools у poc/TEST_APP/Redwave; прототип погоджено, усе підготовлено до переносу в LibGDX (план, port-kit з тестами, шрифти, іконки, тестові треки); Android-проєкт ще не створено
+description: Redwave Music Downloader — тестова апка Tools у poc/TEST_APP/Game Redwave (апка — у вкладеній Redwave/); прототип погоджено, усе підготовлено до переносу в LibGDX (план, port-kit з тестами, шрифти, іконки, тестові треки); Android-проєкт ще не створено
 metadata:
   type: project
 ---
 
 **Redwave: Music Downloader** — нова апка категорії Tools, не гра парку і **без еталона**
-(правила `poc/TEST_APP/CLAUDE.md`). Тека: `/Users/admin/Apps/UAPP/poc/TEST_APP/Redwave/`
-(до 06.10.2026 звалась `MusicHome`). Завантажувач з легальних лінків + CC-каталог, плеєр з EQ і
+(правила `poc/TEST_APP/CLAUDE.md`). Тека: `/Users/admin/Apps/UAPP/poc/TEST_APP/Game Redwave/`
+(до 06.10.2026 — `MusicHome`, до 07.10.2026 — `TEST_APP/Redwave`). З 07.10.2026 структура як в
+іграх парку: **сама апка — лише в `Game Redwave/Redwave/`** (Android-проєкт + її `CLAUDE.md`),
+а `PORTING.md`, `SCREENS.md`, `prototype/`, `port-kit/`, `assets/`, `market/`, `test-media/` —
+поруч у `Game Redwave/`. Raw-лінки тест-треків — з `Game%20Redwave` у шляху. Завантажувач з легальних лінків + CC-каталог, плеєр з EQ і
 візуалізатором, різак рингтонів, власний головний екран (роль HOME) з карткою лінка з буфера.
 
 **Прототип v2:** https://claude.ai/artifact/1WQgAQ5KYh7M3EHovXgLMC (копія `prototype/`), 8 екранів,
 тест-план 7 сценаріїв, 6 кадрів 9:16. VELDAN підтвердив назву й попросив підготувати перенос
 (06.10.2026). Наступний крок — **локальна сесія на Маці з девайсом**: створити Android-проєкт у
-`Redwave/Redwave/` і переносити фазами Ф0–Ф9.
+`Game Redwave/Redwave/` і переносити фазами Ф0–Ф9.
 
-**Перед роботою прочитати:** `Redwave/CLAUDE.md` → `PORTING.md` (архітектура, що брати з T35,
+**Перед роботою прочитати:** `Game Redwave/Redwave/CLAUDE.md` → `PORTING.md` (архітектура, що брати з T35,
 маніфест, пастки ✔/◌, фази з чекпоінтами, чекліст, Play) → `SCREENS.md` (5 екранів + шторки +
 компоненти з розмірами). На старті спитати «❓ Відкриті рішення» з `PORTING.md` §1 — насамперед
 **applicationId** (пропозиція `com.redwave.downloader`, так названо пакет у port-kit).

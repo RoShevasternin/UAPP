@@ -5,7 +5,7 @@
 публічному репо й качаються через raw.githubusercontent.com:
 
 ```
-https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Redwave/test-media/
+https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20Redwave/test-media/
 ```
 
 Готові лінки й очікувана поведінка апки — **[links.md](links.md)**. Лінки працюють лише після
@@ -90,7 +90,7 @@ WAV і подкаст — моно (синтезатор і так моно, л�
 `libvorbis`, Python 3 з `mutagen`.
 
 ```sh
-cd poc/TEST_APP/Redwave/test-media/tools
+cd "poc/TEST_APP/Game Redwave/test-media/tools"
 
 # 1) синтезатор → WAV (11 файлів, ~50 с)
 node render.js /tmp/redwave-wav
