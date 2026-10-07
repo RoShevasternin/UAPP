@@ -221,6 +221,24 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
         }
     }
 
+    /** Налаштування → «Головний екран» (Settings та debug-кнопка). Без колбеку: стан ролі перевіряє resume. */
+    override fun openHomeAppSettings() {
+        main.post {
+            val intents = listOf(
+                Intent(Settings.ACTION_HOME_SETTINGS),
+                Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS),
+                Intent(Settings.ACTION_SETTINGS),
+            )
+            for (i in intents) {
+                try { activity.startActivity(i); return@post } catch (e: ActivityNotFoundException) { }
+            }
+        }
+    }
+
+    override val appVersion: String get() = runCatching {
+        ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName ?: "?"
+    }.getOrDefault("?")
+
     private fun openHomeSettings() {
         try {
             openSettings.launch(Intent(Settings.ACTION_HOME_SETTINGS))
@@ -529,21 +547,29 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
     // Лаунчер
     // ------------------------------------------------------------------------
     private val packageCallback = object : LauncherApps.Callback() {
-        override fun onPackageAdded(packageName: String, user: android.os.UserHandle) = emit { onAppsChanged() }
-        override fun onPackageRemoved(packageName: String, user: android.os.UserHandle) = emit { onAppsChanged() }
-        override fun onPackageChanged(packageName: String, user: android.os.UserHandle) = emit { onAppsChanged() }
-        override fun onPackagesAvailable(packageNames: Array<out String>, user: android.os.UserHandle, replacing: Boolean) = emit { onAppsChanged() }
-        override fun onPackagesUnavailable(packageNames: Array<out String>, user: android.os.UserHandle, replacing: Boolean) = emit { onAppsChanged() }
+        override fun onPackageAdded(packageName: String, user: android.os.UserHandle) { appsCache = null; emit { onAppsChanged() } }
+        override fun onPackageRemoved(packageName: String, user: android.os.UserHandle) { appsCache = null; emit { onAppsChanged() } }
+        override fun onPackageChanged(packageName: String, user: android.os.UserHandle) { appsCache = null; emit { onAppsChanged() } }
+        override fun onPackagesAvailable(packageNames: Array<out String>, user: android.os.UserHandle, replacing: Boolean) { appsCache = null; emit { onAppsChanged() } }
+        override fun onPackagesUnavailable(packageNames: Array<out String>, user: android.os.UserHandle, replacing: Boolean) { appsCache = null; emit { onAppsChanged() } }
     }
 
     init {
         launcherApps.registerCallback(packageCallback, main)
+        scope.launch { queryApps() }      // прогрів кешу для дока й сітки
     }
 
+    /**
+     * Список апок кешуємо: LauncherApps з сотнею пакетів — це ~1–1.5 с у GL-потоці
+     * (заміряно 07.10.2026: перший показ лаунчера був чорний). Прогрів — у фоні на старті,
+     * скидання — у packageCallback.
+     */
     @Volatile private var appsCache: List<LauncherApp>? = null
-    private fun apps(): List<LauncherApp> = appsCache ?: listApps()
+    private fun apps(): List<LauncherApp> = appsCache ?: queryApps()
 
-    override fun listApps(): List<LauncherApp> = runCatching {
+    override fun listApps(): List<LauncherApp> = apps()
+
+    private fun queryApps(): List<LauncherApp> = runCatching {
         userManager.userProfiles.flatMap { user ->
             val serial = userManager.getSerialNumberForUser(user)
             launcherApps.getActivityList(null, user).map { info ->

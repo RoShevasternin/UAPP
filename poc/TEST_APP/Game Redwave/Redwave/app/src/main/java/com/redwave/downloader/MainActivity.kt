@@ -67,12 +67,19 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
 
         // Системні бари лишаємо видимими (лаунчер не ховає навігацію) — GDX лише
         // відступає safe area. Висоти фіксуємо один раз, як у T35.
+        // Запасні висоти з ресурсів системи — щоб GDX ніколи не стартував з нулем.
+        // Заміряно 07.10.2026: у home-таску перший WindowInsets приходить зі statusBar = 0
+        // → контент налазив на статус-бар.
+        bridge.statusBarPx = systemDimen("status_bar_height")
+        bridge.navBarPx    = systemDimen("navigation_bar_height")
+
+        // getInsetsIgnoringVisibility — висота бару, навіть якщо він зараз схований/ще не показаний.
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
-            if (onceInsets.getAndSet(false)) {
-                bridge.statusBarPx = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
-                bridge.navBarPx    = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
-                log("statusBar = ${bridge.statusBarPx} | navBar = ${bridge.navBarPx}")
-            }
+            val sb = insets.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.statusBars()).top
+            val nb = insets.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.navigationBars()).bottom
+            if (sb > 0) bridge.statusBarPx = sb
+            if (nb > 0) bridge.navBarPx = nb
+            if (onceInsets.getAndSet(false)) log("statusBar = ${bridge.statusBarPx} | navBar = ${bridge.navBarPx} (insets $sb / $nb)")
             WindowInsetsCompat.CONSUMED
         }
 
@@ -83,6 +90,12 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         }
 
         handleIntent(intent, isNew = false)
+    }
+
+    @android.annotation.SuppressLint("DiscouragedApi")
+    private fun systemDimen(name: String): Int {
+        val id = resources.getIdentifier(name, "dimen", "android")
+        return if (id > 0) resources.getDimensionPixelSize(id) else 0
     }
 
     override fun onNewIntent(intent: Intent) {

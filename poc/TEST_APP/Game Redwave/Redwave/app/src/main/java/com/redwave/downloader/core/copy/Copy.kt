@@ -139,6 +139,18 @@ object Copy {
         fun downloadingWidget(n: Int) = "Downloading · $n"
     }
 
+    object Settings {
+        const val TITLE = "Settings"
+        const val HOME_TITLE = "Home screen"
+        const val HOME_ON = "Redwave is your Home screen"
+        const val HOME_OFF = "Redwave is not your Home screen"
+        const val CHANGE = "Change"
+        fun version(v: String) = "Redwave $v"
+        const val DEBUG = "Debug build"
+        const val DEBUG_CHOOSER = "Choose Home app (system)"
+        const val DEBUG_RESET = "Reset onboarding"
+    }
+
     object Role {
         const val TITLE = "Set Redwave as your default home app?"
         const val SUB = "You can change this later in Settings → Apps → Default apps."

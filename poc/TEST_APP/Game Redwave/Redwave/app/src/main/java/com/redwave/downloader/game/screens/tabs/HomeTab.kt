@@ -77,7 +77,9 @@ class HomeTab(app: AppScreen) : ATabPage(app) {
             word.setPosition(logo.width + px(9f), (height - word.height) / 2f)
             val bell = AIconButton(app, assets.ic_bell).withBadge().apply { setBounds(W - px(38f), 0f, px(38f), px(38f)) }
             bell.onClick { gdxGame.toast("No new notifications") }
-            addActor(logo); addActor(word); addActor(bell)
+            val gear = AIconButton(app, assets.ic_gear).apply { setBounds(W - px(38f) * 2 - px(8f), 0f, px(38f), px(38f)) }
+            gear.onClick { app.openSheet(com.redwave.downloader.game.screens.sheets.SettingsSheet(app)) }
+            addActor(logo); addActor(word); addActor(gear); addActor(bell)
         }
     }.apply { setSize(W, px(38f)) }
 

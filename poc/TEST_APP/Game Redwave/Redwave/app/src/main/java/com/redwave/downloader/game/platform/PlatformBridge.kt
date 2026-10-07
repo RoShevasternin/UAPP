@@ -52,6 +52,9 @@ interface PlatformBridge {
     fun isDefaultHome(): Boolean
     /** RoleManager.createRequestRoleIntent(ROLE_HOME) на Q+, ACTION_HOME_SETTINGS на старших. */
     fun requestDefaultHome(onResult: (isHome: Boolean) -> Unit)
+    /** Системний екран вибору головного застосунку (Settings / debug: повернути системний лаунчер). */
+    fun openHomeAppSettings()
+    val appVersion: String
 
     // ── Буфер ────────────────────────────────────────────────────────────────
     /**
