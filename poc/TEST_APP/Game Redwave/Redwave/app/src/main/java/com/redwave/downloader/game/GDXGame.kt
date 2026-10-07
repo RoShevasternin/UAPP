@@ -133,6 +133,8 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
         Blit.dispose()
         // Роль HOME могли забрати в налаштуваннях, поки ми були у фоні → назад на екран-вимогу.
         // Лише коли роль обов'язкова (Remote Config home_required) — перевіряємо на кожному вході.
+        // Інтернет міг зникнути / з'явитись → прапорці інші (офлайн — DEFAULT): оновити 3-й слайд
+        (currentScreen as? OnboardingScreen)?.onFlagsChanged()
         if (isReady && model.state.onboarded && currentScreen !is OnboardingScreen && currentScreen !is SplashScreen && !isUnlocked) {
             log("HOME role required but not held → gate")
             navigationManager.navigateRoot(OnboardingScreen::class.java.name, OnboardingScreen.KEY_GATE)

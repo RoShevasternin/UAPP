@@ -244,7 +244,8 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
     // ------------------------------------------------------------------------
     // Remote Config (RemoteFlagsSource)
     // ------------------------------------------------------------------------
-    override fun remoteFlags(): RemoteFlags = RemoteFlagsSource.current
+    /** Офлайн — RemoteFlags.DEFAULT (RemoteFlagsSource.effective). */
+    override fun remoteFlags(): RemoteFlags = RemoteFlagsSource.effective
     override fun hasRemoteFlags(): Boolean = RemoteFlagsSource.hasRemote()
     override fun refreshRemoteFlags(timeoutMs: Long, onDone: (RemoteFlags) -> Unit) {
         main.post { RemoteFlagsSource.refresh(timeoutMs) { f -> runGDX { onDone(f) } } }

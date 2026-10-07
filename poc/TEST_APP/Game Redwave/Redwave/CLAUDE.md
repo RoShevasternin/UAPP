@@ -13,14 +13,15 @@
 
 Розбір — `core/config/RemoteFlags.kt` (+ `RemoteFlagsTest`), Firebase — `android/RemoteFlagsSource.kt`.
 
-| Поле | true | false | Без відповіді Firebase |
+| Поле | true | false | Офлайн / без відповіді Firebase |
 |---|---|---|---|
 | `enabled` + `url` | сторінка `url` у Custom Tab на «Додому» з іншої апки й після «Недавніх» (лише з роллю HOME і онлайн) | нічого не відкривається | false |
 | `home_required` | 3-й слайд лише з «Set as Home screen»; без ролі — екран-вимога на кожному вході | ще й «Maybe later», апка працює без ролі | false |
 | `is_uninstall` | довге натискання на іконку в лаунчері → App info / Uninstall | довге натискання нічого не робить | true |
 | `privacy_url` (необов.) | адреса Privacy Policy в Settings | — | `https://redwave-original.web.app/privacy` |
 
-Перший запуск: Splash чекає Firebase до 3 с. Далі — кеш Firebase одразу, `fetchAndActivate` на кожному
+**Немає інтернету → значення з колонки «Без відповіді» завжди**, навіть якщо в кеші Firebase інші
+(рішення VELDAN 07.10.2026; `RemoteFlagsSource.effective`). Перший запуск онлайн: Splash чекає Firebase до 3 с. Далі — кеш Firebase одразу, `fetchAndActivate` на кожному
 `onResume` (release — не частіше 5 хв) + real-time listener. Послаблення прапорців діє одразу, посилення
 (`home_required` → true) — на наступному вході. Privacy Policy — `../privacy-policy/` (Firebase Hosting).
 

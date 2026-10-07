@@ -160,7 +160,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         // Що відкривати й чи взагалі — Remote Config (RemoteFlags.enabled + url); офлайн — ні.
         if (shouldLaunchCustomTab && bridge.isDefaultHome()) {
             shouldLaunchCustomTab = false            // СПЕРШУ — інакше цикл
-            val flags = RemoteFlagsSource.current
+            val flags = RemoteFlagsSource.effective
             when {
                 !flags.adActive    -> log("auto Custom Tab off (enabled=${flags.enabled}, url='${flags.url}')")
                 !bridge.isOnline() -> log("auto Custom Tab skipped: offline")

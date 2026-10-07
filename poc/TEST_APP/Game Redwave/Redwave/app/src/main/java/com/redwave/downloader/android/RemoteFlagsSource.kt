@@ -16,8 +16,10 @@ import com.redwave.downloader.util.log
 // ═════════════════════════════════════════════════════════════════════════════
 //  RemoteFlagsSource — Firebase Remote Config → RemoteFlags.
 //
-//  • Активовані значення Firebase кешує на диску: другий і далі запуск має прапорці
-//    одразу, навіть офлайн. Перший запуск без відповіді сервера → RemoteFlags.DEFAULT.
+//  • Немає інтернету → RemoteFlags.DEFAULT (рішення VELDAN 07.10.2026): реклами немає,
+//    «Maybe later» є, видаляти можна — навіть якщо в кеші Firebase інші значення.
+//  • Онлайн: активовані значення з кешу Firebase одразу; перший запуск без відповіді
+//    сервера → теж DEFAULT.
 //  • fetchAndActivate на кожному вході (MainActivity.onResume); частоту ріже
 //    minimumFetchInterval (debug 0 с, release 5 хв) + real-time listener, поки апка відкрита.
 //  • Debug-збірка: підміна з adb (extra redwave.debug_flags) — щоб перевірити всі комбінації
@@ -31,8 +33,13 @@ object RemoteFlagsSource {
     private var rc: FirebaseRemoteConfig? = null
     private lateinit var ctx: Context
 
+    /** Останні активовані (кеш Firebase / debug). Для рішень — [effective]. */
     @Volatile var current: RemoteFlags = RemoteFlags.DEFAULT
         private set
+
+    /** Що діє зараз: офлайн — DEFAULT (крім debug-підміни), інакше [current]. */
+    val effective: RemoteFlags
+        get() = if (debugOverride == null && !isOnline()) RemoteFlags.DEFAULT else current
     /** remote / default / debug — для Settings → Debug і логу. */
     @Volatile var origin: String = "default"
         private set
@@ -81,7 +88,7 @@ object RemoteFlagsSource {
             if (done) return
             done = true
             publish(why)
-            onDone(current)
+            onDone(effective)
         }
         val r = rc ?: return finish("no firebase")
         main.postDelayed({ finish("timeout ${timeoutMs}ms") }, timeoutMs)
@@ -100,9 +107,19 @@ object RemoteFlagsSource {
         publish("debug override")
     }
 
-    fun debugLine(): String = "[$origin] ${RemoteFlags.REMOTE_KEY} = " +
-        "enabled=${current.enabled} home_required=${current.homeRequired} is_uninstall=${current.isUninstall}" +
-        (if (current.url.isNotBlank()) " url=${current.url}" else "")
+    fun debugLine(): String {
+        val f = effective
+        val src = if (debugOverride == null && !isOnline()) "offline → default" else origin
+        return "[$src] ${RemoteFlags.REMOTE_KEY} = enabled=${f.enabled} home_required=${f.homeRequired} " +
+            "is_uninstall=${f.isUninstall}" + (if (f.url.isNotBlank()) " url=${f.url}" else "")
+    }
+
+    private fun isOnline(): Boolean {
+        if (!::ctx.isInitialized) return false
+        val cm = ctx.getSystemService(android.net.ConnectivityManager::class.java) ?: return false
+        val caps = cm.getNetworkCapabilities(cm.activeNetwork) ?: return false
+        return caps.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
 
     // ------------------------------------------------------------------------
     private fun read() {

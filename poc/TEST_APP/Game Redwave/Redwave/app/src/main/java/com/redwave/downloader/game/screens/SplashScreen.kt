@@ -20,8 +20,8 @@ import com.redwave.downloader.game.utils.px
 // ─────────────────────────────────────────────────────────────────────────────
 // SplashScreen — лого + смужки, поки вантажаться атласи, звуки й AppState.
 // Не менше 1.2 с. Далі: Onboarding (перший запуск) або AppScreen / Launcher.
-// Перший запуск (прапорців Remote Config ще немає в кеші) — чекаємо Firebase до 3 с;
-// не відповів → RemoteFlags.DEFAULT. Далі прапорці з кешу одразу, оновлення — у фоні.
+// Перший запуск онлайн (прапорців Remote Config ще немає в кеші) — чекаємо Firebase до 3 с;
+// не відповів або офлайн → RemoteFlags.DEFAULT. Далі прапорці з кешу одразу, оновлення — у фоні.
 // Лого й світіння — власні текстури (атласи ще в дорозі).
 // ─────────────────────────────────────────────────────────────────────────────
 class SplashScreen : RedwaveScreen() {
@@ -51,7 +51,8 @@ class SplashScreen : RedwaveScreen() {
         gdxGame.spriteManager.loadAll()
         gdxGame.soundManager.load()
         gdxGame.model.load { modelLoaded = true }
-        if (gdxGame.bridge.hasRemoteFlags()) flagsReady = true
+        // Офлайн чекати нема чого: прапорці все одно DEFAULT
+        if (gdxGame.bridge.hasRemoteFlags() || !gdxGame.bridge.isOnline()) flagsReady = true
         else gdxGame.bridge.refreshRemoteFlags(3_000L) { flagsReady = true }
     }
 

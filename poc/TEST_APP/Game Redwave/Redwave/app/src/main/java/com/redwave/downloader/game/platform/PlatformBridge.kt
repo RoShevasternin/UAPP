@@ -60,7 +60,7 @@ interface PlatformBridge {
     val appVersion: String
 
     // ── Remote Config (Firebase) ─────────────────────────────────────────────
-    /** Останні активовані прапорці (кеш Firebase) або RemoteFlags.DEFAULT. Дешево — можна щокадру. */
+    /** Що діє зараз: офлайн — RemoteFlags.DEFAULT, онлайн — кеш Firebase (або DEFAULT до першої відповіді). Не щокадру. */
     fun remoteFlags(): RemoteFlags
     /** Чи були прапорці з сервера хоч раз (кеш минулого запуску теж рахується). */
     fun hasRemoteFlags(): Boolean
