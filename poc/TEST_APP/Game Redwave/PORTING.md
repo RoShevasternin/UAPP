@@ -205,7 +205,7 @@ implementation("com.squareup.okhttp3:okhttp:<остання 4.x/5.x>")   // prob
 ## 6. Android-бік: як робити і де пастки
 
 ### 6.1 Роль HOME
-Код є в `poc/HomeLauncher-PoC` (`isDefaultHomeApp()`, `requestDefaultHome()`, фолбек
+Код є в `poc/concept/HomeLauncher-PoC` (`isDefaultHomeApp()`, `requestDefaultHome()`, фолбек
 `ACTION_HOME_SETTINGS`) — переносимо. Пам'ять `home-launcher-poc` — деталі тестів.
 - ✔ HOME-натискання приходять в `onNewIntent` (singleTask); перший запуск як HOME — в `onCreate`.
 - ✔ **«Назад» на LauncherScreen нічого не робить.** `AdvancedScreen.keyDown(BACK)` у T35 при

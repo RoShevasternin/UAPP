@@ -139,7 +139,7 @@ https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20R
 ## 8. Як raw.githubusercontent.com віддає файли (перевірено 06.10.2026)
 
 Перевіряли `curl -sI` (HEAD) і GET з `Range` на наявних файлах: цей репо (`main.mp3`,
-`main.ogg`, `all.png`, `*.json`, `*.html`, `AndroidManifest.xml`, `poc/video.mp4`) і публічні
+`main.ogg`, `all.png`, `*.json`, `*.html`, `AndroidManifest.xml`, `poc/concept/video.mp4`) і публічні
 репо з тестовими семплами (`mathiasbynens/small`, `chromium/chromium` → `media/test/data`,
 `mozilla/gecko-dev` → `dom/media/test`, `rafaelreis-hotmart/Audio-Sample-files`,
 `anars/blank-audio`).
@@ -154,7 +154,7 @@ https://raw.githubusercontent.com/RoShevasternin/UAPP/main/poc/TEST_APP/Game%20R
 | `.wav` | `audio/wav` | `mathiasbynens/small/wav.wav`, `Audio-Sample-files/sample.wav` |
 | `.aac` | `audio/aac` | `chromium/…/bear-audio-main-aac.aac` |
 | `.webm` | `audio/webm` | `mathiasbynens/small/webm.webm` |
-| `.mp4` | **`application/octet-stream`** | UAPP `poc/video.mp4`, `chromium/…/bear-flac.mp4`, `Audio-Sample-files/sample.mp4` |
+| `.mp4` | **`application/octet-stream`** | UAPP `poc/concept/video.mp4`, `chromium/…/bear-flac.mp4`, `Audio-Sample-files/sample.mp4` |
 | `.adts` | **`application/octet-stream`** | `chromium/…/sfx.adts` |
 | `.jpg` / `.png` / `.svg` | `image/jpeg` / `image/png` / `image/svg+xml` | `mathiasbynens/small`, UAPP `all.png` |
 | `.json` `.xml` `.html` `.md` | `text/plain; charset=utf-8` | UAPP `*.json`, `AndroidManifest.xml`, `docs/…/01.html`, `CLAUDE.md` |

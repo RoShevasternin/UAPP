@@ -8,7 +8,7 @@ metadata:
 **Home Launcher PoC** — внутрішній PoC: застосунок стає Default Home App (CATEGORY_HOME)
 і отримує кожне натискання «Додому». Це не гра парку і не міграція до еталона.
 
-**Kotlin-проєкт:** `/Users/admin/Apps/UAPP/poc/HomeLauncher-PoC` (пакет `com.example.homelauncher`,
+**Kotlin-проєкт:** `/Users/admin/Apps/UAPP/poc/concept/HomeLauncher-PoC` (пакет `com.example.homelauncher`,
 minSdk 24, targetSdk 37). Уже зроблено: intent-filter HOME+DEFAULT (+LAUNCHER для зручності),
 `isDefaultHomeApp()` через `RoleManager.isRoleHeld(ROLE_HOME)` / `resolveActivity` на старих,
 `requestDefaultHome()` → системний діалог ролі, фолбек `ACTION_HOME_SETTINGS`; сітка всіх
@@ -25,7 +25,7 @@ minSdk 24, targetSdk 37). Уже зроблено: intent-filter HOME+DEFAULT (+
 `media/demo.mp4` (оригінал `Screenrecorder-2026-09-30-18-32-03-134.mp4` 78 МБ стиснутий ffmpeg до 2.8 МБ, 432 px).
 
 **Тест 2 — сповіщення при зарядці (додано 02.10.2026, той самий артефакт).**
-Проєкт `/Users/admin/Apps/UAPP/poc/ChargingDreamPoC` (пакет `com.example.chargingdreampoc`).
+Проєкт `/Users/admin/Apps/UAPP/poc/concept/ChargingDreamPoC` (пакет `com.example.chargingdreampoc`).
 DreamService (заставку) **викинуто повністю** — не працює: вмикається вручну, стартує лише по
 тайм-ауту простою, а не на кабель, і на MIUI/Samsung функцію вирізано. Замість неї:
 foreground-сервіс (`specialUse`) → `registerReceiver(ACTION_POWER_CONNECTED)` **в рантаймі**
@@ -36,7 +36,7 @@ background-запуск Activity заблоковано з API 29). Корист
 Медіа артефакту: `media/charging.mp4` (14.5 МБ → 1.8 МБ, crf 28, 540 px), `media/charging-poster.jpg`.
 
 **Тест 3 — асистент за замовчуванням (додано 02.10.2026, той самий артефакт).**
-Проєкт `/Users/admin/Apps/UAPP/poc/AssistRolePoC` (пакет `com.example.assistrolepoc`).
+Проєкт `/Users/admin/Apps/UAPP/poc/concept/AssistRolePoC` (пакет `com.example.assistrolepoc`).
 Суть: `intent-filter ACTION_ASSIST` робить апку доступною в «Цифровий помічник за
 умовчанням»; після вибору довге натискання «Додому» відкриває нас **замість Google**.
 Три помилки типової спеки: константа — `ROLE_ASSISTANT`, а не `ROLE_ASSIST` (не
@@ -49,7 +49,7 @@ background-запуск Activity заблоковано з API 29). Корист
 Медіа: `media/assist.mp4` (10.9 МБ → 1.4 МБ), `media/assist-poster.jpg`.
 
 **Тест 4 — плаваюче вікно (додано 02.10.2026, той самий артефакт).**
-Проєкт `/Users/admin/Apps/UAPP/poc/OverlayPoC` (пакет `com.example.overlaypoc`).
+Проєкт `/Users/admin/Apps/UAPP/poc/concept/OverlayPoC` (пакет `com.example.overlaypoc`).
 `SYSTEM_ALERT_WINDOW` + `TYPE_APPLICATION_OVERLAY` + `FLAG_NOT_FOCUSABLE`, два стани:
 кулька 56dp (чат-голова) ↔ картка з банером. Перемикання стану — **removeView +
 addView**, бо `updateViewLayout` уміє лише переміряти вже додану в'юху; невидалена
