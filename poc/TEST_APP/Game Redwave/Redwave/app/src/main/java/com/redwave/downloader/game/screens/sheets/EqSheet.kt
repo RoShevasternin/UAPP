@@ -100,6 +100,7 @@ class EqSheet(screen: AdvancedScreen) : ASheet(screen) {
     private fun refreshAll() {
         chips.forEach { (n, c) -> c.isOn = n == preset; if (n == "Custom") c.isVisible = preset == "Custom" }
         valueLabels.forEachIndexed { i, l -> val right = l.x + l.width; l.setText(fmtDb(bands[i])); l.pack(); l.x = right - l.width }
+        sliders.forEach { it.layoutKnob() }   // пресет міняє всі смуги — повзунки теж
     }
 
     private fun save() {
@@ -136,7 +137,8 @@ class EqSheet(screen: AdvancedScreen) : ASheet(screen) {
             gdxGame.bridge.setEqualizer(enabled, bands)
         }
 
-        private fun layoutKnob() {
+        fun layoutKnob() {
+            if (width <= 0f) return
             val f = (bands[i] - EqCurve.UI_MIN_DB) / (EqCurve.UI_MAX_DB - EqCurve.UI_MIN_DB)
             val kx = f * (width - k)
             knob.setBounds(kx, (height - k) / 2f, k, k)

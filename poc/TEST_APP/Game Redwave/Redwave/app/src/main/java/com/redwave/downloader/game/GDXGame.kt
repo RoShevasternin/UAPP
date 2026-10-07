@@ -169,6 +169,16 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
     /** Перший екран після Splash / після надання ролі. */
     fun navigateFirst() {
         val nav = navigationManager
+        // Роль надали, але онбординг не позначено: Android при наданні ролі закриває стару
+        // MainActivity (з онбордингом) і стартує нову як HOME — колбек ролі гине разом зі старою
+        // (заміряно 07.10.2026). Роль наша = онбординг пройдено → одразу в апку.
+        if (!model.state.onboarded && bridge.isDefaultHome()) {
+            log("HOME role already granted → onboarded")
+            model.update { it.copy(onboarded = true) }
+            pendingHome = false
+            nav.navigateRoot(AppScreen::class.java.name)
+            return
+        }
         when {
             !model.state.onboarded   -> nav.navigateRoot(OnboardingScreen::class.java.name)
             !bridge.isDefaultHome()  -> nav.navigateRoot(OnboardingScreen::class.java.name, OnboardingScreen.KEY_GATE)

@@ -4,6 +4,7 @@ import com.redwave.downloader.core.copy.Copy
 import com.redwave.downloader.core.model.Track
 import com.redwave.downloader.game.actors.layout.AColumn
 import com.redwave.downloader.game.actors.layout.ADyn
+import com.redwave.downloader.game.actors.ui.AButtonGhost
 import com.redwave.downloader.game.actors.ui.AButtonRed
 import com.redwave.downloader.game.actors.ui.AIconButton
 import com.redwave.downloader.game.actors.ui.AInputField
@@ -15,6 +16,7 @@ import com.redwave.downloader.game.screens.AppScreen
 import com.redwave.downloader.game.screens.sheets.TrackMenuSheet
 import com.redwave.downloader.game.utils.Fmt
 import com.redwave.downloader.game.utils.GameColor
+import com.redwave.downloader.game.utils.actor.ellipsize
 import com.redwave.downloader.game.utils.actor.icon
 import com.redwave.downloader.game.utils.actor.lbl
 import com.redwave.downloader.game.utils.advanced.AdvancedGroup
@@ -47,7 +49,7 @@ class LibraryTab(app: AppScreen) : ATabPage(app) {
         })
         col.addActor(actions())
         col.addActor(ADyn(app, W, { "${m.version}:$listKey" }) { w -> buildList(this, w) })
-        col.addActor(ADyn(app, W, { m.version }) { w -> buildStorage(this, w) })
+        col.addActor(ADyn(app, W, { "${m.version}:$folderKey" }) { w -> buildStorage(this, w) })
     }
 
     private fun header() = object : AdvancedGroup() {
@@ -101,21 +103,74 @@ class LibraryTab(app: AppScreen) : ATabPage(app) {
         })
     }
 
+    private var folderKey = 0
+    private var confirmCleanup = false
+
+    /**
+     * Плашка теки: КУДИ качаємо (Internal storage / Music / Redwave), скільки реально лежить на
+     * диску, і «сироти» — файли без треку в бібліотеці (лишаються після очищення даних апки).
+     * Прибрати їх — два тапи (другий підтверджує).
+     */
     private fun buildStorage(g: ADyn, w: Float): Float {
-        val pad = px(12f); val h = px(12f + 16f + 8f + 5f + 12f)
+        val b = gdxGame.bridge
+        val files = b.musicFolderFiles()
+        val known = m.state.library.mapNotNull { m.pathOf(it) }.toSet()
+        val orphans = files.filter { it.path !in known }
+        val diskBytes = files.sumOf { it.sizeBytes }
+        val info = b.storageInfo()
+
+        val pad = px(12f)
+        val rowH = px(16f)
+        val access = b.hasAudioAccess()
+        val orphanH = if (orphans.isNotEmpty()) px(10f) + px(34f) else 0f
+        val accessH = if (!access) px(10f) + px(34f) else 0f
+        val h = pad + rowH + px(6f) + rowH + px(8f) + px(5f) + orphanH + accessH + pad
         g.addActor(ARect(app, px(16f), GameColor.card_170F12, stroke = GameColor.line_white_7).apply { setSize(w, h) })
-        val info = gdxGame.bridge.storageInfo()
-        val tot = m.totalBytes
+
+        var y = h - pad - rowH
         val ic = icon(assets.ic_folder, px(14f), GameColor.muted_A8949B)
-        val folder = lbl(Copy.Library.STORAGE_FOLDER, msdf.regular(12f, GameColor.muted_A8949B))
-        val right = lbl("${Fmt.size(tot)} · ${Fmt.size(info.freeBytes)} free", msdf.semibold(12f))
-        val topY = h - pad - px(16f)
-        ic.setPosition(pad, topY + (px(16f) - ic.height) / 2f); folder.setPosition(pad + px(20f), topY + (px(16f) - folder.height) / 2f)
-        right.setPosition(w - pad - right.width, folder.y)
-        g.addActor(ic); g.addActor(folder); g.addActor(right)
-        val bar = AProgressBar(app).apply { setBounds(pad, pad, w - pad * 2, px(5f)) }
-        val frac = if (info.freeBytes + tot > 0) tot.toFloat() / (info.freeBytes + tot) else 0f
+        val path = lbl(b.musicFolderLabel, msdf.semibold(12f)).ellipsize(w - pad * 2 - px(20f))
+        ic.setPosition(pad, y + (rowH - ic.height) / 2f); path.setPosition(pad + px(20f), y + (rowH - path.height) / 2f)
+        g.addActor(ic); g.addActor(path)
+
+        y -= px(6f) + rowH
+        val left = lbl("${files.size} files · ${Fmt.size(diskBytes)}", msdf.regular(12f, GameColor.muted_A8949B))
+        val right = lbl("${Fmt.size(info.freeBytes)} free", msdf.regular(12f, GameColor.muted_A8949B))
+        left.setPosition(pad, y + (rowH - left.height) / 2f); right.setPosition(w - pad - right.width, left.y)
+        g.addActor(left); g.addActor(right)
+
+        y -= px(8f) + px(5f)
+        val bar = AProgressBar(app).apply { setBounds(pad, y, w - pad * 2, px(5f)) }
+        val frac = if (info.freeBytes + diskBytes > 0) diskBytes.toFloat() / (info.freeBytes + diskBytes) else 0f
         g.addActor(bar); bar.set(frac.coerceIn(0.03f, 1f), immediate = true)
+
+        if (orphans.isNotEmpty()) {
+            y -= px(10f) + px(34f)
+            val note = lbl("${orphans.size} not in library · ${Fmt.size(orphans.sumOf { it.sizeBytes })}", msdf.regular(12f, GameColor.pink_FF8A98))
+            note.setPosition(pad, y + (px(34f) - note.height) / 2f); g.addActor(note)
+            val btn = AButtonGhost(app, if (confirmCleanup) "Tap to confirm" else "Delete", assets.ic_x, small = true)
+            btn.setSize(btn.label.width + px(16f) + px(8f) + px(24f), px(34f)); btn.setPosition(w - pad - btn.width, y)
+            btn.onClick {
+                if (!confirmCleanup) { confirmCleanup = true; folderKey++; return@onClick }
+                confirmCleanup = false
+                b.deleteFiles(orphans) { n ->
+                    gdxGame.toast("Deleted $n file" + (if (n == 1) "" else "s") + " from Music/Redwave")
+                    folderKey++
+                }
+            }
+            g.addActor(btn)
+        }
+
+        // Без дозволу видно лише файли цієї установки — старі (після перевстановлення) приховані
+        if (!access) {
+            y -= px(10f) + px(34f)
+            val note = lbl("Files from earlier installs are hidden", msdf.regular(12f, GameColor.muted_A8949B))
+            note.setPosition(pad, y + (px(34f) - note.height) / 2f); g.addActor(note)
+            val find = AButtonGhost(app, "Find", assets.ic_search, small = true)
+            find.setSize(find.label.width + px(16f) + px(8f) + px(24f), px(34f)); find.setPosition(w - pad - find.width, y)
+            find.onClick { b.requestAudioAccess { folderKey++ } }
+            g.addActor(find)
+        }
         return h
     }
 }

@@ -51,6 +51,14 @@ debug-екстра `redwave.debug_clip`), роль HOME через діалог,
 Пастки, знайдені на девайсі: дві MainActivity (HOME-таск) → трамплін для іконки; raw віддає
 Content-Disposition з шляхом; `.apply { setBounds(...height...) }` бере height самого актора.
 
+**07.10.2026, друга половина дня:** роль HOME обов'язкова (без неї — екран-вимога); Custom Tab google.com
+сам відкривається при поверненні на Home з іншої апки (не з лаунчера, не з наших системних екранів);
+шестерня → Settings з debug-кнопкою повернути системний лаунчер; Library показує теку Music/Redwave,
+«Delete file» видаляє з диска по-справжньому; Gradle 9.8 / AGP 9.4.1 / Kotlin 2.4.20 / OkHttp 5.5.
+Пастка: при наданні ролі Android перезапускає MainActivity як HOME і колбек ролі гине — тому
+navigateFirst сам ставить onboarded, якщо роль уже наша. Відкрите: копіювання в буфер через adb на
+MIUI A13 не працює, тож картку буфера на реальному кліпі не перевірено; WRITE_SETTINGS не надано.
+
 **How to apply:** зміни прототипу — `Artifact read` URL → publish з `url` → перезаписати
 `prototype/index.html`. Зміни логіки — спершу в `port-kit` + тест, потім в апку. Основа ролі
 HOME — [[home-launcher-poc]]; атласи пакує VELDAN у GUI — [[mindora-texturepacker-cli]];

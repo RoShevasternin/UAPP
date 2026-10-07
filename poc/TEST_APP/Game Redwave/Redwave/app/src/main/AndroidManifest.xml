@@ -14,6 +14,10 @@
     <!-- Рингтон: окремий екран налаштувань, НЕ рантайм-діалог -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS" tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Лише за кнопкою «Find files from earlier installs» у Library: після перевстановлення
+         старі файли Music/Redwave нам уже не належать — без цього їх не видно й не видалити. -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
     <!-- POST_NOTIFICATIONS свідомо НЕМАЄ: сповіщення медіасесії звільнені від нього на 13+,
          сповіщення DownloadManager показує системний провайдер. ◌ перевірити на девайсі -->
 

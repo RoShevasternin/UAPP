@@ -26,7 +26,7 @@ class TrackMenuSheet(
 ) : ASheet(screen) {
 
     private val optH = px(46f)
-    override val contentHeight: Float get() = px(52f) + px(12f) + 4 * optH + 3 * px(4f)
+    override val contentHeight: Float get() = px(52f) + px(8f) + px(30f) + px(12f) + 4 * optH + 3 * px(4f)
 
     override fun buildContent(w: Float) {
         var y = contentHeight
@@ -36,13 +36,22 @@ class TrackMenuSheet(
         val s = lbl("${track.artist} · ${Fmt.time(track.durationMs)} · ${track.format} · ${Fmt.size(track.sizeBytes)}", msdf.regular(12f, GameColor.muted_A8949B)).ellipsize(w - px(64f))
         t.setPosition(px(64f), y - px(26f) + px(1f)); s.setPosition(px(64f), y - px(26f) - s.height - px(1f))
         add(t); add(s)
-        y -= px(52f) + px(12f)
+        y -= px(52f) + px(8f)
+
+        // Де лежить файл — щоб було видно, що саме видаляємо
+        val path = gdxGame.model.pathOf(track)?.let { p -> "Music/" + p.substringAfter("/Music/", p.substringAfterLast('/')) } ?: "—"
+        val box = ARect(screen, px(10f), GameColor.white_4).apply { setBounds(0f, y - px(30f), w, px(30f)) }
+        val fic = icon(assets.ic_folder, px(14f), GameColor.muted_A8949B).apply { setPosition(px(10f), y - px(15f) - px(7f)) }
+        val pl = lbl(path, msdf.mono(11f, GameColor.muted_A8949B)).ellipsize(w - px(34f))
+        pl.setPosition(px(30f), y - px(15f) - pl.height / 2f)
+        add(box); add(fic); add(pl)
+        y -= px(30f) + px(12f)
 
         val opts: List<Triple<TextureRegion, String, () -> Unit>> = listOf(
             Triple(assets.ic_play_fill, "Play") { gdxGame.player.play(track); close() },
             Triple(assets.ic_scissors, "Make ringtone") { close(); onRingtone(track) },
             Triple(assets.ic_share, "Share") { gdxGame.bridge.shareTrack(track); close() },
-            Triple(assets.ic_x, "Delete from library") { delete() },
+            Triple(assets.ic_x, "Delete file") { delete() },
         )
         opts.forEachIndexed { i, (ic, label, act) ->
             y -= optH
@@ -61,13 +70,16 @@ class TrackMenuSheet(
         }
     }
 
+    /** Файл видаляється з диска; з бібліотеки — лише якщо файла справді більше немає. */
     private fun delete() {
         val m = gdxGame.model
         if (gdxGame.player.snap.trackId == track.id) gdxGame.bridge.pause()
-        gdxGame.bridge.deleteTrack(track) { }
-        m.update { s -> s.copy(library = s.library.filterNot { it.id == track.id }, favorites = s.favorites - track.id) }
-        gdxGame.covers.invalidateTrack(track.id)
-        gdxGame.toast("Deleted · ${track.title}")
         close()
+        gdxGame.bridge.deleteTrack(track) { ok ->
+            if (!ok) { gdxGame.toast("Couldn’t delete the file · ${track.title}"); return@deleteTrack }
+            m.update { s -> s.copy(library = s.library.filterNot { it.id == track.id }, favorites = s.favorites - track.id) }
+            gdxGame.covers.invalidateTrack(track.id)
+            gdxGame.toast("Deleted · ${track.title}")
+        }
     }
 }

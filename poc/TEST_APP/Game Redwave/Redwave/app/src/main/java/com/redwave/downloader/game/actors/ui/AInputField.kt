@@ -92,7 +92,7 @@ class AInputField(
                 text = text, hint = hint, textSizePx = px(14f) * pxPerWu, isUrl = isUrl,
             ),
             onChange = { t -> text = t; onChange(t) },
-            onDone = { t -> text = t; isEditing = false; refreshLabel(); onSubmit(t) },
+            onDone = { t, submitted -> text = t; isEditing = false; refreshLabel(); if (submitted) onSubmit(t) },
         )
     }
 

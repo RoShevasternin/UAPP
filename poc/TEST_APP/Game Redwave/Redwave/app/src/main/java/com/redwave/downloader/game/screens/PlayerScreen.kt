@@ -70,8 +70,9 @@ class PlayerScreen : RedwaveScreen() {
 
         // ── Фон: розмита обкладинка + затемнення 25 % → 72 % (52 %) → фон (90 %) ──
         content.addActor(bg); bg.setBounds(-px(50f), -px(50f), w + px(100f), h + px(100f)); bg.isVisible = false
-        content.addActor(ARect(this, 0f, GameColor.background.cpy().apply { a = 0.25f }, GameColor.background.cpy().apply { a = 0.72f }, angleCss = 180f, mid = 0.52f).apply { setBounds(-px(4f), h * 0.48f - px(3f), w + px(8f), h * 0.52f + px(8f)) })
-        content.addActor(ARect(this, 0f, GameColor.background.cpy().apply { a = 0.72f }, GameColor.background, angleCss = 180f, mid = 0.8f).apply { setBounds(-px(4f), -px(4f), w + px(8f), h * 0.48f + px(4f)) })
+        // Два шари стик у стик БЕЗ згладження країв (aa = 0): з AA на стику була світла/темна смуга
+        content.addActor(ARect(this, 0f, GameColor.background.cpy().apply { a = 0.25f }, GameColor.background.cpy().apply { a = 0.72f }, angleCss = 180f, mid = 0.52f).apply { fx.aaWidth = 0f; setBounds(-px(4f), h * 0.48f, w + px(8f), h * 0.52f + px(4f)) })
+        content.addActor(ARect(this, 0f, GameColor.background.cpy().apply { a = 0.72f }, GameColor.background, angleCss = 180f, mid = 0.8f).apply { fx.aaWidth = 0f; setBounds(-px(4f), -px(4f), w + px(8f), h * 0.48f + px(4f)) })
 
         var top = h - safeStatusBarUI - px(8f)
 

@@ -32,7 +32,8 @@ class LauncherTrampoline : Activity() {
         target.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(target)
         finish()
-        overridePendingTransition(0, 0)
+        if (Build.VERSION.SDK_INT >= 34) overrideActivityTransition(OVERRIDE_TRANSITION_CLOSE, 0, 0)
+        else @Suppress("DEPRECATION") overridePendingTransition(0, 0)
     }
 
     private fun isDefaultHome(): Boolean {

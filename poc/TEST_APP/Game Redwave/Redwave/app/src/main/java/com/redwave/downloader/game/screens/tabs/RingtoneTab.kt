@@ -238,18 +238,18 @@ class RingtoneTab(app: AppScreen) : ATabPage(app) {
         val t = track ?: return
         if (saving) return
         val b = gdxGame.bridge
-        if (!b.canWriteSettings()) {
-            gdxGame.toast(Copy.Ringtone.NEED_PERMISSION)
-            b.openWriteSettings()
-            return
-        }
+        // Файл зберігаємо завжди (він з'явиться в системному виборі звуків); дозвіл
+        // WRITE_SETTINGS потрібен лише щоб поставити його за замовчуванням.
         stopPreview()
         saving = true
         val kind = Copy.Ringtone.SAVE_AS[saveAs.ordinal]
+        val canSet = b.canWriteSettings()
         b.saveRingtone(t, sel, fadeIn, fadeOut, saveAs) { r ->
             saving = false
-            r.onSuccess { gdxGame.toast(Copy.Ringtone.savedToast(kind, t.title, Fmt.time(sel.lengthMs))) }
-             .onFailure { gdxGame.toast("Couldn’t save: ${it.message ?: "error"}") }
+            r.onSuccess {
+                if (canSet) gdxGame.toast(Copy.Ringtone.savedToast(kind, t.title, Fmt.time(sel.lengthMs)))
+                else { gdxGame.toast(Copy.Ringtone.savedNotSet(kind)); b.openWriteSettings() }
+            }.onFailure { gdxGame.toast("Couldn’t save: ${it.message ?: "error"}") }
         }
     }
 }

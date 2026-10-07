@@ -43,9 +43,11 @@ interface PlatformBridge {
      * scene2d TextField не вміє MSDF, тож редагування — справжній EditText, який
      * Activity кладе ПОВЕРХ поля (координати в px від лівого ВЕРХНЬОГО кута екрана).
      * Системне «Вставити» з меню поля — без тосту Android 12+.
-     * onChange — на кожну зміну, onDone — IME Done / Back / втрата фокусу. Обидва — у GL-потоці.
+     * onChange — на кожну зміну; onDone(text, submitted) — кінець редагування: submitted = true
+     * лише для IME-дії («→» / Go / Search); Back і втрата фокусу — false (нічого не відправляти).
+     * Обидва — у GL-потоці.
      */
-    fun beginTextInput(req: TextInputRequest, onChange: (String) -> Unit, onDone: (String) -> Unit)
+    fun beginTextInput(req: TextInputRequest, onChange: (String) -> Unit, onDone: (text: String, submitted: Boolean) -> Unit)
     fun endTextInput()
 
     // ── Роль HOME ────────────────────────────────────────────────────────────
@@ -115,7 +117,20 @@ interface PlatformBridge {
     /** Теги щойно завантаженого файлу (MediaMetadataRetriever); обкладинку кладе в filesDir/covers/<trackId>.jpg. */
     fun readTags(localUri: String, trackId: String, onResult: (TrackTags?) -> Unit)
     fun shareTrack(track: Track)
+    /** Видаляє файл з диска (і рядок MediaStore). false — файл лишився. */
     fun deleteTrack(track: Track, onResult: (Boolean) -> Unit)
+    /** Куди качаємо — для людей: «Internal storage / Music / Redwave». */
+    val musicFolderLabel: String
+    /** Що реально лежить у Music/Redwave (зокрема «сироти» поза бібліотекою). */
+    fun musicFolderFiles(): List<FolderFile>
+    /**
+     * Видалити файли; колбек — скільки зникло. Свої — одразу; чужі (з попередньої установки) —
+     * через системне підтвердження MediaStore.createDeleteRequest (API 30+).
+     */
+    fun deleteFiles(files: List<FolderFile>, onResult: (Int) -> Unit)
+    /** Чи бачимо ВСІ файли теки (READ_MEDIA_AUDIO / READ_EXTERNAL_STORAGE). */
+    fun hasAudioAccess(): Boolean
+    fun requestAudioAccess(onResult: (Boolean) -> Unit)
 
     // ── Лаунчер ──────────────────────────────────────────────────────────────
     /** LauncherApps.getActivityList для всіх профілів (робочий профіль теж). */
@@ -148,6 +163,14 @@ data class ProbeResult(
     /** Content-Length або з Content-Range; -1 якщо невідомо. */
     val sizeBytes: Long,
     val httpCode: Int,
+)
+
+data class FolderFile(
+    val name: String,
+    val path: String,
+    val sizeBytes: Long,
+    /** content://media/… — для чужих файлів (видалення через createDeleteRequest). */
+    val contentUri: String? = null,
 )
 
 data class StorageInfo(val freeBytes: Long, val totalBytes: Long)

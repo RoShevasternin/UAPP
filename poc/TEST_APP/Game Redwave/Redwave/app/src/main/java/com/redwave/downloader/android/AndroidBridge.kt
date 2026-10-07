@@ -26,6 +26,7 @@ import android.os.SystemClock
 import android.os.UserManager
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.provider.MediaStore
 import android.provider.Settings
 import android.text.Editable
 import android.text.InputType
@@ -53,6 +54,7 @@ import com.redwave.downloader.core.ringtone.SaveAs
 import com.redwave.downloader.core.viz.SpectrumAnalyzer
 import com.redwave.downloader.game.platform.DownloadProgress
 import com.redwave.downloader.game.platform.DownloadRequest
+import com.redwave.downloader.game.platform.FolderFile
 import com.redwave.downloader.game.platform.LauncherApp
 import com.redwave.downloader.game.platform.PlatformBridge
 import com.redwave.downloader.game.platform.PlatformEvents
@@ -277,7 +279,7 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
                     .header("User-Agent", USER_AGENT)
                     .build()
                 http.newCall(req).execute().use { resp ->
-                    val bytes  = resp.body?.byteStream()?.use { s -> ByteArray(64).let { b -> val n = s.read(b); if (n > 0) b.copyOf(n) else ByteArray(0) } }
+                    val bytes  = resp.body.byteStream().use { s -> ByteArray(64).let { b -> val n = s.read(b); if (n > 0) b.copyOf(n) else ByteArray(0) } }
                     val type   = resp.header("Content-Type")
                     val cd     = resp.header("Content-Disposition")
                     val final  = resp.request.url.toString()
@@ -303,7 +305,7 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
                 http.newCall(req).execute().use { resp ->
                     if (!resp.isSuccessful) error("HTTP ${resp.code}")
                     // raw.githubusercontent віддає .rss/.json як text/plain — тип не перевіряємо
-                    resp.body?.string() ?: error("empty body")
+                    resp.body.string()
                 }
             }
             runGDX { onResult(result) }
@@ -319,7 +321,7 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
                 val req = Request.Builder().url(url).header("User-Agent", USER_AGENT).build()
                 http.newCall(req).execute().use { resp ->
                     if (!resp.isSuccessful) error("HTTP ${resp.code}")
-                    resp.body!!.bytes().also { file.writeBytes(it) }
+                    resp.body.bytes().also { file.writeBytes(it) }
                 }
             }.onFailure { log("fetchBytes $url: ${it.message}") }.getOrNull()
             runGDX { onResult(bytes) }
@@ -534,15 +536,114 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
 
     override fun deleteTrack(track: Track, onResult: (Boolean) -> Unit) {
         scope.launch {
-            val ok = runCatching {
-                val u = Uri.parse(track.localUri ?: return@runCatching true)
-                if (u.scheme == "file") File(u.path!!).delete() || !File(u.path!!).exists()
-                else ctx.contentResolver.delete(u, null, null) > 0
-            }.getOrDefault(false)
-            track.coverPath?.let { File(it).delete() }
+            val ok = track.localUri?.let { deleteUri(it) } ?: true
+            if (ok) track.coverPath?.let { File(it).delete() }
             runGDX { onResult(ok) }
         }
     }
+
+    // ------------------------------------------------------------------------
+    // Тека Music/Redwave: що реально лежить на диску
+    // ------------------------------------------------------------------------
+    private val musicDir get() = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC), FOLDER)
+
+    override val musicFolderLabel: String get() = "Internal storage / Music / $FOLDER"
+
+    /**
+     * Без дозволу scoped storage показує лише НАШІ файли (поточної установки). З дозволом —
+     * MediaStore за RELATIVE_PATH, тобто й «сироти» з минулих установок.
+     */
+    override fun musicFolderFiles(): List<FolderFile> {
+        val own = runCatching {
+            musicDir.listFiles()?.filter { it.isFile }?.map { FolderFile(it.name, it.absolutePath, it.length()) }.orEmpty()
+        }.getOrDefault(emptyList())
+        if (!hasAudioAccess()) return own
+        val all = runCatching {
+            val out = ArrayList<FolderFile>()
+            val col = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+            val proj = arrayOf(MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DISPLAY_NAME, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.SIZE)
+            val where = "${MediaStore.Audio.Media.DATA} LIKE ?"
+            ctx.contentResolver.query(col, proj, where, arrayOf("${musicDir.absolutePath}/%"), null)?.use { c ->
+                while (c.moveToNext()) {
+                    val uri = android.content.ContentUris.withAppendedId(col, c.getLong(0))
+                    out += FolderFile(c.getString(1) ?: "?", c.getString(2) ?: "", c.getLong(3), uri.toString())
+                }
+            }
+            out
+        }.getOrDefault(emptyList())
+        // свої, яких MediaStore ще не проіндексував, теж показуємо
+        return all + own.filter { o -> all.none { it.path == o.path } }
+    }
+
+    override fun hasAudioAccess(): Boolean {
+        val perm = if (Build.VERSION.SDK_INT >= 33) android.Manifest.permission.READ_MEDIA_AUDIO else android.Manifest.permission.READ_EXTERNAL_STORAGE
+        return ContextCompat.checkSelfPermission(ctx, perm) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private var audioPermCallback: ((Boolean) -> Unit)? = null
+    private val audioPermLauncher =
+        activity.registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            val cb = audioPermCallback; audioPermCallback = null
+            runGDX { cb?.invoke(granted) }
+        }
+
+    override fun requestAudioAccess(onResult: (Boolean) -> Unit) {
+        main.post {
+            audioPermCallback = onResult
+            activity.internalNavigation = true
+            audioPermLauncher.launch(if (Build.VERSION.SDK_INT >= 33) android.Manifest.permission.READ_MEDIA_AUDIO else android.Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+    }
+
+    private var deleteCallback: ((Int) -> Unit)? = null
+    private var deleteDoneOwn = 0
+    private var deletePending: List<FolderFile> = emptyList()
+    private val deleteRequestLauncher =
+        activity.registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { r ->
+            scope.launch {
+                // Після «Дозволити» система вже стерла файли — рахуємо, яких справді немає
+                val gone = deletePending.count { !File(it.path).exists() }
+                log("createDeleteRequest result=${r.resultCode}, gone=$gone/${deletePending.size}")
+                val n = deleteDoneOwn + gone
+                val cb = deleteCallback; deleteCallback = null
+                runGDX { cb?.invoke(n) }
+            }
+        }
+
+    override fun deleteFiles(files: List<FolderFile>, onResult: (Int) -> Unit) {
+        scope.launch {
+            // 1) свої — напряму
+            val foreign = ArrayList<FolderFile>()
+            var own = 0
+            files.forEach { f -> if (deleteUri(Uri.fromFile(File(f.path)).toString())) own++ else foreign += f }
+            // 2) чужі — системне підтвердження (API 30+)
+            val uris = foreign.mapNotNull { it.contentUri?.let(Uri::parse) }
+            if (uris.isEmpty() || Build.VERSION.SDK_INT < 30) { runGDX { onResult(own) }; return@launch }
+            main.post {
+                deleteCallback = onResult; deleteDoneOwn = own; deletePending = foreign
+                activity.internalNavigation = true
+                val pi = MediaStore.createDeleteRequest(ctx.contentResolver, uris)
+                deleteRequestLauncher.launch(androidx.activity.result.IntentSenderRequest.Builder(pi.intentSender).build())
+            }
+        }
+    }
+
+    /**
+     * Видалити файл НАСПРАВДІ: спершу File.delete (власник — ми, FUSE пускає), потім рядок
+     * MediaStore за шляхом (інакше в системних плеєрах лишається «привид»). Успіх = файла немає.
+     */
+    private fun deleteUri(uri: String): Boolean = runCatching {
+        val u = Uri.parse(uri)
+        if (u.scheme != "file") return@runCatching ctx.contentResolver.delete(u, null, null) > 0
+        val f = File(u.path ?: return@runCatching false)
+        val deleted = f.delete()
+        val rows = runCatching {
+            ctx.contentResolver.delete(MediaStore.Files.getContentUri("external"), "${MediaStore.MediaColumns.DATA}=?", arrayOf(f.absolutePath))
+        }.getOrDefault(0)
+        val gone = !f.exists()
+        log("delete ${f.name}: file=$deleted mediaStore=$rows gone=$gone")
+        gone
+    }.onFailure { log("delete $uri: ${it.message}") }.getOrDefault(false)
 
     // ------------------------------------------------------------------------
     // Лаунчер
@@ -630,10 +731,10 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
     // ------------------------------------------------------------------------
     @Volatile var isTextInputActive = false
         private set
-    private var inputDone: ((String) -> Unit)? = null
+    private var inputDone: ((String, Boolean) -> Unit)? = null
     private var inputWatcher: TextWatcher? = null
 
-    override fun beginTextInput(req: TextInputRequest, onChange: (String) -> Unit, onDone: (String) -> Unit) {
+    override fun beginTextInput(req: TextInputRequest, onChange: (String) -> Unit, onDone: (String, Boolean) -> Unit) {
         main.post {
             val et = activity.binding.input
             inputWatcher?.let { et.removeTextChangedListener(it) }
@@ -660,14 +761,16 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
             }
             inputWatcher = w
             et.addTextChangedListener(w)
-            et.setOnEditorActionListener { _, _, _ -> endTextInput(); true }
-            et.setOnFocusChangeListener { _, has -> if (!has && isTextInputActive) endTextInput() }
+            et.setOnEditorActionListener { _, _, _ -> finishTextInput(submitted = true); true }
+            et.setOnFocusChangeListener { _, has -> if (!has && isTextInputActive) finishTextInput(submitted = false) }
 
-            activity.getSystemService<InputMethodManager>()?.showSoftInput(et, InputMethodManager.SHOW_IMPLICIT)
+            activity.getSystemService<InputMethodManager>()?.showSoftInput(et, 0)
         }
     }
 
-    override fun endTextInput() {
+    override fun endTextInput() = finishTextInput(submitted = false)
+
+    private fun finishTextInput(submitted: Boolean) {
         main.post {
             if (!isTextInputActive) return@post
             isTextInputActive = false
@@ -680,7 +783,7 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
             et.clearFocus()
             et.visibility = View.GONE
             val cb = inputDone; inputDone = null
-            runGDX { cb?.invoke(text) }
+            runGDX { cb?.invoke(text, submitted) }
         }
     }
 

@@ -220,7 +220,10 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
             }
             intent.action == Intent.ACTION_MAIN && intent.hasCategory(Intent.CATEGORY_HOME) -> {
                 log("HOME intent (new = $isNew)")
-                if (!ownTabInFront) shouldLaunchCustomTab = true
+                // Холодний старт як HOME (надали роль, ребут) → вкладка. Для живої Activity вмикає
+                // лише onStop від іншої апки: «Додому» на самому лаунчері (MIUI шле їх по два)
+                // і «Додому» поверх нашої вкладки вкладку не відкривають.
+                if (!isNew) shouldLaunchCustomTab = true
                 bridge.emit { onHomePressed() }
             }
             intent.action == Intent.ACTION_SEND && intent.type == "text/plain" -> {

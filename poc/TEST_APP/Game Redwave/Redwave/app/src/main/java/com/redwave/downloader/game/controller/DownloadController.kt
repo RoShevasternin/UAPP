@@ -217,7 +217,7 @@ class DownloadController(
             }
             // Немає вбудованої обкладинки, але є з каталогу/фіду — докачуємо
             if (tags?.coverPath == null && d.coverUrl != null) {
-                bridge.fetchBytes(d.coverUrl!!) { bytes -> finishTrack(bytes?.let { bridge.saveCover(d.trackId, it) }) }
+                bridge.fetchBytes(d.coverUrl) { bytes -> finishTrack(bytes?.let { bridge.saveCover(d.trackId, it) }) }
             } else finishTrack(null)
         }
     }

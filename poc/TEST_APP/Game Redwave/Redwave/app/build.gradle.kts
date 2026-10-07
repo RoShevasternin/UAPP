@@ -62,14 +62,12 @@ val natives: Configuration = configurations.create("natives") {
 dependencies {
     // Test Core ------------------------------------------------------------------------
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:2.4.10")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:2.4.20")
 
     // AndroidX Core ------------------------------------------------------------------------
-    implementation("androidx.core:core-ktx:1.19.0")
+    implementation("androidx.core:core-ktx:1.19.1")
     implementation("androidx.appcompat:appcompat:1.8.0")
     implementation("androidx.activity:activity-ktx:1.13.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.2.2")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.10.0")
     implementation("androidx.datastore:datastore-preferences:1.2.1")
 
     // LibGDX Core ------------------------------------------------------------------------
@@ -98,7 +96,7 @@ dependencies {
     implementation("androidx.browser:browser:1.10.0")
 
     // probe + fetchText
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:okhttp:5.5.0")
 }
 
 tasks.register("copyAndroidNatives") {

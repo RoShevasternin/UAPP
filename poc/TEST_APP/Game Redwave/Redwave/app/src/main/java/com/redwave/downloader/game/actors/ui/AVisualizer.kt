@@ -25,8 +25,11 @@ class AVisualizer(screen: AdvancedScreen) : AShape(screen) {
         refl.set(GameColor.red_FF2E4D).also { it.a = 0.18f * alpha }
         val baseY = y + height - mid
         for (i in 0 until n) {
-            val env = Math.pow((1.0 - i.toDouble() / n), 0.7).toFloat() * 0.85f + 0.15f
-            val h = (bands[i] * env * mid).coerceAtLeast(px(3f))
+            // Візуальна корекція: у музиці верхні смуги на 20–30 dB тихіші за бас — без нахилу
+            // права половина завжди «пласка» (заміряно на тестових треках 07.10.2026)
+            val tilt = 0.75f + 1.1f * i / n
+            val v = (Math.pow(bands[i].toDouble(), 0.65).toFloat() * tilt).coerceAtMost(1f)
+            val h = (v * mid).coerceAtLeast(px(3f))
             val bx = x + i * step + px(1.2f)
             // колір верху = точка градієнта на висоті h від лінії
             val t = 1f - h / mid

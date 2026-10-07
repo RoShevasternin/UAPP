@@ -88,7 +88,6 @@ class PlaybackService : MediaSessionService() {
             enableAudioTrackPlaybackParams: Boolean,
         ): AudioSink = DefaultAudioSink.Builder(context)
             .setEnableFloatOutput(false)
-            .setEnableAudioTrackPlaybackParams(enableAudioTrackPlaybackParams)
             .setAudioProcessors(arrayOf(TeeAudioProcessor(PcmTap())))
             .build()
     }

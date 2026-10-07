@@ -75,4 +75,7 @@ class AppModel(private val coroutine: CoroutineScope) {
     }
 
     val totalBytes: Long get() = state.library.sumOf { it.sizeBytes }
+
+    /** Абсолютний шлях файлу треку (file:// → /storage/…), для порівняння з вмістом теки. */
+    fun pathOf(t: Track): String? = t.localUri?.let { runCatching { java.net.URI(it).path }.getOrNull() }
 }

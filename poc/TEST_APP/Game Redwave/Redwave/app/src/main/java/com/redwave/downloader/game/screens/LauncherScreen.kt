@@ -28,6 +28,7 @@ import com.redwave.downloader.game.actors.ui.ATap
 import com.redwave.downloader.game.controller.DownloadController.Submit
 import com.redwave.downloader.game.platform.LauncherApp
 import com.redwave.downloader.game.screens.base.RedwaveScreen
+import com.redwave.downloader.game.screens.base.statusScrim
 import com.redwave.downloader.game.screens.sheets.FeedSheet
 import com.redwave.downloader.game.utils.GameColor
 import com.redwave.downloader.game.utils.actor.ellipsize
@@ -93,6 +94,7 @@ class LauncherScreen : RedwaveScreen() {
         val bottom = handle.y + handle.height + px(6f)
         scroll.setBounds(0f, bottom, w, h - bottom)
         content.addActor(scroll)
+        content.addActor(statusScrim(this, Color(0.03f, 0.016f, 0.02f, 1f), alpha = 0.7f))
 
         clock = lbl("9:41", msdf.clock(62f))
         date = lbl("Tuesday, October 6", msdf.regular(14f, GameColor.white_75))

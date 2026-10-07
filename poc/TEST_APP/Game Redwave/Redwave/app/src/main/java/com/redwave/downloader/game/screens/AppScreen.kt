@@ -10,7 +10,9 @@ import com.redwave.downloader.game.screens.tabs.DiscoverTab
 import com.redwave.downloader.game.screens.tabs.HomeTab
 import com.redwave.downloader.game.screens.tabs.LibraryTab
 import com.redwave.downloader.game.screens.tabs.RingtoneTab
+import com.redwave.downloader.game.utils.GameColor
 import com.redwave.downloader.game.utils.gdxGame
+import com.redwave.downloader.game.screens.base.statusScrim
 import com.redwave.downloader.game.utils.px
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -42,7 +44,7 @@ class AppScreen : RedwaveScreen() {
     private val tabBarH get() = px(62f) + safeNavBarUI
     private val miniH = px(56f)
 
-    override val toastBottom: Float get() = tabBarH + miniH + px(18f)
+    override val toastBottom: Float get() = pageBottom() + px(14f)
 
     override fun buildContent() {
         tabBar = ATabBar(this, safeNavBarUI) { select(it) }
@@ -51,6 +53,8 @@ class AppScreen : RedwaveScreen() {
         mini = AMiniPlayer(this) { openPlayer() }
         mini.setBounds(px(8f), tabBarH + px(6f), worldWidth - px(16f), miniH)
 
+        // Смуга під статус-баром: скрол пливе ПІД нею, системна панель читається (VELDAN, 07.10.2026)
+        content.addActor(statusScrim(this, GameColor.background))
         content.addActor(tabBar)
         content.addActor(mini)
 

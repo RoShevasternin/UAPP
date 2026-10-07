@@ -79,3 +79,18 @@ abstract class RedwaveScreen : AdvancedScreen() {
         content.addAction(Actions.sequence(Actions.fadeOut(0.12f), Actions.run(blockEnd)))
     }
 }
+
+/**
+ * Смуга під статус-баром для скрол-екранів: зверху колір фону (alpha), донизу — прозорість.
+ * Контент проїжджає під нею, а годинник/іконки системи лишаються читабельними.
+ */
+fun statusScrim(screen: RedwaveScreen, bg: com.badlogic.gdx.graphics.Color, alpha: Float = 0.97f): com.redwave.downloader.game.actors.ui.ARect {
+    val h = screen.safeStatusBarUI + px(18f)
+    val top = bg.cpy().apply { a = alpha }
+    val bottom = bg.cpy().apply { a = 0f }
+    // суцільна на всю висоту статус-бару, далі — плавно в нуль
+    return com.redwave.downloader.game.actors.ui.ARect(screen, 0f, top, bottom, angleCss = 180f, start = screen.safeStatusBarUI / h).apply {
+        setBounds(-px(4f), screen.worldHeight - h, screen.worldWidth + px(8f), h + px(4f))
+        touchable = Touchable.disabled
+    }
+}

@@ -166,6 +166,6 @@ object RingtoneMaker {
             out.flip()
         }
 
-        override fun onFlush() { frames = 0 }
+        override fun onFlush(streamMetadata: AudioProcessor.StreamMetadata) { frames = 0 }
     }
 }
