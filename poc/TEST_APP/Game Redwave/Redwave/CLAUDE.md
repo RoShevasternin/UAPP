@@ -36,24 +36,36 @@
 | `../market/` | Google Play: 6 скрінів 1080×1920, іконка 512, feature 1024×500 | Play Console |
 | `../test-media/` | Наші згенеровані треки (CC0), RSS, `catalog.json`, `links.md` — **прямі лінки для тестів на девайсі** | хоститься з GitHub raw |
 
-Android-проєкт створюється **тут, у `Game Redwave/Redwave/`** (поруч із цим `CLAUDE.md`), як
+Android-проєкт — **тут, у `Game Redwave/Redwave/`** (поруч із цим `CLAUDE.md`), як
 `Game T35/Mindora Self Test/`. У `Game Redwave/` — лише матеріали до апки (маркет, ассети,
 прототип, port-kit, тест-треки, документи), коду апки там немає.
 
-## Збірка і запуск (коли проєкт буде)
+## Збірка і запуск
 
 ```bash
 export PATH="$HOME/Library/Android/sdk/platform-tools:$PATH"   # adb не в PATH
 cd "/Users/admin/Apps/UAPP/poc/TEST_APP/Game Redwave/Redwave"
 sh ./gradlew assembleDebug                                       # gradlew часто без біта виконання
 adb install -r -t app/build/outputs/apk/debug/app-debug.apk      # MIUI: INSTALL_FAILED_USER_RESTRICTED → просто повторити
-adb shell monkey -p <applicationId> -c android.intent.category.LAUNCHER 1
+adb shell monkey -p com.redwave.downloader -c android.intent.category.LAUNCHER 1
 adb logcat -s redwave:V AndroidRuntime:E
 adb exec-out screencap -p > /tmp/shot.png                        # скріншот — відкрити й подивитись
 ```
 
-Тести чистої логіки: `cd ../port-kit && gradle test` (або в апці — `testDebugUnitTest`, якщо
-перенести тести в `app/src/test`).
+Пакет — **`com.redwave.downloader`** (рішення VELDAN 07.10.2026). Атлас іконок — `sh ./gradlew :app:packAtlas`
+(gdx-tools з `../assets/all/icons`, рішення VELDAN 07.10.2026; GUI TexturePacker не потрібен).
+
+Debug-хуки (лише debug-збірка):
+```bash
+# лаунчер без зміни дефолтного HOME + імітація лінка з буфера (adb на Android 13 не пише в буфер)
+adb shell am start -a android.intent.action.MAIN -c android.intent.category.HOME -n com.redwave.downloader/.MainActivity --es redwave.debug_clip "https://…/blue-room.m4a"
+```
+
+**Одна MainActivity на процес.** Іконка застосунку йде через `LauncherTrampoline`: на Android 10+
+HOME-інтент кладе Activity в окремий home-таск, і дві MainActivity = два GDX в одному процесі
+(статики `Gdx.*`, кеш шейдерів → білі прямокутники). Не повертати LAUNCHER-фільтр на MainActivity.
+
+Тести чистої логіки: `sh ./gradlew :app:testDebugUnitTest` (копії тестів port-kit) або `cd ../port-kit && gradle test`.
 
 **Змінив UI, анімацію чи шейдер — зроби скріншот з девайса і подивись на нього.** Порівняй
 з тим самим екраном прототипу. Не описувати зміну словами, не здогадуватись.
@@ -82,7 +94,6 @@ adb exec-out screencap -p > /tmp/shot.png                        # скрінш�
 ## Не чіпати руками
 
 - `../assets/fonts/msdf/*` — генерується `../assets/fonts/tools/build_all.sh`.
-- Атласи (`app/src/main/assets/atlas/*`) — пакує VELDAN у TexturePacker GUI. CLI TexturePacker
-  у компанії без ліцензії й ставить водяні знаки (пам'ять `mindora-texturepacker-cli`).
-  Альтернатива без ліцензії — `gdx-tools` TexturePacker (див. `../PORTING.md`).
+- Атлас `app/src/main/assets/atlas/all.*` — генерує `:app:packAtlas` (gdx-tools). CLI TexturePacker
+  (codeandweb) не використовувати — без ліцензії й з водяними знаками (пам'ять `mindora-texturepacker-cli`).
 - `app/libs/**/*.so` — розпаковує таск `copyAndroidNatives`.

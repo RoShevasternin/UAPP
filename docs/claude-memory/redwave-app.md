@@ -1,6 +1,6 @@
 ---
 name: redwave-app
-description: Redwave Music Downloader — тестова апка Tools у poc/TEST_APP/Game Redwave (апка — у вкладеній Redwave/); прототип погоджено, усе підготовлено до переносу в LibGDX (план, port-kit з тестами, шрифти, іконки, тестові треки); Android-проєкт ще не створено
+description: Redwave Music Downloader — тестова апка Tools у poc/TEST_APP/Game Redwave (апка — у вкладеній Redwave/); з 07.10.2026 Android-проєкт LibGDX є і працює на девайсі (усі 5 екранів, Ф0–Ф8 у першому проході)
 metadata:
   type: project
 ---
@@ -40,6 +40,16 @@ metadata:
 StartActivity); музика — Media3 у MediaSessionService, не Gdx.audio; візуалізатор через
 TeeAudioProcessor (без RECORD_AUDIO); буфер читати в onWindowFocusChanged + ClipGate за timestamp
 (тост Android 12+); бібліотека — свій індекс у DataStore; «Назад» на лаунчері нічого не робить.
+
+**Стан на 07.10.2026 (локальна сесія з Redmi):** пакет `com.redwave.downloader`, атлас — gdx-tools
+(`:app:packAtlas`). Зроблено й перевірено на девайсі: сплеш, онбординг, Home (поле = нативний EditText
+поверх GL, помилки, черга, карусель, плитки), Discover (каталог з GitHub raw, кнопка ⬇/кільце/✓, підбірки),
+Library, Player (Media3, візуалізатор через Tee, EQ — `Equalizer.setBandLevel` у лозі), Ringtone (піки
+MediaCodec), Launcher (годинник, картка буфера, віджети, док із дефолтних апок, сітка). Не перевірено:
+збереження рингтону (потрібен WRITE_SETTINGS — вмикає VELDAN), реальний буфер (adb на A13 не пише; є
+debug-екстра `redwave.debug_clip`), роль HOME через діалог, фон з вимкненим екраном, FeedSheet.
+Пастки, знайдені на девайсі: дві MainActivity (HOME-таск) → трамплін для іконки; raw віддає
+Content-Disposition з шляхом; `.apply { setBounds(...height...) }` бере height самого актора.
 
 **How to apply:** зміни прототипу — `Artifact read` URL → publish з `url` → перезаписати
 `prototype/index.html`. Зміни логіки — спершу в `port-kit` + тест, потім в апку. Основа ролі

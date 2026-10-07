@@ -5,8 +5,8 @@
 головний екран (роль HOME): скопіював лінк будь-де → «Додому» → картка «Download».
 
 - **Живий прототип:** https://claude.ai/artifact/1WQgAQ5KYh7M3EHovXgLMC (копія — `prototype/`)
-- **Стан на 06.10.2026:** прототип v2 погоджено, усе підготовлено до переносу в LibGDX.
-  Android-проєкт ще не створено — він з'явиться в `Redwave/` на першій локальній сесії.
+- **Стан на 07.10.2026:** Android-проєкт LibGDX у `Redwave/` працює на девайсі: сплеш, онбординг,
+  Home/Discover/Library/Ringtone, плеєр з EQ і візуалізатором, лаунчер. Пакет `com.redwave.downloader`.
 
 ## З чого почати локальну сесію
 
@@ -22,7 +22,7 @@
 
 ```
 Game Redwave/
-├── Redwave/        ← апка: Android-проєкт LibGDX (поки лише CLAUDE.md)
+├── Redwave/        ← апка: Android-проєкт LibGDX
 ├── PORTING.md      ← план переносу
 ├── SCREENS.md      ← екрани й компоненти
 ├── prototype/      ← HTML-прототип
@@ -34,7 +34,7 @@ Game Redwave/
 
 | Шлях | Що | Розмір |
 |---|---|---|
-| `Redwave/` | апка; зараз тут лише `CLAUDE.md` — правила для Claude: стек, конвенції, збірка, git | — |
+| `Redwave/` | апка (Android-проєкт) + `CLAUDE.md` — правила для Claude: стек, конвенції, збірка, git | — |
 | `PORTING.md` | архітектура, T35-донор, Gradle, маніфест, Android-бік з пастками, фази Ф0–Ф9, чекліст, Play | — |
 | `SCREENS.md` | 5 екранів + шторки + бібліотека компонентів з розмірами | — |
 | `prototype/` | HTML-прототип v2, фото CC0 (`img/SOURCES.md`, `make_assets.py`) | 0.7 МБ |

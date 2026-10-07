@@ -1,0 +1,8 @@
+<resources>
+    <!-- Апка завжди темна (свідомо, чекліст §9 п.14) — без DayNight. -->
+    <style name="Base.Theme.Redwave" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/background</item>
+    </style>
+
+    <style name="Theme.Redwave" parent="Base.Theme.Redwave" />
+</resources>

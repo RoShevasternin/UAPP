@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Share треку: файли з Music/Redwave віддаємо через FileProvider (file:// Android блокує). -->
+<paths>
+    <external-path name="music" path="Music/" />
+    <files-path name="files" path="." />
+</paths>
