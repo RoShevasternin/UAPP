@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.utils.Align
 import com.redwave.downloader.core.copy.Copy
 import com.redwave.downloader.game.actors.ui.AShape
+import com.redwave.downloader.game.platform.AdStatus
 import com.redwave.downloader.game.screens.base.RedwaveScreen
 import com.redwave.downloader.game.utils.GameColor
 import com.redwave.downloader.game.utils.actor.lbl
@@ -111,17 +112,30 @@ class SplashScreen : RedwaveScreen() {
             gdxGame.soundManager.init()
             assetsDone = true
         }
-        if (!navigated && assetsDone && modelLoaded && flagsReady && System.currentTimeMillis() - startedAt >= 1200L) {
+        val elapsed = System.currentTimeMillis() - startedAt
+        if (!navigated && assetsDone && modelLoaded && flagsReady && elapsed >= 1200L) {
+            // App Open при відкритті: лише якщо далі застосунок (не онбординг, не лаунчер) і онлайн.
+            // Ще вантажиться — чекаємо до AD_WAIT_MS від старту Splash, далі йдемо без реклами.
+            val ad = if (gdxGame.firstScreenIsApp() && gdxGame.bridge.isOnline()) gdxGame.bridge.appOpenStatus() else AdStatus.NONE
+            if (ad == AdStatus.LOADING && elapsed < AD_WAIT_MS) return
             navigated = true
             gdxGame.onReady()
-            animHideScreen {
-                gdxGame.backgroundColor = GameColor.background
-                gdxGame.navigateFirst()
+            val go = {
+                animHideScreen {
+                    gdxGame.backgroundColor = GameColor.background
+                    gdxGame.navigateFirst()
+                }
             }
+            if (ad == AdStatus.READY) gdxGame.bridge.showAppOpen(onReturn = false, awayMs = 0L) { go() } else go()
         }
     }
 
     override fun onBackPressed() {}
+
+    private companion object {
+        /** Скільки Splash максимум чекає App Open (від свого старту). */
+        const val AD_WAIT_MS = 3_500L
+    }
 
     /** .sp-bars: 7 стовпчиків, ping-pong 0.9 с із затримкою 110 мс на кожен. */
     private inner class SplashBars : AShape(this@SplashScreen) {

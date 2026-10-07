@@ -73,6 +73,23 @@ interface PlatformBridge {
     /** Увімкнути / вимкнути AD_MODE і перезапустити апку (лише debug-збірка). */
     fun setAdMode(on: Boolean)
 
+    // ── Реклама: AdMob App Open + Interstitial (AdsManager, зараз тестові блоки) ──
+    /** Частота — core/ads/AdPolicy; де показувати (лише в застосунку) — GDXGame. */
+    /** Splash: READY — показати; LOADING — є сенс почекати (до таймауту); NONE — не чекати. */
+    fun appOpenStatus(): AdStatus
+    /**
+     * App Open. onReturn = true — повернення в апку після awayMs мс поза нею; false — відкриття.
+     * onDone(shown) — у GL-потоці рівно один раз; shown = true — рекламу показали й закрили.
+     */
+    fun showAppOpen(onReturn: Boolean, awayMs: Long, onDone: (shown: Boolean) -> Unit)
+    /** Трек завантажено — лічильник для інтерстішала (кожні 2). */
+    fun onTrackDownloaded()
+    fun isInterstitialDue(): Boolean
+    /** Interstitial, якщо настав час; onDone(shown) — у GL-потоці рівно один раз. */
+    fun showInterstitial(onDone: (shown: Boolean) -> Unit)
+    /** Settings → Debug: лічильник, останній показ, чи завантажено. */
+    fun adsDebug(): String
+
     // ── Буфер ────────────────────────────────────────────────────────────────
     /**
      * Лише за ДІЄЮ користувача (кнопка Paste). Автоматичне читання при «Додому»
@@ -185,7 +202,15 @@ interface PlatformEvents {
     fun onPlaybackChanged()
     /** Прапорці Remote Config змінились (fetch / real-time / debug з adb). */
     fun onRemoteFlags(flags: RemoteFlags)
+    /**
+     * Людина повернулась у Redwave з іншої апки / «Недавніх» / вимкненого екрана (не через «Додому»,
+     * не з нашої реклами, вкладки чи системного екрана): awayMs — скільки її не було.
+     * fromIcon = true — тапнули іконку Redwave (відкриття апки, а не повернення).
+     */
+    fun onAppForeground(awayMs: Long, fromIcon: Boolean)
 }
+
+enum class AdStatus { READY, LOADING, NONE }
 
 data class ProbeResult(
     val decision: AudioSniffer.Decision,

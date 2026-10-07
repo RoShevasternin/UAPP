@@ -47,7 +47,8 @@ class AppScreen : RedwaveScreen() {
     override val toastBottom: Float get() = pageBottom() + px(14f)
 
     override fun buildContent() {
-        tabBar = ATabBar(this, safeNavBarUI) { select(it) }
+        // Зміна вкладки — природна пауза: тут же інтерстішал, якщо настав (кожні 2 треки)
+        tabBar = ATabBar(this, safeNavBarUI) { select(it); gdxGame.maybeInterstitial() }
         tabBar.setBounds(0f, 0f, worldWidth, tabBarH)
 
         mini = AMiniPlayer(this) { openPlayer() }

@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.SystemClock
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.badlogic.gdx.backends.android.AndroidFragmentApplication
+import com.redwave.downloader.android.AdsManager
 import com.redwave.downloader.android.AndroidBridge
 import com.redwave.downloader.android.ClipWatcher
 import com.redwave.downloader.android.RemoteFlagsSource
@@ -70,6 +72,16 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
      * не «інша апка»: повернення з них не має відкривати вкладку. Ставить AndroidBridge.
      */
     var internalNavigation = false
+
+    // ------------------------------------------------------------------------
+    // Повернення в апку — для App Open (AdsManager / AdPolicy)
+    // ------------------------------------------------------------------------
+    /** Коли пішли в іншу апку / «Недавні» / вимкнули екран (elapsedRealtime); 0 — не йшли. */
+    private var leftAt = 0L
+    /** Повернулись кнопкою «Додому» — це лаунчер, а не застосунок: App Open не показуємо. */
+    private var returnViaHome = false
+    /** Тапнули іконку Redwave, коли процес живий (холодний старт веде Splash). */
+    private var openedFromIcon = false
 
     /** startActivity для екранів, які Redwave відкриває сам (див. internalNavigation). */
     fun startInternal(intent: Intent) {
@@ -156,6 +168,15 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
 
         ownTabInFront = false
         internalNavigation = false
+        // App Open: повернення (не довше години — вирішує AdPolicy) або тап по іконці
+        val away = if (leftAt > 0) SystemClock.elapsedRealtime() - leftAt else -1L
+        leftAt = 0L
+        if (!returnViaHome && (away >= 0 || openedFromIcon)) {
+            val fromIcon = openedFromIcon
+            bridge.emit { onAppForeground(away, fromIcon) }
+        }
+        returnViaHome = false
+        openedFromIcon = false
         // Лише як головний екран: відкриті з іконки, ми — звичайна апка.
         // Що відкривати й чи взагалі — Remote Config (RemoteFlags.enabled + url); офлайн — ні.
         if (shouldLaunchCustomTab && bridge.isDefaultHome()) {
@@ -173,10 +194,18 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
 
     override fun onStop() {
         super.onStop()
+        // Прапорці стосуються наступного повернення. Зайвий HOME на живій Activity (MIUI шле по два)
+        // без onResume лишив би returnViaHome = true і з'їв би наступне справжнє повернення.
+        returnViaHome = false
+        openedFromIcon = false
         when {
-            internalNavigation -> {}                       // наш системний екран — не рахується
-            ownTabInFront      -> {}                       // нас сховала наша ж вкладка
-            else               -> shouldLaunchCustomTab = true   // інша апка / «Недавні»
+            internalNavigation    -> {}                    // наш системний екран — не рахується
+            ownTabInFront         -> {}                    // нас сховала наша ж вкладка
+            AdsManager.isShowing  -> {}                    // нас сховала наша ж реклама AdMob
+            else                  -> {                     // інша апка / «Недавні» / вимкнений екран
+                shouldLaunchCustomTab = true
+                leftAt = SystemClock.elapsedRealtime()
+            }
         }
     }
 
@@ -228,9 +257,13 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
             log("debug flags → $json")
             RemoteFlagsSource.setDebugOverride(json)
         }
+        // Лише debug: забути останній показ реклами й лічильник треків (не чекати 3 хв):
+        // adb shell am start -n com.redwave.downloader/.MainActivity --ez redwave.debug_ads_reset true
+        if (BuildConfig.DEBUG && intent.getBooleanExtra("redwave.debug_ads_reset", false)) AdsManager.debugReset()
         when {
             intent.getBooleanExtra(EXTRA_OPEN_APP, false) -> {
                 log("open app (icon), new = $isNew")
+                if (isNew) openedFromIcon = true
                 bridge.emit { onAppIconPressed() }
             }
             intent.action == Intent.ACTION_MAIN && intent.hasCategory(Intent.CATEGORY_HOME) -> {
@@ -239,6 +272,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
                 // лише onStop від іншої апки: «Додому» на самому лаунчері (MIUI шле їх по два)
                 // і «Додому» поверх нашої вкладки вкладку не відкривають.
                 if (!isNew) shouldLaunchCustomTab = true
+                if (isNew) returnViaHome = true
                 bridge.emit { onHomePressed() }
             }
             intent.action == Intent.ACTION_SEND && intent.type == "text/plain" -> {

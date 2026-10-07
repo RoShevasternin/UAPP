@@ -19,7 +19,7 @@
 - [Хмара: мерж у main сам](uapp-cloud-merge-permission.md) — у claude.ai/code комітити, пушити, PR і merge без питань (06.10.2026); локально пуш не працює
 - [TikTok: звіт для менеджера](tiktok-competitor-analysis.md) — 30.09.2026, доробка звіту Nasuf, 3 мови; копія docs/research/tiktok-30-09-2026/; як оновити
 - [PoC-лендінг: тести Android](home-launcher-poc.md) — Тест 1 Default Home App, Тест 2 зарядка, Тест 3 асистент (02.10.2026); DreamService викинуто; таймлайн покадрово
-- [Redwave: тестова апка Tools](redwave-app.md) — poc/TEST_APP/Game Redwave/Redwave: LibGDX-апка є (07.10.2026), 5 екранів працюють на Redmi; що не перевірено — у файлі
+- [Redwave: тестова апка Tools](redwave-app.md) — poc/TEST_APP/Game Redwave/Redwave: LibGDX-апка є (07.10.2026), 5 екранів працюють на Redmi; AdMob (тест) App Open + Interstitial; що не перевірено — у файлі
 - [UAPP: сторінки-патчі](uapp-patch-page-flow.md) — зміни коду лише через сторінку з вибором «сам / авто»; «Патч NN · Готово» в чаті = читай і роби
 - [UAPP: Meta SDK](uapp-meta-sdk.md) — патч 01 (T5 + еталон), ключі з сервера, події як у TikTok; що далі
 - [Стрімінги: звіт для менеджера](streaming-competitor-analysis.md) — 02.10.2026, скорочена версія звіту Тараса, 3 мови; копія docs/research/streaming-02-10-2026/

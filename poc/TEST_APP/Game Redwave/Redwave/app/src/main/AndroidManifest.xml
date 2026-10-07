@@ -65,6 +65,11 @@
         android:theme="@style/Theme.Redwave"
         tools:ignore="UnusedAttribute">
 
+        <!-- AdMob: ТЕСТОВИЙ App ID Google (разом з тестовими блоками в AdsManager). Перед релізом — свій. -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -54,6 +54,7 @@ import com.redwave.downloader.core.model.Track
 import com.redwave.downloader.core.ringtone.CutSelection
 import com.redwave.downloader.core.ringtone.SaveAs
 import com.redwave.downloader.core.viz.SpectrumAnalyzer
+import com.redwave.downloader.game.platform.AdStatus
 import com.redwave.downloader.game.platform.DownloadProgress
 import com.redwave.downloader.game.platform.DownloadRequest
 import com.redwave.downloader.game.platform.FolderFile
@@ -892,6 +893,35 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
             runGDX { cb?.invoke(text, submitted) }
         }
     }
+
+    // ------------------------------------------------------------------------
+    // Реклама (AdsManager живе на весь процес, тут лише перенос у main і назад у GL)
+    // ------------------------------------------------------------------------
+    override fun appOpenStatus(): AdStatus = AdsManager.appOpenStatus()
+
+    override fun showAppOpen(onReturn: Boolean, awayMs: Long, onDone: (shown: Boolean) -> Unit) {
+        main.post {
+            if (!isActivityResumed()) { runGDX { onDone(false) }; return@post }
+            AdsManager.showAppOpen(activity, onReturn, awayMs) { shown -> runGDX { onDone(shown) } }
+        }
+    }
+
+    override fun onTrackDownloaded() { main.post { AdsManager.onTrackDownloaded() } }
+
+    override fun isInterstitialDue(): Boolean = AdsManager.isInterstitialDue()
+
+    override fun showInterstitial(onDone: (shown: Boolean) -> Unit) {
+        main.post {
+            // У фоні (трек докачався, поки людина в іншій апці) — не показуємо: лишається в черзі
+            if (!isActivityResumed() || isTextInputActive) { runGDX { onDone(false) }; return@post }
+            AdsManager.showInterstitial(activity) { shown -> runGDX { onDone(shown) } }
+        }
+    }
+
+    override fun adsDebug(): String = AdsManager.debugLine()
+
+    private fun isActivityResumed() =
+        !activity.isFinishing && activity.lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)
 
     // ------------------------------------------------------------------------
     // Lifecycle

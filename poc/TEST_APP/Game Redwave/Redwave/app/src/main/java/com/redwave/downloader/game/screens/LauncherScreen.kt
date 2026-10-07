@@ -301,7 +301,7 @@ class LauncherScreen : RedwaveScreen() {
         }
     }.onClick {
         when {
-            redwave -> gdxGame.navigationManager.navigate(AppScreen::class.java.name, LauncherScreen::class.java.name)
+            redwave -> gdxGame.openAppFromLauncher()
             app != null -> gdxGame.bridge.launchApp(app)
         }
     }.apply {

@@ -48,6 +48,9 @@ class DownloadController(
 
     val active: List<DownloadItem> get() = model.state.downloads
 
+    /** Трек додано в бібліотеку (для лічильника інтерстішала — GDXGame). */
+    var onTrackAdded: (() -> Unit)? = null
+
     // ------------------------------------------------------------------------
     // Submit
     // ------------------------------------------------------------------------
@@ -221,6 +224,7 @@ class DownloadController(
                 finishing.remove(id)
                 speed.remove(id); lastBytes.remove(id)
                 toast(Copy.Toasts.downloaded(track.title))
+                onTrackAdded?.invoke()
                 log("track added: ${track.title} · ${track.artist} · ${track.format} · cover=${track.coverPath != null}")
             }
             // Немає вбудованої обкладинки, але є з каталогу/фіду — докачуємо

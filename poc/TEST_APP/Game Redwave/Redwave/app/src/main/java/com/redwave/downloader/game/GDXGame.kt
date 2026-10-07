@@ -24,6 +24,7 @@ import com.redwave.downloader.game.platform.PlatformEvents
 import com.redwave.downloader.game.screens.AppScreen
 import com.redwave.downloader.game.screens.LauncherScreen
 import com.redwave.downloader.game.screens.OnboardingScreen
+import com.redwave.downloader.game.screens.PlayerScreen
 import com.redwave.downloader.game.screens.SplashScreen
 import com.redwave.downloader.game.screens.base.RedwaveScreen
 import com.redwave.downloader.game.utils.GameColor
@@ -73,7 +74,7 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
     val coroutine = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     val model     = AppModel(coroutine)
-    val downloads = DownloadController(model, bridge) { toast(it) }
+    val downloads = DownloadController(model, bridge) { toast(it) }.apply { onTrackAdded = { afterTrackDownloaded() } }
     val player    = PlayerController(model, bridge) { toast(it) }
     val discover  = DiscoverController(model, bridge, downloads)
 
@@ -201,6 +202,56 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
             else                     -> nav.navigateRoot(AppScreen::class.java.name)
         }
         pendingHome = false
+    }
+
+    // ------------------------------------------------------------------------
+    // Реклама: App Open + Interstitial (частота — AdPolicy, показ — AdsManager)
+    // ------------------------------------------------------------------------
+    /**
+     * Лише всередині застосунку: вкладки й плеєр. На лаунчері (роль HOME) реклами AdMob немає —
+     * повноекранна реклама на головному екрані = «disruptive ads» за правилами Google Play;
+     * на онбордингу й екрані-вимозі — теж ні.
+     */
+    private val isInApp: Boolean get() = currentScreen is AppScreen || currentScreen is PlayerScreen
+
+    /** Splash: чи поведе перший екран у застосунок (тоді є сенс у App Open). Перший запуск — ні. */
+    fun firstScreenIsApp(): Boolean = model.state.onboarded && isUnlocked && !pendingHome
+
+    /**
+     * Повернулись у Redwave / тапнули іконку. Навігація з onAppIconPressed ще в черзі GL —
+     * екран перевіряємо наступним проходом черги, коли AppScreen уже стоїть.
+     */
+    override fun onAppForeground(awayMs: Long, fromIcon: Boolean) {
+        if (!isReady || !isUnlocked) return
+        com.redwave.downloader.game.utils.runGDX {
+            if (!isInApp) return@runGDX
+            bridge.showAppOpen(onReturn = !fromIcon, awayMs = awayMs) { shown -> if (!shown) maybeInterstitial() }
+        }
+    }
+
+    /** Іконка Redwave на НАШОМУ лаунчері — таке саме відкриття апки, як тап у системному (App Open). */
+    fun openAppFromLauncher() {
+        navigationManager.navigate(AppScreen::class.java.name, LauncherScreen::class.java.name)
+        onAppForeground(awayMs = -1L, fromIcon = true)
+    }
+
+    /** Трек у бібліотеці → лічильник; інтерстішал — коли людина побачила тост «Downloaded». */
+    private fun afterTrackDownloaded() {
+        bridge.onTrackDownloaded()
+        com.badlogic.gdx.utils.Timer.schedule(object : com.badlogic.gdx.utils.Timer.Task() {
+            override fun run() { maybeInterstitial() }
+        }, 1.5f)
+    }
+
+    /**
+     * Interstitial у природній паузі: після завантаження треку або при зміні вкладки.
+     * Не поверх шторки й не посеред набору тексту; не настав час — нічого (лічильник чекає).
+     */
+    fun maybeInterstitial() {
+        if (!isReady || !isInApp) return
+        if ((currentScreen as? RedwaveScreen)?.sheet != null) return
+        if (!bridge.isInterstitialDue()) return
+        bridge.showInterstitial { }
     }
 
     fun toast(text: String) {

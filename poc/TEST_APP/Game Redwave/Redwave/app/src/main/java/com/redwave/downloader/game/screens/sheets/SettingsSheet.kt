@@ -40,7 +40,7 @@ class SettingsSheet(screen: AdvancedScreen) : ASheet(screen) {
 
     override val contentHeight: Float get() {
         var h = px(26f) + px(14f) + cardH + noteH + px(10f) + rowH + px(12f) + px(16f)
-        if (IS_DEBUG) h += px(22f) + px(18f) + cardH + px(8f) + btnH + px(10f) + px(46f)
+        if (IS_DEBUG) h += px(22f) + px(18f) + cardH + px(8f) + btnH + px(10f) + px(64f)
         return h
     }
 
@@ -126,15 +126,18 @@ class SettingsSheet(screen: AdvancedScreen) : ASheet(screen) {
                 gdxGame.navigationManager.navigateRoot(OnboardingScreen::class.java.name)
             }
             add(reset)
-            y -= px(10f) + px(46f)
-            val dl = lbl(gdxGame.bridge.remoteFlagsDebug(), msdf.mono(10.5f, GameColor.muted_A8949B)).apply {
-                setWrap(true); width = w; height = px(46f)
+            y -= px(10f) + px(64f)
+            val dl = lbl(debugText(), msdf.mono(10.5f, GameColor.muted_A8949B)).apply {
+                setWrap(true); width = w; height = px(64f)
                 setAlignment(com.badlogic.gdx.utils.Align.topLeft)
             }
             dl.setPosition(0f, y); add(dl)
             debugLine = dl
         }
     }
+
+    /** Remote Config + стан реклами (лічильник треків, останній показ, чи завантажено). */
+    private fun debugText() = gdxGame.bridge.remoteFlagsDebug() + "\n" + gdxGame.bridge.adsDebug()
 
     /** Увімкнути — діалог ролі; вимкнути — системний вибір головного застосунку (роль забирає лише система). */
     private fun switchHome() {
@@ -153,7 +156,7 @@ class SettingsSheet(screen: AdvancedScreen) : ASheet(screen) {
         acc += delta
         if (acc >= 1f && ::status.isInitialized) {        // RoleManager — binder-виклик, не щокадру
             acc = 0f; refresh()
-            debugLine?.setText(gdxGame.bridge.remoteFlagsDebug())
+            debugLine?.setText(debugText())
         }
     }
 

@@ -78,6 +78,14 @@ HOME — [[home-launcher-poc]]; атласи пакує VELDAN у GUI — [[mind
   перемикання перезапускає процес; на екрані-вимозі є «AD_MODE OFF». У Remote Config зараз «білі» значення.
 - Назва в маркеті має містити Launcher/Home (рішення VELDAN), конкретну ще не обрано.
 
+## Реклама AdMob (VELDAN, 07.10.2026, увечері — зроблено й перевірено на Redmi)
+- App Open: відкриття (холодний старт з іконки, іконка Redwave на нашому лаунчері) + повернення в апку,
+  якщо людини не було ≤ 1 год; не частіше раз на 3 хв від будь-якої повноекранної. Interstitial — кожні 2 треки.
+- Лише в AppScreen/PlayerScreen — НЕ на лаунчері (повноекранна на головному екрані = disruptive ads), не на онбордингу.
+- Зараз тестові блоки Google (play-services-ads 25.5.0). Перед релізом: свої ID, UMP, Privacy Policy + Data safety.
+- ◌ Тлумачення «повернувся протягом години» — буквальне: > 1 год поза апкою без холодного старту → без App Open.
+  Якщо VELDAN мав на увазі інше — константа `AdPolicy.RETURN_WINDOW_MS` / `canAppOpenOnReturn`.
+
 ## Орієнтир для публікації (VELDAN, 07.10.2026)
 - Cube Square: Space Launcher (`com.square.rush.cub.dash.runner`, Screening Developers) — пройшла модерацію:
   «Launcher» у назві, розділ «Desktop Launcher Features» в описі, категорія Games → Casual, «Contains ads»,

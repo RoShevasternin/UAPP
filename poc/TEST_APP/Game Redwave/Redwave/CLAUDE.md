@@ -7,7 +7,23 @@
 Стек як в іграх UAPP: **Kotlin + LibGDX 1.14.2 + scene2d**, UI малюється в GL, Android-бік —
 тонкий шар сервісів. **Еталона немає** (правила теки — `poc/TEST_APP/CLAUDE.md`): ні `businesModule`,
 ні `adsmodule`, ні TikTok/білінгу, доки VELDAN окремо не скаже. **Firebase — лише Remote Config**
-(рішення VELDAN 07.10.2026, проєкт `redwave-original`, `app/google-services.json`); Analytics і рекламних SDK немає.
+(рішення VELDAN 07.10.2026, проєкт `redwave-original`, `app/google-services.json`); Analytics немає.
+**Реклама — AdMob напряму** (App Open + Interstitial, розділ нижче), зараз лише тестові блоки Google.
+
+## Реклама AdMob (рішення VELDAN 07.10.2026)
+
+Частота — `core/ads/AdPolicy.kt` (+ `AdPolicyTest`), SDK — `android/AdsManager.kt`, де показувати — `GDXGame`.
+
+| Що | Коли | Обмеження |
+|---|---|---|
+| App Open | відкриття апки: холодний старт з іконки (Splash чекає рекламу до 3,5 с), іконка Redwave на нашому лаунчері | не частіше раз на 3 хв від будь-якої повноекранної |
+| App Open | повернення в апку з іншої апки / «Недавніх» / вимкненого екрана, якщо не було ≤ 1 год | те саме; > 1 год — не показуємо |
+| Interstitial | кожні 2 завантажені треки: через 1,5 с після тосту «Downloaded» або на наступній зміні вкладки | не поверх шторки й поля вводу, не у фоні; ≥ 60 с після попередньої |
+
+**Лише в застосунку** (`AppScreen`, `PlayerScreen`): на лаунчері (роль HOME), онбордингу, екрані-вимозі й першому запуску —
+ні. «Додому» → лаунчер — не повернення. Наші вкладка, системні екрани й сама реклама (`AdsManager.isShowing`) у `onStop`
+не рахуються виходом. Стан (останній показ, лічильник треків) — SharedPreferences `redwave_ads`, переживає перезапуск.
+**Перед релізом:** свій App ID у маніфесті + свої блоки в `AdsManager`, згода UMP (ЄЕЗ), реклама в Privacy Policy і Data safety.
 
 ## Remote Config — параметр `redwave_config` (JSON)
 
@@ -80,6 +96,10 @@ adb shell am start -a android.intent.action.MAIN -c android.intent.category.HOME
 # перемикання перезапускає апку; вимкнути можна й з екрана-вимоги (кнопка AD_MODE OFF зліва вгорі)
 # підміна Remote Config (живе до очищення: --es redwave.debug_flags ""); у Settings → Debug видно джерело прапорців
 adb shell am start -n com.redwave.downloader/.MainActivity --es redwave.debug_flags '{"enabled":true,"url":"https://google.com","home_required":false,"is_uninstall":true}'
+# реклама: забути останній показ і лічильник треків (не чекати 3 хв); стан видно в Settings → Debug (ads(test) · dl 1/2 · …)
+adb shell am start -n com.redwave.downloader/.MainActivity --ez redwave.debug_ads_reset true
+# «повернення в апку» без «Недавніх»: піти в Settings і повернути Redwave наперед
+adb shell am start -a android.settings.SETTINGS && sleep 3 && adb shell am start -n com.redwave.downloader/.MainActivity
 ```
 
 **Одна MainActivity на процес.** Іконка застосунку йде через `LauncherTrampoline`: на Android 10+
