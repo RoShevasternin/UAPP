@@ -21,6 +21,7 @@ import com.redwave.downloader.game.platform.PlatformBridge
 import com.redwave.downloader.game.platform.PlatformEvents
 import com.redwave.downloader.game.screens.AppScreen
 import com.redwave.downloader.game.screens.LauncherScreen
+import com.redwave.downloader.game.screens.OnboardingScreen
 import com.redwave.downloader.game.screens.SplashScreen
 import com.redwave.downloader.game.screens.base.RedwaveScreen
 import com.redwave.downloader.game.utils.GameColor
@@ -130,6 +131,11 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
     override fun resume() {
         super.resume()
         Blit.dispose()
+        // Роль HOME могли забрати в налаштуваннях, поки ми були у фоні → назад на екран-вимогу
+        if (isReady && model.state.onboarded && currentScreen !is OnboardingScreen && currentScreen !is SplashScreen && !bridge.isDefaultHome()) {
+            log("HOME role lost → gate")
+            navigationManager.navigateRoot(OnboardingScreen::class.java.name, OnboardingScreen.KEY_GATE)
+        }
     }
 
     override fun dispose() {
@@ -154,11 +160,23 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
         player.applyEq()
     }
 
-    /** Перший екран після Splash/Onboarding. */
-    fun firstScreenName(): String = when {
-        pendingHome -> LauncherScreen::class.java.name
-        else -> AppScreen::class.java.name
-    }.also { pendingHome = false }
+    /**
+     * Роль HOME обов'язкова (рішення VELDAN 07.10.2026): без неї апкою користуватись не можна,
+     * лише онбординг / екран-вимога (OnboardingScreen з KEY_GATE).
+     */
+    val isUnlocked: Boolean get() = model.state.onboarded && bridge.isDefaultHome()
+
+    /** Перший екран після Splash / після надання ролі. */
+    fun navigateFirst() {
+        val nav = navigationManager
+        when {
+            !model.state.onboarded   -> nav.navigateRoot(OnboardingScreen::class.java.name)
+            !bridge.isDefaultHome()  -> nav.navigateRoot(OnboardingScreen::class.java.name, OnboardingScreen.KEY_GATE)
+            pendingHome              -> nav.navigateRoot(LauncherScreen::class.java.name)
+            else                     -> nav.navigateRoot(AppScreen::class.java.name)
+        }
+        pendingHome = false
+    }
 
     fun toast(text: String) {
         val s = currentScreen as? RedwaveScreen
@@ -169,7 +187,7 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
     // PlatformEvents
     // ------------------------------------------------------------------------
     override fun onHomePressed() {
-        if (!isReady || !model.state.onboarded) { pendingHome = true; return }
+        if (!isReady || !isUnlocked) { pendingHome = true; return }
         val s = currentScreen
         if (s is LauncherScreen) s.onHomeAgain()
         else navigationManager.navigateRoot(LauncherScreen::class.java.name)
@@ -177,7 +195,7 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
 
     override fun onAppIconPressed() {
         pendingHome = false                      // перший екран — AppScreen, навіть у home-таску
-        if (!isReady || !model.state.onboarded) return
+        if (!isReady || !isUnlocked) return
         if (currentScreen is LauncherScreen) navigationManager.navigate(AppScreen::class.java.name, LauncherScreen::class.java.name)
     }
 
@@ -188,7 +206,7 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
 
     override fun onSharedText(text: String) {
         sharedText = text
-        if (!isReady || !model.state.onboarded) return
+        if (!isReady || !isUnlocked) return
         val s = currentScreen
         if (s is AppScreen) s.consumeSharedText()
         else navigationManager.navigateRoot(AppScreen::class.java.name)

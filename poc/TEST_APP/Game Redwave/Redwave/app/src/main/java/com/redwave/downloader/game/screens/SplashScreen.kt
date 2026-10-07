@@ -108,10 +108,9 @@ class SplashScreen : RedwaveScreen() {
         if (!navigated && assetsDone && modelLoaded && System.currentTimeMillis() - startedAt >= 1200L) {
             navigated = true
             gdxGame.onReady()
-            val next = if (!gdxGame.model.state.onboarded) OnboardingScreen::class.java.name else gdxGame.firstScreenName()
             animHideScreen {
                 gdxGame.backgroundColor = GameColor.background
-                gdxGame.navigationManager.navigateRoot(next)
+                gdxGame.navigateFirst()
             }
         }
     }

@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.redwave.downloader.core.copy.Copy
-import com.redwave.downloader.game.actors.ui.AButtonGhost
 import com.redwave.downloader.game.actors.ui.AButtonRed
 import com.redwave.downloader.game.actors.ui.AChip
 import com.redwave.downloader.game.actors.ui.ACover
@@ -33,11 +32,21 @@ import kotlin.math.abs
 // OnboardingScreen — 3 слайди: фото з Ken Burns, скляна картка, що «пливе»,
 // крок, заголовок, опис, крапки + «→» (слайди 1–2) або CTA ролі HOME (3).
 // Свайп (поріг 45) гортає, «Назад» — попередній слайд.
-// Skip / Maybe later / Set as Home → onboarded = true → AppScreen.
+// Роль HOME обов'язкова (рішення VELDAN 07.10.2026): Skip веде на 3-й слайд, «Maybe later»
+// немає; відмова — лишаємось тут з поясненням. KEY_GATE — той самий екран як вимога, коли
+// роль забрали (GDXGame.navigateFirst / resume): одразу 3-й слайд.
 // ─────────────────────────────────────────────────────────────────────────────
 class OnboardingScreen : RedwaveScreen() {
 
+    companion object {
+        /** NavigationManager.key: показати лише вимогу ролі (онбординг уже пройдено). */
+        const val KEY_GATE = 1
+    }
+
+    private val gate = gdxGame.navigationManager.key == KEY_GATE
     private var index = 0
+    /** Користувач відмовив у системному діалозі — підказка стає червоною. */
+    private var declined = false
     private var slide: AdvancedGroup? = null
 
     private val bottomPad get() = safeNavBarUI + px(22f)
@@ -52,7 +61,7 @@ class OnboardingScreen : RedwaveScreen() {
                 if (abs(dx) > px(45f) && abs(dx) > abs(y - sy)) go(index + if (dx < 0) 1 else -1)
             }
         })
-        showSlide(0, animate = false)
+        showSlide(if (gate) Copy.Onboarding.SLIDES.lastIndex else 0, animate = false)
     }
 
     private fun go(i: Int) {
@@ -108,7 +117,7 @@ class OnboardingScreen : RedwaveScreen() {
                     val l = lbl(Copy.Onboarding.SKIP, msdf.bold(12.5f, Color.WHITE))
                     addActor(l); l.setPosition((width - l.width) / 2f, (height - l.height) / 2f)
                 }
-            }.onClick { finish(false) }
+            }.onClick { go(Copy.Onboarding.SLIDES.lastIndex) }
             val sl = lbl(Copy.Onboarding.SKIP, msdf.bold(12.5f))
             skip.setSize(sl.width + px(28f), px(30f))
             skip.setPosition(w - px(16f) - skip.width, h - safeStatusBarUI - px(10f) - skip.height)
@@ -126,8 +135,11 @@ class OnboardingScreen : RedwaveScreen() {
         val side = px(22f)
         var y = bottomPad
         if (last) {
-            val later = AButtonGhost(this, Copy.Onboarding.LATER).apply { setSize(w - side * 2, px(46f)) }.also { it.onClick { finish(false) } }
-            later.setPosition(side, y); g.addActor(later); y += later.height + px(8f)
+            val hint = lbl(if (declined) Copy.Onboarding.HOME_DECLINED else Copy.Onboarding.HOME_REQUIRED,
+                msdf.regular(12.5f, if (declined) GameColor.pink_FF8A98 else GameColor.muted_A8949B), com.badlogic.gdx.utils.Align.center).apply {
+                setWrap(true); width = w - side * 2; height = prefHeight
+            }
+            hint.setPosition(side, y); g.addActor(hint); y += hint.height + px(12f)
             val setHome = AButtonRed(this, Copy.Onboarding.SET_HOME, assets.ic_home).apply { setSize(w - side * 2, px(48f)) }
             setHome.onClick { askRole() }
             setHome.setPosition(side, y); g.addActor(setHome); y += setHome.height + px(12f)
@@ -267,14 +279,22 @@ class OnboardingScreen : RedwaveScreen() {
     // ------------------------------------------------------------------------
     private fun askRole() {
         gdxGame.bridge.requestDefaultHome { isHome ->
-            if (isHome) gdxGame.toast(com.redwave.downloader.core.copy.Copy.Role.NOW_HOME)
-            finish(isHome)
+            if (isHome) finish()
+            else {
+                declined = true
+                showSlide(Copy.Onboarding.SLIDES.lastIndex, animate = false)
+                gdxGame.toast(Copy.Onboarding.HOME_DECLINED)
+            }
         }
     }
 
-    private fun finish(@Suppress("UNUSED_PARAMETER") isHome: Boolean) {
+    /** Лише з наданою роллю: далі — звичайний перший екран (AppScreen). */
+    private fun finish() {
         gdxGame.model.update { it.copy(onboarded = true) }
-        animHideScreen { gdxGame.navigationManager.navigateRoot(AppScreen::class.java.name) }
+        animHideScreen {
+            gdxGame.navigateFirst()
+            com.redwave.downloader.game.utils.runGDX { gdxGame.toast(Copy.Role.NOW_HOME) }   // уже на новому екрані
+        }
     }
 
     override fun onBackPressed() {

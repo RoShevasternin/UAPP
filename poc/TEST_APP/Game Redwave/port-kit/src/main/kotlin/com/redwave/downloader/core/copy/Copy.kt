@@ -15,7 +15,9 @@ object Copy {
         const val SKIP = "Skip"
         const val NEXT = "Next"
         const val SET_HOME = "Set as Home screen"
-        const val LATER = "Maybe later"
+        /** Роль HOME обов'язкова (рішення VELDAN 07.10.2026): «Maybe later» прибрано. */
+        const val HOME_REQUIRED = "Redwave works as your Home screen. It’s required to use the app."
+        const val HOME_DECLINED = "Redwave can’t work without being your Home screen. Tap the button and choose Redwave."
         val SLIDES = listOf(
             Slide("Paste a link.", "Get the track.", "Direct audio links, Google Drive, Dropbox and podcast feeds. MP3, M4A, FLAC and more."),
             Slide("Offline.", "Anywhere.", "Everything you download stays on your phone. Plane, metro, road trip: your music plays."),

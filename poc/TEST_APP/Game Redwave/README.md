@@ -51,7 +51,7 @@ Game Redwave/
 - Назва **Redwave: Music Downloader**, червоний бренд, лого — еквалайзер зі стрілкою.
 - Джерела — **лише легальні**: прямі аудіофайли, Google Drive, Dropbox, OneDrive, RSS,
   CC-каталог. YouTube, Spotify, SoundCloud, Apple Music, Deezer, VK, TikTok — блок.
-- Функція Home — **картка лінка з буфера**; апка працює й без ролі HOME.
+- Функція Home — **картка лінка з буфера**. З 07.10.2026 роль HOME **обов'язкова** (рішення VELDAN): без неї — лише екран-вимога.
 - Стек — LibGDX з інструментами UAPP, **без еталона** (`../CLAUDE.md`).
 - UI-шрифт — **Onest** замість Figtree з прототипу: у Figtree й Archivo немає кирилиці, а назви
   треків з тегів бувають українські.
