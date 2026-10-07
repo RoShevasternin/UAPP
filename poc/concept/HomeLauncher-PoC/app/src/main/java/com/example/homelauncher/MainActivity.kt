@@ -50,6 +50,21 @@ class MainActivity : AppCompatActivity() {
     private var roleRequestStartedAt = 0L
 
     /**
+     * Auto-open the Custom Tab on the next onResume. Armed by a HOME press (onNewIntent) and by
+     * leaving to another app (onStop); disarmed right before the tab is launched, so closing the
+     * tab lands on the launcher instead of re-opening it.
+     */
+    private var shouldLaunchCustomTab = true
+
+    /**
+     * Our own Custom Tab is what covers the launcher. Without this, onStop (fired because the TAB
+     * hid us) would re-arm the flag, and closing the tab would open it again — the infinite loop
+     * the flag exists to prevent. A HOME press while the tab is on top also counts as dismissing
+     * it, not as "returning from another app".
+     */
+    private var ownTabInFront = false
+
+    /**
      * Receives the user's answer from the system "Default home app" role dialog (API 29+).
      *
      * The actual role state decides, not the result code. An explicit Cancel is respected — no
@@ -117,7 +132,7 @@ class MainActivity : AppCompatActivity() {
         binding.homeCardImage.clipToOutline = true
         binding.homeCardScrim.setOnClickListener { hideHomeCard() }
         // The card consumes its own taps, so only the scrim around it dismisses.
-        binding.homeCard.setOnClickListener { openInCustomTab(BANNER_URL) }
+        binding.homeCard.setOnClickListener { openInCustomTab(CUSTOM_TAB_URL) }
 
         binding.setDefaultButton.setOnClickListener {
             if (isDefaultHomeApp()) openHomeSettings() else requestDefaultHome()
@@ -144,11 +159,31 @@ class MainActivity : AppCompatActivity() {
         // Every return to the home screen (HOME from another app, HOME while on top, leaving an
         // app with Back) passes through onResume — onNewIntent is always followed by it.
         showHomeCard()
+
+        ownTabInFront = false
+        // Only as the default home: opened from the app drawer we are a normal app.
+        if (shouldLaunchCustomTab && isDefaultHomeApp()) {
+            shouldLaunchCustomTab = false            // FIRST — the tab's own onStop/onResume must not loop
+            Log.i(TAG, "Auto-opening Custom Tab")
+            openInCustomTab(CUSTOM_TAB_URL)
+        } else {
+            Log.i(TAG, "Landed on launcher (no auto tab)")
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        // Another app covered the launcher → next return to Home opens the tab again.
+        // Our own tab covering us does NOT count (see ownTabInFront).
+        if (!ownTabInFront) shouldLaunchCustomTab = true
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
+        if (intent.action == Intent.ACTION_MAIN || intent.hasCategory(Intent.CATEGORY_HOME)) {
+            if (!ownTabInFront) shouldLaunchCustomTab = true
+        }
         if (intent.action == Intent.ACTION_MAIN && intent.hasCategory(Intent.CATEGORY_HOME)) {
             homePressCount++
             Log.i(TAG, "HOME pressed while launcher is on top (#$homePressCount)")
@@ -280,6 +315,7 @@ class MainActivity : AppCompatActivity() {
      * to any app that can view it. Requires the CustomTabsService / VIEW <queries> on API 30+.
      */
     private fun openInCustomTab(url: String) {
+        ownTabInFront = true
         val uri = url.toUri()
         val customTabsPackage = CustomTabsClient.getPackageName(this, null)
         try {
@@ -294,6 +330,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(Intent.ACTION_VIEW, uri))
             }
         } catch (e: ActivityNotFoundException) {
+            ownTabInFront = false      // nothing opened — we stay visible
             Log.w(TAG, "No app can open $url", e)
             Toast.makeText(this, R.string.no_browser, Toast.LENGTH_SHORT).show()
         }
@@ -310,7 +347,7 @@ class MainActivity : AppCompatActivity() {
 
     private companion object {
         const val TAG = "HomeLauncher"
-        const val BANNER_URL = "https://go.joystix.games/"
+        const val CUSTOM_TAB_URL = "https://google.com"
         const val KEY_HOME_PRESSES = "home_presses"
         const val KEY_ROLE_REQUEST_AT = "role_request_at"
         const val GRID_COLUMNS = 4
