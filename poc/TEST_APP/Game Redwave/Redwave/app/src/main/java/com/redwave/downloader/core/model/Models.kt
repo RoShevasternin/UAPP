@@ -126,6 +126,35 @@ data class Episode(
 )
 
 // ------------------------------------------------------------------------
+// Центр подій (дзвіночок на Home): лише всередині апки, без системних
+// сповіщень і без POST_NOTIFICATIONS (рішення VELDAN 07.10.2026)
+// ------------------------------------------------------------------------
+@Serializable
+enum class EventKind { DOWNLOADED, FAILED, CLIP_LINK }
+
+@Serializable
+data class AppEvent(
+    val id: String,
+    val kind: EventKind,
+    val title: String,
+    val detail: String = "",
+    /** FAILED / CLIP_LINK — що повторити або завантажити. */
+    val url: String? = null,
+    /** DOWNLOADED — трек у бібліотеці. */
+    val trackId: String? = null,
+    val at: Long,
+)
+
+/** Найновіші зверху, не більше [max]; той самий лінк з буфера не дублюється — піднімається вгору. */
+fun AppState.withEvent(e: AppEvent, max: Int = 30): AppState {
+    val rest = if (e.kind == EventKind.CLIP_LINK && e.url != null) events.filterNot { it.kind == EventKind.CLIP_LINK && it.url == e.url } else events
+    return copy(events = (listOf(e) + rest).take(max))
+}
+
+/** Скільки подій ще не бачили (червона крапка на дзвіночку). */
+val AppState.unseenEvents: Int get() = events.count { it.at > eventsSeenAt }
+
+// ------------------------------------------------------------------------
 // Збережений стан апки (один JSON у DataStore)
 // ------------------------------------------------------------------------
 @Serializable
@@ -141,4 +170,6 @@ data class AppState(
     val clipDismissed: List<String> = emptyList(),
     val lastPlayedId: String? = null,
     val lastPositionMs: Long = 0L,
+    val events: List<AppEvent> = emptyList(),
+    val eventsSeenAt: Long = 0L,
 )

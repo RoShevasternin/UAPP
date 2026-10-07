@@ -18,6 +18,17 @@ object Fmt {
         else                    -> "0 MB"
     }
 
+    /** «just now», «5 min ago», «3 h ago», «2 d ago» — для центру подій. */
+    fun ago(atMs: Long, nowMs: Long = System.currentTimeMillis()): String {
+        val m = (nowMs - atMs).coerceAtLeast(0) / 60_000
+        return when {
+            m < 1      -> "just now"
+            m < 60     -> "$m min ago"
+            m < 60 * 24 -> "${m / 60} h ago"
+            else       -> "${m / 1440} d ago"
+        }
+    }
+
     fun hours(ms: Long): String = String.format(Locale.US, "%.1f h", ms / 3_600_000f)
 
     fun speed(bytesPerSec: Float): String = String.format(Locale.US, "%.1f MB/s", bytesPerSec / 1_048_576f)

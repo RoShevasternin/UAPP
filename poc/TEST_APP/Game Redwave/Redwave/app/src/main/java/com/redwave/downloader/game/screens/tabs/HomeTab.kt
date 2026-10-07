@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.redwave.downloader.core.copy.Copy
+import com.redwave.downloader.core.model.unseenEvents
 import com.redwave.downloader.core.model.DownloadItem
 import com.redwave.downloader.core.model.DownloadStatus
 import com.redwave.downloader.game.actors.label.AMsdfLabel
@@ -75,8 +76,12 @@ class HomeTab(app: AppScreen) : ATabPage(app) {
             val pw = width; val ph = height; val logo = Image(assets.LOGO).apply { setSize(px(30f), px(30f)); setPosition(0f, (ph - px(30f)) / 2f) }
             val word = lbl(Copy.APP_NAME, msdf.disp(19f))
             word.setPosition(logo.width + px(9f), (height - word.height) / 2f)
+            // Центр подій: крапка — лише коли є непереглянуте (завантаження / лінк з буфера)
             val bell = AIconButton(app, assets.ic_bell).withBadge().apply { setBounds(W - px(38f), 0f, px(38f), px(38f)) }
-            bell.onClick { gdxGame.toast("No new notifications") }
+            bell.onClick { app.openSheet(com.redwave.downloader.game.screens.sheets.EventsSheet(app)) }
+            bell.addAction(com.badlogic.gdx.scenes.scene2d.actions.Actions.forever(com.badlogic.gdx.scenes.scene2d.actions.Actions.run {
+                bell.badge?.isVisible = gdxGame.model.state.unseenEvents > 0
+            }))
             val gear = AIconButton(app, assets.ic_gear).apply { setBounds(W - px(38f) * 2 - px(8f), 0f, px(38f), px(38f)) }
             gear.onClick { app.openSheet(com.redwave.downloader.game.screens.sheets.SettingsSheet(app)) }
             addActor(logo); addActor(word); addActor(gear); addActor(bell)

@@ -5,7 +5,10 @@ import com.redwave.downloader.core.link.LinkResolver
 import com.redwave.downloader.core.link.ResolvedLink
 import com.redwave.downloader.core.link.sourceUrl
 import com.redwave.downloader.core.model.DownloadItem
+import com.redwave.downloader.core.model.AppEvent
 import com.redwave.downloader.core.model.DownloadStatus
+import com.redwave.downloader.core.model.EventKind
+import com.redwave.downloader.core.model.withEvent
 import com.redwave.downloader.core.model.Track
 import com.redwave.downloader.core.model.TrackKind
 import com.redwave.downloader.core.model.TrackSource
@@ -185,7 +188,11 @@ class DownloadController(
         if (!success || localUri == null) {
             log("download failed: ${d.title}")
             finishing.remove(id)
-            model.update { s -> s.copy(downloads = s.downloads.map { if (it.id == id) it.copy(status = DownloadStatus.FAILED, error = Copy.Errors.DOWNLOAD_FAILED) else it }) }
+            val now = System.currentTimeMillis()
+            model.update { s ->
+                s.copy(downloads = s.downloads.map { if (it.id == id) it.copy(status = DownloadStatus.FAILED, error = Copy.Errors.DOWNLOAD_FAILED) else it })
+                    .withEvent(AppEvent("dl-$id-$now", EventKind.FAILED, d.title, url = d.url, at = now))
+            }
             toast(Copy.Errors.DOWNLOAD_FAILED)
             return
         }
@@ -209,6 +216,7 @@ class DownloadController(
                 )
                 model.update { s ->
                     s.copy(library = s.library.filterNot { it.id == track.id } + track, downloads = s.downloads.filterNot { it.id == id })
+                        .withEvent(AppEvent("dl-$id-${track.addedAt}", EventKind.DOWNLOADED, track.title, track.artist, trackId = track.id, at = track.addedAt))
                 }
                 finishing.remove(id)
                 speed.remove(id); lastBytes.remove(id)

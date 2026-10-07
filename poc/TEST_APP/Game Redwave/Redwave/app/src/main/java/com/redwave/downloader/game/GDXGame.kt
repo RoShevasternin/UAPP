@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.ScreenUtils
 import com.redwave.downloader.core.link.ResolvedLink
+import com.redwave.downloader.core.link.chipLabel
 import com.redwave.downloader.core.link.sourceUrl
+import com.redwave.downloader.core.model.withEvent
 import com.redwave.downloader.game.controller.DiscoverController
 import com.redwave.downloader.game.controller.DownloadController
 import com.redwave.downloader.game.controller.PlayerController
@@ -91,6 +93,8 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
     var appsVersion = 0
         private set
     private var pendingHome = false
+    /** Події з буфера, що прийшли до завантаження стану (див. onClipboardLink). */
+    private val pendingEvents = mutableListOf<com.redwave.downloader.core.model.AppEvent>()
 
     /** Текстури обкладинок на всю сесію. */
     val covers = com.redwave.downloader.game.utils.CoverCache()
@@ -159,6 +163,10 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
     /** Splash: асети й стан завантажено → куди йти. */
     fun onReady() {
         isReady = true
+        if (pendingEvents.isNotEmpty()) {
+            val evs = pendingEvents.toList(); pendingEvents.clear()
+            model.update { s -> evs.fold(s) { acc, e -> acc.withEvent(e) } }
+        }
         downloads.resumeAfterStart()
         player.applyEq()
     }
@@ -219,6 +227,17 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
     override fun onClipboardLink(link: ResolvedLink) {
         clipLink = link
         clipVersion++
+        // У центр подій: лінк лишається там, навіть якщо картку на лаунчері закрили
+        val url = link.sourceUrl ?: return
+        val now = System.currentTimeMillis()
+        // Заголовок — ім'я файлу (blue-room.m4a), без нього — хост
+        val title = runCatching {
+            val u = java.net.URI(url)
+            u.path?.substringAfterLast('/')?.takeIf { it.isNotBlank() }?.let { java.net.URLDecoder.decode(it, "UTF-8") } ?: u.host
+        }.getOrNull() ?: url
+        val ev = com.redwave.downloader.core.model.AppEvent("clip-$now", com.redwave.downloader.core.model.EventKind.CLIP_LINK, title, link.chipLabel, url = url, at = now)
+        // Холодний старт (апку щойно відкрили «Додому»): стан ще вантажиться — додамо в onReady
+        if (model.isLoaded) model.update { it.withEvent(ev) } else pendingEvents += ev
     }
 
     override fun onSharedText(text: String) {

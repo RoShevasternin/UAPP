@@ -173,6 +173,18 @@ object Copy {
         const val NOW_HOME = "Redwave is now your Home screen"
     }
 
+    /** Центр подій (дзвіночок на Home) — лише в апці, без системних сповіщень. */
+    object Events {
+        const val TITLE = "Notifications"
+        const val CLEAR = "Clear"
+        const val EMPTY = "Nothing yet. Finished downloads and audio links you copy will show up here."
+        const val DOWNLOADED = "Downloaded"
+        const val FAILED = "Download failed · tap to retry"
+        const val CLIP = "Copied link · tap to download"
+        const val TRACK_GONE = "This track is no longer in your library"
+        const val OFFLINE = "No connection"
+    }
+
     object Toasts {
         fun downloaded(title: String) = "Downloaded · $title"
         const val COPIED = "Copied to clipboard"
