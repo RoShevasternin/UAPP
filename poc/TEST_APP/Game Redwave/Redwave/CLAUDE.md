@@ -18,12 +18,12 @@
 | `enabled` + `url` | сторінка `url` у Custom Tab на «Додому» з іншої апки й після «Недавніх» (лише з роллю HOME і онлайн) | нічого не відкривається | false |
 | `home_required` | 3-й слайд лише з «Set as Home screen»; без ролі — екран-вимога на кожному вході | ще й «Maybe later», апка працює без ролі | false |
 | `is_uninstall` | довге натискання на іконку в лаунчері → App info / Uninstall | довге натискання нічого не робить | true |
-| `privacy_url` (необов.) | адреса Privacy Policy в Settings | — | `RemoteFlags.DEFAULT_PRIVACY_URL` (поки заглушка — чекаємо адресу GitHub Pages) |
+| `privacy_url` (необов.) | адреса Privacy Policy в Settings | — | `https://redwave-privacy.oyutetijep68.workers.dev/privacy` |
 
 **Немає інтернету → значення з колонки «Без відповіді» завжди**, навіть якщо в кеші Firebase інші
 (рішення VELDAN 07.10.2026; `RemoteFlagsSource.effective`). Перший запуск онлайн: Splash чекає Firebase до 3 с. Далі — кеш Firebase одразу, `fetchAndActivate` на кожному
 `onResume` (release — не частіше 5 хв) + real-time listener. Послаблення прапорців діє одразу, посилення
-(`home_required` → true) — на наступному вході. Privacy Policy — `../privacy-policy/` (окремий репозиторій на GitHub Pages; адресу прописати в `RemoteFlags.DEFAULT_PRIVACY_URL`).
+(`home_required` → true) — на наступному вході. Privacy Policy — `../privacy-policy/` (Cloudflare, проєкт `redwave-privacy`; оновлення — «New deployment» з текою `public`).
 
 Спілкування й коментарі в коді — **українською**. UI апки — **англійською** (маркет США).
 

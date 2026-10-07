@@ -33,8 +33,8 @@ data class RemoteFlags(
 
     companion object {
         const val REMOTE_KEY = "redwave_config"
-        /** ◌ Тимчасово: замінити на адресу GitHub Pages, коли VELDAN викладе Game Redwave/privacy-policy/. */
-        const val DEFAULT_PRIVACY_URL = "https://redwave-original.web.app/privacy"
+        /** Cloudflare (Workers static assets) акаунта STAR ADS LLC; сторінка — Game Redwave/privacy-policy/public. */
+        const val DEFAULT_PRIVACY_URL = "https://redwave-privacy.oyutetijep68.workers.dev/privacy"
         val DEFAULT = RemoteFlags()
 
         /** Порожньо або зламано → DEFAULT, а не краш. */
