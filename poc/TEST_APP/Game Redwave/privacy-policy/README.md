@@ -1,26 +1,20 @@
-# Redwave — Privacy Policy (Firebase Hosting)
+# Redwave — Privacy Policy (GitHub Pages)
 
-Сторінка для Google Play і для кнопки **Settings → Privacy Policy** в апці.
-Адреса після деплою: **https://redwave-original.web.app/privacy** — саме її апка відкриває за
-замовчуванням (`RemoteFlags.DEFAULT_PRIVACY_URL`). Іншу адресу можна задати полем `privacy_url`
-у Remote Config, без нової збірки.
+Сторінка для Google Play і кнопки **Settings → Privacy Policy** в апці. Розробник — STAR ADS LLC,
+контакт — oyutetijep68@gmail.com. Хоститься окремим репозиторієм на GitHub Pages (рішення VELDAN 07.10.2026).
 
-## Перед деплоєм
+`public/privacy.html` і `public/index.html` — однаковий текст (корінь сайту теж відкриває політику).
 
-У `public/privacy.html` замінити заглушки:
-- `DEVELOPER_NAME` — назва акаунта розробника в Play Console;
-- `CONTACT_EMAIL` — пошта для запитів (та сама, що в Play Console → Store listing → Contact details).
+## Як викласти
 
-Якщо зміниться поведінка апки (нові дозволи, SDK, аналітика, реклама) — оновити відповідний розділ
-і дату «Effective date». Текст має збігатися з анкетою Data safety в Play Console.
+1. GitHub → **New repository**, публічний (напр. `redwave-privacy`).
+2. **Add file → Upload files** → завантажити `public/index.html` і `public/privacy.html` → Commit.
+3. **Settings → Pages** → Source: *Deploy from a branch* → Branch: `main`, папка `/ (root)` → Save.
+4. Через 1–2 хв сторінка відкривається за адресою `https://<логін>.github.io/redwave-privacy/privacy.html`.
+5. Цю адресу:
+   - вставити в Play Console → App content → Privacy policy;
+   - додати в Remote Config `redwave_config` полем `"privacy_url": "https://…/privacy.html"`;
+   - прописати в коді як `RemoteFlags.DEFAULT_PRIVACY_URL` (щоб працювало й офлайн / до першої відповіді Firebase).
 
-## Деплой (один раз поставити CLI)
-
-```bash
-npm install -g firebase-tools
-firebase login
-cd "/Users/admin/Apps/UAPP/poc/TEST_APP/Game Redwave/privacy-policy"
-firebase deploy --only hosting
-```
-
-Проєкт — `redwave-original` (`.firebaserc`). Перевірити: відкрити https://redwave-original.web.app/privacy.
+Змінилась поведінка апки (дозволи, SDK, дані) — оновити текст і «Effective date», завантажити файли знову.
+Текст має збігатися з анкетою Data safety у Play Console.

@@ -1,6 +1,88 @@
 <!doctype html>
-<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Redwave</title>
-<meta http-equiv="refresh" content="0; url=/privacy">
-<p><a href="/privacy">Redwave Privacy Policy</a></p>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Redwave Privacy Policy</title>
+<meta name="description" content="How the Redwave app handles your information.">
+<style>
+  :root{--bg:#FFFFFF;--ink:#1B1114;--muted:#6C5C62;--line:#E8DEE1;--accent:#D4002A;--soft:#FBF4F5}
+  @media (prefers-color-scheme:dark){:root{--bg:#0D090A;--ink:#F5ECEE;--muted:#A8949B;--line:#2B1E22;--accent:#FF5A6C;--soft:#160F11}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  main{max-width:760px;margin:0 auto;padding:32px 16px 64px}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+  header svg{flex:none}
+  h1{font-size:28px;line-height:1.2;margin:0}
+  h2{font-size:19px;margin:32px 0 8px}
+  p,li{color:var(--ink)}
+  .muted{color:var(--muted);font-size:14px}
+  .box{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:20px 0}
+  ul{padding-left:20px}
+  li{margin:6px 0}
+  a{color:var(--accent)}
+  code{font-size:14px}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <svg width="40" height="40" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5468"/><stop offset="1" stop-color="#c2001f"/></linearGradient></defs><rect width="48" height="48" rx="14" fill="url(#g)"/><g stroke="#fff" stroke-width="3.4" stroke-linecap="round" fill="none"><path d="M12 20v8M18 15v18M30 15v18M36 20v8"/><path d="M24 13v19M19 27l5 5 5-5"/></g></svg>
+    <h1>Redwave Privacy Policy</h1>
+  </header>
+  <p class="muted">Effective date: October 7, 2026 · App: Redwave (package <code>com.redwave.downloader</code>) · Developer: STAR ADS LLC</p>
+
+  <div class="box">
+    <strong>In short.</strong> Redwave has no accounts and does not sell or share your personal information. Your music, library, links and settings stay on your phone. The app uses Google Firebase Remote Config to receive its settings.
+  </div>
+
+  <h2>1. What Redwave does</h2>
+  <p>Redwave downloads audio files from direct links you provide, offers a free Creative Commons music catalog and podcast feeds, plays your music with an equalizer, cuts ringtones, and can work as your Home screen (launcher).</p>
+
+  <h2>2. Information we do not collect</h2>
+  <ul>
+    <li>No account, name, email address or phone number.</li>
+    <li>No contacts, location, photos, microphone or camera data.</li>
+    <li>No advertising ID, no analytics SDK and no ad SDK in the app.</li>
+  </ul>
+
+  <h2>3. Information processed only on your device</h2>
+  <ul>
+    <li><strong>Links and clipboard.</strong> When you tap Paste, or when you open Redwave or return to its Home screen, Redwave reads the clipboard to detect an audio link and offer a download. The clipboard is checked on your device only. It is never stored on our servers or sent to us.</li>
+    <li><strong>Your music.</strong> Downloaded files are saved to <code>Music/Redwave</code> on your device. Your library, favorites, equalizer and other settings are stored in the app’s private storage.</li>
+    <li><strong>Audio files access (optional).</strong> If you tap “Find” in Library, Redwave asks for permission to read audio files so it can show and delete files left from an earlier install. You can decline; everything else keeps working.</li>
+    <li><strong>App list (Home screen mode).</strong> To show your apps, the Redwave launcher reads the list of installed apps and their icons on your device. This list is not sent anywhere.</li>
+  </ul>
+
+  <h2>4. Network connections</h2>
+  <ul>
+    <li><strong>Downloads.</strong> When you download a link, your phone connects directly to the server that hosts that file. That server receives your IP address and device request headers, as with any download, under its own policy.</li>
+    <li><strong>Catalog and podcasts.</strong> The free catalog, cover images and podcast feeds are loaded from the hosts that publish them.</li>
+    <li><strong>Firebase Remote Config (Google).</strong> Redwave receives its settings, such as which features are switched on, from Google Firebase Remote Config. To do this, Firebase uses a Firebase installation ID and basic technical data (app version, device language, country derived from the IP address). See <a href="https://firebase.google.com/support/privacy" rel="noopener">Firebase privacy and security</a> and <a href="https://policies.google.com/privacy" rel="noopener">Google’s Privacy Policy</a>.</li>
+  </ul>
+
+  <h2>5. Home screen (launcher) role</h2>
+  <p>Redwave can be set as your Home screen. You choose this in an Android system dialog, and you can turn it off at any time in Redwave → Settings → “Use as Home screen”, or in Android Settings → Apps → Default apps → Home app.</p>
+  <p>To uninstall Redwave, use Android Settings → Apps → Redwave → Uninstall. Depending on the version of the app, you can also long-press an app icon on the Redwave Home screen and choose Uninstall.</p>
+
+  <h2>6. System permissions</h2>
+  <ul>
+    <li><strong>Modify system settings</strong> — only when you choose to set a cut track as your default ringtone, alarm or notification sound. You grant it on a separate Android screen and can revoke it there.</li>
+    <li><strong>Request delete packages</strong> — only to open Android’s own uninstall dialog when you choose Uninstall on the Redwave Home screen. Android always asks you to confirm.</li>
+    <li><strong>Internet, network state, foreground playback service, vibration</strong> — to download, check connectivity, keep music playing with the screen off, and give tap feedback.</li>
+  </ul>
+
+  <h2>7. Children</h2>
+  <p>Redwave is not directed at children under 13 and does not knowingly collect personal information from children.</p>
+
+  <h2>8. Data retention and deletion</h2>
+  <p>Because your data stays on your device, you control it. Delete tracks in Library (the file is removed from <code>Music/Redwave</code>), or uninstall Redwave to remove its private storage. Firebase Remote Config data is handled by Google as described in its policies.</p>
+
+  <h2>9. Changes to this policy</h2>
+  <p>If we change this policy, we will update this page and its effective date. Significant changes will also be noted in the app’s store listing.</p>
+
+  <h2>10. Contact</h2>
+  <p>Questions or requests: <a href="mailto:oyutetijep68@gmail.com">oyutetijep68@gmail.com</a>.</p>
+</main>
+</body>
 </html>

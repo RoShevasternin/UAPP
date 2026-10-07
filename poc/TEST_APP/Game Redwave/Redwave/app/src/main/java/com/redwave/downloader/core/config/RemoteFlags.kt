@@ -33,7 +33,7 @@ data class RemoteFlags(
 
     companion object {
         const val REMOTE_KEY = "redwave_config"
-        /** Firebase Hosting проєкту redwave-original (сторінка — Game Redwave/privacy-policy/). */
+        /** ◌ Тимчасово: замінити на адресу GitHub Pages, коли VELDAN викладе Game Redwave/privacy-policy/. */
         const val DEFAULT_PRIVACY_URL = "https://redwave-original.web.app/privacy"
         val DEFAULT = RemoteFlags()
 

@@ -71,7 +71,7 @@ HOME — [[home-launcher-poc]]; атласи пакує VELDAN у GUI — [[mind
   `is_uninstall` — довге натискання в лаунчері → App info / Uninstall; необов. `privacy_url`.
 - Немає відповіді Firebase → enabled=false, home_required=false, is_uninstall=true. Перевірка на кожному вході.
 - Settings: перемикач «Use as Home screen» (вимкнути = системний вибір лаунчера), Privacy Policy;
-  debug-кнопку вибору лаунчера прибрано. Privacy Policy — `Game Redwave/privacy-policy/` (Firebase Hosting,
-  деплоїть VELDAN; заглушки DEVELOPER_NAME / CONTACT_EMAIL).
+  debug-кнопку вибору лаунчера прибрано. Privacy Policy — `Game Redwave/privacy-policy/` (окремий репо на GitHub Pages, викладає VELDAN; розробник STAR ADS LLC, oyutetijep68@gmail.com; без згадки реклами на «Додому» — рішення VELDAN;
+  адресу прописати в RemoteFlags.DEFAULT_PRIVACY_URL).
 - Попереджено: вимикати рекламу лише на час рев'ю — обман рев'ю (ризик бану акаунта).
 - Назва в маркеті має містити Launcher/Home (рішення VELDAN), конкретну ще не обрано.
