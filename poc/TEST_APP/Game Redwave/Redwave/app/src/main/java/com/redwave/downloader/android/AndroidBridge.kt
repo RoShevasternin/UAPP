@@ -47,6 +47,7 @@ import com.redwave.downloader.MainActivity
 import com.redwave.downloader.android.ringtone.RingtoneMaker
 import com.redwave.downloader.android.ringtone.SystemSounds
 import com.redwave.downloader.android.ringtone.WaveformPeaks
+import com.redwave.downloader.core.config.RemoteFlags
 import com.redwave.downloader.core.link.AudioSniffer
 import com.redwave.downloader.core.model.DownloadStatus
 import com.redwave.downloader.core.model.Track
@@ -239,6 +240,16 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
             }
         }
     }
+
+    // ------------------------------------------------------------------------
+    // Remote Config (RemoteFlagsSource)
+    // ------------------------------------------------------------------------
+    override fun remoteFlags(): RemoteFlags = RemoteFlagsSource.current
+    override fun hasRemoteFlags(): Boolean = RemoteFlagsSource.hasRemote()
+    override fun refreshRemoteFlags(timeoutMs: Long, onDone: (RemoteFlags) -> Unit) {
+        main.post { RemoteFlagsSource.refresh(timeoutMs) { f -> runGDX { onDone(f) } } }
+    }
+    override fun remoteFlagsDebug(): String = RemoteFlagsSource.debugLine()
 
     override val appVersion: String get() = runCatching {
         ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName ?: "?"
@@ -762,6 +773,39 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
         defaultAppFor(Intent(Intent.ACTION_VIEW, "https://example.com".toUri())),
         defaultAppFor(Intent(android.provider.MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA)),
     )
+
+    // ── Довге натискання: App info / Uninstall (RemoteFlags.isUninstall) ──
+    /** Системні апки й апки робочого профілю не видаляємо — лише «App info». */
+    override fun canUninstall(app: LauncherApp?): Boolean {
+        if (app == null) return true
+        val me = userManager.getSerialNumberForUser(android.os.Process.myUserHandle())
+        if (app.userSerial != me) return false
+        val ai = runCatching { ctx.packageManager.getApplicationInfo(app.packageName, 0) }.getOrNull() ?: return false
+        return ai.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM == 0
+    }
+
+    override fun openAppInfo(app: LauncherApp?) {
+        main.post {
+            runCatching {
+                activity.internalNavigation = true
+                if (app == null) {
+                    activity.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", ctx.packageName, null)))
+                } else {
+                    val user = userManager.getUserForSerialNumber(app.userSerial)
+                    launcherApps.startAppDetailsActivity(ComponentName(app.packageName, app.activityName), user, null, null)
+                }
+            }.onFailure { log("openAppInfo: ${it.message}") }
+        }
+    }
+
+    /** Системний діалог видалення (REQUEST_DELETE_PACKAGES у маніфесті, API 28+). */
+    override fun uninstallApp(app: LauncherApp?) {
+        val pkg = app?.packageName ?: ctx.packageName
+        main.post {
+            runCatching { activity.startInternal(Intent(Intent.ACTION_DELETE, Uri.fromParts("package", pkg, null))) }
+                .onFailure { log("uninstall $pkg: ${it.message}") }
+        }
+    }
 
     /** Дефолтна апка для дії (Dialer/SMS/камера) — для дока лаунчера. */
     fun defaultAppFor(intent: Intent): LauncherApp? {

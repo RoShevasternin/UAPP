@@ -15,9 +15,13 @@ object Copy {
         const val SKIP = "Skip"
         const val NEXT = "Next"
         const val SET_HOME = "Set as Home screen"
-        /** Роль HOME обов'язкова (рішення VELDAN 07.10.2026): «Maybe later» прибрано. */
+        /** Remote Config home_required = true: лише «Set as Home screen». */
         const val HOME_REQUIRED = "Redwave works as your Home screen. It’s required to use the app."
         const val HOME_DECLINED = "Redwave can’t work without being your Home screen. Tap the button and choose Redwave."
+        /** home_required = false: ще й «Maybe later» — роль бажана, не обов'язкова. */
+        const val MAYBE_LATER = "Maybe later"
+        const val HOME_OPTIONAL = "Recommended. You can turn it off anytime in Settings."
+        const val HOME_DECLINED_OPTIONAL = "No problem. You can set it anytime in Settings."
         val SLIDES = listOf(
             Slide("Paste a link.", "Get the track.", "Direct audio links, Google Drive, Dropbox and podcast feeds. MP3, M4A, FLAC and more."),
             Slide("Offline.", "Anywhere.", "Everything you download stays on your phone. Plane, metro, road trip: your music plays."),
@@ -139,19 +143,24 @@ object Copy {
         const val CHOOSE_EPISODE = "Choose episode"
         const val DISMISS = "Dismiss"
         const val ALL_APPS = "All apps"
+        const val APP_INFO = "App info"
+        const val UNINSTALL = "Uninstall"
         const val RECENT_WIDGET = "Redwave · Recently added"
         fun downloadingWidget(n: Int) = "Downloading · $n"
     }
 
     object Settings {
         const val TITLE = "Settings"
-        const val HOME_TITLE = "Home screen"
-        const val HOME_ON = "Redwave is your Home screen"
-        const val HOME_OFF = "Redwave is not your Home screen"
-        const val CHANGE = "Change"
+        const val HOME_TITLE = "Use as Home screen"
+        const val HOME_ON = "On · Redwave is your Home screen"
+        const val HOME_OFF = "Off · your system Home screen is used"
+        /** home_required = true: чесно кажемо, що без ролі апка не працює. */
+        const val HOME_REQUIRED_NOTE = "Redwave needs to be your Home screen to work."
+        /** Вимикання ролі = системний екран вибору головного застосунку. */
+        const val PICK_PREVIOUS = "Choose your previous Home app"
+        const val PRIVACY = "Privacy Policy"
         fun version(v: String) = "Redwave $v"
         const val DEBUG = "Debug build"
-        const val DEBUG_CHOOSER = "Choose Home app (system)"
         const val DEBUG_RESET = "Reset onboarding"
     }
 

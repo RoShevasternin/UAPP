@@ -20,6 +20,8 @@ import com.redwave.downloader.game.utils.px
 // ─────────────────────────────────────────────────────────────────────────────
 // SplashScreen — лого + смужки, поки вантажаться атласи, звуки й AppState.
 // Не менше 1.2 с. Далі: Onboarding (перший запуск) або AppScreen / Launcher.
+// Перший запуск (прапорців Remote Config ще немає в кеші) — чекаємо Firebase до 3 с;
+// не відповів → RemoteFlags.DEFAULT. Далі прапорці з кешу одразу, оновлення — у фоні.
 // Лого й світіння — власні текстури (атласи ще в дорозі).
 // ─────────────────────────────────────────────────────────────────────────────
 class SplashScreen : RedwaveScreen() {
@@ -35,6 +37,7 @@ class SplashScreen : RedwaveScreen() {
     private var assetsDone  = false
     private var modelLoaded = false
     private var navigated   = false
+    private var flagsReady  = false
 
     init {
         disposableSet += texLogo
@@ -48,6 +51,8 @@ class SplashScreen : RedwaveScreen() {
         gdxGame.spriteManager.loadAll()
         gdxGame.soundManager.load()
         gdxGame.model.load { modelLoaded = true }
+        if (gdxGame.bridge.hasRemoteFlags()) flagsReady = true
+        else gdxGame.bridge.refreshRemoteFlags(3_000L) { flagsReady = true }
     }
 
     override fun buildContent() {
@@ -105,7 +110,7 @@ class SplashScreen : RedwaveScreen() {
             gdxGame.soundManager.init()
             assetsDone = true
         }
-        if (!navigated && assetsDone && modelLoaded && System.currentTimeMillis() - startedAt >= 1200L) {
+        if (!navigated && assetsDone && modelLoaded && flagsReady && System.currentTimeMillis() - startedAt >= 1200L) {
             navigated = true
             gdxGame.onReady()
             animHideScreen {

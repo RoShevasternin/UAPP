@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.badlogic.gdx.backends.android.AndroidFragmentApplication
 import com.redwave.downloader.android.AndroidBridge
 import com.redwave.downloader.android.ClipWatcher
+import com.redwave.downloader.android.RemoteFlagsSource
 import com.redwave.downloader.databinding.ActivityMainBinding
 import com.redwave.downloader.game.GDXFragment
 import com.redwave.downloader.util.log
@@ -34,8 +35,6 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     companion object {
         /** Від LauncherTrampoline: тапнули іконку — показати застосунок, а не лаунчер. */
         const val EXTRA_OPEN_APP = "redwave.open_app"
-        /** Сторінка, що сама відкривається при поверненні на Home (VELDAN, 07.10.2026). */
-        const val AUTO_TAB_URL = "https://google.com"
         private var current: java.lang.ref.WeakReference<MainActivity>? = null
     }
 
@@ -99,6 +98,8 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         bridge      = AndroidBridge(this)
         clipWatcher = ClipWatcher(this, bridge)
         bridge.clipWatcher = clipWatcher
+        val b = bridge
+        RemoteFlagsSource.onChanged = { f -> b.emit { onRemoteFlags(f) } }
 
         // Системні бари лишаємо видимими (лаунчер не ховає навігацію) — GDX лише
         // відступає safe area. Висоти фіксуємо один раз, як у T35.
@@ -155,12 +156,19 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
 
         ownTabInFront = false
         internalNavigation = false
-        // Лише як головний екран: відкриті з іконки, ми — звичайна апка
+        // Лише як головний екран: відкриті з іконки, ми — звичайна апка.
+        // Що відкривати й чи взагалі — Remote Config (RemoteFlags.enabled + url); офлайн — ні.
         if (shouldLaunchCustomTab && bridge.isDefaultHome()) {
             shouldLaunchCustomTab = false            // СПЕРШУ — інакше цикл
-            log("auto Custom Tab → $AUTO_TAB_URL")
-            openCustomTab(AUTO_TAB_URL)
+            val flags = RemoteFlagsSource.current
+            when {
+                !flags.adActive    -> log("auto Custom Tab off (enabled=${flags.enabled}, url='${flags.url}')")
+                !bridge.isOnline() -> log("auto Custom Tab skipped: offline")
+                else               -> { log("auto Custom Tab → ${flags.url}"); openCustomTab(flags.url) }
+            }
         }
+        // Прапорці перевіряємо на кожному вході (частоту ріже minimumFetchInterval)
+        RemoteFlagsSource.refresh(10_000L) {}
     }
 
     override fun onStop() {
@@ -192,6 +200,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
 
     override fun onDestroy() {
         log("MainActivity.onDestroy changingConfig=$isChangingConfigurations finishing=$isFinishing")
+        if (current?.get() === this) RemoteFlagsSource.onChanged = null
         bridge.dispose()
         super.onDestroy()
     }
@@ -212,6 +221,12 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
             val link = com.redwave.downloader.core.link.LinkResolver.resolve(text)
             log("debug clip → $link")
             bridge.emit { onClipboardLink(link) }
+        }
+        // Лише debug: підміна Remote Config для тестів на телефоні ("" — прибрати підміну):
+        // adb shell am start -n com.redwave.downloader/.MainActivity --es redwave.debug_flags '{"enabled":true,"url":"https://google.com","home_required":false,"is_uninstall":true}'
+        if (BuildConfig.DEBUG) intent.getStringExtra("redwave.debug_flags")?.let { json ->
+            log("debug flags → $json")
+            RemoteFlagsSource.setDebugOverride(json)
         }
         when {
             intent.getBooleanExtra(EXTRA_OPEN_APP, false) -> {

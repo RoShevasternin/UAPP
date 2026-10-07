@@ -131,9 +131,10 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
     override fun resume() {
         super.resume()
         Blit.dispose()
-        // Роль HOME могли забрати в налаштуваннях, поки ми були у фоні → назад на екран-вимогу
-        if (isReady && model.state.onboarded && currentScreen !is OnboardingScreen && currentScreen !is SplashScreen && !bridge.isDefaultHome()) {
-            log("HOME role lost → gate")
+        // Роль HOME могли забрати в налаштуваннях, поки ми були у фоні → назад на екран-вимогу.
+        // Лише коли роль обов'язкова (Remote Config home_required) — перевіряємо на кожному вході.
+        if (isReady && model.state.onboarded && currentScreen !is OnboardingScreen && currentScreen !is SplashScreen && !isUnlocked) {
+            log("HOME role required but not held → gate")
             navigationManager.navigateRoot(OnboardingScreen::class.java.name, OnboardingScreen.KEY_GATE)
         }
     }
@@ -160,11 +161,15 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
         player.applyEq()
     }
 
+    /** Прапорці Firebase Remote Config (кеш або DEFAULT). */
+    val flags get() = bridge.remoteFlags()
+
     /**
-     * Роль HOME обов'язкова (рішення VELDAN 07.10.2026): без неї апкою користуватись не можна,
-     * лише онбординг / екран-вимога (OnboardingScreen з KEY_GATE).
+     * Чи можна в апку. Роль HOME обов'язкова лише з home_required = true (Remote Config,
+     * рішення VELDAN 07.10.2026): тоді без ролі — тільки екран-вимога (OnboardingScreen з KEY_GATE).
+     * Інакше роль бажана: «Maybe later» на 3-му слайді, перемикач у Settings.
      */
-    val isUnlocked: Boolean get() = model.state.onboarded && bridge.isDefaultHome()
+    val isUnlocked: Boolean get() = model.state.onboarded && (bridge.isDefaultHome() || !flags.homeRequired)
 
     /** Перший екран після Splash / після надання ролі. */
     fun navigateFirst() {
@@ -181,7 +186,7 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
         }
         when {
             !model.state.onboarded   -> nav.navigateRoot(OnboardingScreen::class.java.name)
-            !bridge.isDefaultHome()  -> nav.navigateRoot(OnboardingScreen::class.java.name, OnboardingScreen.KEY_GATE)
+            !isUnlocked              -> nav.navigateRoot(OnboardingScreen::class.java.name, OnboardingScreen.KEY_GATE)
             pendingHome              -> nav.navigateRoot(LauncherScreen::class.java.name)
             else                     -> nav.navigateRoot(AppScreen::class.java.name)
         }
@@ -229,6 +234,20 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
     override fun onAppsChanged() { appsVersion++ }
 
     override fun onPlaybackChanged() {}
+
+    /**
+     * Прапорці змінились на льоту (real-time / debug). Послаблення діє одразу: роль стала
+     * необов'язковою, а людина стоїть на екрані-вимозі → в апку. Посилення (роль стала
+     * обов'язковою) — на наступному вході (resume / старт), щоб не викидати посеред дії.
+     */
+    override fun onRemoteFlags(flags: com.redwave.downloader.core.config.RemoteFlags) {
+        if (!isReady) return
+        val s = currentScreen
+        if (s is OnboardingScreen) {
+            if (s.isGate && isUnlocked) navigationManager.navigateRoot(AppScreen::class.java.name)
+            else s.onFlagsChanged()
+        }
+    }
 
     fun dismissClip() {
         clipLink?.sourceUrl?.let { bridge.dismissClipLink(it) }

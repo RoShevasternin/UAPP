@@ -32,9 +32,11 @@ import kotlin.math.abs
 // OnboardingScreen — 3 слайди: фото з Ken Burns, скляна картка, що «пливе»,
 // крок, заголовок, опис, крапки + «→» (слайди 1–2) або CTA ролі HOME (3).
 // Свайп (поріг 45) гортає, «Назад» — попередній слайд.
-// Роль HOME обов'язкова (рішення VELDAN 07.10.2026): Skip веде на 3-й слайд, «Maybe later»
-// немає; відмова — лишаємось тут з поясненням. KEY_GATE — той самий екран як вимога, коли
-// роль забрали (GDXGame.navigateFirst / resume): одразу 3-й слайд.
+// 3-й слайд — роль HOME. Remote Config home_required (рішення VELDAN 07.10.2026):
+//   true  — лише «Set as Home screen»; відмова — лишаємось тут з поясненням;
+//   false — під нею вторинна текстова «Maybe later» (видна, але не кричить) → апка без ролі.
+// Skip веде на 3-й слайд. KEY_GATE — той самий екран як вимога, коли роль обов'язкова, а її
+// немає (GDXGame.navigateFirst / resume): одразу 3-й слайд.
 // ─────────────────────────────────────────────────────────────────────────────
 class OnboardingScreen : RedwaveScreen() {
 
@@ -44,6 +46,9 @@ class OnboardingScreen : RedwaveScreen() {
     }
 
     private val gate = gdxGame.navigationManager.key == KEY_GATE
+    val isGate get() = gate
+    /** Чи обов'язкова роль — з Remote Config; змінився на льоту → onFlagsChanged перебудовує слайд. */
+    private var required = gdxGame.flags.homeRequired
     private var index = 0
     /** Користувач відмовив у системному діалозі — підказка стає червоною. */
     private var declined = false
@@ -135,11 +140,28 @@ class OnboardingScreen : RedwaveScreen() {
         val side = px(22f)
         var y = bottomPad
         if (last) {
-            val hint = lbl(if (declined) Copy.Onboarding.HOME_DECLINED else Copy.Onboarding.HOME_REQUIRED,
-                msdf.regular(12.5f, if (declined) GameColor.pink_FF8A98 else GameColor.muted_A8949B), com.badlogic.gdx.utils.Align.center).apply {
+            val hintText = when {
+                required && declined -> Copy.Onboarding.HOME_DECLINED
+                required             -> Copy.Onboarding.HOME_REQUIRED
+                declined             -> Copy.Onboarding.HOME_DECLINED_OPTIONAL
+                else                 -> Copy.Onboarding.HOME_OPTIONAL
+            }
+            val hint = lbl(hintText,
+                msdf.regular(12.5f, if (declined && required) GameColor.pink_FF8A98 else GameColor.muted_A8949B), com.badlogic.gdx.utils.Align.center).apply {
                 setWrap(true); width = w - side * 2; height = prefHeight
             }
-            hint.setPosition(side, y); g.addActor(hint); y += hint.height + px(12f)
+            hint.setPosition(side, y); g.addActor(hint); y += hint.height + px(6f)
+            if (!required) {
+                // Вторинна дія: без підкладки, приглушений колір, але читається й має зону тапу 44
+                val later = object : ATap(this, 0.96f) {
+                    override fun addContent() {
+                        val l = lbl(Copy.Onboarding.MAYBE_LATER, msdf.semibold(14f, GameColor.muted_A8949B))
+                        addActor(l); l.setPosition((width - l.width) / 2f, (height - l.height) / 2f)
+                    }
+                }.onClick { skipRole() }
+                later.setBounds((w - px(180f)) / 2f, y, px(180f), px(44f))
+                g.addActor(later); y += later.height + px(2f)
+            } else y += px(6f)
             val setHome = AButtonRed(this, Copy.Onboarding.SET_HOME, assets.ic_home).apply { setSize(w - side * 2, px(48f)) }
             setHome.onClick { askRole() }
             setHome.setPosition(side, y); g.addActor(setHome); y += setHome.height + px(12f)
@@ -283,12 +305,26 @@ class OnboardingScreen : RedwaveScreen() {
             else {
                 declined = true
                 showSlide(Copy.Onboarding.SLIDES.lastIndex, animate = false)
-                gdxGame.toast(Copy.Onboarding.HOME_DECLINED)
+                if (required) gdxGame.toast(Copy.Onboarding.HOME_DECLINED)
             }
         }
     }
 
-    /** Лише з наданою роллю: далі — звичайний перший екран (AppScreen). */
+    /** «Maybe later» (лише home_required = false): онбординг пройдено, роль — пізніше в Settings. */
+    private fun skipRole() {
+        gdxGame.model.update { it.copy(onboarded = true) }
+        animHideScreen { gdxGame.navigateFirst() }
+    }
+
+    /** Remote Config змінився, поки ми тут (GDXGame.onRemoteFlags): показати / сховати «Maybe later». */
+    fun onFlagsChanged() {
+        val r = gdxGame.flags.homeRequired
+        if (r == required) return
+        required = r
+        if (index == Copy.Onboarding.SLIDES.lastIndex) showSlide(index, animate = false)
+    }
+
+    /** З наданою роллю: далі — звичайний перший екран (AppScreen). */
     private fun finish() {
         gdxGame.model.update { it.copy(onboarded = true) }
         animHideScreen {

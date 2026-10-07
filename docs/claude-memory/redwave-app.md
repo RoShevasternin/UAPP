@@ -64,9 +64,14 @@ MIUI A13 не працює, тож картку буфера на реально
 HOME — [[home-launcher-poc]]; атласи пакує VELDAN у GUI — [[mindora-texturepacker-cli]];
 хмара мержить сама — [[uapp-cloud-merge-permission]].
 
-## Remote Config для ролі HOME (рішення VELDAN 07.10.2026)
-- Прапорець у Firebase Remote Config (`is_home`): `true` — 3-й слайд онбордингу, обов'язкова роль HOME, лаунчер і сторінка на «Додому»; `false` — без 3-го слайду, роль не просимо, апка працює без неї.
-- Немає інтернету або Firebase не відповів (таймаут на сплеші 2–3 с) → `false`.
-- Прапорець перевіряємо при КОЖНОМУ вході: увімкнули `true` → вимога ролі з'явиться й у старих користувачів.
-- Firebase-проєкт створює VELDAN і дає `google-services.json` (пакет `com.redwave.downloader`); до того Firebase в апку не додаємо.
-- Попереджено: вимикати прапорець лише на час рев'ю — обман рев'ю (ризик бану акаунта); легально — A/B, країни, аварійне вимкнення.
+## Remote Config (рішення VELDAN 07.10.2026, зроблено того ж дня)
+- Firebase-проєкт `redwave-original`, у апці лише Remote Config (BoM 34.19.0, плагін google-services 4.5.0).
+- Параметр `redwave_config` (JSON): `enabled` + `url` — сторінка-реклама на «Додому»/після «Недавніх»;
+  `home_required` — true: лише «Set as Home screen», false: ще й «Maybe later» (видна, але скромна);
+  `is_uninstall` — довге натискання в лаунчері → App info / Uninstall; необов. `privacy_url`.
+- Немає відповіді Firebase → enabled=false, home_required=false, is_uninstall=true. Перевірка на кожному вході.
+- Settings: перемикач «Use as Home screen» (вимкнути = системний вибір лаунчера), Privacy Policy;
+  debug-кнопку вибору лаунчера прибрано. Privacy Policy — `Game Redwave/privacy-policy/` (Firebase Hosting,
+  деплоїть VELDAN; заглушки DEVELOPER_NAME / CONTACT_EMAIL).
+- Попереджено: вимикати рекламу лише на час рев'ю — обман рев'ю (ризик бану акаунта).
+- Назва в маркеті має містити Launcher/Home (рішення VELDAN), конкретну ще не обрано.

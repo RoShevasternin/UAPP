@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "265946491026",
+    "project_id": "redwave-original",
+    "storage_bucket": "redwave-original.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:265946491026:android:6909ea4dfe85590c449e4b",
+        "android_client_info": {
+          "package_name": "com.redwave.downloader"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_QUX5LTT3rnVwVNHGnuWE6NRZx9HdFgc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("kotlinx-serialization")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -97,6 +98,10 @@ dependencies {
 
     // probe + fetchText
     implementation("com.squareup.okhttp3:okhttp:5.5.0")
+
+    // Firebase: лише Remote Config (параметр redwave_config — див. RemoteFlags.kt). Без Analytics і реклами.
+    implementation(platform("com.google.firebase:firebase-bom:34.19.0"))
+    implementation("com.google.firebase:firebase-config")
 }
 
 tasks.register("copyAndroidNatives") {

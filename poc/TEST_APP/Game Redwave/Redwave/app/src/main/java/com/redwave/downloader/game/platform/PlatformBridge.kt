@@ -1,5 +1,6 @@
 package com.redwave.downloader.game.platform
 
+import com.redwave.downloader.core.config.RemoteFlags
 import com.redwave.downloader.core.link.AudioSniffer
 import com.redwave.downloader.core.link.ResolvedLink
 import com.redwave.downloader.core.model.DownloadStatus
@@ -54,9 +55,19 @@ interface PlatformBridge {
     fun isDefaultHome(): Boolean
     /** RoleManager.createRequestRoleIntent(ROLE_HOME) на Q+, ACTION_HOME_SETTINGS на старших. */
     fun requestDefaultHome(onResult: (isHome: Boolean) -> Unit)
-    /** Системний екран вибору головного застосунку (Settings / debug: повернути системний лаунчер). */
+    /** Системний екран вибору головного застосунку (Settings: перемикач «Use as Home screen» → вимкнути). */
     fun openHomeAppSettings()
     val appVersion: String
+
+    // ── Remote Config (Firebase) ─────────────────────────────────────────────
+    /** Останні активовані прапорці (кеш Firebase) або RemoteFlags.DEFAULT. Дешево — можна щокадру. */
+    fun remoteFlags(): RemoteFlags
+    /** Чи були прапорці з сервера хоч раз (кеш минулого запуску теж рахується). */
+    fun hasRemoteFlags(): Boolean
+    /** fetchAndActivate; onDone у GL-потоці рівно один раз — по відповіді або по таймауту. */
+    fun refreshRemoteFlags(timeoutMs: Long, onDone: (RemoteFlags) -> Unit)
+    /** Settings → Debug: звідки прапорці (remote / default / debug) і що в них. */
+    fun remoteFlagsDebug(): String
 
     // ── Буфер ────────────────────────────────────────────────────────────────
     /**
@@ -149,6 +160,10 @@ interface PlatformBridge {
     fun launchApp(app: LauncherApp)
     /** Док лаунчера: дефолтні апки ролей [Телефон, Повідомлення, Браузер, Камера]; null — немає дефолту. */
     fun dockApps(): List<LauncherApp?>
+    /** Довге натискання в лаунчері (RemoteFlags.isUninstall). app = null — сама Redwave. */
+    fun canUninstall(app: LauncherApp?): Boolean
+    fun openAppInfo(app: LauncherApp?)
+    fun uninstallApp(app: LauncherApp?)
 }
 
 /** Android → GDX. Реалізує GDXGame; Android кличе вже через runGDX (GL-потік). */
@@ -164,6 +179,8 @@ interface PlatformEvents {
     fun onDownloadFinished(id: Long, success: Boolean, localUri: String?)
     fun onAppsChanged()
     fun onPlaybackChanged()
+    /** Прапорці Remote Config змінились (fetch / real-time / debug з adb). */
+    fun onRemoteFlags(flags: RemoteFlags)
 }
 
 data class ProbeResult(

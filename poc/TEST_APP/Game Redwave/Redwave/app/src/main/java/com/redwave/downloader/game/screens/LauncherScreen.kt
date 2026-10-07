@@ -29,6 +29,7 @@ import com.redwave.downloader.game.controller.DownloadController.Submit
 import com.redwave.downloader.game.platform.LauncherApp
 import com.redwave.downloader.game.screens.base.RedwaveScreen
 import com.redwave.downloader.game.screens.base.statusScrim
+import com.redwave.downloader.game.screens.sheets.AppMenuSheet
 import com.redwave.downloader.game.screens.sheets.FeedSheet
 import com.redwave.downloader.game.utils.GameColor
 import com.redwave.downloader.game.utils.actor.ellipsize
@@ -47,6 +48,7 @@ import java.util.Locale
 // LauncherScreen — власний головний екран (роль HOME): годинник, картка лінка
 // з буфера (ClipGate), віджет завантажень, віджет плеєра, «All apps», док.
 // «Назад» нічого не робить; повторне «Додому» закриває сітку й гортає вгору.
+// Довге натискання на іконку → App info / Uninstall, лише з Remote Config is_uninstall = true.
 // ─────────────────────────────────────────────────────────────────────────────
 class LauncherScreen : RedwaveScreen() {
 
@@ -301,6 +303,15 @@ class LauncherScreen : RedwaveScreen() {
         when {
             redwave -> gdxGame.navigationManager.navigate(AppScreen::class.java.name, LauncherScreen::class.java.name)
             app != null -> gdxGame.bridge.launchApp(app)
+        }
+    }.apply {
+        // Remote Config is_uninstall: true — як системний лаунчер (App info / Uninstall);
+        // false — довге натискання нічого не робить, видалення лише через системні Налаштування
+        onLongPress = lp@{
+            if (!gdxGame.flags.isUninstall || (app == null && !redwave)) return@lp false
+            gdxGame.bridge.vibrate(20)
+            openSheet(AppMenuSheet(this@LauncherScreen, if (redwave) null else app))
+            true
         }
     }
 

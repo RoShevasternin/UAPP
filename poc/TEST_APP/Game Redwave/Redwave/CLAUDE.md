@@ -6,7 +6,23 @@
 
 Стек як в іграх UAPP: **Kotlin + LibGDX 1.14.2 + scene2d**, UI малюється в GL, Android-бік —
 тонкий шар сервісів. **Еталона немає** (правила теки — `poc/TEST_APP/CLAUDE.md`): ні `businesModule`,
-ні `adsmodule`, ні Firebase/TikTok/білінгу, доки VELDAN окремо не скаже.
+ні `adsmodule`, ні TikTok/білінгу, доки VELDAN окремо не скаже. **Firebase — лише Remote Config**
+(рішення VELDAN 07.10.2026, проєкт `redwave-original`, `app/google-services.json`); Analytics і рекламних SDK немає.
+
+## Remote Config — параметр `redwave_config` (JSON)
+
+Розбір — `core/config/RemoteFlags.kt` (+ `RemoteFlagsTest`), Firebase — `android/RemoteFlagsSource.kt`.
+
+| Поле | true | false | Без відповіді Firebase |
+|---|---|---|---|
+| `enabled` + `url` | сторінка `url` у Custom Tab на «Додому» з іншої апки й після «Недавніх» (лише з роллю HOME і онлайн) | нічого не відкривається | false |
+| `home_required` | 3-й слайд лише з «Set as Home screen»; без ролі — екран-вимога на кожному вході | ще й «Maybe later», апка працює без ролі | false |
+| `is_uninstall` | довге натискання на іконку в лаунчері → App info / Uninstall | довге натискання нічого не робить | true |
+| `privacy_url` (необов.) | адреса Privacy Policy в Settings | — | `https://redwave-original.web.app/privacy` |
+
+Перший запуск: Splash чекає Firebase до 3 с. Далі — кеш Firebase одразу, `fetchAndActivate` на кожному
+`onResume` (release — не частіше 5 хв) + real-time listener. Послаблення прапорців діє одразу, посилення
+(`home_required` → true) — на наступному вході. Privacy Policy — `../privacy-policy/` (Firebase Hosting).
 
 Спілкування й коментарі в коді — **українською**. UI апки — **англійською** (маркет США).
 
@@ -59,6 +75,8 @@ Debug-хуки (лише debug-збірка):
 ```bash
 # лаунчер без зміни дефолтного HOME + імітація лінка з буфера (adb на Android 13 не пише в буфер)
 adb shell am start -a android.intent.action.MAIN -c android.intent.category.HOME -n com.redwave.downloader/.MainActivity --es redwave.debug_clip "https://…/blue-room.m4a"
+# підміна Remote Config (живе до очищення: --es redwave.debug_flags ""); у Settings → Debug видно джерело прапорців
+adb shell am start -n com.redwave.downloader/.MainActivity --es redwave.debug_flags '{"enabled":true,"url":"https://google.com","home_required":false,"is_uninstall":true}'
 ```
 
 **Одна MainActivity на процес.** Іконка застосунку йде через `LauncherTrampoline`: на Android 10+

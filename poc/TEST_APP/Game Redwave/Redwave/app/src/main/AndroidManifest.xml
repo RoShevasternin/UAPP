@@ -18,6 +18,9 @@
          старі файли Music/Redwave нам уже не належать — без цього їх не видно й не видалити. -->
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <!-- Лаунчер: «Uninstall» на довге натискання (Remote Config is_uninstall) — системний діалог
+         ACTION_DELETE; без цього дозволу на API 28+ він не відкривається. Звичайний дозвіл, без запиту. -->
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <!-- POST_NOTIFICATIONS свідомо НЕМАЄ: сповіщення медіасесії звільнені від нього на 13+,
          сповіщення DownloadManager показує системний провайдер. ◌ перевірити на девайсі -->
 
