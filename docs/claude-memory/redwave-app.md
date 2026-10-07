@@ -77,3 +77,10 @@ HOME — [[home-launcher-poc]]; атласи пакує VELDAN у GUI — [[mind
 - Debug AD_MODE (Settings → Debug, лише debug-збірка): реклама + роль обов'язкова + без Uninstall поверх Remote Config,
   перемикання перезапускає процес; на екрані-вимозі є «AD_MODE OFF». У Remote Config зараз «білі» значення.
 - Назва в маркеті має містити Launcher/Home (рішення VELDAN), конкретну ще не обрано.
+
+## Орієнтир для публікації (VELDAN, 07.10.2026)
+- Cube Square: Space Launcher (`com.square.rush.cub.dash.runner`, Screening Developers) — пройшла модерацію:
+  «Launcher» у назві, розділ «Desktop Launcher Features» в описі, категорія Games → Casual, «Contains ads»,
+  Everyone, 500K+, Data safety з Location/Installed apps/Device IDs. У відгуках (07–09.2026): «force you to put it
+  as home app», «pop up every time I opened any app» — той самий механізм, ризик блокування вже після публікації.
+- Менеджер хоче категорію Tools. Акаунт — організація STAR ADS LLC (закритий тест 12×14 не обов'язковий).
