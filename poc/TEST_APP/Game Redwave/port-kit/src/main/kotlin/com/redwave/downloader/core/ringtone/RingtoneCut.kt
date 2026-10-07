@@ -25,7 +25,7 @@ object RingtoneCut {
     const val MAX_MS = 40_000L
     const val DEFAULT_LEN_MS = 25_000L
     const val DEFAULT_START_FRACTION = 0.30
-    const val MAX_FADE_MS = 1_500L
+    const val MAX_FADE_MS = 3_000L   // 1.5 с на дзвінку не чутно (VELDAN, 07.10.2026)
 
     /** Стартове виділення: з 30 % треку, 25 с (або скільки влізе). */
     fun default(durationMs: Long): CutSelection {
@@ -56,7 +56,7 @@ object RingtoneCut {
         }
     }
 
-    /** Fade: чверть фрагмента, але не більше 1.5 с. */
+    /** Fade: чверть фрагмента, але не більше 3 с. */
     fun fadeMs(lengthMs: Long): Long = min(MAX_FADE_MS, lengthMs / 4)
 
     /** Позиція пальця на хвилі (0..1) → мілісекунди. */

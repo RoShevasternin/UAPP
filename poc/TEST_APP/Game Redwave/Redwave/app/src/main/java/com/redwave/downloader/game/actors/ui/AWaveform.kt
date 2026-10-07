@@ -21,6 +21,9 @@ class AWaveform(screen: AdvancedScreen) : AShape(screen) {
     var peaks = FloatArray(64) { 0.15f }
     var durationMs = 1L
     var sel = CutSelection(0, 1)
+    /** Fade у мс (0 — вимкнено): стовпчики в цих зонах нижчають за кривою гучності + лінія рампи. */
+    var fadeInMs = 0L
+    var fadeOutMs = 0L
     var onChange: (CutSelection) -> Unit = {}
 
     private var handle = CutHandle.START
@@ -45,6 +48,16 @@ class AWaveform(screen: AdvancedScreen) : AShape(screen) {
         if (n != sel) { sel = n; onChange(n) }
     }
 
+    private val fadeLine = Color(1f, 1f, 1f, 0.55f)
+
+    /** Та сама крива, що в Preview і у файлі (лінійна). */
+    private fun gainAt(ms: Long): Float {
+        var g = 1f
+        if (fadeInMs > 0) g = ((ms - sel.startMs).toFloat() / fadeInMs).coerceIn(0f, 1f)
+        if (fadeOutMs > 0) g = minOf(g, ((sel.endMs - ms).toFloat() / fadeOutMs).coerceIn(0f, 1f))
+        return g
+    }
+
     override fun drawShape(alpha: Float) {
         val n = peaks.size
         val a = RingtoneCut.msToFraction(sel.startMs, durationMs)
@@ -56,9 +69,21 @@ class AWaveform(screen: AdvancedScreen) : AShape(screen) {
         val bw = step - px(2f)
         for (i in 0 until n) {
             val f = (i + 0.5f) / n
-            val h = (peaks[i] * height * 0.82f).coerceAtLeast(px(6f))
-            col(if (f in a..b) GameColor.wave_FF3D55 else offColor, alpha)
+            val inSel = f in a..b
+            val g = if (inSel) gainAt(RingtoneCut.fractionToMs(f, durationMs)) else 1f
+            val h = (peaks[i] * height * 0.82f * (0.12f + 0.88f * g)).coerceAtLeast(px(4f))
+            col(if (inSel) GameColor.wave_FF3D55 else offColor, alpha)
             drawer.filledRectangle(x + i * step + px(1f), y + (height - h) / 2f, bw, h)
+        }
+        // Рампи fade: від низу на краю фрагмента до верху там, де fade закінчився
+        col(fadeLine, alpha)
+        if (fadeInMs > 0) {
+            val fx = x + RingtoneCut.msToFraction(sel.startMs + fadeInMs, durationMs) * width
+            drawer.line(ax, y + px(4f), fx, y + height - px(4f), px(1.6f))
+        }
+        if (fadeOutMs > 0) {
+            val fx = x + RingtoneCut.msToFraction(sel.endMs - fadeOutMs, durationMs) * width
+            drawer.line(fx, y + height - px(4f), bx, y + px(4f), px(1.6f))
         }
         listOf(ax, bx).forEach { hx ->
             col(Color.WHITE, alpha); drawer.line(hx, y, hx, y + height, px(2f))

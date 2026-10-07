@@ -119,7 +119,9 @@ object RingtoneMaker {
             ctx.contentResolver.update(uri, ContentValues().apply { put(MediaStore.Audio.Media.IS_PENDING, 0) }, null, null)
         }
         if (Build.VERSION.SDK_INT < 23 || Settings.System.canWrite(ctx)) {
+            SystemSounds.rememberBeforeSet(ctx, saveAs)       // щоб Restore повернув саме це
             RingtoneManager.setActualDefaultRingtoneUri(ctx, type, uri)
+            SystemSounds.markOurs(ctx, saveAs, uri)
             log("ringtone set: $uri ($saveAs)")
         } else {
             log("ringtone saved without WRITE_SETTINGS: $uri")

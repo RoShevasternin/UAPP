@@ -80,7 +80,7 @@ class RingtoneCutTest {
     }
 
     @Test fun fadesAndNames() {
-        assertEquals(1_500, RingtoneCut.fadeMs(25_000))
+        assertEquals(3_000, RingtoneCut.fadeMs(25_000))
         assertEquals(1_000, RingtoneCut.fadeMs(4_000))
         assertEquals("Night Drive (ringtone).m4a", RingtoneCut.fileName("Night Drive", SaveAs.RINGTONE))
         assertEquals("AC DC (alarm).m4a", RingtoneCut.fileName("AC/DC", SaveAs.ALARM))

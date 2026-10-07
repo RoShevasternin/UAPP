@@ -125,6 +125,8 @@ object Copy {
         const val STOP = "Stop"
         fun save(kind: String) = "Save ${kind.lowercase()}"
         fun savedToast(kind: String, title: String, len: String) = "$kind saved · $title ($len)"
+        fun restore(kind: String) = "Restore system ${kind.lowercase()}"
+        fun restored(kind: String) = "System ${kind.lowercase()} restored"
         const val NEED_PERMISSION = "Allow Redwave to change system settings to set ringtones."
         /** Файл збережено (є в системному виборі звуків), але без WRITE_SETTINGS за замовчуванням не поставлено. */
         fun savedNotSet(kind: String) = "$kind saved. Allow “Modify system settings” to make it the default."

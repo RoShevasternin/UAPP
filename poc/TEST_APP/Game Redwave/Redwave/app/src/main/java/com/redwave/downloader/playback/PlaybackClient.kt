@@ -112,6 +112,7 @@ class PlaybackClient(private val ctx: Context) {
         val items = queue.mapNotNull { it.toMediaItem() }
         if (items.isEmpty()) return@run
         val start = queue.getOrNull(startIndex)?.id?.let { id -> items.indexOfFirst { it.mediaId == id } }?.coerceAtLeast(0) ?: 0
+        c.volume = 1f
         c.setMediaItems(items, start, positionMs)
         c.prepare()
         c.play()
@@ -131,6 +132,43 @@ class PlaybackClient(private val ctx: Context) {
             sleepAt = if (minutes <= 0) 0 else System.currentTimeMillis() + minutes * 60_000L
             refresh()
         }
+    }
+
+    // ------------------------------------------------------------------------
+    // Preview рингтону: fade гучністю плеєра + стоп рівно на кінці фрагмента
+    // ------------------------------------------------------------------------
+    private var fade: IntArray? = null
+    private var fadeLogTick = 0      // startMs, endMs, fadeInMs, fadeOutMs
+    private val fadeTicker = object : Runnable {
+        override fun run() {
+            val f = fade ?: return
+            val c = controller ?: return
+            val pos = c.currentPosition
+            if (pos >= f[1]) {                       // кінець фрагмента
+                c.pause(); c.volume = 1f; fade = null; refresh(); return
+            }
+            var g = 1f
+            val fromStart = (pos - f[0]).coerceAtLeast(0)
+            val toEnd = (f[1] - pos).coerceAtLeast(0)
+            if (f[2] > 0 && fromStart < f[2]) g = fromStart.toFloat() / f[2]
+            if (f[3] > 0 && toEnd < f[3]) g = minOf(g, toEnd.toFloat() / f[3])
+            c.volume = g.coerceIn(0f, 1f)
+            if (++fadeLogTick % 10 == 0) log("preview fade pos=$pos gain=${"%.2f".format(c.volume)}")
+            main.postDelayed(this, 30)
+        }
+    }
+
+    fun previewFade(startMs: Long, endMs: Long, fadeInMs: Long, fadeOutMs: Long) = main.post {
+        fade = intArrayOf(startMs.toInt(), endMs.toInt(), fadeInMs.toInt(), fadeOutMs.toInt())
+        controller?.volume = if (fadeInMs > 0) 0f else 1f
+        main.removeCallbacks(fadeTicker)
+        main.post(fadeTicker)
+    }
+
+    fun clearPreviewFade() = main.post {
+        fade = null
+        main.removeCallbacks(fadeTicker)
+        controller?.volume = 1f
     }
 
     fun release() = main.post {

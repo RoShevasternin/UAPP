@@ -17,6 +17,7 @@ import com.redwave.downloader.game.actors.ui.ASegmented
 import com.redwave.downloader.game.actors.ui.ATap
 import com.redwave.downloader.game.actors.ui.AToggle
 import com.redwave.downloader.game.actors.ui.AWaveform
+import com.redwave.downloader.game.platform.RestoreResult
 import com.redwave.downloader.game.screens.AppScreen
 import com.redwave.downloader.game.utils.Fmt
 import com.redwave.downloader.game.utils.GameColor
@@ -42,6 +43,7 @@ class RingtoneTab(app: AppScreen) : ATabPage(app) {
     private var fadeOut = true
     private var saveAs = SaveAs.RINGTONE
     private var previewing = false
+    private var previewStartedAt = 0L
     private var saving = false
     private var key = 0
 
@@ -73,6 +75,22 @@ class RingtoneTab(app: AppScreen) : ATabPage(app) {
         }
     }.apply { setSize(W, px(38f)) }
 
+    private var wave: AWaveform? = null
+    private val fadeSubs = arrayOfNulls<AMsdfLabel>(2)
+    private val fadeInMs get() = if (fadeIn) RingtoneCut.fadeMs(sel.lengthMs) else 0L
+    private val fadeOutMs get() = if (fadeOut) RingtoneCut.fadeMs(sel.lengthMs) else 0L
+
+    /** Fade змінився (тумблер / довжина фрагмента) — хвиля й підписи «1.5 s». */
+    private fun refreshFade() {
+        wave?.fadeInMs = fadeInMs; wave?.fadeOutMs = fadeOutMs
+        val sec = String.format(java.util.Locale.US, "%.1f s", RingtoneCut.fadeMs(sel.lengthMs) / 1000f)
+        fadeSubs.forEachIndexed { i, l -> l ?: return@forEachIndexed
+            val on = if (i == 0) fadeIn else fadeOut
+            l.setText(if (on) sec else "off"); l.pack()
+            l.setTextColor(if (on) GameColor.redHi_FF5A6C else GameColor.muted_A8949B)
+        }
+    }
+
     private lateinit var startL: AMsdfLabel
     private lateinit var lenL: AMsdfLabel
     private lateinit var endL: AMsdfLabel
@@ -86,10 +104,11 @@ class RingtoneTab(app: AppScreen) : ATabPage(app) {
         }
         if (trackId != t.id) { trackId = t.id; sel = RingtoneCut.default(t.durationMs) }
         val gap = px(18f)
-        val parts = listOf(trackCard(t, w), waveBox(t, w), toggles(w), segment(w), buttons(w))
+        val parts = listOf(trackCard(t, w), waveBox(t, w), toggles(w), segment(w), buttons(w), restoreButton(w))
         val h = parts.sumOf { it.height.toDouble() }.toFloat() + gap * (parts.size - 1)
         var y = h
         parts.forEach { p -> y -= p.height; p.setPosition(0f, y); g.addActor(p); y -= gap }
+        refreshFade()
         return h
     }
 
@@ -131,8 +150,9 @@ class RingtoneTab(app: AppScreen) : ATabPage(app) {
                 val wave = AWaveform(app).apply {
                     setBounds(pad, y, this@RingtoneTab.W - pad * 2, waveH)
                     durationMs = t.durationMs.coerceAtLeast(1); sel = this@RingtoneTab.sel
-                    onChange = { s -> this@RingtoneTab.sel = s; stopPreview(); refreshInfo() }
+                    onChange = { s -> this@RingtoneTab.sel = s; stopPreview(); refreshInfo(); refreshFade() }
                 }
+                this@RingtoneTab.wave = wave
                 addActor(wave)
                 gdxGame.bridge.waveformPeaks(t, 64) { p -> if (p.isNotEmpty()) wave.peaks = p }
                 y -= px(10f) + px(40f)
@@ -167,16 +187,19 @@ class RingtoneTab(app: AppScreen) : ATabPage(app) {
                 val tap = object : ATap(app, 0.97f) {
                     override fun addContent() {
                         addAndFillActor(ARect(app, px(14f), GameColor.card_170F12, stroke = GameColor.line_white_7))
-                        val l = lbl(label, msdf.semibold(13f)); l.setPosition(px(12f), (height - l.height) / 2f); addActor(l)
+                        val l = lbl(label, msdf.semibold(13f)); l.setPosition(px(12f), height / 2f - px(1f)); addActor(l)
+                        val sub = lbl("off", msdf.monoSemi(10.5f, GameColor.muted_A8949B)); sub.setPosition(px(12f), height / 2f - sub.height - px(1f)); addActor(sub)
+                        fadeSubs[i] = sub
                         addActor(tgl); tgl.setPosition(width - px(12f) - tgl.width, (height - tgl.height) / 2f)
                     }
                 }.onClick {
                     if (i == 0) { fadeIn = !fadeIn; tgl.isOn = fadeIn } else { fadeOut = !fadeOut; tgl.isOn = fadeOut }
+                    stopPreview(); refreshFade()
                 }
                 tap.setBounds(i * (tw + px(8f)), 0f, tw, height); addActor(tap)
             }
         }
-    }.apply { setSize(w, px(44f)) }
+    }.apply { setSize(w, px(50f)) }
 
     private fun segment(w: Float) = ASegmented(app, Copy.Ringtone.SAVE_AS.map { it to null }, saveAs.ordinal) { i ->
         saveAs = SaveAs.entries[i]; key++
@@ -196,6 +219,23 @@ class RingtoneTab(app: AppScreen) : ATabPage(app) {
         }
     }.apply { setSize(w, px(46f)) }
 
+    /** Повернути системний звук для вибраного типу (VELDAN, 07.10.2026). */
+    private fun restoreButton(w: Float): AButtonGhost {
+        val kind = Copy.Ringtone.SAVE_AS[saveAs.ordinal]
+        val b = AButtonGhost(app, Copy.Ringtone.restore(kind), assets.ic_repeat, small = true).apply { setSize(w, px(40f)) }
+        b.onClick {
+            gdxGame.bridge.restoreSystemSound(saveAs) { r ->
+                when (r) {
+                    RestoreResult.RESTORED -> gdxGame.toast(Copy.Ringtone.restored(kind))
+                    RestoreResult.PICKED -> gdxGame.toast(Copy.Ringtone.restored(kind))
+                    RestoreResult.NO_PERMISSION -> { gdxGame.toast(Copy.Ringtone.NEED_PERMISSION); gdxGame.bridge.openWriteSettings() }
+                    RestoreResult.CANCELLED -> {}
+                }
+            }
+        }
+        return b
+    }
+
     // ------------------------------------------------------------------------
     // Дії
     // ------------------------------------------------------------------------
@@ -210,14 +250,18 @@ class RingtoneTab(app: AppScreen) : ATabPage(app) {
         val t = track ?: return
         if (previewing) { stopPreview(); return }
         previewing = true
+        previewStartedAt = System.currentTimeMillis()
         gdxGame.bridge.setRepeatOne(false)
         gdxGame.bridge.play(listOf(t), 0, sel.startMs)
+        // fade чутно вже в Preview — та сама крива, що піде у файл
+        gdxGame.bridge.previewFade(sel.startMs, sel.endMs, fadeInMs, fadeOutMs)
         updatePreviewBtn()
     }
 
     private fun stopPreview() {
         if (!previewing) return
         previewing = false
+        gdxGame.bridge.clearPreviewFade()
         gdxGame.bridge.pause()
         updatePreviewBtn()
     }
@@ -229,8 +273,10 @@ class RingtoneTab(app: AppScreen) : ATabPage(app) {
     override fun act(delta: Float) {
         super.act(delta)
         if (previewing) {
+            // Плеєр сам ставить паузу рівно на кінці фрагмента (previewFade) — ловимо це
             val s = gdxGame.player.snap
-            if (s.trackId == trackId && s.positionMs >= sel.endMs) stopPreview()
+            val started = System.currentTimeMillis() - previewStartedAt > 800
+            if (s.trackId == trackId && (s.positionMs >= sel.endMs || (started && !s.isPlaying))) stopPreview()
         }
     }
 

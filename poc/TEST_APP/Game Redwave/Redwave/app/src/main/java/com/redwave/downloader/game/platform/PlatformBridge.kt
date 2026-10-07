@@ -95,6 +95,9 @@ interface PlatformBridge {
     fun setShuffle(on: Boolean)
     fun setRepeatOne(on: Boolean)
     fun setSleepTimer(minutes: Int)
+    /** Preview рингтону: гучність = fade за позицією, пауза рівно на endMs. Скидає clearPreviewFade / play. */
+    fun previewFade(startMs: Long, endMs: Long, fadeInMs: Long, fadeOutMs: Long)
+    fun clearPreviewFade()
     fun playbackState(): PlaybackSnapshot
     /** android.media.audiofx.Equalizer на audioSessionId плеєра; bandsDb — 5 смуг UI (EqCurve). */
     fun setEqualizer(enabled: Boolean, bandsDb: FloatArray)
@@ -114,6 +117,13 @@ interface PlatformBridge {
         track: Track, selection: CutSelection, fadeIn: Boolean, fadeOut: Boolean, saveAs: SaveAs,
         onResult: (Result<String>) -> Unit,
     )
+    /** Чи стоїть зараз звук, встановлений Redwave (для цього типу). */
+    fun isOurSoundActive(saveAs: SaveAs): Boolean
+    /**
+     * Повернути системний звук. Відомий оригінал (запам'ятали перед заміною) — одразу,
+     * колбек RESTORED. Невідомий — системний список звуків: PICKED (вибрали) / CANCELLED.
+     */
+    fun restoreSystemSound(saveAs: SaveAs, onResult: (RestoreResult) -> Unit)
     /** Теги щойно завантаженого файлу (MediaMetadataRetriever); обкладинку кладе в filesDir/covers/<trackId>.jpg. */
     fun readTags(localUri: String, trackId: String, onResult: (TrackTags?) -> Unit)
     fun shareTrack(track: Track)
@@ -164,6 +174,8 @@ data class ProbeResult(
     val sizeBytes: Long,
     val httpCode: Int,
 )
+
+enum class RestoreResult { RESTORED, PICKED, CANCELLED, NO_PERMISSION }
 
 data class FolderFile(
     val name: String,

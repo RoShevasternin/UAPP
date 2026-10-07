@@ -45,6 +45,7 @@ import androidx.core.graphics.createBitmap
 import androidx.core.net.toUri
 import com.redwave.downloader.MainActivity
 import com.redwave.downloader.android.ringtone.RingtoneMaker
+import com.redwave.downloader.android.ringtone.SystemSounds
 import com.redwave.downloader.android.ringtone.WaveformPeaks
 import com.redwave.downloader.core.link.AudioSniffer
 import com.redwave.downloader.core.model.DownloadStatus
@@ -60,6 +61,7 @@ import com.redwave.downloader.game.platform.PlatformBridge
 import com.redwave.downloader.game.platform.PlatformEvents
 import com.redwave.downloader.game.platform.PlaybackSnapshot
 import com.redwave.downloader.game.platform.ProbeResult
+import com.redwave.downloader.game.platform.RestoreResult
 import com.redwave.downloader.game.platform.StorageInfo
 import com.redwave.downloader.game.platform.TextInputRequest
 import com.redwave.downloader.game.platform.TrackTags
@@ -431,6 +433,8 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
     override fun setShuffle(on: Boolean)   = playback.setShuffle(on)
     override fun setRepeatOne(on: Boolean) = playback.setRepeatOne(on)
     override fun setSleepTimer(minutes: Int) = playback.setSleepTimer(minutes)
+    override fun previewFade(startMs: Long, endMs: Long, fadeInMs: Long, fadeOutMs: Long) { playback.previewFade(startMs, endMs, fadeInMs, fadeOutMs) }
+    override fun clearPreviewFade() { playback.clearPreviewFade() }
     override fun playbackState(): PlaybackSnapshot = playback.snapshot
     override fun setEqualizer(enabled: Boolean, bandsDb: FloatArray) = AudioFx.set(enabled, bandsDb)
     override val spectrum: SpectrumAnalyzer get() = Spectrum.analyzer
@@ -514,6 +518,52 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
     ) {
         main.post {
             RingtoneMaker.save(ctx, track, selection, fadeIn, fadeOut, saveAs) { r -> runGDX { onResult(r) } }
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // Повернути системний рингтон / будильник / сповіщення
+    // ------------------------------------------------------------------------
+    override fun isOurSoundActive(saveAs: SaveAs): Boolean = runCatching { SystemSounds.isOursActive(ctx, saveAs) }.getOrDefault(false)
+
+    private var pickerFor: SaveAs? = null
+    private var pickerCallback: ((RestoreResult) -> Unit)? = null
+    private val soundPicker =
+        activity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { r ->
+            val saveAs = pickerFor; val cb = pickerCallback
+            pickerFor = null; pickerCallback = null
+            val result = if (r.resultCode == android.app.Activity.RESULT_OK && saveAs != null) {
+                @Suppress("DEPRECATION")
+                val uri: Uri? = r.data?.getParcelableExtra(android.media.RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
+                SystemSounds.set(ctx, saveAs, uri)
+                SystemSounds.forgetOriginal(ctx, saveAs)
+                RestoreResult.PICKED
+            } else RestoreResult.CANCELLED
+            runGDX { cb?.invoke(result) }
+        }
+
+    override fun restoreSystemSound(saveAs: SaveAs, onResult: (RestoreResult) -> Unit) {
+        main.post {
+            if (!canWriteSettings()) { runGDX { onResult(RestoreResult.NO_PERMISSION) }; return@post }
+            if (SystemSounds.hasOriginal(ctx, saveAs)) {
+                SystemSounds.set(ctx, saveAs, SystemSounds.original(ctx, saveAs))
+                SystemSounds.forgetOriginal(ctx, saveAs)
+                runGDX { onResult(RestoreResult.RESTORED) }
+                return@post
+            }
+            // Оригінал невідомий → системний список звуків (лише системні, без «Default»)
+            val type = SystemSounds.type(saveAs)
+            val intent = Intent(android.media.RingtoneManager.ACTION_RINGTONE_PICKER)
+                .putExtra(android.media.RingtoneManager.EXTRA_RINGTONE_TYPE, type)
+                .putExtra(android.media.RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, false)
+                .putExtra(android.media.RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, saveAs == SaveAs.NOTIFICATION)
+                .putExtra(android.media.RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, android.media.RingtoneManager.getActualDefaultRingtoneUri(ctx, type))
+            pickerFor = saveAs; pickerCallback = onResult
+            activity.internalNavigation = true
+            try { soundPicker.launch(intent) } catch (e: ActivityNotFoundException) {
+                pickerFor = null; pickerCallback = null
+                runGDX { onResult(RestoreResult.CANCELLED) }
+            }
         }
     }
 
