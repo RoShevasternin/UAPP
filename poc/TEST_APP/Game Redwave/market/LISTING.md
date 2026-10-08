@@ -98,7 +98,7 @@ Remote Config `is_uninstall`.
 |---|---|
 | App or game | **App** |
 | Category | **Tools** (бажання менеджера). ◌ Альтернатива для лаунчера — Personalization, для плеєра — Music & Audio |
-| Tags | до 5 зі списку консолі. Кандидати: Launcher, Music player, Ringtones, Podcast, Offline music. ◌ Назви тегів брати лише з того, що консоль пропонує |
+| Tags | до 5, лише зі списку консолі (пошук у Manage tags). ✔ **Music & audio** є (08.10.2026). Далі за пріоритетом шукати: «Launch» (лаунчер / Home screen), «Ring» (рингтони), «Pod» (подкасти), «Personal» (Personalization — точно існує, видно як пов'язаний тег), «player» (аудіоплеєр). Не брати: Music instrument, Watch face: Music |
 | Contact email | `oyutetijep68@gmail.com` |
 | Website | необов'язково (можна лишити порожнім) |
 | Phone | необов'язково |
