@@ -82,6 +82,8 @@ HOME — [[home-launcher-poc]]; атласи пакує VELDAN у GUI — [[mind
 - App Open: відкриття (холодний старт з іконки, іконка Redwave на нашому лаунчері) + повернення в апку,
   якщо людини не було ≤ 1 год; не частіше раз на 3 хв від будь-якої повноекранної. Interstitial — кожні 2 треки.
 - Лише в AppScreen/PlayerScreen — НЕ на лаунчері (повноекранна на головному екрані = disruptive ads), не на онбордингу.
+- Вмикач — Remote Config `is_enable_admob` (08.10.2026): false / офлайн / без Firebase → AdMob немає зовсім
+  (SDK не ініціалізується). AD_MODE вмикає й AdMob. `AD_ID` прописано в маніфесті явно.
 - Зараз тестові блоки Google (play-services-ads 25.5.0). Перед релізом: свої ID, UMP, Privacy Policy + Data safety.
 - ◌ Тлумачення «повернувся протягом години» — буквальне: > 1 год поза апкою без холодного старту → без App Open.
   Якщо VELDAN мав на увазі інше — константа `AdPolicy.RETURN_WINDOW_MS` / `canAppOpenOnReturn`.

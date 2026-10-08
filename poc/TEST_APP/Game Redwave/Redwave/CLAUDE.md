@@ -8,11 +8,14 @@
 тонкий шар сервісів. **Еталона немає** (правила теки — `poc/TEST_APP/CLAUDE.md`): ні `businesModule`,
 ні `adsmodule`, ні TikTok/білінгу, доки VELDAN окремо не скаже. **Firebase — лише Remote Config**
 (рішення VELDAN 07.10.2026, проєкт `redwave-original`, `app/google-services.json`); Analytics немає.
-**Реклама — AdMob напряму** (App Open + Interstitial, розділ нижче), зараз лише тестові блоки Google.
+**Реклама — AdMob напряму** (App Open + Interstitial, розділ нижче), зараз лише тестові блоки Google;
+вмикає Remote Config `is_enable_admob`.
 
 ## Реклама AdMob (рішення VELDAN 07.10.2026)
 
-Частота — `core/ads/AdPolicy.kt` (+ `AdPolicyTest`), SDK — `android/AdsManager.kt`, де показувати — `GDXGame`.
+Вмикач — `is_enable_admob` у Remote Config (рішення VELDAN 08.10.2026): `false`, офлайн або без відповіді Firebase —
+SDK не ініціалізується, нічого не вантажиться й не показується, треки не рахуються. Частота — `core/ads/AdPolicy.kt`
+(+ `AdPolicyTest`), SDK — `android/AdsManager.kt`, де показувати — `GDXGame`. `AD_ID` — явно в маніфесті.
 
 | Що | Коли | Обмеження |
 |---|---|---|
@@ -34,6 +37,7 @@
 | `enabled` + `url` | сторінка `url` у Custom Tab на «Додому» з іншої апки й після «Недавніх» (лише з роллю HOME і онлайн) | нічого не відкривається | false |
 | `home_required` | 3-й слайд лише з «Set as Home screen»; без ролі — екран-вимога на кожному вході | ще й «Maybe later», апка працює без ролі | false |
 | `is_uninstall` | довге натискання на іконку в лаунчері → App info / Uninstall | довге натискання нічого не робить | true |
+| `is_enable_admob` | реклама AdMob: App Open + Interstitial (розділ вище) | AdMob немає взагалі | false |
 | `privacy_url` (необов.) | адреса Privacy Policy в Settings | — | `https://redwave-privacy.oyutetijep68.workers.dev/privacy` |
 
 **Немає інтернету → значення з колонки «Без відповіді» завжди**, навіть якщо в кеші Firebase інші
@@ -92,10 +96,10 @@ Debug-хуки (лише debug-збірка):
 ```bash
 # лаунчер без зміни дефолтного HOME + імітація лінка з буфера (adb на Android 13 не пише в буфер)
 adb shell am start -a android.intent.action.MAIN -c android.intent.category.HOME -n com.redwave.downloader/.MainActivity --es redwave.debug_clip "https://…/blue-room.m4a"
-# Settings → Debug → AD_MODE: «чорний» режим поверх Remote Config (реклама на Home, роль обов'язкова, без Uninstall),
+# Settings → Debug → AD_MODE: «чорний» режим поверх Remote Config (реклама на Home + AdMob, роль обов'язкова, без Uninstall),
 # перемикання перезапускає апку; вимкнути можна й з екрана-вимоги (кнопка AD_MODE OFF зліва вгорі)
 # підміна Remote Config (живе до очищення: --es redwave.debug_flags ""); у Settings → Debug видно джерело прапорців
-adb shell am start -n com.redwave.downloader/.MainActivity --es redwave.debug_flags '{"enabled":true,"url":"https://google.com","home_required":false,"is_uninstall":true}'
+adb shell am start -n com.redwave.downloader/.MainActivity --es redwave.debug_flags '{"enabled":true,"url":"https://google.com","home_required":false,"is_uninstall":true,"is_enable_admob":true}'
 # реклама: забути останній показ і лічильник треків (не чекати 3 хв); стан видно в Settings → Debug (ads(test) · dl 1/2 · …)
 adb shell am start -n com.redwave.downloader/.MainActivity --ez redwave.debug_ads_reset true
 # «повернення в апку» без «Недавніх»: піти в Settings і повернути Redwave наперед

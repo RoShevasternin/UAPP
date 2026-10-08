@@ -15,6 +15,7 @@ class RemoteFlagsTest {
             assertFalse(f.enabled, "реклама вимкнена для: $j")
             assertFalse(f.homeRequired, "Maybe later є для: $j")
             assertTrue(f.isUninstall, "видаляти можна для: $j")
+            assertFalse(f.isEnableAdmob, "AdMob вимкнено для: $j")
         }
     }
 
@@ -34,6 +35,12 @@ class RemoteFlagsTest {
         assertFalse(RemoteFlags.parse("""{"enabled": true}""").adActive)
         assertFalse(RemoteFlags.parse("""{"enabled": true, "url": "http://insecure.example"}""").adActive)
         assertFalse(RemoteFlags.parse("""{"enabled": false, "url": "https://example.com"}""").adActive)
+    }
+
+    @Test fun admobFlag() {
+        assertTrue(RemoteFlags.parse("""{"is_enable_admob": true}""").isEnableAdmob)
+        assertFalse(RemoteFlags.parse("""{"is_enable_admob": false}""").isEnableAdmob)
+        assertFalse(RemoteFlags.parse("""{"enabled": true, "url": "https://example.com"}""").isEnableAdmob)
     }
 
     @Test fun privacyUrlFallback() {

@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         clipWatcher = ClipWatcher(this, bridge)
         bridge.clipWatcher = clipWatcher
         val b = bridge
-        RemoteFlagsSource.onChanged = { f -> b.emit { onRemoteFlags(f) } }
+        RemoteFlagsSource.onChanged = { f -> AdsManager.onFlags(); b.emit { onRemoteFlags(f) } }
 
         // Системні бари лишаємо видимими (лаунчер не ховає навігацію) — GDX лише
         // відступає safe area. Висоти фіксуємо один раз, як у T35.
@@ -165,6 +165,8 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     override fun onResume() {
         super.onResume()
         bridge.onActivityResumed()
+        // Апку могли запустити офлайн (AdMob = false), а тепер інтернет є — прапорці ті самі, onChanged не прийде
+        AdsManager.onFlags()
 
         ownTabInFront = false
         internalNavigation = false

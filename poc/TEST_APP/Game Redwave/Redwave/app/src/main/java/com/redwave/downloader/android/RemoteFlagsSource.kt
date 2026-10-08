@@ -114,7 +114,7 @@ object RemoteFlagsSource {
 
     /**
      * Увімкнути — підміна поверх Remote Config: реклама на «Додому» / після «Недавніх» (url з Remote
-     * Config, якщо там https, інакше google.com), роль HOME обов'язкова, видаляти з лаунчера не можна.
+     * Config, якщо там https, інакше google.com) і AdMob, роль HOME обов'язкова, видаляти з лаунчера не можна.
      * Вимкнути — підміну прибрано, діє Remote Config. Синхронний commit: далі процес перезапускаємо.
      */
     fun setAdMode(on: Boolean) {
@@ -124,7 +124,7 @@ object RemoteFlagsSource {
                 ?.takeIf { it.source == FirebaseRemoteConfig.VALUE_SOURCE_REMOTE }
                 ?.let { RemoteFlags.parse(it.asString()).url }
                 ?.takeIf { it.startsWith("https://") }
-            RemoteFlags(enabled = true, url = remoteUrl ?: "https://google.com", homeRequired = true, isUninstall = false)
+            RemoteFlags(enabled = true, url = remoteUrl ?: "https://google.com", homeRequired = true, isUninstall = false, isEnableAdmob = true)
         } else null
         debugOverride = flags
         ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit(commit = true) {
@@ -138,7 +138,7 @@ object RemoteFlagsSource {
         val f = effective
         val src = if (debugOverride == null && !isOnline()) "offline → default" else origin
         return "[$src] ${RemoteFlags.REMOTE_KEY} = enabled=${f.enabled} home_required=${f.homeRequired} " +
-            "is_uninstall=${f.isUninstall}" + (if (f.url.isNotBlank()) " url=${f.url}" else "")
+            "is_uninstall=${f.isUninstall} is_enable_admob=${f.isEnableAdmob}" + (if (f.url.isNotBlank()) " url=${f.url}" else "")
     }
 
     private fun isOnline(): Boolean {

@@ -7,10 +7,10 @@ import kotlinx.serialization.Serializable
 // ═════════════════════════════════════════════════════════════════════════════
 //  RemoteFlags — прапорці з Firebase Remote Config (рішення VELDAN 07.10.2026).
 //  Один параметр REMOTE_KEY зі значенням-JSON, напр.:
-//    {"enabled": true, "url": "https://…", "home_required": false, "is_uninstall": true}
+//    {"enabled": true, "url": "https://…", "home_required": false, "is_uninstall": true, "is_enable_admob": true}
 //
 //  Firebase не відповів / немає інтернету / зламаний JSON → DEFAULT:
-//  реклами немає, роль HOME не обов'язкова («Maybe later» є), видаляти з лаунчера можна.
+//  реклами немає (ні сторінки на «Додому», ні AdMob), роль HOME не обов'язкова («Maybe later» є), видаляти з лаунчера можна.
 //  Чистий Kotlin: без Android, тестується JVM-тестом.
 // ═════════════════════════════════════════════════════════════════════════════
 @Serializable
@@ -25,6 +25,8 @@ data class RemoteFlags(
     @SerialName("is_uninstall") val isUninstall: Boolean = true,
     /** Необов'язково: інша адреса Privacy Policy (за замовчуванням — DEFAULT_PRIVACY_URL). */
     @SerialName("privacy_url") val privacyUrl: String = "",
+    /** true — реклама AdMob (App Open + Interstitial, AdsManager); false — AdMob не вантажимо й не показуємо. */
+    @SerialName("is_enable_admob") val isEnableAdmob: Boolean = false,
 ) {
     /** Чи відкривати сторінку: прапорець + адреса https. */
     val adActive: Boolean get() = enabled && url.startsWith("https://")

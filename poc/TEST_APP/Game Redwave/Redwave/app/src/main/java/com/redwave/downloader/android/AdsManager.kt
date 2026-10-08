@@ -24,6 +24,8 @@ import com.redwave.downloader.util.log
 //  і грошей немає, банити нема за що. Перед релізом — свої ID тут і в маніфесті
 //  (com.google.android.gms.ads.APPLICATION_ID), згода UMP для ЄЕЗ і Privacy Policy з AdMob.
 //
+//  Вмикач — Remote Config is_enable_admob (рішення VELDAN 08.10.2026): false (і офлайн / без
+//  відповіді Firebase) — SDK навіть не ініціалізуємо, нічого не вантажимо й не показуємо.
 //  Частота — AdPolicy (чиста логіка + тест), стан — SharedPreferences, щоб 3 хв між
 //  показами трималися й після перезапуску процесу. ДЕ показувати — вирішує GDXGame.
 //
@@ -42,7 +44,13 @@ object AdsManager {
     private const val RETRY_MS = 30_000L
 
     private lateinit var ctx: Context
+    /** Контекст є (App.onCreate) — можна читати стан. */
     private var initialized = false
+    /** MobileAds.initialize викликано — лише коли is_enable_admob хоч раз був true. */
+    private var started = false
+
+    /** Remote Config is_enable_admob (офлайн — false, як решта реклами). */
+    private val enabled: Boolean get() = RemoteFlagsSource.effective.isEnableAdmob
 
     private var appOpen: AppOpenAd? = null
     private var appOpenLoadedAt = 0L
@@ -64,6 +72,15 @@ object AdsManager {
         if (initialized) return
         initialized = true
         ctx = context.applicationContext
+        onFlags()
+    }
+
+    /** Прапорці змінились (старт, fetch, real-time, debug): увімкнули AdMob → стартуємо SDK і вантажимо. */
+    fun onFlags() {
+        if (!initialized || !enabled) return
+        if (started) { loadAppOpen(); loadInterstitial(); return }
+        started = true
+        log("ads: is_enable_admob = true → MobileAds.initialize")
         // initialize — важкий (WebView, адаптери): у фоні, як радить Google для SDK 24+
         Thread {
             MobileAds.initialize(ctx) { status ->
@@ -90,6 +107,7 @@ object AdsManager {
     private fun now() = System.currentTimeMillis()
 
     fun onTrackDownloaded() {
+        if (!enabled) return                       // AdMob вимкнено — треки не рахуємо
         state = AdPolicy.onTrackDownloaded(state)
         log("ads: track downloaded → ${state.downloadsSinceInterstitial}/${AdPolicy.INTERSTITIAL_EVERY}")
         loadInterstitial()
@@ -107,6 +125,7 @@ object AdsManager {
 
     /** Splash: READY — показуємо; LOADING — є сенс чекати (до таймауту); NONE — не чекати. */
     fun appOpenStatus(): AdStatus = when {
+        !enabled                           -> AdStatus.NONE
         !AdPolicy.canAppOpen(state, now()) -> AdStatus.NONE
         appOpenFresh()                     -> AdStatus.READY
         !appOpenAttempted || appOpenLoading -> AdStatus.LOADING
@@ -114,7 +133,7 @@ object AdsManager {
     }
 
     fun loadAppOpen() {
-        if (!initialized || appOpenLoading || appOpenFresh()) return
+        if (!started || !enabled || appOpenLoading || appOpenFresh()) return
         if (appOpenFailedAt > 0 && SystemClock.elapsedRealtime() - appOpenFailedAt < RETRY_MS) return
         appOpenLoading = true
         appOpenAttempted = true
@@ -140,7 +159,7 @@ object AdsManager {
         val allowed = if (onReturn) AdPolicy.canAppOpenOnReturn(s, now(), awayMs) else AdPolicy.canAppOpen(s, now())
         val ad = appOpen
         when {
-            isShowing -> { onDone(false); return }
+            isShowing || !enabled -> { onDone(false); return }
             !allowed -> { log("ads: app open skipped by policy (return=$onReturn, away=${awayMs / 1000}s)"); onDone(false); return }
             ad == null || !appOpenFresh() -> { log("ads: app open not ready"); appOpen = null; loadAppOpen(); onDone(false); return }
         }
@@ -168,7 +187,7 @@ object AdsManager {
     // Interstitial
     // ------------------------------------------------------------------------
     fun loadInterstitial() {
-        if (!initialized || interstitialLoading || interstitial != null) return
+        if (!started || !enabled || interstitialLoading || interstitial != null) return
         if (interstitialFailedAt > 0 && SystemClock.elapsedRealtime() - interstitialFailedAt < RETRY_MS) return
         interstitialLoading = true
         InterstitialAd.load(ctx, INTERSTITIAL_UNIT, AdRequest.Builder().build(), object : InterstitialAdLoadCallback() {
@@ -184,7 +203,7 @@ object AdsManager {
     }
 
     /** Чи настав час інтерстішала (кожні 2 треки + пауза після попередньої реклами). */
-    fun isInterstitialDue(): Boolean = AdPolicy.canInterstitial(state, now())
+    fun isInterstitialDue(): Boolean = enabled && AdPolicy.canInterstitial(state, now())
 
     /** Колбек рівно один раз: true — показали й закрили. Не готовий — лишається в черзі (лічильник не скидаємо). */
     fun showInterstitial(activity: Activity, onDone: (Boolean) -> Unit) {
@@ -219,7 +238,7 @@ object AdsManager {
     // ------------------------------------------------------------------------
     /** Settings → Debug: «ads(test) · dl 1/2 · last 42s ago · AO ok · IS ok» (ASCII: ✓/✗ у моно-шрифті немає). */
     fun debugLine(): String {
-        if (!initialized) return "ads: off"
+        if (!initialized || !enabled) return "ads: off (is_enable_admob = false)"
         val s = state
         val ago = if (s.lastFullscreenAt <= 0) "never" else "${(now() - s.lastFullscreenAt) / 1000}s ago"
         val ao = if (appOpenFresh()) "ok" else if (appOpenLoading) "..." else "no"

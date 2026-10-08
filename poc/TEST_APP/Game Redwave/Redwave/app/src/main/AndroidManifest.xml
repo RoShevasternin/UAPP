@@ -21,6 +21,9 @@
     <!-- Лаунчер: «Uninstall» на довге натискання (Remote Config is_uninstall) — системний діалог
          ACTION_DELETE; без цього дозволу на API 28+ він не відкривається. Звичайний дозвіл, без запиту. -->
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+    <!-- AdMob: рекламний ідентифікатор (Android 13+). play-services-ads додає його й сам через
+         злиття маніфестів, тут — явно, щоб було видно (Play Console → Advertising ID: «Yes»). -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
     <!-- POST_NOTIFICATIONS свідомо НЕМАЄ: сповіщення медіасесії звільнені від нього на 13+,
          сповіщення DownloadManager показує системний провайдер. ◌ перевірити на девайсі -->
 
