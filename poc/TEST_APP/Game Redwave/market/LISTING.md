@@ -121,7 +121,7 @@ Remote Config `is_uninstall`.
 | Government apps | No |
 | Data safety | див. §4 |
 | Advertising ID | **Yes** — Advertising or marketing, Analytics, Fraud prevention, security and compliance ✔ (`AD_ID` у маніфесті) |
-| Foreground service | **Media playback** — див. §3.3 |
+| Foreground service permissions | **Media playback** — опис, вплив, відео (§3.3) |
 
 ### 3.1 Content rating (IARC)
 
@@ -143,16 +143,30 @@ Remote Config `is_uninstall`.
 
 ### 3.3 Foreground service — Media playback
 
-- Тип: **Media playback** (`FOREGROUND_SERVICE_MEDIA_PLAYBACK`, `PlaybackService`).
-- Опис для форми:
+Правило Google ✔ ([Understanding foreground service requirements](https://support.google.com/googleplay/android-developer/answer/13392821)):
+апка з targetSdk 34+ декларує **кожен** тип foreground service, який використовує; винятку для
+`mediaPlayback` немає. Де: **Monitor and improve → App content → Foreground service permissions**.
+◌ Розділ з'являється, коли в консоль завантажено AAB з `FOREGROUND_SERVICE_MEDIA_PLAYBACK` (у нас він є —
+`PlaybackService`). Поля форми (по кожному типу):
+
+1. **Тип і use case** — Media playback → **Media playback** (зі списку Google).
+2. **Description** — що робить функція:
 
 ```
 Redwave plays the user's downloaded music and podcasts in the background. Playback starts only when the user taps Play, shows a media notification with controls, and stops when the user pauses or closes the player.
 ```
 
-- ◌ Консоль просить посилання на коротке відео, де видно функцію (YouTube unlisted / Google Drive).
-  Можемо записати з Redmi: `adb shell screenrecord` — запуск треку → вихід на головний екран →
-  музика грає → сповіщення з кнопками.
+3. **Impact if deferred or interrupted** — що буде, якщо система відкладе чи переб'є службу:
+
+```
+If the service is deferred, music does not start when the user taps Play. If it is interrupted, playback stops as soon as the user leaves the app or turns off the screen, so the user cannot listen in the background.
+```
+
+4. **Video link** — посилання на відео, де видно, які кроки робить користувач, щоб запустити функцію.
+   Вимог до тривалості й хостингу Google не дає; зазвичай — YouTube (Unlisted) або Google Drive з доступом
+   «Anyone with the link». Сценарій (~30–40 с, запис з Redmi через `adb shell screenrecord`):
+   відкрити Library → тапнути трек → Play → вийти на головний екран → музика грає → відкрити шторку,
+   показати сповіщення з кнопками → Pause.
 
 Інші дозволи окремої декларації не потребують: `REQUEST_DELETE_PACKAGES`, `WRITE_SETTINGS`,
 `READ_MEDIA_AUDIO` не входять до обмеженого списку; `QUERY_ALL_PACKAGES` немає (лаунчер бере
@@ -219,7 +233,7 @@ Release notes (en-US) — 3 абстрактні пункти, як у парк�
 - [ ] Свій AdMob App ID у маніфесті й свої блоки в `AdsManager` (зараз тестові Google).
 - [ ] Вікно згоди UMP для ЄЕЗ/UK (якщо країни не лише США — обов'язково).
 - [ ] Release-збірка `.aab`, підписана ключем апки (ключа Redwave ще немає — створити й покласти в git, як в іграх парку).
-- [ ] Відео для декларації foreground service (§3.3).
+- [ ] Відео для декларації foreground service (§3.3) — записати з Redmi, залити на YouTube (Unlisted) / Drive.
 - [ ] Remote Config на момент рев'ю — ті самі значення, що й після публікації (див. «Тонкощі»).
 
 ## Тонкощі
