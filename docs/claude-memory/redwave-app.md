@@ -76,7 +76,10 @@ HOME — [[home-launcher-poc]]; атласи пакує VELDAN у GUI — [[mind
 - Попереджено: вимикати рекламу лише на час рев'ю — обман рев'ю (ризик бану акаунта).
 - Debug AD_MODE (Settings → Debug, лише debug-збірка): реклама + роль обов'язкова + без Uninstall поверх Remote Config,
   перемикання перезапускає процес; на екрані-вимозі є «AD_MODE OFF». У Remote Config зараз «білі» значення.
-- Назва в маркеті має містити Launcher/Home (рішення VELDAN), конкретну ще не обрано.
+- Назва в маркеті — **Redwave: Music Home Launcher** (VELDAN, 08.10.2026; без слова Downloader).
+- Усе для Play Console — `Game Redwave/market/LISTING.md` (описи, категорія Tools, Data safety за таблицями
+  AdMob 25.5.0 і Firebase, IARC, цільова 18+, FGS media playback, чекліст перед Publish). Кадри перегенеровано:
+  лаунчер другим, «100% legal» → «Yours to keep» (і в апці `PROMO_TITLE`). Прототип-артефакт оновлено (v5).
 
 ## Реклама AdMob (VELDAN, 07.10.2026, увечері — зроблено й перевірено на Redmi)
 - App Open: відкриття (холодний старт з іконки, іконка Redwave на нашому лаунчері) + повернення в апку,

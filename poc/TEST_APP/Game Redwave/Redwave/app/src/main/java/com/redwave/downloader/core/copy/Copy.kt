@@ -55,7 +55,7 @@ object Copy {
         const val STAT_ON_DEVICE = "on device"
         const val STAT_OFFLINE = "offline"
         const val PROMO_CHIP = "Creative Commons"
-        const val PROMO_TITLE = "Free music.\n100% legal."   // ◌ формулювання узгодити перед релізом
+        const val PROMO_TITLE = "Free music.\nYours to keep."   // «100% legal» прибрано перед релізом (08.10.2026)
         const val PROMO_GO = "Browse Discover"
         const val ADDED_TOAST = "Added to downloads"
         const val EMPTY_INPUT_TOAST = "Paste a link first"
