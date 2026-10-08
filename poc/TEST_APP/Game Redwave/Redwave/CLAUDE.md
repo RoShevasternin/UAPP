@@ -106,6 +106,12 @@ adb shell am start -n com.redwave.downloader/.MainActivity --ez redwave.debug_ad
 adb shell am start -a android.settings.SETTINGS && sleep 3 && adb shell am start -n com.redwave.downloader/.MainActivity
 ```
 
+**Release (R8, повний режим) перевіряти на девайсі**, не лише збирати: debug без мініфікації не ловить
+вирізаних конструкторів. Заміряно 08.10.2026 — AdMob тягнув WorkManager 2.7.0 / Room 2.2.5, у release краш на
+старті (`Failed to create an instance of androidx.work.impl.WorkDatabase`); лікується явним
+`androidx.work:work-runtime` свіжої версії в `app/build.gradle.kts`. Перевірка без ключа апки: зібрати
+`assembleRelease`, `zipalign` + `apksigner` debug-ключем (`~/.android/debug.keystore`, пароль `android`) → `adb install -r`.
+
 **Одна MainActivity на процес.** Іконка застосунку йде через `LauncherTrampoline`: на Android 10+
 HOME-інтент кладе Activity в окремий home-таск, і дві MainActivity = два GDX в одному процесі
 (статики `Gdx.*`, кеш шейдерів → білі прямокутники). Не повертати LAUNCHER-фільтр на MainActivity.

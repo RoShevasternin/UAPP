@@ -93,6 +93,12 @@ HOME — [[home-launcher-poc]]; атласи пакує VELDAN у GUI — [[mind
 - ◌ Тлумачення «повернувся протягом години» — буквальне: > 1 год поза апкою без холодного старту → без App Open.
   Якщо VELDAN мав на увазі інше — константа `AdPolicy.RETURN_WINDOW_MS` / `canAppOpenOnReturn`.
 
+## Release-збірка (08.10.2026)
+- VELDAN підняв Firebase BoM до 35.0.0 — перевірено: debug і release збираються, Remote Config і AdMob працюють.
+- Пастка: release з R8 падав на старті через WorkManager 2.7.0 з AdMob → явно `androidx.work:work-runtime:2.12.0`.
+  AAB, зібраний до цього фіксу, не годиться. Ключа підпису Redwave в репо ще немає (VELDAN збирає AAB сам).
+- Дані апки на Redmi «зникали» через перевстановлення з Android Studio, не через код.
+
 ## Орієнтир для публікації (VELDAN, 07.10.2026)
 - Cube Square: Space Launcher (`com.square.rush.cub.dash.runner`, Screening Developers) — пройшла модерацію:
   «Launcher» у назві, розділ «Desktop Launcher Features» в описі, категорія Games → Casual, «Contains ads»,

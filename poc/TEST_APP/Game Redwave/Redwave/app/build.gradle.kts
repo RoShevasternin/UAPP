@@ -100,11 +100,15 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:5.5.0")
 
     // Firebase: лише Remote Config (параметр redwave_config — див. RemoteFlags.kt). Без Analytics.
-    implementation(platform("com.google.firebase:firebase-bom:34.19.0"))
+    implementation(platform("com.google.firebase:firebase-bom:35.0.0"))
     implementation("com.google.firebase:firebase-config")
 
     // AdMob: App Open + Interstitial (android/AdsManager.kt). Зараз — лише тестові блоки Google.
     implementation("com.google.android.gms:play-services-ads:25.5.0")
+    // play-services-ads тягне WorkManager 2.7.0 + Room 2.2.5 (2021): їхні правила R8 писані до повного режиму,
+    // і в release R8 вирізає конструктор WorkDatabase_Impl → краш на старті (заміряно 08.10.2026).
+    // Свіжий WorkManager тягне Room 2.8 з правильними consumer-правилами.
+    implementation("androidx.work:work-runtime:2.12.0")
 }
 
 tasks.register("copyAndroidNatives") {
