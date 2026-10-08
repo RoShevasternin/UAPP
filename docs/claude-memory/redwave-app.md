@@ -84,7 +84,9 @@ HOME — [[home-launcher-poc]]; атласи пакує VELDAN у GUI — [[mind
 - Лише в AppScreen/PlayerScreen — НЕ на лаунчері (повноекранна на головному екрані = disruptive ads), не на онбордингу.
 - Вмикач — Remote Config `is_enable_admob` (08.10.2026): false / офлайн / без Firebase → AdMob немає зовсім
   (SDK не ініціалізується). AD_MODE вмикає й AdMob. `AD_ID` прописано в маніфесті явно.
-- Зараз тестові блоки Google (play-services-ads 25.5.0). Перед релізом: свої ID, UMP, Privacy Policy + Data safety.
+- Зараз тестові блоки Google (play-services-ads 25.5.0). Перед релізом: свої ID, UMP, Data safety.
+- Privacy Policy: 08.10.2026 додано розділ про AdMob (рекламний ID, IP, дані пристрою, відмова від персоналізації);
+  реклама на «Додому» там і далі не згадується. Без UMP у тексті немає обіцянки вікна згоди.
 - ◌ Тлумачення «повернувся протягом години» — буквальне: > 1 год поза апкою без холодного старту → без App Open.
   Якщо VELDAN мав на увазі інше — константа `AdPolicy.RETURN_WINDOW_MS` / `canAppOpenOnReturn`.
 

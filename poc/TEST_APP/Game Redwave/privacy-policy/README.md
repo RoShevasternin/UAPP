@@ -5,6 +5,8 @@
 контакт — oyutetijep68@gmail.com. Викладено 07.10.2026 у Cloudflare (Workers & Pages → `redwave-privacy`,
 акаунт oyutetijep68@gmail.com). `/privacy.html` Cloudflare сам переводить на `/privacy`.
 
+08.10.2026 додано розділ 5 «Advertising (Google AdMob)» і дозвіл Advertising ID (у Cloudflare — після New deployment).
+
 `public/privacy.html` і `public/index.html` — однаковий текст (корінь сайту теж відкриває політику).
 
 ## Як оновити
