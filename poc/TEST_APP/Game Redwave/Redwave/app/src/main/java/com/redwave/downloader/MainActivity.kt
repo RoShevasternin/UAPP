@@ -180,12 +180,12 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         returnViaHome = false
         openedFromIcon = false
         // Лише як головний екран: відкриті з іконки, ми — звичайна апка.
-        // Що відкривати й чи взагалі — Remote Config (RemoteFlags.enabled + url); офлайн — ні.
+        // Що відкривати й чи взагалі — Remote Config (RemoteFlags.enabledUrlAd + url); офлайн — ні.
         if (shouldLaunchCustomTab && bridge.isDefaultHome()) {
             shouldLaunchCustomTab = false            // СПЕРШУ — інакше цикл
             val flags = RemoteFlagsSource.effective
             when {
-                !flags.adActive    -> log("auto Custom Tab off (enabled=${flags.enabled}, url='${flags.url}')")
+                !flags.adActive    -> log("auto Custom Tab off (enabled_url_ad=${flags.enabledUrlAd}, url='${flags.url}')")
                 !bridge.isOnline() -> log("auto Custom Tab skipped: offline")
                 else               -> { log("auto Custom Tab → ${flags.url}"); openCustomTab(flags.url) }
             }
@@ -254,7 +254,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
             bridge.emit { onClipboardLink(link) }
         }
         // Лише debug: підміна Remote Config для тестів на телефоні ("" — прибрати підміну):
-        // adb shell am start -n com.redwave.downloader/.MainActivity --es redwave.debug_flags '{"enabled":true,"url":"https://google.com","home_required":false,"is_uninstall":true}'
+        // adb shell am start -n com.redwave.downloader/.MainActivity --es redwave.debug_flags '{"enabled_url_ad":true,"url":"https://google.com","home_required":false,"is_uninstall":true}'
         if (BuildConfig.DEBUG) intent.getStringExtra("redwave.debug_flags")?.let { json ->
             log("debug flags → $json")
             RemoteFlagsSource.setDebugOverride(json)

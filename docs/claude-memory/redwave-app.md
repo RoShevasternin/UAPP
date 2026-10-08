@@ -66,7 +66,7 @@ HOME — [[home-launcher-poc]]; атласи пакує VELDAN у GUI — [[mind
 
 ## Remote Config (рішення VELDAN 07.10.2026, зроблено того ж дня)
 - Firebase-проєкт `redwave-original`, у апці лише Remote Config (BoM 34.19.0, плагін google-services 4.5.0).
-- Параметр `redwave_config` (JSON): `enabled` + `url` — сторінка-реклама на «Додому»/після «Недавніх»;
+- Параметр `redwave_config` (JSON): `enabled_url_ad` (до 08.10.2026 — `enabled`) + `url` — сторінка-реклама на «Додому»/після «Недавніх»;
   `home_required` — true: лише «Set as Home screen», false: ще й «Maybe later» (видна, але скромна);
   `is_uninstall` — довге натискання в лаунчері → App info / Uninstall; необов. `privacy_url`.
 - Немає відповіді Firebase → enabled=false, home_required=false, is_uninstall=true. Перевірка на кожному вході.

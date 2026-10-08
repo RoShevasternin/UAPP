@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 // ═════════════════════════════════════════════════════════════════════════════
 //  RemoteFlags — прапорці з Firebase Remote Config (рішення VELDAN 07.10.2026).
 //  Один параметр REMOTE_KEY зі значенням-JSON, напр.:
-//    {"enabled": true, "url": "https://…", "home_required": false, "is_uninstall": true, "is_enable_admob": true}
+//    {"enabled_url_ad": true, "url": "https://…", "home_required": false, "is_uninstall": true, "is_enable_admob": true}
 //
 //  Firebase не відповів / немає інтернету / зламаний JSON → DEFAULT:
 //  реклами немає (ні сторінки на «Додому», ні AdMob), роль HOME не обов'язкова («Maybe later» є), видаляти з лаунчера можна.
@@ -16,8 +16,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RemoteFlags(
     /** Сторінка (реклама) на «Додому» з іншої апки й після «Недавніх». */
-    val enabled: Boolean = false,
-    /** Що відкривати у вкладці; порожньо — не відкриваємо, навіть якщо enabled. */
+    @SerialName("enabled_url_ad") val enabledUrlAd: Boolean = false,
+    /** Що відкривати у вкладці; порожньо — не відкриваємо, навіть якщо enabled_url_ad. */
     val url: String = "",
     /** true — на 3-му слайді лише «Set as Home screen»; false — ще й «Maybe later». */
     @SerialName("home_required") val homeRequired: Boolean = false,
@@ -29,7 +29,7 @@ data class RemoteFlags(
     @SerialName("is_enable_admob") val isEnableAdmob: Boolean = false,
 ) {
     /** Чи відкривати сторінку: прапорець + адреса https. */
-    val adActive: Boolean get() = enabled && url.startsWith("https://")
+    val adActive: Boolean get() = enabledUrlAd && url.startsWith("https://")
 
     val privacy: String get() = privacyUrl.takeIf { it.startsWith("https://") } ?: DEFAULT_PRIVACY_URL
 

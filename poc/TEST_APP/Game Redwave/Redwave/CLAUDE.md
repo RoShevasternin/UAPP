@@ -34,7 +34,7 @@ SDK не ініціалізується, нічого не вантажитьс�
 
 | Поле | true | false | Офлайн / без відповіді Firebase |
 |---|---|---|---|
-| `enabled` + `url` | сторінка `url` у Custom Tab на «Додому» з іншої апки й після «Недавніх» (лише з роллю HOME і онлайн) | нічого не відкривається | false |
+| `enabled_url_ad` + `url` | сторінка `url` у Custom Tab на «Додому» з іншої апки й після «Недавніх» (лише з роллю HOME і онлайн) | нічого не відкривається | false |
 | `home_required` | 3-й слайд лише з «Set as Home screen»; без ролі — екран-вимога на кожному вході | ще й «Maybe later», апка працює без ролі | false |
 | `is_uninstall` | довге натискання на іконку в лаунчері → App info / Uninstall | довге натискання нічого не робить | true |
 | `is_enable_admob` | реклама AdMob: App Open + Interstitial (розділ вище) | AdMob немає взагалі | false |
@@ -99,7 +99,7 @@ adb shell am start -a android.intent.action.MAIN -c android.intent.category.HOME
 # Settings → Debug → AD_MODE: «чорний» режим поверх Remote Config (реклама на Home + AdMob, роль обов'язкова, без Uninstall),
 # перемикання перезапускає апку; вимкнути можна й з екрана-вимоги (кнопка AD_MODE OFF зліва вгорі)
 # підміна Remote Config (живе до очищення: --es redwave.debug_flags ""); у Settings → Debug видно джерело прапорців
-adb shell am start -n com.redwave.downloader/.MainActivity --es redwave.debug_flags '{"enabled":true,"url":"https://google.com","home_required":false,"is_uninstall":true,"is_enable_admob":true}'
+adb shell am start -n com.redwave.downloader/.MainActivity --es redwave.debug_flags '{"enabled_url_ad":true,"url":"https://google.com","home_required":false,"is_uninstall":true,"is_enable_admob":true}'
 # реклама: забути останній показ і лічильник треків (не чекати 3 хв); стан видно в Settings → Debug (ads(test) · dl 1/2 · …)
 adb shell am start -n com.redwave.downloader/.MainActivity --ez redwave.debug_ads_reset true
 # «повернення в апку» без «Недавніх»: піти в Settings і повернути Redwave наперед
