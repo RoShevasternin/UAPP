@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs>
+ <linearGradient id="B" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#10202B"/><stop offset="1" stop-color="#04070A"/></linearGradient>
+ <linearGradient id="A" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5FF2D1"/><stop offset=".48" stop-color="#7B8CFF"/><stop offset="1" stop-color="#FF7AA8"/></linearGradient>
+ <radialGradient id="G" cx=".32" cy=".22" r=".62"><stop offset="0" stop-color="#fff" stop-opacity=".6"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></radialGradient>
+ <radialGradient id="H" cx=".5" cy="1" r=".6"><stop offset="0" stop-color="#5FF2D1" stop-opacity=".45"/><stop offset="1" stop-color="#5FF2D1" stop-opacity="0"/></radialGradient>
+ <clipPath id="C"><path d="M150 410V238a106 106 0 0 1 212 0v172z"/></clipPath>
+</defs><defs><clipPath id="R"><rect width="512" height="512" rx="114"/></clipPath></defs><g clip-path="url(#R)"><rect width="512" height="512" fill="url(#B)"/><ellipse cx="256" cy="420" rx="190" ry="70" fill="url(#H)"/><g clip-path="url(#C)">
+ <rect x="130" y="120" width="252" height="300" fill="url(#A)"/>
+ <path d="M130 268c40-34 84-38 126-8s88 28 126-6v166H130z" fill="#0B1424" opacity=".28"/>
+ <path d="M130 322c46-28 90-24 128 4s84 22 124-8v102H130z" fill="#0B1424" opacity=".42"/>
+ <path d="M130 372c48-20 92-14 130 6s80 14 122-6v48H130z" fill="#0B1424" opacity=".55"/>
+ <ellipse cx="214" cy="200" rx="86" ry="62" fill="url(#G)"/>
+</g>
+<path d="M150 410V238a106 106 0 0 1 212 0v172" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="7"/>
+<rect x="118" y="406" width="276" height="12" rx="6" fill="#5FF2D1" opacity=".9"/></g></svg>

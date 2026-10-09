@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- GL-фрагмент на весь екран + нативне поле вводу, яке AndroidBridge
+     кладе поверх GDX-актора на час редагування (beginTextInput). -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <FrameLayout
+        android:id="@+id/gdxContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <EditText
+        android:id="@+id/input"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="@android:color/transparent"
+        android:importantForAutofill="no"
+        android:padding="0dp"
+        android:singleLine="true"
+        android:textColor="#EAF2F5"
+        android:textColorHint="#8FA3AE"
+        android:textCursorDrawable="@null"
+        android:visibility="gone" />
+
+</FrameLayout>
