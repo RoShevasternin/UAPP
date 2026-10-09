@@ -47,11 +47,11 @@ import java.util.Locale
 // ─────────────────────────────────────────────────────────────────────────────
 // LauncherScreen — головний екран Driftglass (роль HOME):
 //   живі шпалери на весь екран, годинник і дата, скляна картка поточних шпалер
-//   (⇄ інші / ♡ обране / ⚙ налаштувати), бейджі циклу дня й автозміни, сітка апок
-//   зі сторінками й авто-папками (core/logic/HomeLayout; перша — сама Driftglass),
-//   смужка «Усі застосунки», док із дефолтних апок людини.
+//   (⇄ інші / ♡ обране / ⚙ налаштувати), бейджі циклу дня й автозміни, одна сторінка апок
+//   з авто-папками (core/logic/HomeLayout; перша — сама Driftglass), без гортання вбік;
+//   смужка «Усі застосунки» (ті самі папки + усі апки, вертикальний скрол), док із дефолтних апок людини.
 // Жести на порожньому місці: подвійний тап — інші шпалери, довге натискання — меню,
-// свайп угору — усі застосунки, уліво / вправо — сторінки сітки. «Назад» нічого не робить; повторне «Додому» закриває все.
+// свайп угору (і з іконки теж) — усі застосунки. «Назад» нічого не робить; повторне «Додому» закриває все.
 // ─────────────────────────────────────────────────────────────────────────────
 class LauncherScreen : DgScreen() {
 
@@ -191,139 +191,73 @@ class LauncherScreen : DgScreen() {
         }.apply { setOnClickListener { openDrawer() } }
         handle.setPosition((w - handle.width) / 2f, dock.y + dockH + px(4f)); bottom.addActor(handle)
 
-        // елементи: Driftglass (null) + папки + решта апок, без тих, що в доку
+        // Головний екран — ОДНА сторінка без гортання (рішення VELDAN 09.10.2026): Driftglass + папки + апки,
+        // скільки влазить між карткою шпалер і доком. Усе інше — свайпом угору (Drawer, вертикальний скрол).
         val cols = st.cols
         val dockKeys = dockApps.filterNotNull().map { it.packageName to it.activityName }.toSet()
-        val entries = HomeLayout.build(
-            bridge.listApps().filter { (it.packageName to it.activityName) !in dockKeys },
-            { it.packageName }, { it.label }, { it.category }, { it.system },
-        )
+        val entries = homeEntries(bridge.listApps().filter { (it.packageName to it.activityName) !in dockKeys })
         val items: List<HomeEntry<LauncherApp?>> = listOf<HomeEntry<LauncherApp?>>(HomeEntry.App(null)) + entries
 
         val iconSize = if (cols == 5) px(46f) else px(54f)
         val labelH = if (st.labels) px(19f) else 0f
         val cellH = iconSize + labelH + px(16f)
         val colW = cw / cols
-        val dotsH = px(14f)
-        val gridBottom = handle.y + handle.height + dotsH
+        val gridBottom = handle.y + handle.height + px(6f)
         val gridTop = topBottom - px(18f)
         val rows = HomeLayout.rowsFor(gridTop - gridBottom, cellH).coerceAtMost(6)
-        val pages = HomeLayout.pages(items, cols, rows)
-        pageCount = pages.size
-        page = page.coerceIn(0, pageCount - 1)
+        val shown = HomeLayout.pages(items, cols, rows).first()
 
-        pager = group(this, w * pageCount, gridTop - gridBottom) {}.apply { touchable = Touchable.childrenOnly }
-        pager.setPosition(-page * w, gridBottom)
-        pages.forEachIndexed { p, list ->
-            list.forEachIndexed { k, e ->
-                val r = k / cols; val c = k % cols
-                val ic = when (e) {
-                    is HomeEntry.Folder -> folderIcon(this, L.folder(e.kind), e.apps.filterNotNull(), colW, iconSize, st.labels).apply {
-                        val title = L.folder(e.kind); val apps = e.apps.filterNotNull()
-                        setOnClickListener { openFolder(title, apps) }
-                    }
-                    is HomeEntry.App -> {
-                        val app = e.app
-                        appIcon(this, app, colW, iconSize, st.labels).apply {
-                            if (app == null) {
-                                setOnClickListener { gdxGame.openAppFromLauncher() }
-                                onLongPress = { appMenu(null); true }
-                            } else {
-                                setOnClickListener { bridge.launchApp(app) }
-                                onLongPress = { appMenu(app); true }
-                            }
-                        }
-                    }
+        val grid = group(this, w, gridTop - gridBottom) {}.apply { touchable = Touchable.childrenOnly }
+        grid.setPosition(0f, gridBottom)
+        shown.forEachIndexed { k, e ->
+            val r = k / cols; val c = k % cols
+            val ic = entryIcon(e, colW, iconSize, st.labels)
+            ic.setPosition(side + c * colW, grid.height - (r + 1) * cellH + px(16f))
+            grid.addActor(ic)
+        }
+        grid.addListener(SwipeUpListener())
+        bottom.addActor(grid)
+    }
+
+    /** Папки + апки (core/logic/HomeLayout) — однаково для головного екрана і списку всіх апок. */
+    private fun homeEntries(apps: List<LauncherApp>): List<HomeEntry<LauncherApp>> =
+        HomeLayout.build(apps, { it.packageName }, { it.label }, { it.category }, { it.system })
+
+    /** Клітинка сітки: папка (тап → вікно папки) або апка (null — сама Driftglass). */
+    private fun entryIcon(e: HomeEntry<LauncherApp?>, colW: Float, iconSize: Float, labels: Boolean): com.driftglass.home.game.actors.ui.ATap = when (e) {
+        is HomeEntry.Folder -> {
+            val title = L.folder(e.kind); val apps = e.apps.filterNotNull()
+            folderIcon(this, title, apps, colW, iconSize, labels).apply { setOnClickListener { openFolder(title, apps) } }
+        }
+        is HomeEntry.App -> {
+            val app = e.app
+            appIcon(this, app, colW, iconSize, labels).apply {
+                if (app == null) {
+                    setOnClickListener { gdxGame.openAppFromLauncher() }
+                    onLongPress = { appMenu(null); true }
+                } else {
+                    setOnClickListener { gdxGame.bridge.launchApp(app) }
+                    onLongPress = { appMenu(app); true }
                 }
-                ic.setPosition(p * w + side + c * colW, pager.height - (r + 1) * cellH + px(16f))
-                pager.addActor(ic)
             }
         }
-        pager.addListener(PagerListener())
-        bottom.addActor(pager)
-
-        // крапки сторінок
-        dots = null
-        if (pageCount > 1) {
-            val d = group(this, w, dotsH) {}.apply { touchable = Touchable.disabled }
-            d.setPosition(0f, handle.y + handle.height)
-            bottom.addActor(d)
-            dots = d
-            updateDots()
-        }
     }
 
-    // ── Сторінки: свайп уліво / вправо (з іконки або з порожнього місця) ─────
-    private lateinit var pager: AdvancedGroup
-    private var dots: AdvancedGroup? = null
-    private var page = 0
-    private var pageCount = 1
-    private var pDownX = 0f
-    private var pDownY = 0f
-    private var pDragging = false
-
-    private fun pagerDown(sx: Float, sy: Float) {
-        pDownX = sx; pDownY = sy; pDragging = false
-    }
-
-    /** true — це горизонтальний свайп сторінок (решту жестів скасовуємо). */
-    private fun pagerDrag(sx: Float, sy: Float): Boolean {
-        if (!::pager.isInitialized || pageCount < 2 && !pDragging) return false
-        val dx = sx - pDownX; val dy = sy - pDownY
-        if (!pDragging && Math.abs(dx) > px(14f) && Math.abs(dx) > Math.abs(dy) * 1.2f) { pDragging = true; pager.clearActions() }
-        if (pDragging) {
-            val edge = (page == 0 && dx > 0f) || (page == pageCount - 1 && dx < 0f)
-            pager.x = -page * worldWidth + if (edge) dx * 0.3f else dx
-        }
-        return pDragging
-    }
-
-    private fun pagerUp(sx: Float): Boolean {
-        if (!pDragging) return false
-        pDragging = false
-        val dx = sx - pDownX
-        if (dx < -worldWidth * 0.18f && page < pageCount - 1) page++
-        else if (dx > worldWidth * 0.18f && page > 0) page--
-        pager.clearActions()
-        pager.addAction(Actions.moveTo(-page * worldWidth, pager.y, 0.28f, Interpolation.pow3Out))
-        updateDots()
-        return true
-    }
-
-    private fun updateDots() {
-        val d = dots ?: return
-        d.clearChildren()
-        val dw = px(6f); val gap = px(7f); val active = px(16f)
-        val total = active + (pageCount - 1) * dw + (pageCount - 1) * gap
-        var x = (d.width - total) / 2f
-        for (i in 0 until pageCount) {
-            val wdt = if (i == page) active else dw
-            d.addActor(ARect(this, 999f, if (i == page) Color.WHITE else GameColor.white_35).apply { setBounds(x, (d.height - dw) / 2f, wdt, dw) })
-            x += wdt + gap
-        }
-    }
-
-    /** Свайп, що почався на іконці / папці: сторінки або (вгору) усі застосунки. */
-    private inner class PagerListener : InputListener() {
+    /** Свайп угору, що почався на іконці / папці, — теж відкриває всі застосунки. */
+    private inner class SwipeUpListener : InputListener() {
+        private var downY = 0f
         private var taken = false
         override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
             if (pointer > 0) return false
-            taken = false
-            pagerDown(event.stageX, event.stageY)
+            downY = event.stageY; taken = false
             return true
         }
         override fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int) {
-            if (taken && !pDragging) return
-            if (pagerDrag(event.stageX, event.stageY)) {
-                if (!taken) { taken = true; event.stage.cancelTouchFocusExcept(this, event.listenerActor) }
-            } else if (!taken && event.stageY - pDownY > px(70f)) {
+            if (!taken && event.stageY - downY > px(70f)) {
                 taken = true
                 event.stage.cancelTouchFocusExcept(this, event.listenerActor)
                 openDrawer()
             }
-        }
-        override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
-            pagerUp(event.stageX)
         }
     }
 
@@ -466,17 +400,14 @@ class LauncherScreen : DgScreen() {
                 override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                     if (pointer > 0) return false
                     downAt = System.currentTimeMillis(); downX = x; downY = y; pressing = true; moved = false
-                    pagerDown(event.stageX, event.stageY)
                     return true
                 }
                 override fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int) {
                     if (Math.abs(x - downX) > px(12f) || Math.abs(y - downY) > px(12f)) moved = true
-                    pagerDrag(event.stageX, event.stageY)
                 }
                 override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                     if (!pressing) return
                     pressing = false
-                    if (pagerUp(event.stageX)) return                         // гортали сторінки
                     if (y - downY > px(70f)) { openDrawer(); return }       // свайп угору
                     if (moved) return
                     val now = System.currentTimeMillis()
@@ -503,6 +434,8 @@ class LauncherScreen : DgScreen() {
         d.color.a = 0f; d.y = -px(30f)
         d.addAction(Actions.parallel(Actions.fadeIn(0.22f), Actions.moveTo(0f, 0f, 0.3f, Interpolation.pow3Out)))
         drawer = d
+        // головний екран ховаємо: крізь напівпрозорий список не просвічують годинник і іконки, лише шпалери
+        listOf(top, bottom).forEach { it.clearActions(); it.touchable = Touchable.disabled; it.addAction(Actions.fadeOut(0.18f)) }
         log("drawer: ${gdxGame.bridge.listApps().size} apps")
     }
 
@@ -512,6 +445,7 @@ class LauncherScreen : DgScreen() {
         if ((gdxGame.bridge as? com.driftglass.home.android.AndroidBridge)?.isTextInputActive == true) gdxGame.bridge.endTextInput()
         d.touchable = Touchable.disabled
         d.addAction(Actions.sequence(Actions.parallel(Actions.fadeOut(0.18f), Actions.moveTo(0f, -px(30f), 0.18f)), Actions.removeActor()))
+        listOf(top, bottom).forEach { it.clearActions(); it.touchable = Touchable.childrenOnly; it.addAction(Actions.fadeIn(0.22f)) }
     }
 
     private inner class Drawer : AdvancedGroup() {
@@ -550,21 +484,23 @@ class LauncherScreen : DgScreen() {
             if (!::grid.isInitialized) return
             grid.disposeAndClearChildren()
             val q = query.trim().lowercase()
-            val apps = gdxGame.bridge.listApps().filter { q.isEmpty() || it.label.lowercase().contains(q) }
+            val all = gdxGame.bridge.listApps()
+            // без пошуку — ті самі папки, що й на головному екрані, далі всі апки; з пошуком — плоский список збігів
+            val entries: List<HomeEntry<LauncherApp?>> =
+                if (q.isEmpty()) homeEntries(all)
+                else all.filter { it.label.lowercase().contains(q) }.map { HomeEntry.App(it) }
             val cols = 4
             val cw = (width - side * 2) / cols
-            if (apps.isEmpty()) {
+            if (entries.isEmpty()) {
                 val l = lbl("${L.noMatch}: “$query”", msdf.regular(13f, GameColor.white_55))
                 grid.addActor(group(screen, width - side * 2, px(60f)) { l.setPosition((width - l.width) / 2f, (height - l.height) / 2f); addActor(l) })
                 return
             }
-            apps.chunked(cols).forEach { rowApps ->
+            entries.chunked(cols).forEach { rowItems ->
                 val row = group(screen, width - side * 2, px(52f + 19f)) {
-                    rowApps.forEachIndexed { i, a ->
-                        val ic = appIcon(screen, a, cw, px(52f), label = true)
+                    rowItems.forEachIndexed { i, e ->
+                        val ic = entryIcon(e, cw, px(52f), labels = true)
                         ic.setPosition(i * cw, 0f)
-                        ic.setOnClickListener { gdxGame.bridge.launchApp(a) }
-                        ic.onLongPress = { appMenu(a); true }
                         addActor(ic)
                     }
                 }
@@ -600,12 +536,6 @@ class LauncherScreen : DgScreen() {
     fun onHomeAgain() {
         sheet?.close()
         closeFolder()
-        if (drawer == null && folder == null && page != 0 && ::pager.isInitialized) {
-            // як у системних лаунчерів: «Додому» на іншій сторінці — на першу
-            page = 0
-            pager.addAction(Actions.moveTo(0f, pager.y, 0.3f, Interpolation.pow3Out))
-            updateDots()
-        }
         closeDrawer()
     }
 

@@ -41,6 +41,10 @@ class HomeLayoutTest {
         assertNull(HomeLayout.folderOf("com.android.settings", -1, true))
         assertNull(HomeLayout.folderOf("com.miui.gallery", HomeLayout.CAT_IMAGE, true))
         assertEquals(FolderKind.TOOLS, HomeLayout.folderOf("com.miui.notes", -1, true))
+        // MIUI ставить свої апки без FLAG_SYSTEM — ловимо за пакетом виробника
+        assertEquals(FolderKind.TOOLS, HomeLayout.folderOf("com.miui.calculator", -1, false))
+        assertEquals(FolderKind.TOOLS, HomeLayout.folderOf("com.xiaomi.scanner", -1, false))
+        assertNull(HomeLayout.folderOf("com.anydesk.anydeskandroid", -1, false))
     }
 
     @Test fun rows_and_pages() {

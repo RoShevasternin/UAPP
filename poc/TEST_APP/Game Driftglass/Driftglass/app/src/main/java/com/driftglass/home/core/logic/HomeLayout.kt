@@ -38,11 +38,20 @@ object HomeLayout {
         "com.sec.android.gallery3d", "com.miui.securitycenter",
     )
 
+    /**
+     * Передвстановлені апки виробника. MIUI ставить Калькулятор, Нотатки, Погоду, Сканер як звичайні
+     * (без FLAG_SYSTEM — їх можна видалити), тож «системна» не ловить їх — ловимо за пакетом (Redmi, 09.10.2026).
+     */
+    private val VENDOR_PREFIXES = listOf(
+        "com.miui.", "com.xiaomi.", "com.mi.", "com.android.", "com.sec.android.", "com.samsung.",
+        "com.huawei.", "com.hihonor.", "com.oppo.", "com.coloros.", "com.oplus.", "com.oneplus.", "com.vivo.",
+    )
+
     fun folderOf(pkg: String, category: Int, system: Boolean): FolderKind? = when {
         pkg in KEEP_LOOSE                                        -> null
         pkg.startsWith("com.google.") || pkg in GOOGLE_EXTRA     -> FolderKind.GOOGLE
         category == CAT_GAME                                     -> FolderKind.GAMES
-        system                                                   -> FolderKind.TOOLS
+        system || VENDOR_PREFIXES.any { pkg.startsWith(it) }     -> FolderKind.TOOLS
         category == CAT_SOCIAL || category == CAT_NEWS           -> FolderKind.SOCIAL
         category == CAT_AUDIO || category == CAT_VIDEO || category == CAT_IMAGE -> FolderKind.MEDIA
         else                                                     -> null
