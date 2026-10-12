@@ -9,7 +9,6 @@ import com.driftglass.home.game.screens.LauncherScreen
 import com.driftglass.home.game.screens.ui.group
 import com.driftglass.home.game.screens.ui.sectionLabel
 import com.driftglass.home.game.screens.ui.settingsRow
-import com.driftglass.home.game.utils.PRIVACY_URL
 import com.driftglass.home.game.utils.GameColor
 import com.driftglass.home.game.utils.actor.lbl
 import com.driftglass.home.game.utils.gdxGame
@@ -56,20 +55,20 @@ class SettingsTab(app: AppScreen) : TabPage(app) {
         col.addActor(settingsRow(app, W, L.lockStill, L.lockSub, toggle = s.lockStill) { set { it.copy(lockStill = !it.lockStill) } })
 
         section(col, L.secAbout)
-        col.addActor(settingsRow(app, W, L.privacy, null, value = "›") { gdxGame.bridge.openUrl(PRIVACY_URL) })
+        col.addActor(settingsRow(app, W, L.privacy, null, value = "›") { gdxGame.bridge.openUrl(gdxGame.flags.privacy) })
         col.addActor(settingsRow(app, W, L.version, gdxGame.bridge.appVersion) {})
 
         // ── Debug: AD_MODE як у Redwave (реклама на Home, роль обов'язкова, без Uninstall), перемикання перезапускає апку ──
         if (IS_DEBUG) {
             section(col, "DEBUG")
             val adOn = gdxGame.flags.isAdMode
-            col.addActor(settingsRow(app, W, "AD_MODE", if (adOn) "On · ad on Home, Home required, no uninstall" else "Off · flags = default", toggle = adOn) {
+            col.addActor(settingsRow(app, W, "AD_MODE", if (adOn) "On · ad on Home, Home required, no uninstall" else "Off · Remote Config", toggle = adOn) {
                 gdxGame.toast("Restarting…")
                 com.badlogic.gdx.utils.Timer.schedule(object : com.badlogic.gdx.utils.Timer.Task() {
                     override fun run() { gdxGame.bridge.setAdMode(!adOn) }
                 }, 0.35f)
             })
-            val dl = lbl(gdxGame.bridge.flagsDebug(), msdf.label(10f, GameColor.white_55, spacing = 0f)).apply { setWrap(true); width = W - px(8f); height = prefHeight }
+            val dl = lbl(gdxGame.bridge.flagsDebug() + "\n" + gdxGame.bridge.adsDebug() + (if (gdxGame.bridge.isStoreDemo) "\nstore demo: on" else ""), msdf.label(10f, GameColor.white_55, spacing = 0f)).apply { setWrap(true); width = W - px(8f); height = prefHeight }
             col.addActor(group(app, W, dl.height + px(6f)) { dl.setPosition(px(4f), 0f); addActor(dl) })
         }
     }

@@ -1,7 +1,8 @@
 # poc/TEST_APP — апки нового типу
 
 Тут лежать **нові апки, які не є іграми парку RBX** (перша — `Game Redwave/`, категорія Tools;
-свої правила й план переносу — `Game Redwave/Redwave/CLAUDE.md`, `Game Redwave/PORTING.md`).
+свої правила й план переносу — `Game Redwave/Redwave/CLAUDE.md`, `Game Redwave/PORTING.md`; друга — `Game Driftglass/`,
+живі шпалери + роль HOME, правила — `Game Driftglass/Driftglass/CLAUDE.md`).
 Далі — `Game Driftglass/` (живі шпалери + HOME) і `Game Framefall/` (відеозавантажувач + HOME, поки прототип).
 Кожна апка — окрема тека, свій пакет, свій Gradle-проєкт. Кодом між собою не діляться.
 

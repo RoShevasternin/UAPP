@@ -18,7 +18,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.badlogic.gdx.backends.android.AndroidFragmentApplication
 import com.driftglass.home.android.AndroidBridge
-import com.driftglass.home.android.FlagsSource
+import com.driftglass.home.android.AdsManager
+import com.driftglass.home.android.RemoteFlagsSource
+import com.driftglass.home.android.StoreDemo
 import com.driftglass.home.databinding.ActivityMainBinding
 import com.driftglass.home.game.GDXFragment
 import com.driftglass.home.util.log
@@ -69,6 +71,16 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     /** Наші ж системні екрани (діалог ролі, App info, видалення) — не «інша апка». Ставить AndroidBridge. */
     var internalNavigation = false
 
+    // ------------------------------------------------------------------------
+    // Повернення в апку — для App Open (AdsManager / AdPolicy), як у Redwave
+    // ------------------------------------------------------------------------
+    /** Коли пішли в іншу апку / «Недавні» / вимкнули екран (elapsedRealtime); 0 — не йшли. */
+    private var leftAt = 0L
+    /** Повернулись кнопкою «Додому» — це лаунчер, а не застосунок: App Open не показуємо. */
+    private var returnViaHome = false
+    /** Тапнули іконку Driftglass, коли процес живий (холодний старт веде Splash). */
+    private var openedFromIcon = false
+
     fun startInternal(intent: Intent) {
         internalNavigation = true
         startActivity(intent)
@@ -100,6 +112,8 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         setContentView(binding.root)
 
         bridge = AndroidBridge(this)
+        val b = bridge
+        RemoteFlagsSource.onChanged = { f -> AdsManager.onFlags(); b.emit { onRemoteFlags(f) } }
 
         // Системні бари видимі (лаунчер не ховає навігацію) — GDX лише відступає safe area.
         // Запасні висоти з ресурсів: у home-таску перший WindowInsets приходить зі statusBar = 0 (Redwave, 07.10.2026).
@@ -139,27 +153,47 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
 
     override fun onResume() {
         super.onResume()
+        // Апку могли запустити офлайн (AdMob = false), а тепер інтернет є — прапорці ті самі, onChanged не прийде
+        AdsManager.onFlags()
         ownTabInFront = false
         internalNavigation = false
         bridge.emit { onAppResumed() }
+        // App Open: повернення (не довше години — вирішує AdPolicy) або тап по іконці
+        val away = if (leftAt > 0) android.os.SystemClock.elapsedRealtime() - leftAt else -1L
+        leftAt = 0L
+        if (!returnViaHome && (away >= 0 || openedFromIcon)) {
+            val fromIcon = openedFromIcon
+            bridge.emit { onAppForeground(away, fromIcon) }
+        }
+        returnViaHome = false
+        openedFromIcon = false
         // Лише як головний екран: відкриті з іконки, ми — звичайна апка.
         if (shouldLaunchCustomTab && bridge.isDefaultHome()) {
             shouldLaunchCustomTab = false            // СПЕРШУ — інакше цикл
-            val flags = FlagsSource.current
+            val flags = RemoteFlagsSource.effective
             when {
                 !flags.adActive    -> log("auto Custom Tab off (enabled_url_ad=${flags.enabledUrlAd}, url='${flags.url}')")
                 !bridge.isOnline() -> log("auto Custom Tab skipped: offline")
                 else               -> { log("auto Custom Tab → ${flags.url}"); openCustomTab(flags.url) }
             }
         }
+        // Прапорці перевіряємо на кожному вході (частоту ріже minimumFetchInterval)
+        RemoteFlagsSource.refresh(10_000L) {}
     }
 
     override fun onStop() {
         super.onStop()
+        // Прапорці стосуються наступного повернення (MIUI шле HOME по два — без onResume з'їв би наступне)
+        returnViaHome = false
+        openedFromIcon = false
         when {
-            internalNavigation -> {}                    // наш системний екран — не рахується
-            ownTabInFront      -> {}                    // нас сховала наша ж вкладка
-            else               -> shouldLaunchCustomTab = true   // інша апка / «Недавні» / вимкнений екран
+            internalNavigation   -> {}                    // наш системний екран — не рахується
+            ownTabInFront        -> {}                    // нас сховала наша ж вкладка
+            AdsManager.isShowing -> {}                    // нас сховала наша ж реклама AdMob
+            else                 -> {                     // інша апка / «Недавні» / вимкнений екран
+                shouldLaunchCustomTab = true
+                leftAt = android.os.SystemClock.elapsedRealtime()
+            }
         }
     }
 
@@ -184,6 +218,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     override fun onDestroy() {
         log("MainActivity.onDestroy changingConfig=$isChangingConfigurations finishing=$isFinishing")
         runCatching { unregisterReceiver(unlockReceiver) }
+        if (current?.get() === this) RemoteFlagsSource.onChanged = null
         bridge.dispose()
         super.onDestroy()
     }
@@ -202,11 +237,21 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         // adb shell am start -n com.driftglass.home/.MainActivity --es driftglass.debug_flags '{"enabled_url_ad":true,"url":"https://google.com","home_required":true,"is_uninstall":false}'
         if (BuildConfig.DEBUG) intent.getStringExtra("driftglass.debug_flags")?.let { json ->
             log("debug flags → $json")
-            FlagsSource.setDebugOverride(json)
+            RemoteFlagsSource.setDebugOverride(json)
+        }
+        // Лише debug: забути останній показ реклами й лічильник дій (не чекати 3 хв):
+        // adb shell am start -n com.driftglass.home/.MainActivity --ez driftglass.debug_ads_reset true
+        if (BuildConfig.DEBUG && intent.getBooleanExtra("driftglass.debug_ads_reset", false)) AdsManager.debugReset()
+        // Лише debug: чистий режим для скрінів Google Play (вигадані апки, годинник 9:41), перезапуск апки:
+        // adb shell am start -n com.driftglass.home/.MainActivity --ez driftglass.store_demo true
+        if (BuildConfig.DEBUG && intent.hasExtra("driftglass.store_demo")) {
+            StoreDemo.set(this, intent.getBooleanExtra("driftglass.store_demo", false))
+            bridge.appsChangedForDemo()
         }
         when {
             intent.getBooleanExtra(EXTRA_OPEN_APP, false) -> {
                 log("open app (icon), new = $isNew")
+                if (isNew) openedFromIcon = true
                 bridge.emit { onAppIconPressed() }
             }
             intent.action == Intent.ACTION_MAIN && intent.hasCategory(Intent.CATEGORY_HOME) -> {
@@ -215,6 +260,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
                 // Для живої Activity вмикає лише onStop від іншої апки: «Додому» на самому лаунчері
                 // (MIUI шле їх по два) і «Додому» поверх нашої вкладки вкладку не відкривають.
                 if (!isNew) shouldLaunchCustomTab = true
+                if (isNew) returnViaHome = true
                 bridge.emit { onHomePressed() }
             }
         }

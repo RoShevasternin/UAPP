@@ -24,11 +24,34 @@ interface PlatformBridge {
     /** Лаунчер не можна закривати: «вихід» = moveTaskToBack(true), а не Gdx.app.exit(). */
     fun moveToBack()
     val appVersion: String
-    /** Прапорці AD_MODE (core/config/AppFlags, джерело — android/FlagsSource). Дешево, без IO. */
+    fun isOnline(): Boolean
+
+    // ── Firebase Remote Config (core/config/AppFlags, джерело — android/RemoteFlagsSource) ──
+    /** Що діє зараз (офлайн — DEFAULT). Дешево, без IO. */
     fun flags(): com.driftglass.home.core.config.AppFlags
+    /** Є значення з сервера (хоч із кешу). Ні — Splash чекає fetch. */
+    fun hasRemoteFlags(): Boolean
+    /** fetchAndActivate; onDone рівно один раз (відповідь або таймаут) — у GL-потоці. */
+    fun refreshRemoteFlags(timeoutMs: Long, onDone: (com.driftglass.home.core.config.AppFlags) -> Unit)
     /** Увімкнути / вимкнути AD_MODE і перезапустити апку (лише debug-збірка). */
     fun setAdMode(on: Boolean)
     fun flagsDebug(): String
+
+    // ── Реклама: AdMob App Open + Interstitial (AdsManager, зараз тестові блоки) ──
+    /** Splash: READY — показати, LOADING — є сенс чекати, NONE — не чекати. */
+    fun appOpenStatus(): AdStatus
+    /** onReturn — повернення в апку (awayMs), інакше відкриття. onDone(shown) — у GL-потоці рівно один раз. */
+    fun showAppOpen(onReturn: Boolean, awayMs: Long, onDone: (shown: Boolean) -> Unit)
+    /** Застосували / зберегли шпалери — лічильник інтерстішала. */
+    fun onWallpaperAction()
+    fun isInterstitialDue(): Boolean
+    /** Interstitial, якщо настав час; onDone(shown) — у GL-потоці рівно один раз. */
+    fun showInterstitial(onDone: (shown: Boolean) -> Unit)
+    fun adsDebug(): String
+
+    // ── Debug: чистий режим для скрінів Google Play (лише debug-збірка) ──────
+    /** Лаунчер показує вигадані апки з нашими іконками (src/debug/assets/demo_icons), годинник 9:41. */
+    val isStoreDemo: Boolean
     /** Заряд 0..100 і чи на зарядці — для режиму економії. */
     fun battery(): BatteryState
 
@@ -74,7 +97,13 @@ interface PlatformEvents {
     fun onUnlocked()
     /** onResume Activity: перевірити розклад Auto-shuffle, роль, мову. */
     fun onAppResumed()
+    /** Повернулись в апку (awayMs, -1 — не йшли) або тапнули іконку — для App Open. */
+    fun onAppForeground(awayMs: Long, fromIcon: Boolean)
+    /** Remote Config змінився (fetch / real-time / debug). */
+    fun onRemoteFlags(flags: com.driftglass.home.core.config.AppFlags)
 }
+
+enum class AdStatus { READY, LOADING, NONE }
 
 data class BatteryState(val pct: Int, val charging: Boolean)
 

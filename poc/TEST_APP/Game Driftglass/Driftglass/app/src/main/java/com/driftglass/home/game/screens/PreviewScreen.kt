@@ -61,7 +61,7 @@ class PreviewScreen : DgScreen() {
     private fun buildGhost() = group(this, worldWidth, worldHeight) {
         touchable = Touchable.disabled
         val now = Date()
-        val c = lbl(SimpleDateFormat("H:mm", Locale.US).format(now), msdf.clock(56f))
+        val c = lbl(if (gdxGame.bridge.isStoreDemo) "9:41" else SimpleDateFormat("H:mm", Locale.US).format(now), msdf.clock(56f))
         val loc = Locale.forLanguageTag(L.lang.code)
         val d = lbl(SimpleDateFormat("EEEE, d MMMM", loc).format(now).replaceFirstChar { it.titlecase(loc) }, msdf.medium(14f, Color.WHITE.cpy().apply { a = 0.9f }))
         var y = height - safeStatusBarUI - px(70f)
@@ -150,7 +150,7 @@ class PreviewScreen : DgScreen() {
         openSheet(NeedHomeSheet(this,
             onStill = {
                 gdxGame.model.update { it.copy(applied = wp.id, dayCycle = false, changedAt = System.currentTimeMillis()) }
-                gdxGame.setStill(wp, system = true, lock = alsoLock) { ok -> gdxGame.toast(if (ok) L.tStill else L.tStillFail) }
+                gdxGame.setStill(wp, system = true, lock = alsoLock) { ok -> gdxGame.toast(if (ok) L.tStill else L.tStillFail); if (ok) gdxGame.afterWallpaperAction() }
             },
             onHome = {
                 gdxGame.model.update { it.copy(applied = wp.id, dayCycle = false, changedAt = System.currentTimeMillis()) }

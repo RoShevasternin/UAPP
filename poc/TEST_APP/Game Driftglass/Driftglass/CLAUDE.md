@@ -2,8 +2,38 @@
 
 Нова апка (не гра парку RBX): **живі шейдерні шпалери + власний головний екран** (роль HOME).
 Прототип — https://claude.ai/artifact/XXRnR3cEUCuAS5h3Mb7QkW (копія `../prototype/index.html`).
-Правила теки — `poc/TEST_APP/CLAUDE.md`: еталона немає, **ні Firebase, ні реклами SDK, ні сервера**, доки
-VELDAN не скаже. Перенесено зі стеку Redwave (LibGDX 1.14.2 + scene2d, MSDF, `PlatformBridge`).
+Правила теки — `poc/TEST_APP/CLAUDE.md`: еталона немає. Перенесено зі стеку Redwave (LibGDX 1.14.2 + scene2d, MSDF,
+`PlatformBridge`). **Firebase — лише Remote Config, реклама — AdMob напряму, як у Redwave** (рішення VELDAN 12.10.2026);
+Analytics немає. Маркет-кіт — `../market/` (`LISTING.md`, `README.md`), Privacy Policy — `../privacy-policy/`.
+
+## Remote Config + AdMob (як у Redwave, рішення VELDAN 12.10.2026)
+
+Параметр **`driftglass_config`** (JSON), значення VELDAN — `../firebase/driftglass_config.json`, як створити — `../FIREBASE.md`.
+❗ Проєкту Firebase ще немає: без `app/google-services.json` плагін google-services не підключається
+(умова в `app/build.gradle.kts`), `RemoteFlagsSource` бере `AppFlags.DEFAULT` — реклами немає.
+
+- `android/RemoteFlagsSource.kt` — порт Redwave 1:1: офлайн → DEFAULT, Splash чекає Firebase до 3 с на першому запуску,
+  `fetchAndActivate` на кожному `onResume`, real-time listener.
+- `android/AdsManager.kt` + `core/ads/AdPolicy.kt` (+ `AdPolicyTest`) — порт Redwave, тестові блоки Google.
+  App Open — відкриття апки (Splash чекає до 3,5 с; іконка Driftglass на нашому лаунчері) і повернення ≤ 1 год,
+  не частіше раз на 3 хв; Interstitial — кожні 2 дії зі шпалерами (Apply / Save у Studio / кадр на систему),
+  у паузі (через 1,5 с, зміна вкладки), ≥ 60 с після попередньої. **Лише в застосунку** (вкладки, Preview, Studio) —
+  на лаунчері, онбордингу й екрані-вимозі ні. Перевірено на Redmi 12.10.2026: App Open з іконки, Interstitial після
+  2 збережень у Studio; release (R8) стартує без крашу (WorkManager 2.12 явно, як у Redwave).
+- **Перед релізом:** свій App ID у маніфесті + свої блоки в `AdsManager`, згода UMP (ЄЕЗ).
+
+```bash
+adb shell am start -n com.driftglass.home/.MainActivity --ez driftglass.debug_ads_reset true   # забути показ і лічильник
+```
+
+## StoreDemo — чисті скріни для Google Play (запит VELDAN 12.10.2026)
+
+Debug-режим `android/StoreDemo.kt`: лаунчер показує 30 вигаданих апок із загальними назвами й нашими іконками
+(Material Symbols, Apache 2.0; PNG лише в `app/src/debug/assets/demo_icons`), годинник 9:41. Як перезняти кадри — `../market/README.md`.
+
+```bash
+adb shell am start -n com.driftglass.home/.MainActivity --ez driftglass.store_demo true    # false — вимкнути
+```
 
 Спілкування й коментарі в коді — **українською**. UI апки — **лише англійською** (рішення VELDAN 09.10.2026:
 `GDXGame.applyLanguage` → EN; переклади uk/ru лишились у `core/i18n/Strings.kt` на потім, перемикача мови немає).
@@ -11,7 +41,7 @@ VELDAN не скаже. Перенесено зі стеку Redwave (LibGDX 1.1
 ## AD_MODE (як у Redwave, рішення VELDAN 09.10.2026)
 
 Прапорці — `core/config/AppFlags.kt` (+ `AppFlagsTest`), поля й JSON-імена як у Redwave `RemoteFlags`,
-джерело — `android/FlagsSource.kt`. Remote Config **немає**: release = `AppFlags.DEFAULT`, debug — підміна.
+джерело — Remote Config (`android/RemoteFlagsSource.kt`); debug — підміна поверх нього.
 
 | Поле | true | false (DEFAULT) |
 |---|---|---|
@@ -19,7 +49,7 @@ VELDAN не скаже. Перенесено зі стеку Redwave (LibGDX 1.1
 | `home_required` | пояснення ролі без «Maybe later»; без ролі — екран-вимога на кожному вході й resume | «Maybe later» є |
 | `is_uninstall` | довге натискання на іконку в лаунчері → App info / Uninstall | довге натискання нічого не робить |
 
-AD_MODE = `enabled_url_ad` + `https://google.com` + `home_required` + `!is_uninstall`. Логіка вкладки —
+AD_MODE = `enabled_url_ad` + url (з Remote Config, якщо https, інакше google.com) + `home_required` + `!is_uninstall` + AdMob. Логіка вкладки —
 `MainActivity` (1:1 з Redwave): `onStop` від «іншої апки» вмикає, `onResume` відкриває; наша вкладка й
 наші системні екрани (`internalNavigation`) не рахуються; холодний старт як HOME теж відкриває.
 Перевірено на Redmi 09.10.2026: Settings → «Додому» → вкладка; закрити вкладку → лаунчер без повтору;
@@ -63,8 +93,12 @@ adb logcat -s driftglass:V AndroidRuntime:E
 
 **Одна MainActivity на процес** — іконка йде через `LauncherTrampoline` (як Redwave). Не повертати LAUNCHER-фільтр на MainActivity.
 
-**Змінив UI — скріншот з девайса і подивитись.** Пастка, що вже стріляла: усередині `Image().apply { … }`
-`width`/`height` — це розміри Image (0), а не клітинки; брати розмір клітинки в змінну до `apply`.
+**Змінив UI — скріншот з девайса і подивитись.** Пастка, що вже стріляла (іконки лаунчера, палітри Studio, смужка
+«усі апки», затемнення карток): усередині `Image().apply { … }` / `ARect(…).apply { … }` `width`/`height` — це розміри
+самого актора (0), а не клітинки; брати розмір клітинки в змінну до `apply`.
+
+**Release (R8) перевіряти на девайсі:** `assembleRelease` → `zipalign` + `apksigner` debug-ключем (`~/.android/debug.keystore`,
+пароль `android`) → `adb install -r`.
 
 ## Конвенції
 

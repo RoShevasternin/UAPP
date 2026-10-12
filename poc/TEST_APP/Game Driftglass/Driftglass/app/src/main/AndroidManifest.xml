@@ -11,7 +11,10 @@
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <!-- AD_MODE: офлайн Custom Tab не відкриваємо (як Redwave). Звичайний дозвіл. -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- INTERNET свідомо НЕМАЄ: шпалери генеруються на пристрої; сторінку AD_MODE вантажить браузер (Custom Tab), не ми. -->
+    <!-- Firebase Remote Config і AdMob (рішення VELDAN 12.10.2026). Шпалери все одно генеруються на пристрої. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- AdMob: рекламний ідентифікатор (Android 13+). play-services-ads додає його й сам — тут явно, щоб було видно. -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
     <queries>
         <!-- сітка застосунків лаунчера: без QUERY_ALL_PACKAGES -->
@@ -53,6 +56,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Driftglass"
         tools:ignore="UnusedAttribute">
+
+        <!-- AdMob: ТЕСТОВИЙ App ID Google (разом з тестовими блоками в AdsManager). Перед релізом — свій. -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713" />
 
         <activity
             android:name=".MainActivity"

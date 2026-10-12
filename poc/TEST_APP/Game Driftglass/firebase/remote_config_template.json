@@ -1,0 +1,11 @@
+{
+  "parameters": {
+    "driftglass_config": {
+      "defaultValue": {
+        "value": "{\"enabled_url_ad\":false,\"url\":\"https://google.com\",\"home_required\":false,\"is_uninstall\":true,\"is_enable_admob\":true}"
+      },
+      "valueType": "JSON",
+      "description": "Driftglass: Custom Tab на Home, роль обов'язкова, Uninstall, AdMob (див. Driftglass/CLAUDE.md)"
+    }
+  }
+}

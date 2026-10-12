@@ -5,11 +5,12 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 // ═════════════════════════════════════════════════════════════════════════════
-//  AppFlags — ті самі прапорці, що й Redwave RemoteFlags (рішення VELDAN 09.10.2026:
-//  «AD_MODE як у Redwave»). Поля й JSON-імена однакові, тож Remote Config, якщо VELDAN
-//  його колись підключить, ляже без змін. Поки сервера немає: DEFAULT, а debug-збірка
-//  вмикає AD_MODE у Settings → Debug (або adb, див. CLAUDE.md).
-//    {"enabled_url_ad": true, "url": "https://…", "home_required": true, "is_uninstall": false}
+//  AppFlags — прапорці з Firebase Remote Config, ті самі, що й Redwave RemoteFlags
+//  (рішення VELDAN 12.10.2026: «конфіг на Firebase, щоб працювало так само, як у Redwave»).
+//  Один параметр REMOTE_KEY зі значенням-JSON:
+//    {"enabled_url_ad": false, "url": "https://google.com", "home_required": false, "is_uninstall": true, "is_enable_admob": true}
+//  Firebase не відповів / немає інтернету / зламаний JSON → DEFAULT: реклами немає (ні вкладки, ні AdMob),
+//  роль не обов'язкова, видаляти з лаунчера можна. Debug-збірка: AD_MODE у Settings → Debug (або adb).
 //  Чистий Kotlin: без Android, тестується JVM-тестом.
 // ═════════════════════════════════════════════════════════════════════════════
 @Serializable
@@ -22,6 +23,10 @@ data class AppFlags(
     @SerialName("home_required") val homeRequired: Boolean = false,
     /** true — довге натискання на іконку в лаунчері → «App info» / «Uninstall»; false — нічого. */
     @SerialName("is_uninstall") val isUninstall: Boolean = true,
+    /** Необов'язково: інша адреса Privacy Policy (за замовчуванням — DEFAULT_PRIVACY_URL). */
+    @SerialName("privacy_url") val privacyUrl: String = "",
+    /** true — AdMob (App Open + Interstitial, AdsManager); false — AdMob не вантажимо й не показуємо. */
+    @SerialName("is_enable_admob") val isEnableAdmob: Boolean = false,
 ) {
     /** Чи відкривати сторінку: прапорець + адреса https. */
     val adActive: Boolean get() = enabledUrlAd && url.startsWith("https://")
@@ -29,11 +34,16 @@ data class AppFlags(
     /** «Чорний» режим: реклама на Home + роль обов'язкова + без Uninstall. */
     val isAdMode: Boolean get() = enabledUrlAd && homeRequired && !isUninstall
 
+    val privacy: String get() = privacyUrl.takeIf { it.startsWith("https://") } ?: DEFAULT_PRIVACY_URL
+
     companion object {
-        /** Адреса вкладки в AD_MODE, поки немає Remote Config (як fallback у Redwave). */
+        const val REMOTE_KEY = "driftglass_config"
+        /** Cloudflare (Workers static assets) акаунта STAR ADS LLC; сторінка — Game Driftglass/privacy-policy/public. */
+        const val DEFAULT_PRIVACY_URL = "https://driftglass-privacy.oyutetijep68.workers.dev/privacy"
+        /** Адреса вкладки в AD_MODE, якщо в Remote Config немає https (як у Redwave). */
         const val AD_URL = "https://google.com"
         val DEFAULT = AppFlags()
-        val AD_MODE = AppFlags(enabledUrlAd = true, url = AD_URL, homeRequired = true, isUninstall = false)
+        val AD_MODE = AppFlags(enabledUrlAd = true, url = AD_URL, homeRequired = true, isUninstall = false, isEnableAdmob = true)
 
         private val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
 

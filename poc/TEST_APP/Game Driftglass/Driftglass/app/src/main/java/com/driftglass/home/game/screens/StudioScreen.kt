@@ -87,12 +87,14 @@ class StudioScreen : DgScreen() {
             Palettes.ALL.forEach { pal ->
                 val on = pal.id == d.palette
                 val sw = tap(this@StudioScreen, palH, palH, 0.92f) {
-                    val q = width / 2f
+                    // розмір клітинки — ДО apply: усередині ARect.apply width/height — це розміри самого ARect (0)
+                    val cw = width; val ch = height
+                    val q = cw / 2f
                     val cs = pal.colors.map { Color.valueOf(it.removePrefix("#")) }
-                    addActor(ARect(this@StudioScreen, px(12f), cs[0], cs[2], angleCss = 135f).apply { setBounds(0f, 0f, width, height) })
+                    addActor(ARect(this@StudioScreen, px(12f), cs[0], cs[2], angleCss = 135f).apply { setBounds(0f, 0f, cw, ch) })
                     addActor(ARect(this@StudioScreen, px(6f), cs[1]).apply { setBounds(q - px(8f), q - px(8f), px(16f), px(16f)) })
-                    if (on) addActor(ARect(this@StudioScreen, px(14f), Color(0f, 0f, 0f, 0f), stroke = Color.WHITE, strokeWidth = px(2f)).apply { setBounds(-px(2f), -px(2f), width + px(4f), height + px(4f)) })
-                    addActor(ARect(this@StudioScreen, px(12f), Color(0f, 0f, 0f, 0f), stroke = GameColor.white_20).apply { setBounds(0f, 0f, width, height); touchable = Touchable.disabled })
+                    if (on) addActor(ARect(this@StudioScreen, px(14f), Color(0f, 0f, 0f, 0f), stroke = Color.WHITE, strokeWidth = px(2f)).apply { setBounds(-px(2f), -px(2f), cw + px(4f), ch + px(4f)) })
+                    addActor(ARect(this@StudioScreen, px(12f), Color(0f, 0f, 0f, 0f), stroke = GameColor.white_20).apply { setBounds(0f, 0f, cw, ch); touchable = Touchable.disabled })
                 }.apply { setOnClickListener { set(d.copy(palette = pal.id), rebuildPanel = true) } }
                 row.addActor(sw)
             }
@@ -111,15 +113,15 @@ class StudioScreen : DgScreen() {
                 s.setBounds(pad + px(72f), y, iw - px(72f) - ow - px(8f), slH); addActor(s)
             }
             y -= px(4f)
-            slider(L.motion, 0f, 2f, d.speed, { "%.1f".format(it) }) { set(d.copy(speed = it)) }
-            slider(L.scale, 0.5f, 2f, d.scale, { "%.1f".format(it) }) { set(d.copy(scale = it)) }
+            slider(L.motion, 0f, 2f, d.speed, { "%.1f".format(java.util.Locale.US, it) }) { set(d.copy(speed = it)) }
+            slider(L.scale, 0.5f, 2f, d.scale, { "%.1f".format(java.util.Locale.US, it) }) { set(d.copy(scale = it)) }
             slider(L.grain, 0f, 0.2f, d.grain, { "${(it * 500).toInt()}" }) { set(d.copy(grain = it)) }
 
             val save = AButton(this@StudioScreen, L.save, AButton.Kind.GHOST, assets.ic_plus)
             val apply = AButton(this@StudioScreen, L.apply, AButton.Kind.TEAL)
             val cw = (iw - px(10f)) * 0.42f
             save.setBounds(pad, pad, cw, bh); apply.setBounds(pad + cw + px(10f), pad, iw - cw - px(10f), bh)
-            save.setOnClickListener { saveDraft(); showToast(L.tSaved) }
+            save.setOnClickListener { saveDraft(); showToast(L.tSaved); gdxGame.afterWallpaperAction() }
             apply.setOnClickListener { applyDraft() }
             addActor(save); addActor(apply)
         }
@@ -149,7 +151,7 @@ class StudioScreen : DgScreen() {
         openSheet(NeedHomeSheet(this,
             onStill = {
                 gdxGame.model.update { it.copy(applied = w.id, dayCycle = false, changedAt = System.currentTimeMillis()) }
-                gdxGame.setStill(w, system = true, lock = gdxGame.model.state.settings.lockStill) { ok -> gdxGame.toast(if (ok) L.tStill else L.tStillFail) }
+                gdxGame.setStill(w, system = true, lock = gdxGame.model.state.settings.lockStill) { ok -> gdxGame.toast(if (ok) L.tStill else L.tStillFail); if (ok) gdxGame.afterWallpaperAction() }
             },
             onHome = {
                 gdxGame.model.update { it.copy(applied = w.id, dayCycle = false, changedAt = System.currentTimeMillis()) }

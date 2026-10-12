@@ -163,6 +163,51 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
     val needsHomeRole: Boolean get() = flags.homeRequired && !bridge.isDefaultHome()
 
     // ------------------------------------------------------------------------
+    // Реклама: App Open + Interstitial (частота — AdPolicy, показ — AdsManager), як у Redwave
+    // ------------------------------------------------------------------------
+    /**
+     * Лише всередині застосунку: вкладки, Preview, Studio. На лаунчері (роль HOME) реклами AdMob немає —
+     * повноекранна реклама на головному екрані = «disruptive ads» за правилами Google Play;
+     * на онбордингу й екрані-вимозі — теж ні.
+     */
+    private val isInApp: Boolean get() = currentScreen.let { it is AppScreen || it is com.driftglass.home.game.screens.PreviewScreen || it is com.driftglass.home.game.screens.StudioScreen }
+
+    /** Splash: чи поведе перший екран у застосунок (тоді є сенс у App Open). Перший запуск — ні. */
+    fun firstScreenIsApp(): Boolean = model.state.onboarded && !needsHomeRole && !pendingHome
+
+    /** Повернулись у Driftglass / тапнули іконку. Екран перевіряємо наступним проходом черги GL. */
+    override fun onAppForeground(awayMs: Long, fromIcon: Boolean) {
+        if (!isReady || !model.state.onboarded || needsHomeRole) return
+        com.driftglass.home.game.utils.runGDX {
+            if (!isInApp) return@runGDX
+            bridge.showAppOpen(onReturn = !fromIcon, awayMs = awayMs) { shown -> if (!shown) maybeInterstitial() }
+        }
+    }
+
+    override fun onRemoteFlags(flags: com.driftglass.home.core.config.AppFlags) {
+        log("flags changed: $flags")
+    }
+
+    /** Застосували / зберегли шпалери → лічильник; інтерстішал — коли людина побачила тост. */
+    fun afterWallpaperAction() {
+        bridge.onWallpaperAction()
+        com.badlogic.gdx.utils.Timer.schedule(object : com.badlogic.gdx.utils.Timer.Task() {
+            override fun run() { maybeInterstitial() }
+        }, 1.5f)
+    }
+
+    /**
+     * Interstitial у природній паузі: після дії зі шпалерами, при зміні вкладки, перед Preview.
+     * Не поверх шторки; не настав час — нічого (лічильник чекає).
+     */
+    fun maybeInterstitial() {
+        if (!isReady || !isInApp) return
+        if ((currentScreen as? DgScreen)?.sheet != null) return
+        if (!bridge.isInterstitialDue()) return
+        bridge.showInterstitial { }
+    }
+
+    // ------------------------------------------------------------------------
     // Енергія: режим економії = 30 fps, половина швидкості, менший FBO шпалер
     // ------------------------------------------------------------------------
     private fun updatePower(dt: Float) {
@@ -227,6 +272,7 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
     // ------------------------------------------------------------------------
     /** Поставити шпалери на Home (вимикає цикл дня — людина обрала сама). Кадр на екран блокування — за налаштуванням. */
     fun applyWallpaper(id: String, alsoLock: Boolean = model.state.settings.lockStill) {
+        bridge.onWallpaperAction()
         model.update { it.copy(applied = id, dayCycle = false, changedAt = System.currentTimeMillis()) }
         log("apply $id → Home")
         if (alsoLock && model.state.settings.lockStill) model.wallpaper(id)?.let { setStill(it, system = false, lock = true) {} }
@@ -310,5 +356,6 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
     /** Іконка Driftglass на НАШОМУ лаунчері — відкрити застосунок. */
     fun openAppFromLauncher(tab: Int? = null) {
         navigationManager.navigate(AppScreen::class.java.name, LauncherScreen::class.java.name, tab)
+        onAppForeground(awayMs = -1L, fromIcon = true)
     }
 }

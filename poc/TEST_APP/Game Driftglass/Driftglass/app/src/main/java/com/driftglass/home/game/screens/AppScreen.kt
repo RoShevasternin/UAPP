@@ -57,9 +57,11 @@ class AppScreen : DgScreen() {
         page.clearActions()
         page.addAction(Actions.parallel(Actions.fadeIn(0.25f), Actions.moveTo(0f, 0f, 0.3f, Interpolation.pow3Out)))
         current = i
+        val changed = lastTab != i
         lastTab = i
         tabBar.select(i)
         page.onShown()
+        if (changed) gdxGame.maybeInterstitial()   // зміна вкладки — природна пауза (як Redwave)
     }
 
     private fun createPage(i: Int): TabPage {

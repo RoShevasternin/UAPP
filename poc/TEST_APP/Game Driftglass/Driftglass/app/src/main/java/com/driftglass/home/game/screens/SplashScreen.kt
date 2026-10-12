@@ -2,6 +2,7 @@ package com.driftglass.home.game.screens
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
+import com.driftglass.home.game.platform.AdStatus
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
@@ -32,6 +33,7 @@ class SplashScreen : DgScreen() {
     private var assetsDone  = false
     private var modelLoaded = false
     private var navigated   = false
+    private var flagsReady  = false
 
     init {
         disposableSet += texLogo
@@ -45,6 +47,9 @@ class SplashScreen : DgScreen() {
         gdxGame.spriteManager.loadAll()
         gdxGame.soundManager.load()
         gdxGame.model.load { modelLoaded = true }
+        // Перший запуск онлайн: чекаємо Firebase до 3 с (як Redwave), далі — кеш одразу
+        if (gdxGame.bridge.hasRemoteFlags() || !gdxGame.bridge.isOnline()) flagsReady = true
+        else gdxGame.bridge.refreshRemoteFlags(3_000L) { flagsReady = true }
     }
 
     override fun buildContent() {
@@ -77,14 +82,27 @@ class SplashScreen : DgScreen() {
             gdxGame.soundManager.init()
             assetsDone = true
         }
-        if (!navigated && assetsDone && modelLoaded && System.currentTimeMillis() - startedAt >= 1000L) {
+        val elapsed = System.currentTimeMillis() - startedAt
+        if (!navigated && assetsDone && modelLoaded && flagsReady && elapsed >= 1000L) {
+            // App Open при відкритті: лише якщо далі застосунок (не онбординг, не лаунчер) і онлайн.
+            // Ще вантажиться — чекаємо до AD_WAIT_MS від старту Splash, далі йдемо без реклами.
+            val ad = if (gdxGame.firstScreenIsApp() && gdxGame.bridge.isOnline()) gdxGame.bridge.appOpenStatus() else AdStatus.NONE
+            if (ad == AdStatus.LOADING && elapsed < AD_WAIT_MS) return
             navigated = true
             gdxGame.onReady()
-            animHideScreen {
-                gdxGame.backgroundColor = GameColor.background
-                gdxGame.navigateFirst()
+            val go = {
+                animHideScreen {
+                    gdxGame.backgroundColor = GameColor.background
+                    gdxGame.navigateFirst()
+                }
             }
+            if (ad == AdStatus.READY) gdxGame.bridge.showAppOpen(onReturn = false, awayMs = 0L) { go() } else go()
         }
+    }
+
+    private companion object {
+        /** Скільки Splash максимум чекає App Open (від свого старту). */
+        const val AD_WAIT_MS = 3_500L
     }
 
     override fun onBackPressed() {}

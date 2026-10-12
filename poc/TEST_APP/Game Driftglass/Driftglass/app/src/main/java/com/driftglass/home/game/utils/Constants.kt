@@ -30,5 +30,3 @@ object Dimens {
     val TABBAR_H = px(60f)
 }
 
-/** Політика конфіденційності (❓ адресу дасть VELDAN — зараз сторінка-заглушка Redwave не підходить). */
-const val PRIVACY_URL = "https://driftglass-privacy.oyutetijep68.workers.dev/privacy"

@@ -3,6 +3,10 @@ plugins {
     id("kotlinx-serialization")
 }
 
+// Firebase (лише Remote Config, як у Redwave): плагін — коли є app/google-services.json.
+// Без файлу збірка йде, а RemoteFlagsSource бере AppFlags.DEFAULT (реклами немає). Як створити — ../FIREBASE.md.
+if (file("google-services.json").exists()) apply(plugin = "com.google.gms.google-services")
+
 android {
     namespace  = "com.driftglass.home"
     compileSdk = 37
@@ -70,6 +74,16 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.13.0")
     implementation("androidx.datastore:datastore-preferences:1.2.1")
     implementation("androidx.browser:browser:1.10.0")   // AD_MODE: Custom Tab на «Додому»
+
+    // Firebase: лише Remote Config (параметр driftglass_config), як у Redwave ---------------------
+    implementation(platform("com.google.firebase:firebase-bom:35.0.0"))
+    implementation("com.google.firebase:firebase-config")
+
+    // AdMob: App Open + Interstitial (вмикач — Remote Config is_enable_admob) ------------------
+    implementation("com.google.android.gms:play-services-ads:25.5.0")
+    // play-services-ads тягне WorkManager 2.7.0 + Room 2.2.5: у release (R8 повний) краш на старті
+    // (Redwave, 08.10.2026) — свіжий WorkManager явно
+    implementation("androidx.work:work-runtime:2.12.0")
 
     // LibGDX Core ------------------------------------------------------------------------
     val gdxVersion = "1.14.2"

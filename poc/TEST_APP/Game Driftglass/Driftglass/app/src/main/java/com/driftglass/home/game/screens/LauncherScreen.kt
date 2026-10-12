@@ -187,7 +187,8 @@ class LauncherScreen : DgScreen() {
 
         // смужка «усі застосунки»
         val handle = tap(this, px(120f), px(22f), 0.95f) {
-            addActor(ARect(this@LauncherScreen, 999f, GameColor.white_55).apply { setBounds((width - px(44f)) / 2f, (height - px(5f)) / 2f, px(44f), px(5f)) })
+            val hw = width; val hh = height   // не всередині ARect.apply: там width/height — самого ARect
+            addActor(ARect(this@LauncherScreen, 999f, GameColor.white_55).apply { setBounds((hw - px(44f)) / 2f, (hh - px(5f)) / 2f, px(44f), px(5f)) })
         }.apply { setOnClickListener { openDrawer() } }
         handle.setPosition((w - handle.width) / 2f, dock.y + dockH + px(4f)); bottom.addActor(handle)
 
@@ -352,7 +353,8 @@ class LauncherScreen : DgScreen() {
     private fun updateClock(force: Boolean) {
         if (!::clock.isInitialized) return
         val now = Date()
-        val m = SimpleDateFormat("H:mm", Locale.US).format(now)
+        // режим скрінів Google Play — 9:41, як у статус-барі кадру
+        val m = if (gdxGame.bridge.isStoreDemo) "9:41" else SimpleDateFormat("H:mm", Locale.US).format(now)
         if (!force && m == lastMinute) return
         lastMinute = m
         clock.setText(m); clock.pack()

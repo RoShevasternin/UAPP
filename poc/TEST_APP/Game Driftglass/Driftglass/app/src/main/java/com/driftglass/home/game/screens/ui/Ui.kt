@@ -107,7 +107,8 @@ fun wallpaperCard(screen: AdvancedScreen, w: Wallpaper, cw: Float, small: Boolea
     return tap(screen, cw, ch, 0.97f) {
         addAndFillActor(AThumb(screen, w, if (small) px(14f) else px(18f)))
         // підкладка під підпис: прозоро → 60 % чорного
-        addActor(ARect(screen, if (small) px(14f) else px(18f), Color(0f, 0f, 0f, 0f), Color(0f, 0f, 0f, 0.6f), angleCss = 180f, mid = 1f, start = 0.55f).apply { setBounds(0f, 0f, width, height); touchable = Touchable.disabled })
+        val cw = width; val ch = height   // не всередині ARect.apply: там width/height — самого ARect (0)
+        addActor(ARect(screen, if (small) px(14f) else px(18f), Color(0f, 0f, 0f, 0f), Color(0f, 0f, 0f, 0.6f), angleCss = 180f, mid = 1f, start = 0.55f).apply { setBounds(0f, 0f, cw, ch); touchable = Touchable.disabled })
         val pad = if (small) px(8f) else px(10f)
         val name = lbl(displayName(w), msdf.semibold(if (small) 11f else 12.5f, Color.WHITE)).ellipsize(width - pad * 2)
         if (small) {

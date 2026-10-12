@@ -126,7 +126,7 @@ class MyGlassTab(app: AppScreen) : TabPage(app) {
                 val cur = s.dayCycle && slot == curSlot
                 val cell = tap(app, sw, sh + px(18f), 0.95f) {
                     val th = AThumb(app, w, px(12f)); th.setBounds(0f, px(18f), width, sh); addActor(th)
-                    if (cur) addActor(ARect(app, px(14f), Color(0f, 0f, 0f, 0f), stroke = GameColor.teal_5FF2D1, strokeWidth = px(2f)).apply { setBounds(-px(3f), px(15f), width + px(6f), sh + px(6f)); touchable = Touchable.disabled })
+                    if (cur) addActor(ARect(app, px(14f), Color(0f, 0f, 0f, 0f), stroke = GameColor.teal_5FF2D1, strokeWidth = px(2f)).apply { setBounds(-px(3f), px(15f), sw + px(6f), sh + px(6f)); touchable = Touchable.disabled })
                     val l = lbl(L.slot(slot), msdf.medium(10.5f, if (cur) GameColor.teal_5FF2D1 else Color.WHITE)); l.setPosition((width - l.width) / 2f, 0f); addActor(l)
                 }.apply {
                     setOnClickListener {

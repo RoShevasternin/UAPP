@@ -36,6 +36,7 @@ import androidx.core.content.getSystemService
 import androidx.core.graphics.createBitmap
 import androidx.core.net.toUri
 import com.driftglass.home.MainActivity
+import com.driftglass.home.game.platform.AdStatus
 import com.driftglass.home.game.platform.BatteryState
 import com.driftglass.home.game.platform.LauncherApp
 import com.driftglass.home.game.platform.PlatformBridge
@@ -122,26 +123,64 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
         ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName ?: "?"
     }.getOrDefault("?")
 
-    override fun flags() = FlagsSource.current
+    override fun isOnline(): Boolean = RemoteFlagsSource.isOnline()
+
+    // ------------------------------------------------------------------------
+    // Remote Config
+    // ------------------------------------------------------------------------
+    override fun flags() = RemoteFlagsSource.effective
+    override fun hasRemoteFlags(): Boolean = RemoteFlagsSource.hasRemote()
+    override fun refreshRemoteFlags(timeoutMs: Long, onDone: (com.driftglass.home.core.config.AppFlags) -> Unit) {
+        main.post { RemoteFlagsSource.refresh(timeoutMs) { f -> runGDX { onDone(f) } } }
+    }
 
     /** Перезапуск процесу: новий таск через трамплін (він сам вирішить — home-таск чи звичайний). */
     override fun setAdMode(on: Boolean) {
         main.post {
-            FlagsSource.setAdMode(on)
+            RemoteFlagsSource.setAdMode(on)
             val restart = Intent.makeRestartActivityTask(ComponentName(ctx, com.driftglass.home.LauncherTrampoline::class.java))
             ctx.startActivity(restart)
             Runtime.getRuntime().exit(0)
         }
     }
 
-    override fun flagsDebug(): String = FlagsSource.debugLine()
+    override fun flagsDebug(): String = RemoteFlagsSource.debugLine()
 
-    /** Для Custom Tab: офлайн сторінку не відкриваємо (як у Redwave). */
-    fun isOnline(): Boolean {
-        val cm = ctx.getSystemService<android.net.ConnectivityManager>() ?: return false
-        val caps = cm.getNetworkCapabilities(cm.activeNetwork) ?: return false
-        return caps.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    // ------------------------------------------------------------------------
+    // Реклама (AdsManager живе на весь процес, тут лише перенос у main і назад у GL)
+    // ------------------------------------------------------------------------
+    override fun appOpenStatus(): AdStatus = AdsManager.appOpenStatus()
+
+    override fun showAppOpen(onReturn: Boolean, awayMs: Long, onDone: (shown: Boolean) -> Unit) {
+        main.post {
+            if (!isActivityResumed()) { runGDX { onDone(false) }; return@post }
+            AdsManager.showAppOpen(activity, onReturn, awayMs) { shown -> runGDX { onDone(shown) } }
+        }
     }
+
+    override fun onWallpaperAction() { main.post { AdsManager.onWallpaperAction() } }
+
+    override fun isInterstitialDue(): Boolean = AdsManager.isInterstitialDue()
+
+    override fun showInterstitial(onDone: (shown: Boolean) -> Unit) {
+        main.post {
+            if (!isActivityResumed() || isTextInputActive) { runGDX { onDone(false) }; return@post }
+            AdsManager.showInterstitial(activity) { shown -> runGDX { onDone(shown) } }
+        }
+    }
+
+    override fun adsDebug(): String = AdsManager.debugLine()
+
+    private fun isActivityResumed() =
+        !activity.isFinishing && activity.lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)
+
+    // ------------------------------------------------------------------------
+    // Debug: чистий режим для скрінів Google Play
+    // ------------------------------------------------------------------------
+    override val isStoreDemo: Boolean get() = StoreDemo.isOn
+
+    /** Режим скрінів увімкнули / вимкнули — лаунчер перебудовує сітку й док. */
+    fun appsChangedForDemo() { emit { onAppsChanged() } }
 
     /** Sticky-бродкаст ACTION_BATTERY_CHANGED: без ресивера, без дозволів. */
     override fun battery(): BatteryState {
@@ -272,7 +311,7 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
     @Volatile private var appsCache: List<LauncherApp>? = null
     private fun apps(): List<LauncherApp> = appsCache ?: queryApps()
 
-    override fun listApps(): List<LauncherApp> = apps()
+    override fun listApps(): List<LauncherApp> = if (StoreDemo.isOn) StoreDemo.apps else apps()
 
     private fun queryApps(): List<LauncherApp> = runCatching {
         userManager.userProfiles.flatMap { user ->
@@ -291,6 +330,7 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
     }.getOrDefault(emptyList()).also { appsCache = it }
 
     override fun appIconPng(app: LauncherApp, sizePx: Int, onResult: (ByteArray?) -> Unit) {
+        if (StoreDemo.isDemo(app)) { scope.launch { val b = StoreDemo.iconPng(ctx, app); runGDX { onResult(b) } }; return }
         scope.launch {
             val bytes = runCatching {
                 val user = userManager.getUserForSerialNumber(app.userSerial) ?: return@runCatching null
@@ -307,6 +347,7 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
     }
 
     override fun launchApp(app: LauncherApp) {
+        if (StoreDemo.isDemo(app)) return
         main.post {
             runCatching {
                 val user = userManager.getUserForSerialNumber(app.userSerial)
@@ -315,7 +356,7 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
         }
     }
 
-    override fun dockApps(): List<LauncherApp?> = listOf(
+    override fun dockApps(): List<LauncherApp?> = if (StoreDemo.isOn) StoreDemo.dock else listOf(
         defaultAppFor(Intent(Intent.ACTION_DIAL)),
         defaultAppFor(Intent(Intent.ACTION_SENDTO, "smsto:".toUri())),
         defaultAppFor(Intent(Intent.ACTION_VIEW, "https://example.com".toUri())),
