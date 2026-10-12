@@ -38,8 +38,12 @@ data class AppFlags(
 
     companion object {
         const val REMOTE_KEY = "driftglass_config"
-        /** Cloudflare (Workers static assets) акаунта STAR ADS LLC; сторінка — Game Driftglass/privacy-policy/public. */
-        const val DEFAULT_PRIVACY_URL = "https://driftglass-privacy.oyutetijep68.workers.dev/privacy"
+        /**
+         * Cloudflare (Workers static assets) акаунта Strategic Access Ventures (0927920793ja@gmail.com), сторінка —
+         * Game Driftglass/privacy-policy/public. ◌ Субдомен workers.dev — припущення до першої публікації: якщо адреса
+         * вийде інша, поле privacy_url у Remote Config (без збірки) + виправити тут.
+         */
+        const val DEFAULT_PRIVACY_URL = "https://driftglass-privacy.0927920793ja.workers.dev/privacy"
         /** Адреса вкладки в AD_MODE, якщо в Remote Config немає https (як у Redwave). */
         const val AD_URL = "https://google.com"
         val DEFAULT = AppFlags()

@@ -6,6 +6,9 @@
 
 Графіка — у цій теці, опис файлів — [README.md](README.md).
 
+**Акаунт Google Play (VELDAN, 12.10.2026): Strategic Access Ventures** — Organization account, Account ID `5142898478012444545`,
+контакт `0927920793ja@gmail.com`. Нові апки викладаємо на нові акаунти; Redwave — на STAR ADS LLC.
+
 ---
 
 ## 1. Store listing (Main store listing)
@@ -97,7 +100,7 @@ PRIVACY
 | App or game | **App** |
 | Category | **Personalization** ◌ (шпалери + лаунчер; так у маніфесті `appCategory="image"` не заважає) |
 | Tags | ◌ обрати в консолі: **Launcher, Wallpapers, Live wallpapers, Personalization** (що з цього є в списку тегів Google — звірити) |
-| Contact email | `oyutetijep68@gmail.com` |
+| Contact email | `0927920793ja@gmail.com` |
 | Website | необов'язково |
 | Phone | необов'язково |
 | External marketing | лишити увімкненим (за замовчуванням) |
@@ -108,7 +111,7 @@ PRIVACY
 
 | Розділ | Відповідь |
 |---|---|
-| Privacy policy | `https://driftglass-privacy.oyutetijep68.workers.dev/privacy` (спершу викласти — `../privacy-policy/README.md`) |
+| Privacy policy | `https://driftglass-privacy.0927920793ja.workers.dev/privacy` ◌ (спершу викласти — `../privacy-policy/README.md`; адресу звірити після публікації) |
 | Ads | **Yes, my app contains ads** |
 | App access | **All functionality is available without special access** — логіна немає |
 | Content rating | анкета IARC, див. §3.1 |
@@ -174,7 +177,7 @@ PRIVACY
 |---|---|
 | Countries | United States ◌ (маркет США; інші — за рішенням VELDAN) |
 | Price | Free |
-| Track | Production одразу (акаунт організації STAR ADS LLC) ◌ |
+| Track | Production одразу (акаунт організації Strategic Access Ventures) ◌ |
 | Release name | `1.0.0 (1)` |
 
 Release notes (en-US) — 3 абстрактні пункти, як у парку:
