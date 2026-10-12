@@ -1,0 +1,916 @@
+{
+ "Kinora": {
+  "results_returned": 30,
+  "collisions": [
+   {
+    "appId": "movies.kinora.app",
+    "title": "Kinora: Movie Recommendations",
+    "developer": "Wavelength VR",
+    "installs": "50+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   },
+   {
+    "appId": "app.kinora",
+    "title": "Kinora: Family Memories",
+    "developer": "BURAK AKSU",
+    "installs": "500+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   },
+   {
+    "appId": "com.pradappandiyan.kinora",
+    "title": "Kinora - Stay Close",
+    "developer": "Pradap Pandian",
+    "installs": "1+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   },
+   {
+    "appId": "br.app.kinora.home",
+    "title": "Kinora Home: Organizing Family",
+    "developer": "Code Art BR",
+    "installs": "100+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   }
+  ],
+  "top5_results": [
+   {
+    "appId": "movies.kinora.app",
+    "title": "Kinora: Movie Recommendations",
+    "installs": "50+"
+   },
+   {
+    "appId": "app.kinora",
+    "title": "Kinora: Family Memories",
+    "installs": "500+"
+   },
+   {
+    "appId": "com.pradappandiyan.kinora",
+    "title": "Kinora - Stay Close",
+    "installs": "1+"
+   },
+   {
+    "appId": "com.apps.ai.video.luts.kinocamera",
+    "title": "KinoCamera: Video Camera Pro",
+    "installs": "100,000+"
+   },
+   {
+    "appId": "br.app.kinora.home",
+    "title": "Kinora Home: Organizing Family",
+    "installs": "100+"
+   }
+  ]
+ },
+ "Framefall": {
+  "results_returned": 30,
+  "collisions": [],
+  "top5_results": [
+   {
+    "appId": "com.frameless_asia_pacific.frameless_2",
+    "title": "Frameless",
+    "installs": "500+"
+   },
+   {
+    "appId": "com.mobileframe.mobileframe",
+    "title": "MobileFrame",
+    "installs": "1,000+"
+   },
+   {
+    "appId": "com.exd.ffl.mcas",
+    "title": "FFL-MCAS",
+    "installs": "1,000+"
+   },
+   {
+    "appId": "com.frampol.myFrampol",
+    "title": "Frampol",
+    "installs": "100+"
+   },
+   {
+    "appId": "com.lionweld.app",
+    "title": "FRAMECS",
+    "installs": "10+"
+   }
+  ],
+  "spaced_variant": {
+   "query": "Frame Fall",
+   "collisions": [],
+   "phrase_matches": []
+  }
+ },
+ "Beamdrop": {
+  "results_returned": 30,
+  "collisions": [
+   {
+    "appId": "com.khrispens.beam_drop",
+    "title": "BeamDrop",
+    "developer": "1bgn",
+    "installs": "5+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   },
+   {
+    "appId": "com.kadiirgok.beamdrop",
+    "title": "BeamDrop",
+    "developer": "Abdulkadir Gök",
+    "installs": "5+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   }
+  ],
+  "top5_results": [
+   {
+    "appId": "com.khrispens.beam_drop",
+    "title": "BeamDrop",
+    "installs": "5+"
+   },
+   {
+    "appId": "com.kadiirgok.beamdrop",
+    "title": "BeamDrop",
+    "installs": "5+"
+   },
+   {
+    "appId": "com.ce.android.brand.superfoods",
+    "title": "Beaming Healthy Marketplace",
+    "installs": "1,000+"
+   },
+   {
+    "appId": "com.novotechx.beam",
+    "title": "Beam – P2P File Transfer",
+    "installs": "100+"
+   },
+   {
+    "appId": "com.shahzaman.pricetracker",
+    "title": "Droplert: Price Drop Alerts",
+    "installs": "5,000+"
+   }
+  ]
+ },
+ "Framevault": {
+  "results_returned": 30,
+  "collisions": [
+   {
+    "appId": "com.framevault.media.library.viewer.mzn",
+    "title": "FrameVault",
+    "developer": "Trumpecta9b",
+    "installs": "50+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   }
+  ],
+  "top5_results": [
+   {
+    "appId": "com.framevault.media.library.viewer.mzn",
+    "title": "FrameVault",
+    "installs": "50+"
+   },
+   {
+    "appId": "com.biztechsoftsys.lumutport",
+    "title": "Vault - Lumut Port's U See U A",
+    "installs": "100+"
+   },
+   {
+    "appId": "com.ffpvault.app",
+    "title": "FFPVault",
+    "installs": "10+"
+   },
+   {
+    "appId": "com.paycom.myvaultcard",
+    "title": "My Vault Card",
+    "installs": "100,000+"
+   },
+   {
+    "appId": "com.probro.nqv_Vault_recovery",
+    "title": "Wafer Vault Unlocker -NQ Vault",
+    "installs": "100,000+"
+   }
+  ]
+ },
+ "Cinedrop": {
+  "results_returned": 50,
+  "collisions": [],
+  "top5_results": [
+   {
+    "appId": "com.drivedrop.app",
+    "title": "DriveDrop",
+    "installs": "1,000+"
+   },
+   {
+    "appId": "net.mkswap.dropshare_android",
+    "title": "Dropshare - File Sharing Tool",
+    "installs": "100+"
+   },
+   {
+    "appId": "com.cinebur",
+    "title": "Cinebur",
+    "installs": "1,000+"
+   },
+   {
+    "appId": "jp.ne.phoenixx.dropin",
+    "title": "dropin: Gravity Rhythm Game",
+    "installs": "500+"
+   },
+   {
+    "appId": "nz.co.vista.android.movie.cinedot",
+    "title": "Cinedot",
+    "installs": "100,000+"
+   }
+  ],
+  "spaced_variant": {
+   "query": "Cine Drop",
+   "collisions": [],
+   "phrase_matches": []
+  }
+ },
+ "Clipwave": {
+  "results_returned": 30,
+  "collisions": [],
+  "top5_results": [
+   {
+    "appId": "com.blackthorn.clipmaker",
+    "title": "Clip Maker: Video Editor",
+    "installs": "5,000+"
+   },
+   {
+    "appId": "com.videoeditor.videomaker.photos.music.pictures",
+    "title": "Video Editor with Song Clipvue",
+    "installs": "10,000,000+"
+   },
+   {
+    "appId": "com.michael.clipvault",
+    "title": "ClipVault",
+    "installs": "10+"
+   },
+   {
+    "appId": "pro.opus.clip",
+    "title": "OpusClip - AI Video Clipping",
+    "installs": "100,000+"
+   },
+   {
+    "appId": "com.clipcraft.app",
+    "title": "ClipCraft - AI Video Editor",
+    "installs": "5,000+"
+   }
+  ],
+  "spaced_variant": {
+   "query": "Clip Wave",
+   "collisions": [],
+   "phrase_matches": []
+  }
+ },
+ "Vidwave": {
+  "results_returned": 30,
+  "collisions": [
+   {
+    "appId": "com.clarify.vidwave",
+    "title": "VidWave: Stream & Downloader",
+    "developer": "Clarify Labs",
+    "installs": "1+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   }
+  ],
+  "top5_results": [
+   {
+    "appId": "com.clarify.vidwave",
+    "title": "VidWave: Stream & Downloader",
+    "installs": "1+"
+   },
+   {
+    "appId": "com.vidiwave.media",
+    "title": "vidiWave",
+    "installs": "1,000+"
+   },
+   {
+    "appId": "progue.readtv.play",
+    "title": "VidiWave TV Player",
+    "installs": "5,000+"
+   },
+   {
+    "appId": "com.vidu.oversea",
+    "title": "Vidu - AI Video Generator",
+    "installs": "1,000,000+"
+   },
+   {
+    "appId": "igsp.lqbs.abns",
+    "title": "VidiWave Filmes e Series",
+    "installs": "1,000+"
+   }
+  ],
+  "spaced_variant": {
+   "query": "Vid Wave",
+   "collisions": [],
+   "phrase_matches": []
+  }
+ },
+ "Reelvault": {
+  "results_returned": 50,
+  "collisions": [
+   {
+    "appId": "com.reelvaultapp",
+    "title": "ReelVault: Video Downloader",
+    "developer": "ReelVault",
+    "installs": "500+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "developer",
+     "appId"
+    ]
+   },
+   {
+    "appId": "com.tipsnotricks.reelvault",
+    "title": "ReelVault: Save&Organize Reels",
+    "developer": "TipsNoTricks Labs",
+    "installs": "10+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   },
+   {
+    "appId": "com.reelvault.app",
+    "title": "Reel Vault",
+    "developer": "VSKA DIGITAL",
+    "installs": "10+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   },
+   {
+    "appId": "com.reel.instagram.saver.indownload",
+    "title": "ReelVault: Video Downloader",
+    "developer": "BAPU Apps",
+    "installs": "50+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title"
+    ]
+   },
+   {
+    "appId": "com.dongajenis.reelsaver",
+    "title": "ReelVault: Video Downloader",
+    "developer": "zyvento",
+    "installs": "10+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title"
+    ]
+   },
+   {
+    "appId": "com.blast777.reelvault",
+    "title": "Reel Vault: TV Show Tracker",
+    "developer": "Blast777, LLC",
+    "installs": "1+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   }
+  ],
+  "top5_results": [
+   {
+    "appId": "com.reelvaultapp",
+    "title": "ReelVault: Video Downloader",
+    "installs": "500+"
+   },
+   {
+    "appId": "com.tipsnotricks.reelvault",
+    "title": "ReelVault: Save&Organize Reels",
+    "installs": "10+"
+   },
+   {
+    "appId": "com.reelvault.app",
+    "title": "Reel Vault",
+    "installs": "10+"
+   },
+   {
+    "appId": "com.reel.instagram.saver.indownload",
+    "title": "ReelVault: Video Downloader",
+    "installs": "50+"
+   },
+   {
+    "appId": "com.dongajenis.reelsaver",
+    "title": "ReelVault: Video Downloader",
+    "installs": "10+"
+   }
+  ]
+ },
+ "Frameport": {
+  "results_returned": 30,
+  "collisions": [
+   {
+    "appId": "co.vexon.frameport",
+    "title": "Frameport",
+    "developer": "Vexon Group LTD",
+    "installs": "0+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   }
+  ],
+  "top5_results": [
+   {
+    "appId": "co.vexon.frameport",
+    "title": "Frameport",
+    "installs": "0+"
+   },
+   {
+    "appId": "com.fps.monitor",
+    "title": "FrameForge Monitor FPS PC",
+    "installs": "500+"
+   },
+   {
+    "appId": "com.jiahk.jiahuakuang",
+    "title": "Frameit: Art & Drawing Preview",
+    "installs": "500,000+"
+   },
+   {
+    "appId": "com.photoeditor.camera.exif.frame.lut.app",
+    "title": "EXIF FRAME - Photo Frames",
+    "installs": "100+"
+   },
+   {
+    "appId": "com.matterport.android.capture",
+    "title": "Matterport",
+    "installs": "1,000,000+"
+   }
+  ],
+  "spaced_variant": {
+   "query": "Frame Port",
+   "collisions": [
+    {
+     "appId": "co.vexon.frameport",
+     "title": "Frameport",
+     "developer": "Vexon Group LTD",
+     "installs": "0+"
+    }
+   ],
+   "phrase_matches": []
+  }
+ },
+ "Lumenreel": {
+  "results_returned": 8,
+  "collisions": [],
+  "top5_results": [
+   {
+    "appId": "com.unext.lumen",
+    "title": "Lumen",
+    "installs": "100,000+"
+   },
+   {
+    "appId": "com.snowgames.lumenrider",
+    "title": "Lumen Rider",
+    "installs": "100,000+"
+   },
+   {
+    "appId": "com.talhaashraf.lumen",
+    "title": "Lumen",
+    "installs": "10+"
+   },
+   {
+    "appId": "com.spwatch.lumen",
+    "title": "Lumen",
+    "installs": "10,000+"
+   },
+   {
+    "appId": "com.spwatch.lumenedge",
+    "title": "Lumen Edge",
+    "installs": "1,000+"
+   }
+  ],
+  "spaced_variant": {
+   "query": "Lumen Reel",
+   "collisions": [],
+   "phrase_matches": []
+  }
+ },
+ "Moviedrop": {
+  "results_returned": 30,
+  "collisions": [],
+  "top5_results": [
+   {
+    "appId": "com.google.android.videos",
+    "title": "Google TV",
+    "installs": "10,000,000,000+"
+   },
+   {
+    "appId": "com.netflix.mediaclient",
+    "title": "Netflix",
+    "installs": "1,000,000,000+"
+   },
+   {
+    "appId": "com.amazon.avod.thirdpartyclient",
+    "title": "Prime Video",
+    "installs": "500,000,000+"
+   },
+   {
+    "appId": "com.wbd.stream",
+    "title": "HBO Max: Stream TV & Movies",
+    "installs": "100,000,000+"
+   },
+   {
+    "appId": "com.plexapp.android",
+    "title": "Plex: Find Movies & TV Shows",
+    "installs": "100,000,000+"
+   }
+  ],
+  "spaced_variant": {
+   "query": "Movie Drop",
+   "collisions": [],
+   "phrase_matches": []
+  }
+ },
+ "Beamline": {
+  "results_returned": 30,
+  "collisions": [
+   {
+    "appId": "com.beamline.app",
+    "title": "Beamline Systems",
+    "developer": "MINAC GROUP LLC",
+    "installs": "1+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   }
+  ],
+  "top5_results": [
+   {
+    "appId": "com.beamline.app",
+    "title": "Beamline Systems",
+    "installs": "1+"
+   },
+   {
+    "appId": "com.beamcheckout.bolt",
+    "title": "Beam Bolt",
+    "installs": "100+"
+   },
+   {
+    "appId": "com.beamspace.beamspace",
+    "title": "Beam Space",
+    "installs": "5,000+"
+   },
+   {
+    "appId": "com.novotechx.beam",
+    "title": "Beam – P2P File Transfer",
+    "installs": "100+"
+   },
+   {
+    "appId": "com.denalidigital.tanning",
+    "title": "Beam Tan: UV Index & Timer",
+    "installs": "50+"
+   }
+  ],
+  "spaced_variant": {
+   "query": "Beam Line",
+   "collisions": [
+    {
+     "appId": "com.beamline.app",
+     "title": "Beamline Systems",
+     "developer": "MINAC GROUP LLC",
+     "installs": "1+"
+    }
+   ],
+   "phrase_matches": []
+  }
+ },
+ "Glowframe": {
+  "results_returned": 30,
+  "collisions": [],
+  "top5_results": [
+   {
+    "appId": "com.wallpicture.full",
+    "title": "WallPicture2 - Art room design",
+    "installs": "100,000+"
+   },
+   {
+    "appId": "com.pushd.client",
+    "title": "Aura Frames",
+    "installs": "1,000,000+"
+   },
+   {
+    "appId": "ai.framelight.mobile",
+    "title": "Framelight",
+    "installs": "100+"
+   },
+   {
+    "appId": "com.glowpaintstudio.drawart",
+    "title": "Glow Paint Studio: Draw Art",
+    "installs": "10,000+"
+   },
+   {
+    "appId": "com.vblast.flipaclip",
+    "title": "FlipaClip: Draw 2D Animation",
+    "installs": "50,000,000+"
+   }
+  ],
+  "spaced_variant": {
+   "query": "Glow Frame",
+   "collisions": [],
+   "phrase_matches": []
+  }
+ },
+ "Nightframe": {
+  "results_returned": 10,
+  "collisions": [
+   {
+    "appId": "com.noemalauncher.app",
+    "title": "Noema",
+    "developer": "Nightframe Labs",
+    "installs": "10+",
+    "score": null,
+    "starts_with": false,
+    "match_in": [
+     "developer"
+    ]
+   },
+   {
+    "appId": "com.pavahainc.nightframes",
+    "title": "Night Frames: Photo Effect App",
+    "developer": "Pavaha Lab",
+    "installs": "100,000+",
+    "score": 4.28125,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   },
+   {
+    "appId": "com.sonaraaudio.app",
+    "title": "Sonara Audio",
+    "developer": "Nightframe Labs",
+    "installs": "10+",
+    "score": null,
+    "starts_with": false,
+    "match_in": [
+     "developer"
+    ]
+   }
+  ],
+  "top5_results": [
+   {
+    "appId": "com.noemalauncher.app",
+    "title": "Noema",
+    "installs": "10+"
+   },
+   {
+    "appId": "com.pavahainc.nightframes",
+    "title": "Night Frames: Photo Effect App",
+    "installs": "100,000+"
+   },
+   {
+    "appId": "com.sonaraaudio.app",
+    "title": "Sonara Audio",
+    "installs": "10+"
+   },
+   {
+    "appId": "com.tileharbor.zen",
+    "title": "Parimatch",
+    "installs": "5+"
+   },
+   {
+    "appId": "com.newandromo.dev1662959.app2160575",
+    "title": "Good night Images",
+    "installs": "10,000+"
+   }
+  ]
+ },
+ "Clipvault": {
+  "results_returned": 50,
+  "collisions": [
+   {
+    "appId": "com.clipvault.mobile",
+    "title": "ClipVault: Smart Clipboard",
+    "developer": "MindCrafts_AI",
+    "installs": "100+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   },
+   {
+    "appId": "com.nirvanadust.clipvault",
+    "title": "ClipVault",
+    "developer": "NirvanaDust",
+    "installs": "1+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   },
+   {
+    "appId": "com.rate_code.clipvault",
+    "title": "ClipVault",
+    "developer": "Rate Code",
+    "installs": "10+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   },
+   {
+    "appId": "app.clipvault",
+    "title": "ClipVault",
+    "developer": "Davder Ltd.",
+    "installs": "10+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   },
+   {
+    "appId": "com.clip.vault.app",
+    "title": "ClipVault",
+    "developer": "Bgon Outdoors llc",
+    "installs": "0+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   },
+   {
+    "appId": "com.jangdev.clipvault",
+    "title": "ClipVault: Clipboard Notes",
+    "developer": "Dev Jang",
+    "installs": "50+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   },
+   {
+    "appId": "com.clipvault.app",
+    "title": "ClipVault",
+    "developer": "ClipVault",
+    "installs": "50+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "developer",
+     "appId"
+    ]
+   },
+   {
+    "appId": "com.michael.clipvault",
+    "title": "ClipVault",
+    "developer": "MichaelSam94",
+    "installs": "10+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   },
+   {
+    "appId": "com.soloprono.clipvault",
+    "title": "ClipVault",
+    "developer": "SoloProno",
+    "installs": "1+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   },
+   {
+    "appId": "com.abuckor2apps.clipvault",
+    "title": "ClipVault",
+    "developer": "ABuckOr2Apps",
+    "installs": "1+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   },
+   {
+    "appId": "com.blueglorious.clipvault",
+    "title": "ClipVault: Offline Player",
+    "developer": "BLUE GLORIOUS LIMITED",
+    "installs": "50+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   },
+   {
+    "appId": "com.clipvault.threads",
+    "title": "ClipVault for Threads",
+    "developer": "hanbae",
+    "installs": "5+",
+    "score": null,
+    "starts_with": true,
+    "match_in": [
+     "title",
+     "appId"
+    ]
+   },
+   {
+    "appId": "dev.mjandroid.clipvault",
+    "title": "CopyVault: Clipboard Manager",
+    "developer": "mjandroid.dev",
+    "installs": "100+",
+    "score": null,
+    "starts_with": false,
+    "match_in": [
+     "appId"
+    ]
+   }
+  ],
+  "top5_results": [
+   {
+    "appId": "com.clipvault.mobile",
+    "title": "ClipVault: Smart Clipboard",
+    "installs": "100+"
+   },
+   {
+    "appId": "com.nirvanadust.clipvault",
+    "title": "ClipVault",
+    "installs": "1+"
+   },
+   {
+    "appId": "com.rate_code.clipvault",
+    "title": "ClipVault",
+    "installs": "10+"
+   },
+   {
+    "appId": "app.clipvault",
+    "title": "ClipVault",
+    "installs": "10+"
+   },
+   {
+    "appId": "com.clip.vault.app",
+    "title": "ClipVault",
+    "installs": "0+"
+   }
+  ]
+ }
+}
