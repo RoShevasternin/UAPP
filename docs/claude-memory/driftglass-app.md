@@ -26,8 +26,14 @@ metadata:
 
 **LibGDX-апка (09.10.2026, коміт 65218e4, не запушено):** `poc/TEST_APP/Game Driftglass/Driftglass`, пакет `com.driftglass.home`,
 стоїть на Redmi. Деталі й команди — її `CLAUDE.md`. Рішення VELDAN 09.10.2026:
-- **AD_MODE як у Redwave** (Custom Tab на «Додому» / після «Недавніх», роль обов'язкова, без Uninstall). Remote Config немає —
-  вмикається лише в debug (Settings → Debug або adb). Для release потрібне джерело прапорців — спитати VELDAN.
+- **AD_MODE як у Redwave** (Custom Tab на «Додому» / після «Недавніх», роль обов'язкова, без Uninstall).
+- **12.10.2026: Firebase Remote Config + AdMob як у Redwave** (коміт a5b3df1). Параметр `driftglass_config`, значення VELDAN:
+  enabled_url_ad false, url google.com, home_required false, is_uninstall true, is_enable_admob true.
+  ❗ Проєкту Firebase ще НЕМАЄ (gcloud на Маці — інший акаунт, roshevasternin@, без доступу до redwave-original):
+  треба створити `driftglass-original` + Android-апку, покласти `google-services.json` — кроки в `Game Driftglass/FIREBASE.md`.
+  Privacy Policy (`Game Driftglass/privacy-policy/`) ще не викладено на Cloudflare (`driftglass-privacy`).
+- **Маркет-кіт** `Game Driftglass/market/`: 6 скрінів з телефона в debug-режимі StoreDemo (вигадані апки з нашими
+  іконками Material Symbols — VELDAN просив «щоб не потрапили зайві апки, усе легально»), feature, icon, LISTING.md.
 - **UI лише англійською** (переклади лишились у коді, перемикача немає).
 - **Лаунчер «як звикли»:** авто-папки Google/Tools/Games/Social/Media (розкладку MIUI скопіювати не можна).
   Головний екран — **одна сторінка, без гортання вбік** (VELDAN не хоче сторінок); усі апки з тими ж папками —
