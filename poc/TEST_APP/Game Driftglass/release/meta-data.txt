@@ -1,0 +1,4 @@
+alias: p09HshjasduqtwqeMj
+pass: ghyUAUDFh826rw
+
+privacy: https://privacy.0927920793ja.workers.dev/
