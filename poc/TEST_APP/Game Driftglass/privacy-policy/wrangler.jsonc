@@ -1,0 +1,7 @@
+// Запасний шлях публікації через CLI (основний — дашборд Cloudflare, див. README.md).
+// Worker без коду: лише статичні файли з ./public → https://driftglass-privacy.<субдомен акаунта>.workers.dev
+{
+  "name": "driftglass-privacy",
+  "compatibility_date": "2026-10-01",
+  "assets": { "directory": "./public" }
+}

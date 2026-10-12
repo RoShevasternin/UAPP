@@ -189,8 +189,8 @@ Release notes (en-US) — 3 абстрактні пункти, як у парк�
 
 ## 6. Що ще не зроблено перед кнопкою «Publish»
 
-- [ ] Firebase: проєкт, Android-апка `com.driftglass.home`, `google-services.json` у `Driftglass/app/`, параметр `driftglass_config` — `../FIREBASE.md`.
-- [ ] Cloudflare → `driftglass-privacy` → викласти `privacy-policy/public` (`../privacy-policy/README.md`).
+- [x] Firebase: проєкт `driftglass-original`, `google-services.json`, параметр `driftglass_config` (VELDAN, 12.10.2026; апка отримує `[remote]`).
+- [ ] Cloudflare → `driftglass-privacy` → викласти `privacy-policy/public` — покроково в `../privacy-policy/README.md`.
 - [ ] Свій AdMob App ID у маніфесті й свої блоки в `AdsManager` (зараз тестові Google).
 - [ ] Вікно згоди UMP для ЄЕЗ/UK (якщо країни не лише США — обов'язково).
 - [ ] Release-збірка `.aab`, підписана ключем апки (ключа Driftglass ще немає — створити й покласти в git, як в іграх парку).

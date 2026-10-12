@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "530670720746",
+    "project_id": "driftglass-original",
+    "storage_bucket": "driftglass-original.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:530670720746:android:2cc30a6c97563e2f0de993",
+        "android_client_info": {
+          "package_name": "com.driftglass.home"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkiPJYkJZcGbonn9cb8edOf4pel4NLN7s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

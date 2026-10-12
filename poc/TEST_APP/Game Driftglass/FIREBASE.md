@@ -1,5 +1,8 @@
 # Driftglass — Firebase Remote Config (як у Redwave)
 
+✔ **Зроблено 12.10.2026 (VELDAN):** проєкт `driftglass-original`, `Driftglass/app/google-services.json`, параметр `driftglass_config`.
+Перевірено на Redmi: `remote flags (fetch) [remote]: … isEnableAdmob=true` → AdMob стартує, App Open показується.
+
 Рішення VELDAN 12.10.2026: конфіг на Firebase, щоб працювало так само, як у Redwave. Код уже готовий
 (`Driftglass/app/.../android/RemoteFlagsSource.kt`, `core/config/AppFlags.kt`, `android/AdsManager.kt`) — бракує лише
 проєкту у Firebase і файлу `google-services.json`. Без файлу апка збирається й працює з `AppFlags.DEFAULT`

@@ -9,8 +9,8 @@ Analytics немає. Маркет-кіт — `../market/` (`LISTING.md`, `READM
 ## Remote Config + AdMob (як у Redwave, рішення VELDAN 12.10.2026)
 
 Параметр **`driftglass_config`** (JSON), значення VELDAN — `../firebase/driftglass_config.json`, як створити — `../FIREBASE.md`.
-❗ Проєкту Firebase ще немає: без `app/google-services.json` плагін google-services не підключається
-(умова в `app/build.gradle.kts`), `RemoteFlagsSource` бере `AppFlags.DEFAULT` — реклами немає.
+Проєкт Firebase — `driftglass-original` (VELDAN, 12.10.2026), `app/google-services.json` у git. Без цього файлу плагін
+google-services не підключається (умова в `app/build.gradle.kts`), а `RemoteFlagsSource` бере `AppFlags.DEFAULT` — реклами немає.
 
 - `android/RemoteFlagsSource.kt` — порт Redwave 1:1: офлайн → DEFAULT, Splash чекає Firebase до 3 с на першому запуску,
   `fetchAndActivate` на кожному `onResume`, real-time listener.
