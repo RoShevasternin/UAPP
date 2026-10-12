@@ -1,0 +1,1554 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- Framefall — прототип. Жива версія: https://claude.ai/artifact/5L7TpzbpbrTptLSVq66UJw -->
+<title>Framefall: Video Downloader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800&family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: hero → stage (живий телефон | тест-панель) → дослідження → кадри для маркету → бренд → перенос.
+   Одна темна сцена: світло кінопроєктора (бурштин → помаранч) на теплій чорній плівці. */
+:root{
+  color-scheme:dark;
+  --bg:#0B0806; --panel:#130E0A; --panel2:#1B140F; --line:#2B2119; --fg:#FFF5EA; --muted:#B5A496; --dim:#7F7064;
+  --amber:#FFB547; --orange:#FF7A2B; --flame:#F2511B; --ok:#47E0A0; --bad:#FF5F57; --info:#7CC8FF;
+  --grad:linear-gradient(135deg,#FFC94D,#FF8A2A 55%,#F2511B);
+  --f-disp:"Unbounded","Onest",system-ui,sans-serif;
+  --f-ui:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --a-bg:#0A0705; --a-card:#16100C; --a-card2:#201812; --a-line:rgba(255,236,214,.08); --a-fg:#FFF6EC; --a-muted:#B3A293;
+  --glass:rgba(22,15,10,.46); --glass-line:rgba(255,236,214,.16);
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;color:var(--fg);font:15px/1.55 var(--f-ui);background:radial-gradient(1100px 620px at 10% -8%,rgba(255,154,61,.16),transparent 62%),radial-gradient(900px 560px at 100% 26%,rgba(242,81,27,.10),transparent 62%),var(--bg)}
+button,input,select{font:inherit;color:inherit}
+em{font-style:normal}
+a{color:var(--amber)}
+.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic.f{fill:currentColor;stroke:none}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:16px;padding-block:30px 70px;display:flex;flex-direction:column;gap:48px}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-disp);margin:0;text-wrap:balance}
+h2{font-size:clamp(22px,2.8vw,30px);font-weight:700;letter-spacing:-.01em}
+.eyebrow{font:600 11.5px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--amber)}
+.lede{color:var(--muted);max-width:64ch;margin:0}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* ---------- hero ---------- */
+.hero{display:flex;flex-wrap:wrap;gap:28px;justify-content:space-between;align-items:flex-end}
+.brand{display:flex;gap:20px;align-items:center}
+.brand .logo{width:104px;height:104px;filter:drop-shadow(0 18px 36px rgba(255,122,43,.42));flex:none}
+.hero h1{font-size:clamp(40px,7vw,78px);font-weight:800;letter-spacing:-.04em;line-height:.95;margin-top:8px}
+.hero h1 span{display:block;font-size:.3em;font-weight:400;letter-spacing:.02em;color:var(--muted);margin-top:12px}
+.hero-r{display:flex;flex-direction:column;gap:12px;max-width:480px;min-width:0}
+.by{font:600 12px var(--f-mono);letter-spacing:.06em;color:var(--dim);text-transform:uppercase}
+.by b{color:var(--fg)}
+.namebox{display:grid;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:13.5px}
+.namebox div{display:flex;justify-content:space-between;gap:10px}
+.namebox span:last-child{font:600 12px var(--f-mono);color:var(--amber);white-space:nowrap}
+.namebox .cur span:first-child{color:var(--fg);font-weight:700}
+
+/* ---------- stage ---------- */
+.stage{display:grid;grid-template-columns:minmax(0,390px) minmax(0,1fr);gap:40px;align-items:start}
+@media (max-width:900px){.stage{grid-template-columns:minmax(0,1fr)}}
+.phone-col{position:sticky;top:calc(env(safe-area-inset-top,0px) + 18px);display:flex;flex-direction:column;align-items:center;gap:12px}
+@media (max-width:900px){.phone-col{position:static}}
+.hint{font-size:12.5px;color:var(--dim);text-align:center;max-width:330px;margin:0}
+.phone{position:relative;width:min(370px,100%);aspect-ratio:9/19.5;border-radius:56px;padding:10px;background:linear-gradient(155deg,#2d241d,#0c0907 42%,#201913);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 60px 110px -50px rgba(255,122,43,.5),0 40px 70px -40px #000}
+.screen{position:relative;width:100%;height:100%;border-radius:46px;overflow:hidden;background:var(--a-bg);color:var(--a-fg);font:14px/1.4 var(--f-ui);isolation:isolate;container-type:inline-size}
+.sb{position:absolute;top:0;left:0;right:0;height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 24px 0 30px;font:600 12.5px var(--f-ui);z-index:30;pointer-events:none;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.45)}
+.sb .cam{position:absolute;left:50%;top:10px;width:11px;height:11px;border-radius:50%;background:#000;box-shadow:0 0 0 2px #1c1510;transform:translateX(-50%)}
+.sb .st{display:flex;gap:5px;align-items:center}
+.sb .st svg{width:15px;height:15px;fill:#fff}
+.sb .dl{display:flex;align-items:center;gap:4px;color:var(--amber)}
+.sb .dl svg{fill:none;stroke:var(--amber);stroke-width:2.4}
+.scr{position:absolute;top:0;left:0;right:0;bottom:38px;overflow:hidden}
+.nav{position:absolute;left:0;right:0;bottom:0;height:38px;display:flex;justify-content:space-around;align-items:center;background:#060403;z-index:30}
+.nav button{background:none;border:0;color:#dacbbf;width:70px;height:32px;border-radius:16px;display:grid;place-items:center;cursor:pointer}
+.nav button:hover{background:rgba(255,255,255,.07)}
+.nav .ic{width:17px;height:17px}
+.nav .home.pulse{animation:hpulse 1.5s ease-in-out infinite}
+@keyframes hpulse{50%{box-shadow:0 0 0 5px rgba(255,154,61,.35);background:rgba(255,154,61,.18)}}
+.s{position:absolute;inset:0}
+.s.enter{animation:scrIn .3s cubic-bezier(.2,.8,.2,1) both}
+@keyframes scrIn{from{opacity:0;transform:translateY(10px)}}
+.toast{position:absolute;left:50%;bottom:108px;transform:translateX(-50%);z-index:45;background:rgba(42,33,27,.97);color:#fff;font:500 12.5px var(--f-ui);padding:9px 14px;border-radius:20px;white-space:nowrap;max-width:92%;overflow:hidden;text-overflow:ellipsis;box-shadow:0 10px 30px -10px #000;display:flex;align-items:center;gap:8px}
+.toast svg{flex:none}
+
+/* ---------- app shell ---------- */
+.app{display:flex;flex-direction:column;background:var(--a-bg)}
+.ascroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:44px 16px 18px;display:flex;flex-direction:column;gap:18px;scrollbar-width:none}
+.ascroll::-webkit-scrollbar,.hs::-webkit-scrollbar,.sh::-webkit-scrollbar,.dr::-webkit-scrollbar{display:none}
+.ascroll>*,.sh>*,.dr>*{flex-shrink:0}
+.ahead{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.big{font:800 26px/1 var(--f-disp);letter-spacing:-.03em;margin:0}
+.icb{width:38px;height:38px;border-radius:50%;border:1px solid var(--a-line);background:rgba(255,255,255,.04);color:var(--a-fg);display:grid;place-items:center;cursor:pointer;position:relative;flex:none}
+.icb .ic{width:18px;height:18px}
+.icb .badge{position:absolute;top:7px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 2px var(--a-bg)}
+.muted{color:var(--a-muted);font-size:12.5px}
+.chip{display:inline-flex;align-items:center;gap:5px;font:700 10.5px var(--f-ui);letter-spacing:.02em;padding:5px 8px;border-radius:999px;background:rgba(255,154,61,.14);color:#FFB37A;white-space:nowrap}
+.chip .ic{width:12px;height:12px}
+.chip.g{background:rgba(71,224,160,.13);color:#7DEBBB}
+.chip.b{background:rgba(124,200,255,.13);color:#A6DAFF}
+.chip.w{background:rgba(255,255,255,.08);color:#E9DDD1}
+.chip.r{background:rgba(255,95,87,.14);color:#FF9690}
+.btn-p{display:flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:15px;padding:13px 16px;font:700 15px var(--f-ui);color:#1A0C02;background:var(--grad);box-shadow:0 12px 26px -12px rgba(255,122,43,.95),inset 0 1px 0 rgba(255,255,255,.35);cursor:pointer;width:100%}
+.btn-p.sm{padding:9px 14px;font-size:13px;border-radius:12px;width:auto}
+.btn-p .ic{width:18px;height:18px}
+.btn-p[disabled]{opacity:.45;cursor:default}
+.btn-g{display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid rgba(255,236,214,.16);border-radius:15px;padding:12px 16px;font:700 14.5px var(--f-ui);color:var(--a-fg);background:rgba(255,255,255,.04);cursor:pointer;width:100%}
+.btn-g.sm{padding:8px 12px;font-size:13px;border-radius:12px;width:auto}
+.btn-g .ic{width:16px;height:16px}
+.btn-t{background:none;border:0;color:var(--a-muted);font:600 13px var(--f-ui);cursor:pointer;padding:8px}
+.spin{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.2);border-top-color:var(--amber);animation:rot .7s linear infinite;flex:none}
+@keyframes rot{to{transform:rotate(360deg)}}
+.bar{height:4px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--grad);border-radius:4px;transition:width .3s linear}
+
+/* save tab: paste card */
+.paste{padding:14px;border-radius:24px;background:linear-gradient(165deg,rgba(255,154,61,.18),rgba(255,154,61,.02) 55%),var(--a-card);border:1px solid rgba(255,170,90,.24);display:flex;flex-direction:column;gap:11px;box-shadow:0 24px 40px -26px rgba(255,122,43,.7);margin:0}
+.paste h3{font:700 15px var(--f-ui);margin:0}
+.pin{display:flex;align-items:center;gap:8px;background:#0C0806;border:1px solid var(--a-line);border-radius:15px;padding:5px 5px 5px 12px;color:var(--a-muted)}
+.pin input{flex:1;min-width:0;background:none;border:0;color:var(--a-fg);font:14px var(--f-ui);outline:none;padding:8px 0}
+.pin input::placeholder{color:#7E6E62}
+.pbtn{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:11px;padding:8px 11px;font:700 12.5px var(--f-ui);background:var(--a-card2);color:var(--a-fg);cursor:pointer;flex:none}
+.pbtn .ic{width:15px;height:15px}
+.srcs{display:flex;flex-wrap:wrap;gap:6px}
+.srcs span{display:inline-flex;align-items:center;gap:5px;font:600 10.5px var(--f-ui);color:var(--a-muted);background:rgba(255,255,255,.04);border:1px solid var(--a-line);padding:5px 8px;border-radius:999px}
+.res{display:flex;gap:10px;align-items:flex-start;border-radius:14px;padding:10px 12px;font-size:12.5px;line-height:1.4}
+.res .ic{width:18px;height:18px;margin-top:1px}
+.res b{display:block;font-size:13.5px;margin-bottom:2px}
+.res span{color:#E6D3C4}
+.res.bad{background:rgba(255,95,87,.10);border:1px solid rgba(255,95,87,.35);color:#FF9690}
+.res.soft{background:rgba(124,200,255,.08);border:1px solid rgba(124,200,255,.28);color:#A6DAFF}
+.res.info{background:rgba(255,255,255,.05);color:var(--a-fg);align-items:center}
+.sec{display:flex;flex-direction:column;gap:10px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.sec-h h3{margin:0;font:700 15.5px var(--f-ui)}
+.sec-h h3 em{color:var(--a-muted);font-weight:500;margin-left:4px}
+.sec-h button{background:none;border:0;color:#FFB37A;font:600 12.5px var(--f-ui);cursor:pointer;padding:0}
+.q-it{display:flex;gap:10px;align-items:center;background:var(--a-card);border:1px solid var(--a-line);border-radius:16px;padding:9px}
+.q-meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.q-top{display:flex;justify-content:space-between;gap:8px;font-size:13px}
+.q-top b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.q-top span{font:600 12px var(--f-mono);color:var(--amber)}
+.q-sub{font:500 11px var(--f-mono);color:var(--a-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.thumb{display:block;position:relative;flex:none;border-radius:11px;overflow:hidden;background:#221a14 center/cover no-repeat}
+.thumb .dur{position:absolute;right:4px;bottom:4px;font:600 9.5px var(--f-mono);background:rgba(0,0,0,.72);color:#fff;padding:2px 4px;border-radius:5px}
+.thumb .glyph{position:absolute;inset:0;display:grid;place-items:center;color:#FFB37A}
+.hs{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:0 16px;scrollbar-width:none}
+.hs>*{flex-shrink:0;scroll-snap-align:start}
+.cw{width:150px;display:flex;flex-direction:column;gap:6px;background:none;border:0;padding:0;text-align:left;cursor:pointer;color:var(--a-fg)}
+.cw b{font:600 12.5px var(--f-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cw .bar{height:3px}
+.tools4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.tl{display:flex;flex-direction:column;align-items:center;gap:6px;padding:11px 4px;border-radius:16px;background:var(--a-card);border:1px solid var(--a-line);cursor:pointer;font:600 11px var(--f-ui);color:var(--a-fg)}
+.tl i{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:rgba(255,154,61,.13);color:#FFB37A}
+.tl i .ic{width:18px;height:18px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stats div{background:var(--a-card);border:1px solid var(--a-line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:2px}
+.stats b{font:700 16px var(--f-disp);font-variant-numeric:tabular-nums}
+.stats span{font-size:11px;color:var(--a-muted)}
+.tabbar{display:grid;grid-template-columns:repeat(4,1fr);background:rgba(12,8,6,.96);border-top:1px solid var(--a-line);padding:6px 6px 8px;flex:none}
+.tabbar button{background:none;border:0;color:#8F7F72;display:flex;flex-direction:column;align-items:center;gap:3px;font:600 10.5px var(--f-ui);cursor:pointer;padding:5px 0;border-radius:12px}
+.tabbar button.on{color:#FFB37A}
+.tabbar button.on .ic{filter:drop-shadow(0 0 8px rgba(255,154,61,.6))}
+.tabbar .ic{width:20px;height:20px}
+
+/* discover */
+.feat{position:relative;border-radius:22px;overflow:hidden;aspect-ratio:16/10;background:#000 center/cover;display:flex;flex-direction:column;justify-content:flex-end;padding:14px;gap:6px;border:1px solid var(--a-line)}
+.feat::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(8,5,3,.92))}
+.feat>*{position:relative}
+.feat h3{font:800 20px/1.05 var(--f-disp);letter-spacing:-.02em;margin:0}
+.feat p{margin:0;font-size:12px;color:#E6D3C4}
+.feat .row{display:flex;gap:8px;align-items:center;justify-content:space-between}
+.card-v{width:168px;display:flex;flex-direction:column;gap:6px;color:var(--a-fg)}
+.card-v .thumb{width:168px;height:94px}
+.card-v b{font:600 13px var(--f-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-v .meta{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.dlb{width:30px;height:30px;border-radius:50%;border:0;display:grid;place-items:center;background:var(--a-card2);color:#FFB37A;cursor:pointer;flex:none;position:relative}
+.dlb .ic{width:15px;height:15px}
+.dlb.done{background:rgba(71,224,160,.15);color:var(--ok)}
+.dlb svg.ring{position:absolute;inset:0;width:30px;height:30px;transform:rotate(-90deg)}
+.lic{font:600 9.5px var(--f-mono);letter-spacing:.04em;color:var(--a-muted)}
+
+/* library */
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips button{border:1px solid var(--a-line);background:rgba(255,255,255,.03);color:var(--a-muted);border-radius:999px;padding:6px 11px;font:600 12px var(--f-ui);cursor:pointer}
+.chips button.on{background:var(--a-fg);color:#170E08;border-color:transparent}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lib-it{display:flex;flex-direction:column;gap:6px;background:none;border:0;padding:0;text-align:left;cursor:pointer;color:var(--a-fg);min-width:0}
+.lib-it .thumb{width:100%;aspect-ratio:16/9}
+.lib-it .t{display:flex;justify-content:space-between;gap:6px;align-items:flex-start}
+.lib-it b{font:600 12.5px/1.25 var(--f-ui);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.lib-it span{font:500 10.5px var(--f-mono);color:var(--a-muted)}
+.lib-it .more{background:none;border:0;color:var(--a-muted);padding:0 2px;cursor:pointer}
+.lib-it .more .ic{width:16px;height:16px}
+.kind{position:absolute;left:5px;top:5px;font:700 9px var(--f-ui);letter-spacing:.05em;text-transform:uppercase;background:rgba(0,0,0,.6);color:#FFD3A6;padding:3px 6px;border-radius:6px}
+.prog-line{position:absolute;left:0;bottom:0;height:3px;background:var(--orange)}
+.storage{background:var(--a-card);border:1px solid var(--a-line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.storage .row{display:flex;justify-content:space-between;font-size:12px;color:var(--a-muted)}
+.storage .row b{color:var(--a-fg)}
+
+/* studio */
+.studio-hero{display:flex;gap:12px;align-items:center;background:var(--a-card);border:1px solid var(--a-line);border-radius:18px;padding:10px}
+.studio-hero .thumb{width:112px;height:63px}
+.tool-list{display:flex;flex-direction:column;gap:8px}
+.tool{display:flex;gap:12px;align-items:center;padding:12px;border-radius:16px;background:var(--a-card);border:1px solid var(--a-line);cursor:pointer;text-align:left;color:var(--a-fg)}
+.tool i{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:rgba(255,154,61,.13);color:#FFB37A;flex:none}
+.tool div{flex:1;min-width:0}
+.tool b{display:block;font:700 14px var(--f-ui)}
+.tool span{font-size:12px;color:var(--a-muted)}
+.tool .go{color:var(--a-muted)}
+
+/* player */
+.player{background:#000;display:flex;flex-direction:column}
+.pv{position:relative;margin-top:34px;aspect-ratio:16/9;background:#000;flex:none}
+.pv video{width:100%;height:100%;object-fit:contain;display:block;background:#000}
+.pv .ov{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:28px;background:linear-gradient(180deg,rgba(0,0,0,.45),transparent 30%,transparent 70%,rgba(0,0,0,.55));opacity:1;transition:opacity .25s}
+.pv .ov.hide{opacity:0}
+.pv .ov button{background:rgba(0,0,0,.45);border:0;color:#fff;border-radius:50%;width:44px;height:44px;display:grid;place-items:center;cursor:pointer}
+.pv .ov button.mid{width:58px;height:58px;background:rgba(255,154,61,.92);color:#1A0C02}
+.pv .ov button.mid .ic{width:26px;height:26px}
+.pv .pbar{position:absolute;left:10px;right:10px;bottom:8px;display:flex;align-items:center;gap:8px;font:600 10.5px var(--f-mono);color:#fff}
+.pv .pbar .bar{flex:1;height:3px;cursor:pointer}
+.pv .top{position:absolute;left:8px;right:8px;top:6px;display:flex;justify-content:space-between}
+.pv .top button{background:none;border:0;color:#fff;padding:6px;cursor:pointer}
+.pl-body{flex:1;min-height:0;overflow-y:auto;padding:14px 16px 18px;display:flex;flex-direction:column;gap:14px;background:var(--a-bg);scrollbar-width:none}
+.pl-body::-webkit-scrollbar{display:none}
+.pl-body>*{flex-shrink:0}
+.pl-body h2{font:700 19px/1.15 var(--f-disp);letter-spacing:-.02em}
+.pl-acts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.pl-acts button{display:flex;flex-direction:column;align-items:center;gap:5px;background:var(--a-card);border:1px solid var(--a-line);border-radius:14px;padding:10px 2px;color:var(--a-fg);font:600 10.5px var(--f-ui);cursor:pointer}
+.pl-acts button .ic{color:#FFB37A}
+.pl-acts button.on{border-color:rgba(255,154,61,.5);background:rgba(255,154,61,.12)}
+.seg{display:flex;background:var(--a-card);border:1px solid var(--a-line);border-radius:12px;padding:3px;gap:2px}
+.seg button{flex:1;border:0;background:none;color:var(--a-muted);font:600 12px var(--f-mono);padding:6px 0;border-radius:9px;cursor:pointer}
+.seg button.on{background:var(--a-card2);color:var(--a-fg)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:12px}
+.kv span{color:var(--a-muted)}
+.kv b{font-weight:600;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* trim / tools editor */
+.ed{background:var(--a-bg);display:flex;flex-direction:column}
+.ed-head{padding:42px 14px 8px;display:flex;align-items:center;gap:10px}
+.ed-head h2{font:700 17px var(--f-disp);flex:1}
+.ed-v{margin:0 14px;border-radius:16px;overflow:hidden;aspect-ratio:16/9;background:#000;position:relative;flex:none}
+.ed-v video{width:100%;height:100%;object-fit:cover;display:block}
+.ed-v .tc{position:absolute;left:8px;bottom:8px;font:600 11px var(--f-mono);background:rgba(0,0,0,.6);padding:3px 6px;border-radius:6px}
+.ed-body{flex:1;min-height:0;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:14px;scrollbar-width:none}
+.ed-body>*{flex-shrink:0}
+.strip{position:relative;height:58px;border-radius:12px;background:#111 0 0/100% 100% no-repeat;touch-action:none;user-select:none}
+.strip .dim{position:absolute;top:0;bottom:0;background:rgba(10,7,5,.72)}
+.strip .sel{position:absolute;top:-2px;bottom:-2px;border:2.5px solid var(--amber);border-radius:10px;pointer-events:none;box-shadow:0 0 0 999px transparent}
+.strip .h{position:absolute;top:-2px;bottom:-2px;width:16px;background:var(--amber);border-radius:6px;cursor:ew-resize;display:grid;place-items:center}
+.strip .h::after{content:"";width:2px;height:18px;border-radius:2px;background:#1A0C02}
+.strip .ph{position:absolute;top:-6px;bottom:-6px;width:2px;background:#fff;border-radius:2px;pointer-events:none;box-shadow:0 0 6px #000}
+.tline{display:flex;justify-content:space-between;font:600 11px var(--f-mono);color:var(--a-muted);font-variant-numeric:tabular-nums}
+.tline b{color:var(--a-fg)}
+.opt{display:flex;flex-direction:column;gap:7px}
+.opt>span{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--a-muted)}
+.est{display:flex;justify-content:space-between;align-items:center;background:var(--a-card);border:1px solid var(--a-line);border-radius:14px;padding:10px 12px;font-size:12.5px}
+.est b{font:700 14px var(--f-mono);color:var(--amber)}
+.proc{display:flex;flex-direction:column;gap:8px;background:var(--a-card);border:1px solid rgba(255,170,90,.3);border-radius:16px;padding:12px}
+.proc .top{display:flex;justify-content:space-between;font-size:13px}
+.proc .top span{font:600 12px var(--f-mono);color:var(--amber)}
+.parts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.parts div{border-radius:10px;background:var(--a-card);border:1px solid var(--a-line);padding:8px 4px;text-align:center;font:600 11px var(--f-mono)}
+.parts div b{display:block;color:var(--amber);font-size:13px}
+.gifp{display:grid;place-items:center;background:repeating-conic-gradient(#1c1510 0 25%,#140f0b 0 50%) 0 0/16px 16px;border-radius:14px;padding:10px}
+.gifp video{width:62%;border-radius:8px;display:block}
+
+/* launcher */
+.ln{background:#000}
+.ln .bgv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 0}
+.ln::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35),transparent 26%,transparent 52%,rgba(0,0,0,.6));pointer-events:none;z-index:1}
+.ln.dim1::after{background:linear-gradient(180deg,rgba(0,0,0,.5),rgba(0,0,0,.18) 26%,rgba(0,0,0,.18) 52%,rgba(0,0,0,.7))}
+.ln-in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;padding:44px 16px 8px;gap:12px;overflow:hidden}
+.clock{font:300 64px/1 var(--f-disp);letter-spacing:-.05em;text-shadow:0 2px 24px rgba(0,0,0,.4);font-variant-numeric:tabular-nums}
+.date{font:600 13px var(--f-ui);color:#F4E6D9;text-shadow:0 1px 8px rgba(0,0,0,.5);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.glass{background:var(--glass);backdrop-filter:blur(18px) saturate(1.3);-webkit-backdrop-filter:blur(18px) saturate(1.3);border:1px solid var(--glass-line);border-radius:22px}
+.clipc{padding:11px;display:flex;flex-direction:column;gap:10px;animation:cardIn .45s cubic-bezier(.2,.9,.2,1.1) both}
+@keyframes cardIn{from{opacity:0;transform:translateY(-12px) scale(.97)}}
+.clipc .top{display:flex;gap:10px;align-items:center}
+.clipc .thumb{width:86px;height:48px}
+.clipc .meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.clipc .meta small{font:700 9.5px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:#FFC796}
+.clipc .meta b{font:700 13.5px var(--f-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clipc .meta span{font:500 11px var(--f-mono);color:#E6D3C4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clipc .acts{display:flex;gap:8px}
+.clipc .x{background:rgba(255,255,255,.1);border:0;color:#fff;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;cursor:pointer;flex:none;align-self:flex-start}
+.clipc .x .ic{width:15px;height:15px}
+.cwl{padding:10px 11px;display:flex;flex-direction:column;gap:8px}
+.cwl .h{display:flex;justify-content:space-between;align-items:center;font:700 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:#F4E6D9}
+.cwl .row{display:flex;gap:8px}
+.cwl button{flex:1;min-width:0;background:none;border:0;padding:0;color:#fff;display:flex;flex-direction:column;gap:4px;cursor:pointer;text-align:left}
+.cwl .thumb{width:100%;aspect-ratio:16/9}
+.cwl b{font:600 10.5px var(--f-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.apps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 6px;margin-top:auto}
+.app-i{display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:0;color:#fff;cursor:pointer;font:500 10.5px var(--f-ui);text-shadow:0 1px 4px rgba(0,0,0,.7);min-width:0;padding:0}
+.app-i span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ai{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;box-shadow:0 6px 14px -6px rgba(0,0,0,.6);position:relative}
+.ai .ic{width:24px;height:24px;color:#fff}
+.ai.fold{place-items:stretch;background:rgba(255,236,214,.2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:8px}
+.ai.fold i{border-radius:4px}
+.dock{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:10px 8px;border-radius:26px}
+.dock .app-i>span:last-child{display:none}
+.swipe{display:flex;flex-direction:column;align-items:center;gap:2px;font:600 10px var(--f-ui);color:rgba(255,255,255,.75);background:none;border:0;cursor:pointer;padding:0}
+.swipe .ic{width:16px;height:16px}
+.drawer{position:absolute;inset:0;z-index:5;background:rgba(14,10,7,.82);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);display:flex;flex-direction:column;animation:drIn .32s cubic-bezier(.2,.8,.2,1) both}
+@keyframes drIn{from{transform:translateY(40px);opacity:0}}
+.dr{flex:1;overflow-y:auto;padding:46px 16px 16px;display:flex;flex-direction:column;gap:14px;scrollbar-width:none}
+.srch{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border-radius:14px;padding:10px 12px;color:#D9C9BC;font-size:13px}
+.dr h4{margin:0;font:700 10.5px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--a-muted)}
+.dr .apps{margin-top:0}
+.ln-menu{position:absolute;left:16px;right:16px;bottom:118px;z-index:6;padding:8px;display:flex;flex-direction:column;animation:cardIn .3s both}
+.ln-menu button{display:flex;gap:10px;align-items:center;padding:11px 10px;border:0;background:none;color:#fff;font:600 13.5px var(--f-ui);border-radius:12px;cursor:pointer;text-align:left}
+.ln-menu button:hover{background:rgba(255,255,255,.08)}
+.ln-menu .ic{color:#FFC796}
+
+/* stock launcher (system) */
+.stock{background:linear-gradient(170deg,#3b5f7d,#1d2f44 55%,#121c2a)}
+.stock .ln-in{padding-top:52px}
+.stock .clock{font:300 54px/1 var(--f-ui)}
+
+/* sheet */
+.ovl{position:absolute;inset:0;z-index:40;display:flex;flex-direction:column;justify-content:flex-end;background:rgba(0,0,0,.55);animation:fadeIn .2s both}
+@keyframes fadeIn{from{opacity:0}}
+.sh{background:#17110D;border-radius:26px 26px 0 0;padding:10px 16px 18px;display:flex;flex-direction:column;gap:12px;max-height:88%;overflow-y:auto;animation:shIn .32s cubic-bezier(.2,.8,.2,1) both;scrollbar-width:none;border-top:1px solid var(--a-line)}
+@keyframes shIn{from{transform:translateY(60px);opacity:.3}}
+.grab{width:40px;height:4px;border-radius:4px;background:rgba(255,255,255,.2);margin:0 auto 2px}
+.sh h3{font:700 17px var(--f-disp);margin:0;letter-spacing:-.01em}
+.sh-top{display:flex;gap:12px;align-items:center}
+.sh-top .thumb{width:118px;height:66px}
+.sh-top .meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.sh-top .meta b{font:700 14.5px/1.2 var(--f-ui)}
+.sh-top .meta span{font:500 11px var(--f-mono);color:var(--a-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qlist{display:flex;flex-direction:column;gap:6px}
+.qrow{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:var(--a-card);border:1px solid var(--a-line);cursor:pointer;text-align:left;color:var(--a-fg)}
+.qrow.on{border-color:rgba(255,154,61,.65);background:rgba(255,154,61,.09)}
+.qrow .rd{width:18px;height:18px;border-radius:50%;border:2px solid #6E5E52;flex:none;display:grid;place-items:center}
+.qrow.on .rd{border-color:var(--amber)}
+.qrow.on .rd::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--amber)}
+.qrow div{flex:1;min-width:0}
+.qrow b{font:700 13.5px var(--f-ui)}
+.qrow span{display:block;font:500 11px var(--f-mono);color:var(--a-muted)}
+.qrow em{font:700 12px var(--f-mono);color:var(--a-fg)}
+.menu-l{display:flex;flex-direction:column}
+.menu-l button{display:flex;gap:12px;align-items:center;border:0;background:none;color:var(--a-fg);font:600 14px var(--f-ui);padding:11px 4px;cursor:pointer;text-align:left;border-radius:10px}
+.menu-l button .ic{color:#FFB37A}
+.menu-l button.red,.menu-l button.red .ic{color:#FF8C85}
+.tg{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--a-line);font-size:13.5px}
+.tg div{min-width:0}
+.tg small{display:block;color:var(--a-muted);font-size:11.5px}
+.sw{width:38px;height:22px;border-radius:11px;background:#3A2E25;border:0;position:relative;cursor:pointer;flex:none;transition:background .2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+.sw.on{background:var(--orange)}
+.sw.on::after{transform:translateX(16px)}
+
+/* onboarding / splash / role */
+.splash{background:radial-gradient(420px 420px at 50% 42%,rgba(255,138,42,.24),transparent 70%),#080504;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.splash .logo{width:92px;height:92px;animation:pop .8s cubic-bezier(.2,.9,.2,1.2) both}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+.splash b{font:800 26px var(--f-disp);letter-spacing:-.03em}
+.splash span{font:600 10.5px var(--f-mono);letter-spacing:.24em;text-transform:uppercase;color:var(--a-muted)}
+.onb{background:#000;display:flex;flex-direction:column}
+.onb-art{position:relative;flex:1;min-height:0;overflow:hidden}
+.onb-art video,.onb-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.onb-art::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.2),transparent 40%,var(--a-bg) 98%)}
+.onb-float{position:absolute;left:18px;right:18px;bottom:20px;z-index:2}
+.onb-body{padding:6px 22px 18px;display:flex;flex-direction:column;gap:12px;background:var(--a-bg);flex:none}
+.onb-step{font:600 11px var(--f-mono);letter-spacing:.14em;color:var(--amber)}
+.onb-step span{color:var(--a-muted)}
+.onb-body h2{font:800 25px/1.05 var(--f-disp);letter-spacing:-.03em}
+.onb-body p{margin:0;color:var(--a-muted);font-size:13.5px;line-height:1.5}
+.dots{display:flex;gap:6px}
+.dots i{width:7px;height:7px;border-radius:4px;background:#3E3128;transition:width .2s}
+.dots i.on{width:20px;background:var(--amber)}
+.role{background:radial-gradient(500px 340px at 50% 0%,rgba(255,138,42,.2),transparent 70%),var(--a-bg);display:flex;flex-direction:column;padding:56px 20px 18px;gap:16px}
+.role h2{font:800 24px/1.08 var(--f-disp);letter-spacing:-.03em}
+.role ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.role li{display:flex;gap:12px;align-items:flex-start;font-size:13.5px;line-height:1.4;color:#EADBCD}
+.role li i{width:34px;height:34px;border-radius:11px;background:rgba(255,154,61,.13);color:#FFB37A;display:grid;place-items:center;flex:none}
+.role li b{display:block;color:var(--a-fg)}
+.role .mini{position:relative;height:170px;border-radius:20px;overflow:hidden;border:1px solid var(--a-line)}
+.role .mini video,.role .mini img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 8%}
+.role .mini .glass{position:absolute;left:10px;right:10px;bottom:10px;padding:8px 10px;display:flex;gap:8px;align-items:center;font:600 11.5px var(--f-ui)}
+.role .push{margin-top:auto;display:flex;flex-direction:column;gap:8px;align-items:stretch}
+.role small{color:var(--a-muted);font-size:11.5px;text-align:center}
+.dlg{position:absolute;inset:0;z-index:50;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;padding:12px;animation:fadeIn .2s both}
+.dlg .box{width:100%;background:#2A2522;color:#F2ECE6;border-radius:28px;padding:20px 18px 12px;display:flex;flex-direction:column;gap:12px;font-family:system-ui,Roboto,sans-serif;animation:shIn .3s both}
+.dlg h4{margin:0;font:500 19px/1.3 system-ui,Roboto,sans-serif}
+.dlg .opt-r{display:flex;align-items:center;gap:12px;padding:8px 2px;font-size:14px;cursor:pointer;background:none;border:0;color:inherit;text-align:left}
+.dlg .opt-r .rr{width:20px;height:20px;border-radius:50%;border:2px solid #A79C93;display:grid;place-items:center}
+.dlg .opt-r.on .rr{border-color:#FFB37A}
+.dlg .opt-r.on .rr::after{content:"";width:10px;height:10px;border-radius:50%;background:#FFB37A}
+.dlg .opt-r .ai{width:30px;height:30px;border-radius:9px}
+.dlg .opt-r .ai .ic{width:16px;height:16px}
+.dlg .acts{display:flex;justify-content:flex-end;gap:6px}
+.dlg .acts button{background:none;border:0;color:#FFB37A;font:600 14px system-ui,Roboto,sans-serif;padding:10px 12px;border-radius:20px;cursor:pointer}
+.req{background:var(--a-bg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 24px;gap:14px}
+
+/* other app (browser) */
+.web{background:#F6F1EC;color:#1d1915;display:flex;flex-direction:column}
+.web .url{margin:40px 10px 8px;background:#E8E0D8;border-radius:22px;padding:9px 14px;font:13px system-ui,sans-serif;color:#3c342d;display:flex;gap:8px;align-items:center;overflow:hidden;white-space:nowrap}
+.web .pg{flex:1;overflow-y:auto;padding:6px 14px 14px;display:flex;flex-direction:column;gap:10px;font:14px/1.45 system-ui,sans-serif}
+.web .pg img{width:100%;border-radius:10px;display:block}
+.web .pg h3{margin:0;font:700 18px system-ui,sans-serif}
+.web .pg .lnk{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #ddd2c7;border-radius:12px;padding:10px;font-size:12.5px;word-break:break-all}
+.web .pg .lnk button{flex:none;border:0;background:#1d1915;color:#fff;border-radius:9px;padding:7px 10px;font:600 12px system-ui,sans-serif;cursor:pointer}
+.ctxm{position:absolute;z-index:44;left:50%;top:40%;transform:translateX(-50%);background:#fff;color:#1d1915;border-radius:12px;box-shadow:0 14px 40px -10px rgba(0,0,0,.5);display:flex;padding:4px;font:600 13px system-ui,sans-serif}
+.ctxm button{border:0;background:none;padding:9px 12px;cursor:pointer;border-radius:8px}
+.ctxm button.kin{color:#C2410C}
+
+/* ---------- test panel ---------- */
+.panel{display:flex;flex-direction:column;gap:18px;min-width:0}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.box-h{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.box h2{font-size:17px}
+.prog{font:600 12px var(--f-mono);color:var(--muted)}
+.prog b{color:var(--amber)}
+.tests{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.tests li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--muted);line-height:1.45}
+.tests li i{width:18px;height:18px;border-radius:50%;border:1.5px solid #5A4A3E;flex:none;margin-top:2px;display:grid;place-items:center}
+.tests li.ok{color:var(--fg)}
+.tests li.ok i{border-color:var(--ok);background:var(--ok)}
+.tests li.ok i::after{content:"";width:8px;height:4px;border-left:2px solid #0b1a12;border-bottom:2px solid #0b1a12;transform:rotate(-45deg) translate(1px,-1px)}
+.tests li b{color:var(--fg);font-weight:600}
+.pacts{display:flex;flex-wrap:wrap;gap:6px}
+.btn{border:1px solid var(--line);background:var(--panel2);color:var(--fg);border-radius:10px;padding:7px 11px;font:600 12.5px var(--f-ui);cursor:pointer}
+.btn:hover{border-color:#4a3a2e}
+.btn.hot{border-color:rgba(255,154,61,.5);color:#FFC796}
+.clips{display:flex;flex-direction:column;gap:6px}
+.clipr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+.clipr code{font:500 11.5px var(--f-mono);color:#E9DBCC;overflow-wrap:anywhere;min-width:0}
+.clipr small{grid-column:1;font-size:11.5px;color:var(--dim)}
+.clipr button{grid-row:1/3;grid-column:2}
+.clipr.cur{border-color:rgba(255,154,61,.55)}
+.clipbar{display:flex;gap:8px;align-items:center;font:500 12px var(--f-mono);color:var(--muted);background:#0E0A07;border:1px dashed var(--line);border-radius:10px;padding:8px 10px;min-width:0}
+.clipbar code{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;color:var(--fg)}
+.flags{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted)}
+.flags label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.log{font:500 11.5px/1.55 var(--f-mono);color:#C9B8A9;background:#0C0806;border:1px solid var(--line);border-radius:12px;padding:10px 12px;max-height:230px;overflow:auto;display:flex;flex-direction:column;gap:2px}
+.log div{white-space:pre-wrap;overflow-wrap:anywhere}
+.log .k{color:#FFC796}
+.log .g{color:#7DEBBB}
+.log .r{color:#FF9690}
+.log .t{color:var(--dim)}
+
+/* ---------- research ---------- */
+.sec-block{display:flex;flex-direction:column;gap:18px}
+.r-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px}
+.rc{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.rc h3{font:700 16px var(--f-disp)}
+.rc p,.rc li{color:#D9C8BA;font-size:14px;margin:0}
+.rc ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.rc .src{font:500 11.5px var(--f-mono);color:var(--dim);overflow-wrap:anywhere}
+.nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.num{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:4px}
+.num b{font:800 26px/1 var(--f-disp);color:var(--amber);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.num span{font-size:12.5px;color:var(--muted)}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:720px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--panel2)}
+td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.tag{display:inline-block;font:600 10.5px var(--f-mono);padding:2px 6px;border-radius:6px;background:rgba(255,154,61,.14);color:#FFC796;margin:1px 2px 1px 0}
+.tag.r{background:rgba(255,95,87,.14);color:#FF9690}
+.tag.g{background:rgba(71,224,160,.13);color:#7DEBBB}
+.fine{display:flex;flex-direction:column;gap:8px}
+.fine div{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:#D9C8BA}
+.fine i{font-style:normal;font:700 12px var(--f-mono);flex:none;margin-top:2px}
+.fine .f{color:var(--ok)}
+.fine .h{color:var(--amber)}
+
+/* ---------- store frames ---------- */
+.shots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (min-width:640px){.shots{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:1100px){.shots{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.shot{position:relative;aspect-ratio:9/16;max-width:100%;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;align-items:center;padding:20px 14px 0;gap:12px;container-type:inline-size}
+.shot h4{margin:0;font:800 7.6cqw/1.08 var(--f-disp);letter-spacing:-.03em;text-align:center;color:#fff;text-wrap:balance}
+.shot h4 em{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.shot .mini{width:76%;flex:1;min-height:0;position:relative}
+.shot .mini .ph{position:absolute;left:0;right:0;top:0;aspect-ratio:9/19.5;border-radius:12cqw 12cqw 0 0;padding:2.2cqw;background:#1a140f;box-shadow:0 0 0 1px rgba(255,255,255,.1)}
+.shot .mini .scrn{position:relative;width:100%;height:100%;border-radius:10cqw 10cqw 0 0;overflow:hidden}
+.shot .mini .scale{position:absolute;top:0;left:0;width:350px;height:758px;transform-origin:0 0}
+.s1{background:radial-gradient(120% 80% at 50% 0%,#5a2a0c,#120a05 70%)}
+.s2{background:radial-gradient(120% 80% at 50% 0%,#1e2e47,#090b12 70%)}
+.s3{background:radial-gradient(120% 80% at 50% 0%,#4a1d10,#100705 70%)}
+.s4{background:radial-gradient(120% 80% at 50% 0%,#2b2a12,#0c0b05 70%)}
+.s5{background:radial-gradient(120% 80% at 50% 0%,#3e1a2a,#0e070a 70%)}
+.s6{background:radial-gradient(120% 80% at 50% 0%,#14352c,#060d0b 70%)}
+
+/* ---------- brand ---------- */
+.brand-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px}
+.icons-row{display:flex;gap:18px;align-items:flex-end;flex-wrap:wrap}
+.icons-row .logo{border-radius:0}
+.masks{display:flex;gap:14px;flex-wrap:wrap}
+.masks div{display:flex;flex-direction:column;gap:6px;align-items:center;font:500 11px var(--f-mono);color:var(--dim)}
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.sw-c{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--panel2)}
+.sw-c i{display:block;height:46px}
+.sw-c span{display:block;padding:6px 8px;font:500 11px var(--f-mono);color:var(--muted)}
+.typo{display:flex;flex-direction:column;gap:6px}
+.typo .d{font:800 34px/1 var(--f-disp);letter-spacing:-.03em}
+.typo .u{font:500 16px var(--f-ui)}
+.typo .m{font:500 13px var(--f-mono);color:var(--muted)}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px}
+.notes ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px;color:#D9C8BA;font-size:14px}
+.notes code{font:500 12.5px var(--f-mono);color:#FFD3A6;overflow-wrap:anywhere}
+</style>
+
+<div class="wrap">
+<header class="hero">
+  <div class="brand">
+    <svg class="logo" id="heroLogo" viewBox="0 0 48 48" aria-hidden="true"></svg>
+    <div>
+      <div class="eyebrow">Прототип · Tools · Android · роль HOME</div>
+      <h1 id="heroName">Framefall<span>Video Downloader · твоє відео на головному екрані</span></h1>
+    </div>
+  </div>
+  <div class="hero-r">
+    <div class="by">Підготував <b>VELDAN</b> · 12.10.2026 · за методикою Redwave</div>
+    <p class="lede">Зберігає відео з легальних посилань і відкритих каталогів, ріже, витягає звук, робить GIF і частини для Status. Як головний екран показує живий відеофон, картку з посиланням із буфера і «Продовжити перегляд».</p>
+    <div class="namebox" id="namebox"></div>
+  </div>
+</header>
+
+<section class="stage">
+  <div class="phone-col">
+    <div class="phone" id="phone">
+      <div class="screen" id="screen">
+        <div class="sb"><span id="sbTime">9:41</span><i class="cam"></i><span class="st" id="sbRight"></span></div>
+        <div class="scr" id="scr"></div>
+        <div class="toast" id="toast" hidden></div>
+        <div id="ovl"></div>
+        <div class="nav">
+          <button type="button" data-act="back" aria-label="Назад"><svg class="ic" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button type="button" class="home" data-act="home" aria-label="Додому"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/></svg></button>
+          <button type="button" data-act="recents" aria-label="Недавні"><svg class="ic" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <p class="hint">Клікай як на телефоні. Кнопки внизу — системні «Назад», «Додому» і «Недавні». Відео справжні: відкриті фільми Blender, NASA та Internet Archive.</p>
+  </div>
+
+  <div class="panel">
+    <div class="box">
+      <div class="box-h"><h2>Тест-план</h2><span class="prog" id="prog"></span></div>
+      <ul class="tests" id="tests"></ul>
+    </div>
+    <div class="box">
+      <div class="box-h"><h2>Буфер обміну</h2><span class="prog">натисни «Копіювати», потім «Додому»</span></div>
+      <div class="clipbar"><span>Зараз:</span><code id="clipNow">порожньо</code></div>
+      <div class="clips" id="clips"></div>
+    </div>
+    <div class="box">
+      <div class="box-h"><h2>Екрани й прапорці</h2><button class="btn" type="button" data-pact="reset">Скинути все</button></div>
+      <div class="pacts" id="pacts"></div>
+      <div class="flags">
+        <label><input type="checkbox" id="fHomeReq"> home_required (без «Maybe later»)</label>
+        <label><input type="checkbox" id="fWifi"> Лише Wi-Fi (зараз мобільні дані)</label>
+      </div>
+    </div>
+    <div class="box">
+      <div class="box-h"><h2>Журнал подій Android</h2><button class="btn" type="button" data-pact="clear-log">Очистити</button></div>
+      <div class="log" id="log" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec-block" id="research">
+  <div><div class="eyebrow">Дослідження · Google Play США · 12.10.2026</div><h2>Яку апку можна зробити</h2></div>
+  <div id="researchBody" style="display:flex;flex-direction:column;gap:18px">
+  <p class="lede">Зібрано 909 апок із Google Play США за 36 пошуковими запитами й «схожими апками», з них 253 справжні завантажувачі відео. Окремо 31 483 відгуки, правила Google і умови джерел. Висновок: є ніша, яку ніхто не зайняв. Це чесний завантажувач лише з легальних джерел, де головний екран вмикається за згодою людини й має живий відеофон.</p>
+  <div class="nums">
+    <div class="num"><b>253</b><span>завантажувачі відео, разом 3,35 млрд встановлень</span></div>
+    <div class="num"><b>84,5%</b><span>встановлень у топ-25, усі вийшли у 2016–2022 роках</span></div>
+    <div class="num"><b>21</b><span>гібрид «завантажувач + лаунчер», хвиля 2025–2026</span></div>
+    <div class="num"><b>9,2 млн</b><span>у лідера-гібрида з 21.07.2025, ≈610 тис. на місяць</span></div>
+    <div class="num"><b>0 з 25</b><span>у топі обіцяють YouTube; 5 прямо пишуть «не підтримується»</span></div>
+    <div class="num"><b>3,0%</b><span>відгуків «вірус / скам» у гібридів, проти 0,5% у звичайних</span></div>
+  </div>
+
+  <div class="r-grid">
+    <div class="rc">
+      <h3>Ринок</h3>
+      <ul>
+        <li>Лідери: All Video Downloader & Player (390 млн), Video Downloader від Simple Design (333 млн), дві апки InShot (278 і 238 млн).</li>
+        <li>У великих апок однаковий набір: вбудований браузер, автопошук відео, фонове завантаження, приватна тека, плеєр, MP3.</li>
+        <li>Рідко трапляються HLS/m3u8 (7%), відеошпалери (3%), PiP (2%) і обрізка (4%). Саме цим можна вирізнитися.</li>
+        <li>За що ставлять 1–2★: «не працює» (27,8% таких відгуків) і реклама (22,3%). На приватну теку майже не скаржаться.</li>
+        <li>Категорії: Tools 121, Video Players & Editors 105. Реклама є в 89% апок з ≥1 млн встановлень.</li>
+      </ul>
+      <p class="src">google-play-scraper, US/en, 12.10.2026. Встановлення — realInstalls.</p>
+    </div>
+    <div class="rc">
+      <h3>Гібриди з лаунчером: наша ніша вже не порожня</h3>
+      <ul>
+        <li><b>All Video Downloader: Launcher</b> (The Lucky App), 9,2 млн, 4,05★. Video Downloader & Launcher — 2,2 млн з 03.2026. All Video Downloader, Launcher — 1,1 млн з 04.2026.</li>
+        <li>Шість однакових «All Video Downloader & Home» від шести акаунтів, без оцінок і відгуків. ◌ Схоже на ферму лістингів одного оператора.</li>
+        <li>Лише 3 з 21 пишуть в описі, що головний екран зміниться. 20 з 21 показують рекламу, 14 з 21 тримають політику приватності на blogspot.</li>
+        <li>Найпопулярніший відгук у лідера (1 196 👍): «SCAM ALERT… no reason for a video player to have a hard requirement to change the default home page».</li>
+      </ul>
+      <p class="src">◌ Гіпотеза: у них лаунчер утримує людину й дає місце під рекламу, а не працює як функція. Чесний варіант (пояснення, Maybe later, легкий шлях назад) поки не зайнятий.</p>
+    </div>
+    <div class="rc">
+      <h3>Що дозволяє Google Play</h3>
+      <ul>
+        <li>✔ IP-політика забороняє апки, що дають «download a local copy of copyrighted content without authorization». Те саме стосується опису й скріншотів.</li>
+        <li>✔ YouTube у політиці не названо. Блокують за правилом Device and Network Abuse («violates its terms of service»): умови YouTube забороняють завантаження.</li>
+        <li>✔ Чужі бренди й логотипи в назві чи іконці («for Instagram») порушують правила Impersonation і Metadata. Назва — до 30 символів.</li>
+        <li>✔ Disruptive Ads прямо забороняє «ads triggered by the home button» і рекламу на головному екрані.</li>
+        <li>✔ Зміну налаштувань пристрою, зокрема вигляду головного екрана, можна робити лише за згодою людини і так, щоб її легко було скасувати.</li>
+      </ul>
+      <p class="src">support.google.com/googleplay/android-developer: 9888072, 18258653, 9857753, 9898842</p>
+    </div>
+    <div class="rc">
+      <h3>Практика</h3>
+      <ul>
+        <li>✔ «Downloader» від AFTVnews (50 млн+) двічі за 2023 рік знімали з Play за DMCA: його вбудований браузер відкривав піратський сайт. Обидва рази апку повернули.</li>
+        <li>◌ Відомі YouTube-завантажувачі (VidMate тощо) живуть поза Play.</li>
+        <li>✔ X з 09.10.2026 бере $15 000 за кожен мільйон постів з тих, хто «knowingly facilitate» скрейпінг. Instagram, Facebook і TikTok забороняють автоматичний збір даних.</li>
+      </ul>
+      <p class="src">Висновок для v1: без браузера-«ловця» відео. Лише вставка посилання, «Поділитися» і меню виділення тексту.</p>
+    </div>
+  </div>
+
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Джерело</th><th>Що там</th><th>Ліцензія</th><th>Доступ</th><th>Рішення</th></tr></thead>
+    <tbody>
+      <tr><td>Пряме посилання, Drive, Dropbox, OneDrive, RSS</td><td>файли людини</td><td>права — на людині</td><td>як у Redwave</td><td><span class="tag g">v1</span> з приміткою «лише своє або з дозволом»</td></tr>
+      <tr><td>Internet Archive</td><td>класика в суспільному надбанні, відкриті фільми</td><td>PD Mark / CC (поле заповнює автор)</td><td>без ключа, прямі MP4, byte-range</td><td><span class="tag g">v1</span> лише вибраний список елементів</td></tr>
+      <tr><td>NASA Image Library</td><td>космос, запуски, Земля</td><td>суспільне надбання; логотип NASA — ні</td><td>без ключа, ~orig/~mobile.mp4</td><td><span class="tag g">v1</span> підпис «NASA»</td></tr>
+      <tr><td>Blender open movies</td><td>Big Buck Bunny, Sintel, Tears of Steel, Spring</td><td>CC BY 3.0 / 4.0</td><td>download.blender.org, Commons, Archive</td><td><span class="tag g">v1</span> титри з файлом</td></tr>
+      <tr><td>Wikimedia Commons</td><td>WebM/OGV + перекодовані 240p–1080p</td><td>свою для кожного файлу (extmetadata)</td><td>без ключа, потрібен User-Agent, 429 при частих запитах</td><td><span class="tag g">v1</span></td></tr>
+      <tr><td>PeerTube</td><td>федеративне відео</td><td>поле licence; downloadEnabled</td><td>API, 50 запитів / 10 с</td><td><span class="tag">v1.1</span> лише перевірені інстанси</td></tr>
+      <tr><td>Pixabay</td><td>сток-кліпи</td><td>без атрибуції; масове завантаження заборонене</td><td>ключ, 100 / хв, кеш 24 год</td><td><span class="tag">опційно</span></td></tr>
+      <tr><td>Pexels, Coverr, Mixkit, Videvo</td><td>сток</td><td>заборона на сервіси-конкуренти й на шпалери</td><td>Pexels: видачу ключів призупинено</td><td><span class="tag r">ні</span></td></tr>
+      <tr><td>YouTube, Instagram, Facebook, TikTok, X, Vimeo, Twitch, стрімінги</td><td>—</td><td>умови забороняють завантаження</td><td>—</td><td><span class="tag r">блок</span> з поясненням, без логотипів</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="r-grid">
+    <div class="rc">
+      <h3>Що з цього взято в прототип</h3>
+      <ul>
+        <li>Головний екран — за згодою людини: пояснення, «Maybe later», перемикач у Settings. Без «SCAM ALERT».</li>
+        <li>Живий відеофон з власних відео: у завантажувачах шпалери є лише в 3% апок, а лаунчера з відеофоном немає ні в кого.</li>
+        <li>Картка лінка на головному лише для того, що можна зберегти. YouTube тощо тихо ігнорує.</li>
+        <li>HLS без захисту — рідкісна функція (7%). Стріми з DRM чи AES отримують чесну відмову.</li>
+        <li>Studio: обрізка, звук M4A, GIF або MP4-петля, частини для Status (60 с, ◌ WhatsApp уже дозволяє 90 с), кадр, стиснення.</li>
+        <li>Discover — лише суспільне надбання і CC, з бейджем ліцензії й титрами у файлі.</li>
+      </ul>
+    </div>
+    <div class="rc">
+      <h3>Тонкощі</h3>
+      <div class="fine">
+        <div><i class="f">✔</i><span>Android-екран із роллю HOME не може піти в PiP (перевірка в AOSP ActivityRecord). Потрібна окрема PlayerActivity.</span></div>
+        <div><i class="f">✔</i><span>У Android немає енкодерів MP3 і GIF. M4A є всюди. Для MP3 потрібен LAME (LGPL), для GIF — свій енкодер або MP4-петля.</span></div>
+        <div><i class="f">✔</i><span>Media3 Transformer офіційно не приймає HLS. Сегменти качаємо самі, склеюємо і тоді перепаковуємо в MP4.</span></div>
+        <div><i class="f">✔</i><span>Саундтрек Tears of Steel — CC BY-ND, тож змінену версію не можна поширювати.</span></div>
+        <div><i class="h">◌</i><span>Ліцензію на Internet Archive вказує той, хто завантажив. Тому тримаємо вибраний список і пропускаємо елементи з is_dark.</span></div>
+        <div><i class="h">◌</i><span>17 апок з ≥100 тис. встановлень ховають оцінку й дату. Цифри гібридів можуть бути накручені.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</section>
+
+<section class="sec-block">
+  <div><div class="eyebrow">Google Play · 9:16</div><h2>Кадри для маркету</h2></div>
+  <div class="shots" id="shots"></div>
+</section>
+
+<section class="sec-block">
+  <div><div class="eyebrow">Бренд</div><h2>Назва, іконка, кольори</h2></div>
+  <div class="brand-g" id="brandBody"></div>
+</section>
+
+<section class="sec-block">
+  <div><div class="eyebrow">Далі</div><h2>Перенос у LibGDX і відкриті рішення</h2></div>
+  <div class="notes" id="portBody">
+  <div class="rc">
+    <h3>Як ляже на LibGDX</h3>
+    <ul>
+      <li><b>Каркас з Redwave майже без змін:</b> MainActivity з HOME + LAUNCHER + SEND, <code>ClipGate</code>, <code>PlatformBridge</code>, DownloadManager → <code>Movies/Framefall</code>, Remote Config.</li>
+      <li><b>Лаунчер із Driftglass:</b> одна сторінка, автопапки, свайп угору — усі апки.</li>
+      <li><b>Відео в GL:</b> ExoPlayer → <code>SurfaceTexture</code> → текстура <code>GL_TEXTURE_EXTERNAL_OES</code> у шейдері. Так скляні картки з розмиттям лягають прямо на відеофон. Запасний варіант: SurfaceView під прозорим GL. ◌ Перевірити на Redmi.</li>
+      <li><b>Плеєр і PiP:</b> окрема <code>PlayerActivity</code> (не HOME, своя taskAffinity, singleTask) з Media3 PlayerView.</li>
+      <li><b>Studio:</b> Media3 Transformer 1.11.1 — ClippingConfiguration, <code>setRemoveVideo</code> → M4A, <code>Presentation</code> для стиснення, частини для Status. Кадр — <code>FrameExtractor</code>.</li>
+      <li><b>HLS:</b> свій завантажувач сегментів (OkHttp) → склейка → Transformer → MP4. Відмова, якщо <code>EXT-X-KEY</code> ≠ NONE або в DASH є <code>ContentProtection</code>.</li>
+      <li><b>port-kit:</b> <code>LinkResolver</code> → <code>VideoLinkResolver</code> (Archive, NASA, Commons, PeerTube, m3u8, ширший блок-лист), <code>AudioSniffer</code> → <code>VideoSniffer</code> (ftyp, EBML, OggS, TS 0x47).</li>
+    </ul>
+  </div>
+  <div class="rc">
+    <h3>Відкриті рішення для VELDAN</h3>
+    <ul>
+      <li><b>Назва й пакет:</b> «Framefall: Video Downloader» (27/30) чи «Framefall: Video Home Launcher» (30/30), як у Redwave. Пакет — пропоную <code>com.framefall.video</code>.</li>
+      <li><b>Реклама:</b> як у Redwave (AdMob в апці)? Рекламу на кнопку «Додому» Google забороняє прямо (Disruptive Ads ✔).</li>
+      <li><b>home_required:</b> лідер-гібрид отримав «SCAM ALERT» саме за обов'язковий лаунчер. Пропоную за замовчуванням false.</li>
+      <li><b>MP3:</b> додати LAME (LGPL, +~1 МБ) чи лишити M4A. <b>GIF:</b> свій енкодер чи лише MP4-петля.</li>
+      <li><b>v1 чи v1.1:</b> HLS, PeerTube, відео як системні живі шпалери (WallpaperService, діє й поза нашим лаунчером).</li>
+      <li><b>Discover:</b> вибраний список (≈30 фільмів Archive + NASA + Blender) у <code>catalog.json</code> на GitHub raw, як у Redwave.</li>
+    </ul>
+  </div>
+</div>
+
+</section>
+</div>
+<script>
+(function(){
+"use strict";
+const NAME="Framefall";
+const $=s=>document.querySelector(s);
+const scr=$("#scr"), ovl=$("#ovl"), toastEl=$("#toast"), logEl=$("#log");
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pad=n=>String(n).padStart(2,"0");
+const fmtT=s=>{s=Math.max(0,Math.floor(s));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=pad(s%60);return h?h+":"+pad(m)+":"+x:m+":"+x;};
+const fmtT1=s=>{s=Math.max(0,s);const m=Math.floor(s/60),x=(s%60).toFixed(1).padStart(4,"0");return m+":"+x;};
+const fmtMB=mb=>mb>=1000?(mb/1000).toFixed(2)+" GB":mb>=100?Math.round(mb)+" MB":mb.toFixed(1)+" MB";
+let STATIC=false;
+
+/* ------------------------------------------------------------------------
+   Іконки (stroke 24×24)
+   ------------------------------------------------------------------------ */
+const P={
+ save:'<path d="M12 3v12m-5-5 5 5 5-5M5 21h14"/>',
+ compass:'<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',
+ grid:'<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',
+ wand:'<path d="m15 4 1 2 2 1-2 1-1 2-1-2-2-1 2-1zM5 19 16 8M19 14l.7 1.3L21 16l-1.3.7L19 18l-.7-1.3L17 16l1.3-.7z"/>',
+ link:'<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+ clip:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>',
+ search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+ check:'<path d="M20 6 9 17l-5-5"/>',
+ x:'<path d="M18 6 6 18M6 6l12 12"/>',
+ gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68 1.65 1.65 0 0 0 10 3.17V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+ share:'<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/>',
+ more:'<circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>',
+ play:'<path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/>',
+ pause:'<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>',
+ rew:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><text x="12" y="15.5" font-size="7" text-anchor="middle" fill="currentColor" stroke="none" font-family="sans-serif" font-weight="700">10</text>',
+ fwd:'<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/><text x="12" y="15.5" font-size="7" text-anchor="middle" fill="currentColor" stroke="none" font-family="sans-serif" font-weight="700">10</text>',
+ pip:'<rect x="2" y="4" width="20" height="16" rx="2"/><rect x="12" y="11" width="7" height="6" rx="1"/>',
+ scissors:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"/>',
+ music:'<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+ gif:'<rect x="2" y="5" width="20" height="14" rx="3"/><path d="M10 10H8a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2v-2M13 10v4M16.5 14v-4h2.5M16.5 12h2"/>',
+ split:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M9 5v14M15 5v14"/>',
+ image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"/>',
+ compress:'<path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/>',
+ film:'<rect x="2" y="3" width="20" height="18" rx="2"/><path d="M7 3v18M17 3v18M2 8h5M2 13h5M2 18h5M17 8h5M17 13h5M17 18h5"/>',
+ shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+ lock:'<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+ info:'<circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/>',
+ globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+ cloud:'<path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z"/>',
+ chev:'<path d="m9 18 6-6-6-6"/>',
+ back:'<path d="M15 18l-6-6 6-6"/>',
+ up:'<path d="m18 15-6-6-6 6"/>',
+ phone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
+ msg:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+ cam:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
+ mail:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/>',
+ map:'<path d="M9 3 3 6v15l6-3 6 3 6-3V3l-6 3z"/><path d="M9 3v15M15 6v15"/>',
+ cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ calc:'<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h.01M12 19h4"/>',
+ folder:'<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>',
+ star:'<path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/>',
+ trash:'<path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>',
+ loop:'<path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>',
+ gauge:'<path d="M12 14 16 10"/><path d="M3.3 19a10 10 0 1 1 17.4 0"/>',
+ bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+ wifi:'<path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/>',
+ alert:'<path d="m10.3 3.9-8.1 14a2 2 0 0 0 1.7 3h16.2a2 2 0 0 0 1.7-3l-8.1-14a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/>',
+ ext:'<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/>',
+ homeic:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+ layers:'<path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/>',
+ note:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/>',
+ store:'<path d="M3 9 4.5 4h15L21 9M3 9h18v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zM9 21v-6h6v6"/>',
+ game:'<rect x="2" y="6" width="20" height="12" rx="6"/><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"/>',
+ sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'
+};
+const ic=(n,c)=>'<svg class="ic'+(c?" "+c:"")+'" viewBox="0 0 24 24" aria-hidden="true">'+(P[n]||"")+'</svg>';
+const icf=n=>'<svg class="ic f" viewBox="0 0 24 24" aria-hidden="true">'+P[n]+'</svg>';
+
+let gid=0;
+function LOGO(s,cls){const g="kg"+(++gid);const sp=(x,y)=>'<rect x="'+x+'" y="'+y+'" width="2.6" height="2.6" rx=".8"/>';
+ return '<svg '+(cls?'class="'+cls+'" ':'')+(s?'width="'+s+'" height="'+s+'" ':'')+'viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="'+g+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFC94D"/><stop offset=".55" stop-color="#FF8A2A"/><stop offset="1" stop-color="#F2511B"/></linearGradient></defs>'+
+ '<rect width="48" height="48" rx="14" fill="url(#'+g+')"/><rect x="9.5" y="10" width="29" height="28" rx="6.5" fill="#fff"/>'+
+ '<g fill="url(#'+g+')">'+sp(11.6,13.2)+sp(11.6,19.8)+sp(11.6,26.4)+sp(33.8,13.2)+sp(33.8,19.8)+sp(33.8,26.4)+
+ '<path d="M18.6 16.6h10.8a1.6 1.6 0 0 1 1.35 2.45l-5.4 8.6a1.6 1.6 0 0 1-2.7 0l-5.4-8.6a1.6 1.6 0 0 1 1.35-2.45z"/><rect x="18" y="31" width="12" height="3" rx="1.5"/></g></svg>';}
+
+/* ------------------------------------------------------------------------
+   Дані: відкриті фільми (кадри й 10-секундні фрагменти — справжні)
+   ------------------------------------------------------------------------ */
+const FILMS={
+ bbb:{title:"Big Buck Bunny",by:"Blender Foundation",year:2008,dur:596,lic:"CC BY 3.0",pd:false,src:"Internet Archive",v:"media/clip_bbb.mp4",strip:"img/strip_bbb.jpg",files:[{l:"360p",dim:"640×360",mb:61.9,fmt:"MP4 · H.264"},{l:"300p",dim:"533×300",mb:46.9,fmt:"OGV · Theora"}]},
+ sintel:{title:"Sintel",by:"Blender Foundation",year:2010,dur:888,lic:"CC BY 3.0",pd:false,src:"Internet Archive",files:[{l:"2K",dim:"2048×872",mb:282.7,fmt:"MP4 · H.264"},{l:"240p",dim:"564×240",mb:77.4,fmt:"MP4 · 512 kbps"}]},
+ tos:{title:"Tears of Steel",by:"Blender Foundation",year:2012,dur:734,lic:"CC BY 3.0",pd:false,src:"Internet Archive",files:[{l:"1080p",dim:"1920×800",mb:575.7,fmt:"MKV · H.264"},{l:"360p",dim:"862×360",mb:76.4,fmt:"MP4 · H.264"}]},
+ ed:{title:"Elephants Dream",by:"Orange Open Movie Project",year:2006,dur:654,lic:"CC BY 3.0",pd:false,src:"Internet Archive",files:[{l:"360p",dim:"640×360",mb:67.8,fmt:"MP4 · H.264"},{l:"240p",dim:"426×240",mb:47.1,fmt:"MP4 · 512 kbps"}]},
+ llama:{title:"Caminandes 3: Llamigos",by:"Blender Foundation",year:2016,dur:150,lic:"CC BY 3.0",pd:false,src:"Internet Archive",files:[{l:"1080p",dim:"1920×1080",mb:138.9,fmt:"MP4 · H.264"},{l:"1080p",dim:"1920×1080",mb:38.0,fmt:"WebM · VP9"}]},
+ moon:{title:"A Trip to the Moon",by:"Georges Méliès",year:1902,dur:678,lic:"Public domain",pd:true,src:"Internet Archive",files:[{l:"480p",dim:"640×480",mb:154.3,fmt:"MP4 · 20 fps"},{l:"240p",dim:"320×240",mb:54.6,fmt:"MP4 · 512 kbps"}]},
+ nosf:{title:"Nosferatu",by:"F. W. Murnau",year:1922,dur:5951,lic:"Public domain",pd:true,src:"Internet Archive",files:[{l:"240p",dim:"320×240",mb:432.3,fmt:"MP4 · 5 parts"}]},
+ notld:{title:"Night of the Living Dead",by:"George A. Romero",year:1968,dur:5732,lic:"Public domain",pd:true,src:"Internet Archive",files:[{l:"480p",dim:"640×480",mb:596.4,fmt:"MP4 · H.264"},{l:"300p",dim:"400×300",mb:441.3,fmt:"OGV · Theora"}]},
+ orion:{title:"Earth from Orion, Day 1",by:"NASA",year:2022,dur:242,lic:"Public domain · NASA",pd:true,src:"NASA Image Library",files:[{l:"720p",dim:"1280×720",mb:156.2,fmt:"MP4 · 30 fps"},{l:"720p60",dim:"1280×720",mb:145.4,fmt:"MP4 · 60 fps"}]}
+};
+Object.keys(FILMS).forEach(k=>{const f=FILMS[k];f.id=k;f.th=f.th||"img/th_"+k+".jpg";f.v=f.v||"media/v_"+k+".mp4";f.strip=f.strip||"img/strip_"+k+".jpg";});
+const HOME_BG={orion:{v:"media/bg_orion.mp4",poster:"img/bg_orion.jpg",label:"Earth from Orion"},sintel:{v:"media/bg_sintel.mp4",poster:"img/bg_sintel.jpg",label:"Sintel · cliff"}};
+const OPEN=["sintel","bbb","tos","ed","llama"], PD=["moon","nosf","notld","orion"];
+
+/* ------------------------------------------------------------------------
+   Розбір посилань (те, що піде в port-kit як VideoLinkResolver)
+   ------------------------------------------------------------------------ */
+const BLOCK=[["YouTube",/(^|\.)(youtube\.com|youtu\.be|youtube-nocookie\.com)$/],["Instagram",/(^|\.)instagram\.com$/],["Facebook",/(^|\.)(facebook\.com|fb\.watch)$/],["TikTok",/(^|\.)tiktok\.com$/],["X",/(^|\.)(x\.com|twitter\.com)$/],["Netflix",/(^|\.)netflix\.com$/],["Disney+",/(^|\.)disneyplus\.com$/],["Prime Video",/(^|\.)primevideo\.com$/],["Twitch",/(^|\.)twitch\.tv$/],["Dailymotion",/(^|\.)dailymotion\.com$/],["Snapchat",/(^|\.)snapchat\.com$/],["VK",/(^|\.)(vk\.com|vkvideo\.ru)$/],["Bilibili",/(^|\.)bilibili\.com$/]];
+const VEXT=/\.(mp4|m4v|mov|webm|mkv|3gp|avi|ts)$/i;
+function resolve(raw){
+ const t=(raw||"").trim();
+ const m=t.match(/https?:\/\/[^\s<>"']+/i);
+ if(!m)return{kind:"none"};
+ let u;try{u=new URL(m[0]);}catch(e){return{kind:"none"};}
+ const host=u.hostname.replace(/^www\.|^m\./,""), path=decodeURIComponent(u.pathname), url=u.href;
+ for(const [svc,re] of BLOCK)if(re.test(host))return{kind:"blocked",svc,host,url};
+ if(/(^|\.)vimeo\.com$/.test(host))return{kind:"soft",svc:"Vimeo",host,url};
+ if(/\.m3u8$/i.test(path))return{kind:"hls",host,url};
+ if(/\.mpd$/i.test(path))return{kind:"dash",host,url};
+ if(/^drive\.google\.com$/.test(host)&&/\/file\/d\//.test(path))return{kind:"drive",host,url,id:path.split("/file/d/")[1].split("/")[0]};
+ if(/(^|\.)dropbox\.com$/.test(host))return{kind:"dropbox",host,url,file:path.split("/").pop()};
+ if(/^(1drv\.ms|onedrive\.live\.com)$/.test(host))return{kind:"onedrive",host,url};
+ if(host==="archive.org"&&/^\/details\//.test(path))return{kind:"archive",host,url,id:path.split("/")[2]};
+ if(host==="images.nasa.gov"&&/^\/details\//.test(path))return{kind:"nasa",host,url,id:path.split("/")[2]};
+ if(host==="commons.wikimedia.org"&&/\/wiki\/File:/.test(path))return{kind:"commons",host,url,file:path.split("File:")[1]};
+ if(/^\/(w|videos\/watch)\//.test(path))return{kind:"peertube",host,url};
+ if(/\.(rss|xml)$/i.test(path)||/\/feed\/?$/.test(path))return{kind:"feed",host,url};
+ if(VEXT.test(path))return{kind:"direct",host,url,file:path.split("/").pop()};
+ return{kind:"page",host,url};
+}
+const okKind=k=>["direct","hls","dash","drive","dropbox","onedrive","archive","nasa","commons","peertube","feed"].includes(k);
+const KIND_LABEL={direct:"Direct file",hls:"HLS stream",dash:"DASH stream",drive:"Google Drive",dropbox:"Dropbox",onedrive:"OneDrive",archive:"Internet Archive",nasa:"NASA",commons:"Wikimedia Commons",peertube:"PeerTube",feed:"Video podcast"};
+function titleFrom(file){const t=(file||"").replace(/\.[a-z0-9]{2,4}$/i,"").replace(/[-_]+/g," ").trim();return t?t.replace(/\b\w/g,c=>c.toUpperCase()):"Shared video";}
+
+/* Тестові посилання — що «відповідає мережа» (у апці це probe: GET Range 0-63 / API джерела) */
+const SAMPLES=[
+ {url:"https://archive.org/download/ElephantsDream/ed_hd.mp4",note:"Пряме посилання на MP4 (Internet Archive, CC BY)",probe:{film:"ed",opts:[{l:"360p",dim:"640×360",mb:67.8,fmt:"MP4 · H.264"}]}},
+ {url:"https://archive.org/details/night_of_the_living_dead_dvd",note:"Сторінка фільму на Internet Archive (суспільне надбання)",probe:{film:"notld"}},
+ {url:"https://images.nasa.gov/details/jsc2022m000270_Orion_First_Imagery_Timelapse_and_Original_221117",note:"NASA Image Library (суспільне надбання)",probe:{film:"orion"}},
+ {url:"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",note:"HLS-стрім без захисту (публічний тест Mux)",probe:{title:"Big Buck Bunny (HLS test)",th:"img/th_bbb.jpg",dur:596,opts:[{l:"1080p",dim:"1920×1080",mb:365,fmt:"HLS → MP4 · 4.9 Mbps"},{l:"720p",dim:"1280×720",mb:194,fmt:"HLS → MP4 · 2.6 Mbps"},{l:"480p",dim:"848×480",mb:104,fmt:"HLS → MP4 · 1.4 Mbps"},{l:"360p",dim:"640×360",mb:67,fmt:"HLS → MP4 · 0.9 Mbps"}],segs:298,noLic:true}},
+ {url:"https://vod.example-tv.com/series/s01e01/master.m3u8",note:"HLS із DRM (приклад) — зберегти не можна",probe:{drm:true}},
+ {url:"https://drive.google.com/file/d/1Xk7pLwQ0mVbN3sR9aT2uYc4dEf5gH6iJ/view?usp=sharing",note:"Google Drive, великий файл (приклад)",probe:{title:"family-trip-2026.mov",dur:412,opts:[{l:"1080p",dim:"1920×1080",mb:214.6,fmt:"MOV · HEVC"}],noLic:true}},
+ {url:"https://www.dropbox.com/scl/fi/a1b2c3/wedding-teaser.mp4?rlkey=x9&dl=0",note:"Dropbox (приклад)",probe:{title:"wedding-teaser.mp4",dur:94,opts:[{l:"1080p",dim:"1920×1080",mb:48.2,fmt:"MP4 · H.264"}],noLic:true}},
+ {url:"https://commons.wikimedia.org/wiki/File:Caminandes_3_-_Llamigos_-_Blender_Foundation.webm",note:"Wikimedia Commons (CC BY)",probe:{film:"llama",opts:[{l:"1080p",dim:"1920×1080",mb:38.0,fmt:"WebM · VP9"},{l:"720p",dim:"1280×720",mb:21.4,fmt:"WebM · transcode"},{l:"480p",dim:"854×480",mb:11.2,fmt:"WebM · transcode"}]}},
+ {url:"https://youtu.be/aqz-KE-bpKQ",note:"YouTube — блок"},
+ {url:"https://www.instagram.com/reel/C9xY2kLs8aB/",note:"Instagram Reels — блок"},
+ {url:"https://vimeo.com/1084537",note:"Vimeo — лише якщо автор увімкнув завантаження"},
+ {url:"https://www.nasa.gov/missions/artemis/",note:"Звичайна сторінка без відеофайлу"},
+ {url:"Watch this tonight 🍿",note:"Текст без посилання — ClipGate ігнорує"}
+];
+function probeOf(url){const s=SAMPLES.find(x=>x.url===url);return s&&s.probe;}
+function infoFor(res){
+ const pr=probeOf(res.url)||{};
+ if(pr.drm)return{drm:true};
+ const f=pr.film&&FILMS[pr.film];
+ let title=pr.title||(f&&f.title)||(res.file?titleFrom(res.file):res.kind==="hls"?"Stream":res.kind==="drive"?"Drive file":"Video");
+ if(res.kind==="hls"&&!pr.film)title=pr.title||"Stream";
+ if(!f&&(res.kind==="drive"||res.kind==="dropbox"))title=titleFrom(title);
+ const opts=pr.opts||(f&&f.files)||[{l:"Original",dim:"—",mb:0,fmt:(res.file||"").split(".").pop().toUpperCase()||"Video"}];
+ return{title,film:f?pr.film:null,th:pr.th||(f&&f.th)||null,dur:pr.dur||(f&&f.dur)||0,opts,lic:f?f.lic:null,by:f?f.by+" · "+f.year:null,segs:pr.segs||0,noLic:!!pr.noLic};
+}
+
+/* ------------------------------------------------------------------------
+   Стан
+   ------------------------------------------------------------------------ */
+let S, T={}, uid=100;
+function libItem(film,extra){const f=FILMS[film];return Object.assign({id:"L"+(++uid),film,title:f.title,kind:"video",dur:f.dur,mb:f.files[f.files.length-1].mb,dim:f.files[f.files.length-1].dim,fmt:f.files[f.files.length-1].fmt,watched:0,src:f.src,lic:f.lic,th:f.th,v:f.v,at:Date.now()},extra||{});}
+function fresh(){
+ uid=100;
+ return{
+  screen:"stock",tab:"save",onb:0,onboarded:false,isHome:false,homeReq:false,wifiOnly:false,
+  clip:{text:"",ts:0},seenTs:0,card:null,drawer:false,lnMenu:false,
+  input:"",res:null,probing:false,
+  dls:[],lib:[
+   libItem("bbb",{watched:.42,mb:61.9,dim:"640×360",fmt:"MP4 · H.264"}),
+   libItem("moon",{watched:.18,mb:54.6,dim:"320×240",fmt:"MP4 · 512 kbps"}),
+   libItem("orion",{mb:156.2,dim:"1280×720",fmt:"MP4 · 30 fps"}),
+   libItem("sintel",{watched:.71,mb:77.4,dim:"564×240",fmt:"MP4 · 512 kbps"}),
+   Object.assign(libItem("bbb"),{title:"Big Buck Bunny (audio)",kind:"audio",mb:9.1,dim:"AAC · 128 kbps",fmt:"M4A",watched:0}),
+   Object.assign(libItem("sintel"),{title:"Sintel · cliff",kind:"gif",dur:4,mb:1.8,dim:"480×204",fmt:"GIF · 12 fps"})
+  ],
+  filter:"all",playing:null,speed:1,loopOn:false,pip:null,
+  studio:null,tool:null,trim:{a:.18,b:.62},job:null,opt:{fmt:"M4A",br:"192",gw:"480",gfps:"12",gfmt:"GIF",part:"60",cmp:"480p",dim:true},
+  homeBg:{key:"orion"},dimBg:false,showCard:true,showCW:true,
+  sheet:null,dlg:null,other:null,ctx:false,
+  tests:{},log:[]
+ };
+}
+S=fresh();
+S.studio=S.lib[0].id;
+
+/* ------------------------------------------------------------------------
+   Тест-план
+   ------------------------------------------------------------------------ */
+const TESTS=[
+ ["role","Перший запуск: онбординг → <b>Set as Home screen</b> → системний діалог → живий відеофон на головному."],
+ ["card","Скопіюй пряме посилання (Elephants Dream), натисни <b>Додому</b> → картка на головному → <b>Save</b>."],
+ ["hls","HLS-стрім: обери якість у шторці → сегменти збираються в один MP4."],
+ ["drm","Стрім із DRM: апка чесно каже, що зберегти не можна."],
+ ["blocked","YouTube / Instagram: пояснення в апці, картки на головному немає."],
+ ["discover","Discover: збережи фільм із суспільного надбання або CC."],
+ ["trim","Studio → Trim: обріж відео ручками й збережи копію."],
+ ["audio","Studio → Extract audio: звук у M4A."],
+ ["loop","Постав фрагмент відео як фон головного екрана."],
+ ["pip","PiP: відео в маленькому вікні поверх головного екрана."]
+];
+function test(k){if(S.tests[k])return;S.tests[k]=true;paintTests();log("✔ Тест: "+TESTS.find(t=>t[0]===k)[1].replace(/<[^>]+>/g,""),"g");}
+function paintTests(){
+ $("#tests").innerHTML=TESTS.map(t=>'<li class="'+(S.tests[t[0]]?"ok":"")+'"><i></i><span>'+t[1]+'</span></li>').join("");
+ $("#prog").innerHTML="<b>"+Object.keys(S.tests).length+"</b> / "+TESTS.length;
+}
+
+/* ------------------------------------------------------------------------
+   Журнал і тост
+   ------------------------------------------------------------------------ */
+function log(text,cls){
+ const d=new Date(),ts=pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds());
+ const el=document.createElement("div");el.className=cls||"";el.innerHTML='<span class="t">'+ts+'</span> '+esc(text);
+ logEl.appendChild(el);logEl.scrollTop=logEl.scrollHeight;
+}
+function toast(text,icon){
+ toastEl.innerHTML=(icon?ic(icon):"")+'<span>'+esc(text)+'</span>';toastEl.hidden=false;
+ clearTimeout(T.toast);T.toast=setTimeout(()=>{toastEl.hidden=true;},2400);
+}
+
+/* ------------------------------------------------------------------------
+   Дрібні будівельники
+   ------------------------------------------------------------------------ */
+function vid(src,poster,attrs,keep){return STATIC?'<img src="'+poster+'" alt="" '+(attrs||"")+'>':'<video src="'+src+'" poster="'+poster+'" muted loop autoplay playsinline '+(keep?'data-keep="'+keep+'" ':'')+(attrs||"")+'></video>';}
+function thumb(it,w,h,opt){
+ opt=opt||{};const th=it.th;const st='width:'+w+'px;height:'+h+'px;'+(th?'background-image:url('+th+')':'');
+ const g=it.kind==="audio"?'<span class="glyph" style="background:rgba(0,0,0,.45)">'+ic("music")+'</span>':!th?'<span class="glyph">'+ic("film")+'</span>':"";
+ return '<span class="thumb" style="'+st+'">'+g+(opt.kind?'<span class="kind">'+opt.kind+'</span>':"")+(it.dur&&!opt.nodur?'<span class="dur">'+fmtT(it.dur)+'</span>':"")+(it.watched?'<span class="prog-line" style="width:'+Math.round(it.watched*100)+'%"></span>':"")+'</span>';
+}
+function clock(){const d=new Date();return d.getHours()+":"+pad(d.getMinutes());}
+function dateStr(){return new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});}
+function libById(id){return S.lib.find(x=>x.id===id);}
+function activeDls(){return S.dls.filter(d=>d.phase!=="done"&&d.phase!=="fail");}
+function filmSaved(k){return S.lib.some(x=>x.film===k&&x.kind==="video");}
+function dlOfFilm(k){return S.dls.find(d=>d.film===k&&d.phase!=="done");}
+
+/* ------------------------------------------------------------------------
+   Екрани
+   ------------------------------------------------------------------------ */
+function screenHTML(){
+ switch(S.screen){
+  case "stock":return stockHTML();
+  case "splash":return '<div class="s splash">'+LOGO(0,"logo")+'<b>'+NAME+'</b><span>Video downloader</span></div>';
+  case "onb":return onbHTML();
+  case "role":return roleHTML();
+  case "req":return reqHTML();
+  case "app":return appHTML();
+  case "player":return playerHTML();
+  case "ed":return edHTML();
+  case "launcher":return launcherHTML();
+  case "other":return otherHTML();
+ }
+ return "";
+}
+
+/* системний лаунчер «до» */
+const APPS={phone:["Phone","#2E9E5B","phone"],msg:["Messages","#2F7BF6","msg"],browser:["Browser","#E2683C","globe"],cam:["Camera","#596273","cam"],mail:["Mail","#C93D3D","mail"],map:["Maps","#3AA17E","map"],cal:["Calendar","#4F6BED","cal"],clock:["Clock","#33363D","clock"],calc:["Calculator","#E08A2C","calc"],files:["Files","#3E8CD9","folder"],notes:["Notes","#E6B422","note"],store:["Store","#14966F","store"],game:["Arcade","#8B5CF6","game"],weather:["Weather","#3C8DE0","sun"],settings:["Settings","#5D6470","gear"],gallery:["Gallery","#D9487A","image"]};
+function appIcon(k,label){
+ if(k==="framefall")return '<button type="button" class="app-i" data-act="open-app">'+'<span class="ai" style="background:none;box-shadow:none">'+LOGO(48)+'</span><span>'+(label===false?"":NAME)+'</span></button>';
+ const a=APPS[k];return '<button type="button" class="app-i" data-act="launch" data-app="'+k+'"><span class="ai" style="background:'+a[1]+'">'+ic(a[2])+'</span><span>'+a[0]+'</span></button>';
+}
+function folderIcon(name,keys){return '<button type="button" class="app-i" data-act="drawer"><span class="ai fold">'+keys.slice(0,4).map(k=>'<i style="background:'+APPS[k][1]+'"></i>').join("")+'</span><span>'+name+'</span></button>';}
+function stockHTML(){
+ return '<div class="s ln stock"><div class="ln-in"><div class="clock">'+clock()+'</div><div class="date">'+dateStr()+'</div>'+
+  '<div class="apps">'+appIcon("gallery")+appIcon("files")+appIcon("weather")+appIcon("framefall")+appIcon("store")+appIcon("notes")+appIcon("calc")+appIcon("settings")+'</div>'+
+  '<div class="dock glass">'+appIcon("phone")+appIcon("msg")+appIcon("browser")+appIcon("cam")+appIcon("mail")+'</div></div></div>';
+}
+
+/* онбординг */
+const ONB=[
+ {h:"Copy a link.<br>Keep the video.",p:"Paste a link to a video file, a stream, Drive or Dropbox. "+NAME+" checks it and saves an MP4 to your phone.",art:()=>vid("media/v_ed.mp4","img/th_ed.jpg"),float:()=>'<div class="glass clipc" style="animation:none"><div class="top">'+thumb({th:"img/th_ed.jpg"},86,48,{nodur:1})+'<div class="meta"><small>Copied link · archive.org</small><b>Elephants Dream</b><span>MP4 · 360p · 67.8 MB</span></div></div><button class="btn-p sm" type="button" tabindex="-1">'+ic("save")+'Save video</button></div>'},
+ {h:"Your home,<br>in motion.",p:"Set any saved clip as a living background for your Home screen. Icons and widgets stay on top.",art:()=>vid("media/bg_orion.mp4","img/bg_orion.jpg"),float:()=>'<div style="text-align:center"><div class="clock" style="font-size:52px">'+clock()+'</div><div class="date" style="justify-content:center">'+dateStr()+'</div></div>'},
+ {h:"Cut, loop,<br>pull the sound.",p:"Trim a scene, make a GIF, split a video for Status or save the audio as M4A. All on your phone.",art:()=>vid("media/v_llama.mp4","img/th_llama.jpg"),float:()=>'<div class="glass" style="padding:10px;border-radius:18px"><div class="strip" style="background-image:url(img/strip_llama.jpg);height:44px"><span class="dim" style="left:0;width:22%"></span><span class="dim" style="right:0;width:30%"></span><span class="h" style="left:22%"></span><span class="h" style="right:30%"></span></div></div>'}
+];
+function onbHTML(){
+ const o=ONB[S.onb];
+ return '<div class="s onb"><div class="onb-art">'+o.art()+'<div class="onb-float">'+o.float()+'</div></div>'+
+  '<div class="onb-body"><div class="onb-step">0'+(S.onb+1)+' <span>/ 03</span></div><h2>'+o.h+'</h2><p>'+o.p+'</p>'+
+  '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><div class="dots">'+ONB.map((_,i)=>'<i class="'+(i===S.onb?"on":"")+'"></i>').join("")+'</div>'+
+  '<button class="btn-p sm" type="button" data-act="onb-next">'+(S.onb<2?"Next":"Continue")+ic("chev")+'</button></div></div></div>';
+}
+function roleHTML(){
+ return '<div class="s role"><div class="eyebrow">Home screen</div><h2>Make '+NAME+' your Home screen</h2>'+
+  '<div class="mini">'+vid(HOME_BG.orion.v,HOME_BG.orion.poster)+'<div class="glass"><span style="flex:1">Copied a video link · <b>Save</b></span>'+ic("save")+'</div></div>'+
+  '<ul><li><i>'+ic("clip")+'</i><span><b>Links wait for you</b>Copy a video link anywhere, press Home and it is ready to save.</span></li>'+
+  '<li><i>'+ic("film")+'</i><span><b>A background that moves</b>Pick a scene from your videos. It plays muted and loops.</span></li>'+
+  '<li><i>'+ic("play")+'</i><span><b>Continue watching</b>Your last videos sit right on Home.</span></li></ul>'+
+  '<div class="push"><button class="btn-p" type="button" data-act="ask-role">'+ic("homeic")+'Set as Home screen</button>'+
+  (S.homeReq?'':'<button class="btn-t" type="button" data-act="role-later">Maybe later</button>')+
+  '<small>You can switch back to your old Home screen anytime in Settings.</small></div></div>';
+}
+function reqHTML(){
+ return '<div class="s req">'+LOGO(72)+'<h2 class="big" style="font-size:22px">'+NAME+' works as your Home screen</h2><p class="muted" style="max-width:260px;margin:0">Without it, copied links can\'t wait for you on Home. Set it once, switch back anytime in Settings.</p><button class="btn-p" type="button" data-act="ask-role">'+ic("homeic")+'Set as Home screen</button></div>';
+}
+
+/* апка */
+function appHTML(){
+ const tab=S.tab, body={save:saveTab,discover:discoverTab,library:libraryTab,studio:studioTab}[tab]();
+ return '<div class="s app"><div class="ascroll" id="ascroll">'+body+'</div>'+
+  '<nav class="tabbar">'+[["save","save","Save"],["discover","compass","Discover"],["library","grid","Library"],["studio","wand","Studio"]].map(t=>'<button type="button" class="'+(tab===t[0]?"on":"")+'" data-act="tab" data-tab="'+t[0]+'">'+ic(t[1])+t[2]+'</button>').join("")+'</nav></div>';
+}
+function resHTML(){
+ if(S.probing)return '<div class="res info"><span class="spin"></span><span>Checking the link…</span></div>';
+ const r=S.res;if(!r)return "";
+ if(r.kind==="none")return '<div class="res bad">'+ic("alert")+'<div><b>That isn\'t a link</b><span>Paste a full address that starts with https://</span></div></div>';
+ if(r.kind==="blocked")return '<div class="res bad">'+ic("lock")+'<div><b>'+esc(r.svc)+' videos can\'t be saved</b><span>'+esc(r.svc)+' doesn\'t allow downloads in its terms. '+NAME+' saves files you have the rights to: direct links, your cloud files and free libraries.</span></div></div>';
+ if(r.kind==="soft")return '<div class="res soft">'+ic("info")+'<div><b>Vimeo: only if the creator allows it</b><span>Open the video on Vimeo and tap Download if the creator turned it on. Then share the file to '+NAME+'.</span></div></div>';
+ if(r.kind==="page")return '<div class="res soft">'+ic("info")+'<div><b>No video file on this page</b><span>Copy the link of the video itself (it ends in .mp4, .webm or .m3u8), or use Share → '+NAME+'.</span></div></div>';
+ if(r.drm)return '<div class="res bad">'+ic("shield")+'<div><b>This stream is protected</b><span>It uses DRM encryption, so it can only play in its own app. '+NAME+' doesn\'t break protection.</span></div></div>';
+ return "";
+}
+function queueHTML(){
+ const act=activeDls();if(!act.length)return "";
+ return '<section class="sec"><div class="sec-h"><h3>Saving <em>'+act.length+'</em></h3></div>'+act.map(d=>'<div class="q-it">'+thumb(d,64,36,{nodur:1})+'<div class="q-meta"><div class="q-top"><b>'+esc(d.title)+'</b><span data-dltxt="'+d.id+'">'+Math.floor(d.p)+'%</span></div><div class="bar"><i data-dlbar="'+d.id+'" style="width:'+d.p+'%"></i></div><span class="q-sub" data-dlsub="'+d.id+'">'+dlSub(d)+'</span></div><button class="icb" type="button" data-act="dl-cancel" data-id="'+d.id+'" aria-label="Cancel">'+ic("x")+'</button></div>').join("")+'</section>';
+}
+function dlSub(d){
+ if(d.phase==="wait")return "Waiting for Wi-Fi · "+fmtMB(d.mb);
+ if(d.phase==="mux")return "Joining "+d.segs+" segments into MP4…";
+ const done=d.p*d.mb/100;
+ return (d.segs?"seg "+Math.floor(d.p*d.segs/100)+"/"+d.segs+" · ":"")+fmtMB(done)+" of "+fmtMB(d.mb)+" · "+d.speed.toFixed(1)+" MB/s";
+}
+function saveTab(){
+ const cw=S.lib.filter(x=>x.kind==="video"&&x.watched>0&&x.watched<.98);
+ const tot=S.lib.reduce((a,x)=>a+x.mb,0), hrs=S.lib.filter(x=>x.kind==="video").reduce((a,x)=>a+x.dur,0)/3600;
+ return '<header class="ahead"><div style="display:flex;align-items:center;gap:9px">'+LOGO(30)+'<b style="font:800 18px var(--f-disp);letter-spacing:-.03em">'+NAME+'</b></div><div style="display:flex;gap:8px"><button class="icb" type="button" data-act="settings" aria-label="Settings">'+ic("gear")+'</button></div></header>'+
+  (!S.isHome?'<button type="button" class="res soft" data-act="role-again" style="border:1px solid rgba(124,200,255,.28);cursor:pointer;text-align:left;width:100%">'+ic("homeic")+'<div><b>Make '+NAME+' your Home screen</b><span>Copied links will wait for you on Home.</span></div></button>':"")+
+  '<form class="paste" id="pasteForm"><h3>Paste a video link</h3>'+
+  '<div class="pin">'+ic("link")+'<input id="linkIn" type="url" inputmode="url" autocomplete="off" placeholder="https://…/video.mp4" value="'+esc(S.input)+'" aria-label="Video link"><button class="pbtn" type="button" data-act="paste">'+ic("clip")+'Paste</button></div>'+
+  resHTML()+
+  '<button class="btn-p" type="submit">'+ic("save")+'Check & save</button>'+
+  '<div class="srcs"><span>'+ic("film")+'Video files</span><span>'+ic("layers")+'HLS streams</span><span>'+ic("cloud")+'Drive · Dropbox</span><span>'+ic("globe")+'Archive · NASA · PeerTube</span></div></form>'+
+  queueHTML()+
+  (cw.length?'<section class="sec"><div class="sec-h"><h3>Continue watching</h3><button type="button" data-act="tab" data-tab="library">Library</button></div><div class="hs">'+cw.map(x=>'<button type="button" class="cw" data-act="play" data-id="'+x.id+'">'+thumb(x,150,84)+'<b>'+esc(x.title)+'</b><span class="muted">'+fmtT(x.dur*(1-x.watched))+' left</span></button>').join("")+'</div></section>':"")+
+  '<section class="sec"><div class="sec-h"><h3>Studio</h3><button type="button" data-act="tab" data-tab="studio">All tools</button></div><div class="tools4">'+
+  [["trim","scissors","Trim"],["audio","music","Audio"],["gif","gif","GIF"],["status","split","Status"]].map(t=>'<button type="button" class="tl" data-act="tool" data-tool="'+t[0]+'"><i>'+ic(t[1])+'</i>'+t[2]+'</button>').join("")+'</div></section>'+
+  '<section class="stats"><div><b>'+S.lib.length+'</b><span>files</span></div><div><b>'+(tot>=1000?(tot/1000).toFixed(1)+" GB":Math.round(tot)+" MB")+'</b><span>on phone</span></div><div><b>'+hrs.toFixed(1)+' h</b><span>to watch</span></div></section>';
+}
+function dlBtn(k){
+ const d=dlOfFilm(k);
+ if(d){const c=2*Math.PI*13,off=c*(1-d.p/100);return '<button type="button" class="dlb" data-act="cat-dl" data-film="'+k+'" aria-label="Saving"><svg class="ring" viewBox="0 0 30 30"><circle cx="15" cy="15" r="13" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="2.5"/><circle data-ring="'+d.id+'" cx="15" cy="15" r="13" fill="none" stroke="#FFB547" stroke-width="2.5" stroke-dasharray="'+c.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'" stroke-linecap="round"/></svg>'+ic("x")+'</button>';}
+ if(filmSaved(k))return '<button type="button" class="dlb done" data-act="play-film" data-film="'+k+'" aria-label="Play">'+ic("check")+'</button>';
+ return '<button type="button" class="dlb" data-act="cat-dl" data-film="'+k+'" aria-label="Save">'+ic("save")+'</button>';
+}
+function card(k){const f=FILMS[k];return '<div class="card-v"><button type="button" class="lib-it" data-act="cat-open" data-film="'+k+'" style="gap:0">'+thumb(f,168,94)+'</button><div class="meta"><div style="min-width:0;display:flex;flex-direction:column;gap:2px"><b>'+esc(f.title)+'</b><span class="lic">'+esc(f.by)+' · '+f.year+'</span></div>'+dlBtn(k)+'</div><span class="chip '+(f.pd?"g":"b")+'" style="align-self:flex-start">'+ic("shield")+esc(f.lic)+'</span></div>';}
+function discoverTab(){
+ const f=FILMS.sintel;
+ return '<header class="ahead"><h2 class="big">Discover</h2><span class="chip g">'+ic("shield")+'Free to keep</span></header>'+
+  '<div class="feat" style="background-image:url('+f.th+')"><span class="chip w" style="align-self:flex-start">Open movie · '+f.year+'</span><h3>'+f.title+'</h3><p>A girl, a baby dragon and a long search. By the Blender Foundation.</p><div class="row"><span class="chip b">'+ic("shield")+f.lic+'</span>'+(filmSaved("sintel")?'<button class="btn-p sm" type="button" data-act="play-film" data-film="sintel">'+ic("play")+'Watch</button>':'<button class="btn-p sm" type="button" data-act="cat-dl" data-film="sintel">'+ic("save")+'Save · '+fmtMB(f.files[1].mb)+'</button>')+'</div></div>'+
+  '<section class="sec"><div class="sec-h"><h3>Open movies</h3><span class="muted">Creative Commons</span></div><div class="hs">'+OPEN.filter(k=>k!=="sintel").map(card).join("")+'</div></section>'+
+  '<section class="sec"><div class="sec-h"><h3>Public domain</h3><span class="muted">Film history & NASA</span></div><div class="hs">'+PD.map(card).join("")+'</div></section>'+
+  '<p class="muted" style="margin:0">Every title here is public domain or Creative Commons. '+NAME+' saves the credits with each file. Sources: Internet Archive, NASA Image Library.</p>';
+}
+const KIND_TAG={video:"",audio:"Audio",gif:"GIF",status:"Status",frame:"Frame",clip:"Clip"};
+function libraryTab(){
+ const F=[["all","All"],["video","Videos"],["audio","Audio"],["gif","GIFs"],["status","Status"]];
+ const items=S.lib.filter(x=>S.filter==="all"||x.kind===S.filter||(S.filter==="video"&&x.kind==="clip"));
+ const tot=S.lib.reduce((a,x)=>a+x.mb,0);
+ return '<header class="ahead"><h2 class="big">Library</h2><button class="icb" type="button" data-act="noop" aria-label="Search">'+ic("search")+'</button></header>'+
+  '<div class="storage"><div class="row"><span>Movies/'+NAME+'</span><b>'+fmtMB(tot)+'</b></div><div class="bar"><i style="width:'+Math.min(100,tot/400*10).toFixed(1)+'%"></i></div><div class="row"><span>'+S.lib.length+' files</span><span>38.4 GB free</span></div></div>'+
+  '<div class="chips">'+F.map(f=>'<button type="button" class="'+(S.filter===f[0]?"on":"")+'" data-act="filter" data-f="'+f[0]+'">'+f[1]+'</button>').join("")+'</div>'+
+  (items.length?'<div class="grid2">'+items.map(x=>'<div class="lib-it"><button type="button" style="all:unset;cursor:pointer;display:block" data-act="play" data-id="'+x.id+'" aria-label="Play '+esc(x.title)+'">'+thumb(x,0,0,{kind:KIND_TAG[x.kind]}).replace('width:0px;height:0px;','')+'</button><div class="t"><div style="min-width:0;display:flex;flex-direction:column;gap:2px"><b>'+esc(x.title)+'</b><span>'+esc(x.fmt.split(" · ")[0])+' · '+fmtMB(x.mb)+'</span></div><button class="more" type="button" data-act="menu" data-id="'+x.id+'" aria-label="More">'+ic("more")+'</button></div></div>').join("")+'</div>':
+  '<div class="res info" style="flex-direction:column;align-items:flex-start">'+ic("film")+'<div><b>Nothing here yet</b><span class="muted">Make one in Studio, it will show up here.</span></div></div>');
+}
+const TOOLS=[["trim","scissors","Trim","Keep the part you need"],["audio","music","Extract audio","Save the sound as M4A"],["gif","gif","Make GIF","Up to 6 seconds, loops forever"],["status","split","Split for Status","Equal parts for Status and Stories"],["frame","image","Grab a frame","Save any moment as a photo"],["compress","compress","Compress","Smaller file for sending"],["loop","homeic","Home background","Loop a scene behind your icons"]];
+function studioTab(){
+ const src=libById(S.studio)||S.lib[0];
+ return '<header class="ahead"><h2 class="big">Studio</h2><span class="chip">'+ic("wand")+'On your phone</span></header>'+
+  '<div class="studio-hero">'+thumb(src,112,63)+'<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span class="muted">Working on</span><b style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(src.title)+'</b><span class="lic">'+esc(src.fmt)+' · '+fmtMB(src.mb)+'</span></div><button class="pbtn" type="button" data-act="pick-src">Change</button></div>'+
+  '<div class="tool-list">'+TOOLS.map(t=>'<button type="button" class="tool" data-act="tool" data-tool="'+t[0]+'"><i>'+ic(t[1])+'</i><div><b>'+t[2]+'</b><span>'+t[3]+'</span></div><span class="go">'+ic("chev")+'</span></button>').join("")+'</div>';
+}
+
+/* плеєр */
+function playerHTML(){
+ const x=libById(S.playing)||S.lib[0], f=FILMS[x.film];
+ const audio=x.kind==="audio";
+ return '<div class="s player"><div class="pv">'+(audio?'<div style="position:absolute;inset:0;background:url('+x.th+') center/cover;filter:blur(18px) brightness(.55)"></div><div style="position:absolute;inset:0;display:grid;place-items:center">'+thumb(x,150,84,{nodur:1})+'</div>':'')+
+  '<video id="pvid" src="'+x.v+'" poster="'+x.th+'" playsinline '+(x.kind==="gif"?"muted loop autoplay":"")+' style="'+(audio?"opacity:0":"")+'"></video>'+
+  '<div class="ov" id="pov"><div class="top"><button type="button" data-act="back" aria-label="Back">'+ic("back")+'</button><span><button type="button" data-act="pip" aria-label="Picture in picture">'+ic("pip")+'</button></span></div>'+
+  '<button type="button" data-act="seek" data-d="-10" aria-label="Back 10 s">'+ic("rew")+'</button><button type="button" class="mid" data-act="pp" id="ppBtn" aria-label="Play or pause">'+icf("pause")+'</button><button type="button" data-act="seek" data-d="10" aria-label="Forward 10 s">'+ic("fwd")+'</button>'+
+  '<div class="pbar"><span id="pcur">0:00</span><div class="bar" data-act="scrub"><i id="pfill" style="width:0%"></i></div><span id="pdur">0:00</span></div></div></div>'+
+  '<div class="pl-body"><div><h2>'+esc(x.title)+'</h2><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><span class="chip w">'+esc(f.by)+' · '+f.year+'</span><span class="chip '+(f.pd?"g":"b")+'">'+ic("shield")+esc(x.lic)+'</span></div></div>'+
+  '<div class="pl-acts">'+
+   '<button type="button" data-act="speed">'+ic("gauge")+'<span id="spdL">'+S.speed+'×</span></button>'+
+   '<button type="button" data-act="loop-t" class="'+(S.loopOn?"on":"")+'">'+ic("loop")+'Loop</button>'+
+   '<button type="button" data-act="pip">'+ic("pip")+'PiP</button>'+
+   '<button type="button" data-act="to-studio" data-id="'+x.id+'">'+ic("wand")+'Studio</button>'+
+   '<button type="button" data-act="tool" data-tool="loop" data-id="'+x.id+'">'+ic("homeic")+'Home bg</button>'+
+   '<button type="button" data-act="tool" data-tool="audio" data-id="'+x.id+'">'+ic("music")+'Audio</button>'+
+   '<button type="button" data-act="share">'+ic("share")+'Share</button>'+
+   '<button type="button" data-act="menu" data-id="'+x.id+'">'+ic("more")+'More</button></div>'+
+  '<div class="kv"><span>File</span><b>'+esc(x.fmt)+'</b><span>Size</span><b>'+fmtMB(x.mb)+' · '+esc(x.dim)+'</b><span>Saved to</span><b>Movies/'+NAME+'</b><span>Source</span><b>'+esc(x.src)+'</b><span>Credit</span><b>'+esc(f.title+" © "+f.by)+'</b></div>'+
+  '<p class="muted" style="margin:0">Прототип: у плеєрі грає справжній 10-секундний фрагмент фільму.</p></div></div>';
+}
+
+/* редактор Studio */
+const TOOL_T={trim:"Trim",audio:"Extract audio",gif:"Make GIF",status:"Split for Status",frame:"Grab a frame",compress:"Compress",loop:"Home background"};
+function seg(key,vals,fmt){return '<div class="seg">'+vals.map(v=>'<button type="button" class="'+(S.opt[key]===v?"on":"")+'" data-act="opt" data-k="'+key+'" data-v="'+v+'">'+(fmt?fmt(v):v)+'</button>').join("")+'</div>';}
+function edHTML(){
+ const x=libById(S.studio)||S.lib[0], f=FILMS[x.film], tool=S.tool;
+ const vdur=x.film==="bbb"?16:10;
+ const a=S.trim.a*vdur,b=S.trim.b*vdur;
+ const strip=(range)=>'<div class="strip" id="strip" style="background-image:url('+f.strip+')">'+(range?'<span class="dim" style="left:0;width:'+(S.trim.a*100)+'%"></span><span class="dim" style="right:0;width:'+((1-S.trim.b)*100)+'%"></span><span class="sel" style="left:'+(S.trim.a*100)+'%;right:'+((1-S.trim.b)*100)+'%"></span><span class="h" data-h="a" style="left:calc('+(S.trim.a*100)+'% - 8px)"></span><span class="h" data-h="b" style="left:calc('+(S.trim.b*100)+'% - 8px)"></span>':'')+'<span class="ph" id="ph" style="left:0"></span></div>';
+ const tline='<div class="tline"><span>In <b id="tA">'+fmtT1(a)+'</b></span><span>Length <b id="tL">'+fmtT1(b-a)+'</b></span><span>Out <b id="tB">'+fmtT1(b)+'</b></span></div>';
+ let body="",cta="",est="";
+ const scale=x.dur/vdur;
+ if(tool==="trim"){body=strip(true)+tline+'<div class="tg"><div>Fast trim<small>Cuts on keyframes, no quality loss</small></div><button type="button" class="sw on" aria-label="Fast trim"></button></div>';est=fmtMB(x.mb*(S.trim.b-S.trim.a));cta="Save trimmed copy";}
+ if(tool==="audio"){body='<div class="opt"><span>Format</span>'+seg("fmt",["M4A","WAV"])+'</div><div class="opt"><span>Quality</span>'+seg("br",["128","192","256"],v=>v+" kbps")+'</div><div class="res info">'+ic("info")+'<span>MP3 isn\'t built into Android. M4A plays everywhere, including WhatsApp and iPhone.</span></div>';const sec=x.dur;est=S.opt.fmt==="WAV"?fmtMB(sec*176.4/1000):fmtMB(sec*(+S.opt.br)/8/1000);cta="Extract audio";}
+ if(tool==="gif"){if(S.trim.b-S.trim.a>.6)S.trim.b=S.trim.a+.6;body=strip(true)+tline+'<div class="gifp"><video src="'+x.v+'" poster="'+x.th+'" muted loop autoplay playsinline id="gifv"></video></div><div class="opt"><span>Format</span>'+seg("gfmt",["GIF","MP4 loop"])+'</div><div class="opt"><span>Width</span>'+seg("gw",["320","480"],v=>v+" px")+'</div><div class="opt"><span>Frame rate</span>'+seg("gfps",["10","12","15"],v=>v+" fps")+'</div>';est=S.opt.gfmt==="MP4 loop"?fmtMB((S.trim.b-S.trim.a)*vdur*.12):fmtMB((S.trim.b-S.trim.a)*vdur*(+S.opt.gfps)*(+S.opt.gw)*(+S.opt.gw)*.5625*.09/1e6*8);cta=S.opt.gfmt==="MP4 loop"?"Make loop":"Make GIF";}
+ if(tool==="status"){const len=+S.opt.part, n=Math.ceil(x.dur/len);body='<div class="opt"><span>Part length</span>'+seg("part",["30","60","90"],v=>v+" s")+'</div><div class="parts">'+Array.from({length:Math.min(n,8)},(_,i)=>'<div><b>'+(i+1)+'</b>'+fmtT(i*len)+'</div>').join("")+(n>8?'<div><b>+'+(n-8)+'</b>more</div>':'')+'</div><p class="muted" style="margin:0">'+n+' parts of '+len+' s from '+fmtT(x.dur)+'. Post them in order and the video plays through.</p>';est=n+" files";cta="Split into "+n+" parts";}
+ if(tool==="frame"){body=strip(false)+'<div class="tline"><span>Frame at <b id="tA">0:00.0</b></span><span>'+esc(x.dim)+'</span></div><div id="frameOut"></div>';est="JPG · "+esc(x.dim);cta="Save this frame";}
+ if(tool==="compress"){const r={"720p":2.2,"480p":1.1,"360p":.7}[S.opt.cmp];body='<div class="opt"><span>Target</span>'+seg("cmp",["720p","480p","360p"])+'</div><div class="res info">'+ic("info")+'<span>Good for sending in messengers. The original stays in your Library.</span></div>';est=fmtMB(Math.min(x.mb*.9,x.dur*r/8));cta="Compress";}
+ if(tool==="loop"){if(S.trim.b-S.trim.a>1)S.trim.b=Math.min(1,S.trim.a+.8);body=strip(true)+tline+'<div class="tg"><div>Dim for icons<small>Darker edges keep labels readable</small></div><button type="button" class="sw '+(S.opt.dim?"on":"")+'" data-act="opt-dim" aria-label="Dim"></button></div><div class="res info">'+ic("info")+'<span>Plays muted and pauses when the screen is off.</span></div>';est=fmtT1(b-a)+" loop";cta="Set as Home background";}
+ const job=S.job&&S.job.tool===tool?S.job:null;
+ const prev=tool==="loop"?'<div class="ed-v" style="aspect-ratio:9/12"><video id="edv" src="'+x.v+'" poster="'+x.th+'" muted playsinline autoplay style="object-fit:cover"></video><div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35),transparent 40%,rgba(0,0,0,.5))"></div><div style="position:absolute;left:14px;top:12px"><div class="clock" style="font-size:40px">'+clock()+'</div></div><div class="apps" style="position:absolute;left:12px;right:12px;bottom:10px;gap:6px">'+["phone","msg","browser","cam"].map(k=>'<span class="ai" style="width:34px;height:34px;border-radius:11px;margin:auto;background:'+APPS[k][1]+'">'+ic(APPS[k][2])+'</span>').join("")+'</div></div>':
+  (tool==="gif"?"":'<div class="ed-v"><video id="edv" src="'+x.v+'" poster="'+x.th+'" muted playsinline autoplay '+(tool==="frame"?'crossorigin="anonymous"':'')+'></video><span class="tc" id="edtc">0:00.0</span></div>');
+ return '<div class="s ed"><div class="ed-head"><button class="icb" type="button" data-act="back" aria-label="Back">'+ic("back")+'</button><h2>'+TOOL_T[tool]+'</h2><span class="lic" style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(x.title)+'</span></div>'+prev+
+  '<div class="ed-body">'+body+(job?procHTML(job):'<div class="est"><span>Result</span><b>'+est+'</b></div><button class="btn-p" type="button" data-act="run-tool">'+ic(TOOLS.find(t=>t[0]===tool)[1])+cta+'</button>')+'</div></div>';
+}
+function procHTML(j){
+ if(!j.done)return '<div class="proc"><div class="top"><b>'+(j.tool==="loop"?"Preparing loop…":"Working on your phone…")+'</b><span id="jobP">'+Math.floor(j.p)+'%</span></div><div class="bar"><i id="jobBar" style="width:'+j.p+'%"></i></div><span class="muted">'+esc(j.what)+'</span></div>';
+ return '<div class="res info" style="border:1px solid rgba(71,224,160,.35);background:rgba(71,224,160,.08)">'+ic("check")+'<div><b style="color:#7DEBBB">'+esc(j.doneText)+'</b><span class="muted">'+esc(j.doneSub)+'</span></div></div><div style="display:flex;gap:8px"><button class="btn-g sm" type="button" data-act="play" data-id="'+(j.newId||"")+'" style="flex:1">'+ic("play")+'Open</button><button class="btn-g sm" type="button" data-act="share" style="flex:1">'+ic("share")+'Share</button><button class="btn-g sm" type="button" data-act="job-again" style="flex:1">'+ic("wand")+'Again</button></div>';
+}
+
+/* наш головний екран */
+function launcherHTML(){
+ const bg=S.homeBg.key?HOME_BG[S.homeBg.key]:null, film=S.homeBg.film?FILMS[S.homeBg.film]:null;
+ const v=bg?bg.v:film.v, poster=bg?bg.poster:film.th;
+ const act=activeDls(), cw=S.lib.filter(x=>x.kind==="video"&&x.watched>0&&x.watched<.98).slice(0,3);
+ const avg=act.length?Math.floor(act.reduce((a,d)=>a+d.p,0)/act.length):0;
+ return '<div class="s ln'+(S.dimBg?" dim1":"")+'">'+vid(v,poster,'class="bgv" id="bgv"',"bg:"+v)+
+  '<div class="ln-in"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="clock">'+clock()+'</div><div class="date">'+dateStr()+(act.length?'<span class="chip" data-lnchip="1">'+ic("save")+act.length+' saving · <span id="lnAvg">'+avg+'</span>%</span>':"")+'</div></div><button type="button" class="icb glass" data-act="ln-menu" aria-label="Home settings" style="border-radius:50%">'+ic("more")+'</button></div>'+
+  (S.card&&S.showCard?clipCardHTML():"")+
+  (S.showCW&&cw.length&&!S.card?'<div class="glass cwl"><div class="h"><span>Continue watching</span><span>'+cw.length+'</span></div><div class="row">'+cw.map(x=>'<button type="button" data-act="play" data-id="'+x.id+'">'+thumb(x,0,0,{nodur:1}).replace('width:0px;height:0px;','')+'<b>'+esc(x.title)+'</b></button>').join("")+'</div></div>':"")+
+  '<div class="apps">'+folderIcon("Social",["msg","mail","phone","cam"])+folderIcon("Tools",["calc","clock","files","notes"])+appIcon("gallery")+appIcon("weather")+folderIcon("Google",["map","store","cal","browser"])+appIcon("settings")+appIcon("game")+appIcon("files")+'</div>'+
+  '<button type="button" class="swipe" data-act="drawer">'+ic("up")+'All apps</button>'+
+  '<div class="dock glass">'+appIcon("phone")+appIcon("msg")+appIcon("browser")+appIcon("cam")+appIcon("framefall",false)+'</div></div>'+
+  (S.pip?pipHTML():"")+
+  (S.lnMenu?'<div class="glass ln-menu"><button type="button" data-act="bg-pick">'+ic("film")+'Change video background</button><button type="button" data-act="dim-t">'+ic("sun")+(S.dimBg?"Undim background":"Dim background")+'</button><button type="button" data-act="cw-t">'+ic("play")+(S.showCW?"Hide Continue watching":"Show Continue watching")+'</button><button type="button" data-act="settings">'+ic("gear")+NAME+' settings</button></div>':"")+
+  (S.drawer?drawerHTML():"")+'</div>';
+}
+function clipCardHTML(){
+ const c=S.card, i=c.info;
+ let acts="";
+ if(c.state==="ready")acts='<div class="acts"><button class="btn-p sm" type="button" data-act="card-save" style="flex:1">'+ic("save")+'Save · '+(i.opts[0].mb?fmtMB(i.opts[0].mb):i.opts[0].l)+'</button><button class="btn-g sm" type="button" data-act="card-opts">Quality</button></div>';
+ if(c.state==="dl"){const d=S.dls.find(z=>z.id===c.dlId)||{p:100};acts='<div class="bar"><i data-dlbar="'+c.dlId+'" style="width:'+d.p+'%"></i></div><span class="muted" data-dlsub="'+c.dlId+'" style="color:#E6D3C4">'+(d.title?dlSub(d):"")+'</span>';}
+ if(c.state==="done")acts='<div class="acts"><button class="btn-p sm" type="button" data-act="play" data-id="'+c.libId+'" style="flex:1">'+ic("play")+'Watch now</button><button class="btn-g sm" type="button" data-act="card-x">Done</button></div>';
+ return '<div class="glass clipc"><div class="top">'+thumb({th:i.th,dur:i.dur},86,48)+'<div class="meta"><small>'+(c.state==="done"?"Saved":"Copied link")+' · '+esc(c.res.host)+'</small><b>'+esc(i.title)+'</b><span>'+esc(KIND_LABEL[c.res.kind])+' · '+esc(i.opts[0].l)+(i.opts[0].mb?' · '+fmtMB(i.opts[0].mb):"")+'</span></div>'+(c.state==="ready"?'<button type="button" class="x" data-act="card-x" aria-label="Dismiss">'+ic("x")+'</button>':"")+'</div>'+acts+'</div>';
+}
+function pipHTML(){const x=libById(S.pip);return '<button type="button" class="pipw" data-act="pip-open" aria-label="Back to player" style="position:absolute;right:12px;bottom:118px;z-index:4;width:168px;aspect-ratio:16/9;border-radius:14px;overflow:hidden;border:0;padding:0;box-shadow:0 14px 30px -8px rgba(0,0,0,.8);background:#000;cursor:pointer">'+vid(x.v,x.th,'style="width:100%;height:100%;object-fit:cover;display:block"',"pip:"+x.v)+'</button>';}
+function drawerHTML(){
+ const g=[["Media",["gallery","cam","game"]],["Social",["msg","mail","phone"]],["Tools",["calc","clock","files","notes","settings","weather"]],["Google",["map","store","cal","browser"]]];
+ return '<div class="drawer"><div class="dr"><div class="srch">'+ic("search")+'Search apps</div><div class="apps">'+appIcon("framefall")+appIcon("browser")+appIcon("msg")+appIcon("cam")+'</div>'+g.map(x=>'<h4>'+x[0]+'</h4><div class="apps">'+x[1].map(k=>appIcon(k)).join("")+'</div>').join("")+'<button class="btn-g sm" type="button" data-act="drawer-x" style="align-self:center">'+ic("chev")+'Close</button></div></div>';
+}
+
+/* інші апки: месенджер і браузер */
+function otherHTML(){
+ if(S.other==="browser")return '<div class="s web"><div class="url">'+ic("lock")+'archive.org/details/ElephantsDream</div><div class="pg"><img src="img/th_ed.jpg" alt=""><h3>Elephants Dream (2006)</h3><p style="margin:0;color:#5c524a">The first open movie, made with Blender. License: CC BY 3.0. Download options:</p>'+
+  '<div class="lnk"><span style="flex:1">https://archive.org/download/ElephantsDream/ed_hd.mp4</span><button type="button" data-act="copy-in" data-url="https://archive.org/download/ElephantsDream/ed_hd.mp4">Copy</button></div>'+
+  '<div class="lnk"><span style="flex:1">MPEG4 · 640×360 · 67.8 MB</span><button type="button" data-act="ctx">Select</button></div>'+
+  '<p style="margin:0;color:#7a6f66;font-size:12.5px">Tip: long-press a link → '+NAME+' in the text menu.</p></div>'+(S.ctx?'<div class="ctxm"><button type="button" data-act="ctx-x">Copy</button><button type="button" data-act="ctx-x">Share</button><button type="button" class="kin" data-act="ctx-kin">'+NAME+'</button></div>':"")+'</div>';
+ return '<div class="s web" style="background:#EFE9E3"><div class="url" style="justify-content:space-between">'+ic("back")+'<b style="flex:1">Mia</b>'+ic("more")+'</div><div class="pg">'+
+  bubble("Found the llama short for the kids 🦙","l")+bubble('<span style="word-break:break-all">https://commons.wikimedia.org/wiki/File:Caminandes_3_-_Llamigos_-_Blender_Foundation.webm</span>',"l",'https://commons.wikimedia.org/wiki/File:Caminandes_3_-_Llamigos_-_Blender_Foundation.webm')+
+  bubble("And the trailer you asked about","l")+bubble('<span style="word-break:break-all">https://youtu.be/aqz-KE-bpKQ</span>',"l","https://youtu.be/aqz-KE-bpKQ")+bubble("thanks! saving both","r")+'</div></div>';
+}
+function bubble(h,side,copy){return '<div style="align-self:'+(side==="l"?"flex-start":"flex-end")+';max-width:84%;background:'+(side==="l"?"#fff":"#FFD9B8")+';border-radius:16px;padding:9px 12px;font-size:13.5px;display:flex;flex-direction:column;gap:6px">'+h+(copy?'<button type="button" data-act="copy-in" data-url="'+esc(copy)+'" style="align-self:flex-start;border:0;background:#1d1915;color:#fff;border-radius:8px;padding:5px 9px;font:600 11.5px system-ui;cursor:pointer">Copy link</button>':"")+'</div>';}
+
+/* шторки й діалоги */
+function sheetHTML(){
+ const sh=S.sheet;if(!sh)return "";
+ let inner="";
+ if(sh.type==="link"){
+  const i=sh.info;
+  inner='<div class="sh-top">'+thumb({th:i.th,dur:i.dur},118,66)+'<div class="meta"><b>'+esc(i.title)+'</b><span>'+esc(KIND_LABEL[sh.res.kind])+' · '+esc(sh.res.host)+'</span>'+(i.lic?'<span class="chip '+(/Public/.test(i.lic)?"g":"b")+'" style="align-self:flex-start">'+ic("shield")+esc(i.lic)+'</span>':"")+'</div></div>'+
+   '<div class="qlist">'+i.opts.map((o,k)=>'<button type="button" class="qrow '+(sh.q===k?"on":"")+'" data-act="q" data-k="'+k+'"><span class="rd"></span><div><b>'+esc(o.l)+'</b><span>'+esc(o.dim)+' · '+esc(o.fmt)+'</span></div><em>'+(o.mb?fmtMB(o.mb):"—")+'</em></button>').join("")+'</div>'+
+   (i.noLic?'<div class="res info">'+ic("info")+'<span>Save only videos you made or have permission to keep.</span></div>':'<div class="res info">'+ic("shield")+'<span>The credit and license are saved with the file.</span></div>')+
+   (S.wifiOnly?'<div class="res soft">'+ic("wifi")+'<span>Wi-Fi only is on. Saving starts when you connect.</span></div>':"")+
+   '<button class="btn-p" type="button" data-act="sheet-save">'+ic("save")+'Save to Movies/'+NAME+'</button>';
+ }
+ if(sh.type==="menu"){
+  const x=libById(sh.id);
+  inner='<div class="sh-top">'+thumb(x,118,66)+'<div class="meta"><b>'+esc(x.title)+'</b><span>'+esc(x.fmt)+' · '+fmtMB(x.mb)+'</span></div></div><div class="menu-l">'+
+   '<button type="button" data-act="play" data-id="'+x.id+'">'+ic("play")+'Play</button>'+
+   (x.kind==="video"?'<button type="button" data-act="tool" data-tool="loop" data-id="'+x.id+'">'+ic("homeic")+'Set as Home background</button><button type="button" data-act="tool" data-tool="trim" data-id="'+x.id+'">'+ic("scissors")+'Trim</button><button type="button" data-act="tool" data-tool="audio" data-id="'+x.id+'">'+ic("music")+'Extract audio</button>':"")+
+   '<button type="button" data-act="share">'+ic("share")+'Share</button><button type="button" class="red" data-act="del" data-id="'+x.id+'">'+ic("trash")+'Delete from phone</button></div>';
+ }
+ if(sh.type==="pick"){
+  inner='<h3>Choose a video</h3><div class="menu-l">'+S.lib.filter(x=>x.kind==="video").map(x=>'<button type="button" data-act="pick" data-id="'+x.id+'">'+thumb(x,64,36,{nodur:1})+esc(x.title)+'</button>').join("")+'</div>';
+ }
+ if(sh.type==="bg"){
+  inner='<h3>Home background</h3><div class="menu-l">'+Object.keys(HOME_BG).map(k=>'<button type="button" data-act="bg-set" data-k="'+k+'">'+thumb({th:HOME_BG[k].poster},40,52,{nodur:1})+esc(HOME_BG[k].label)+(S.homeBg.key===k?' · current':'')+'</button>').join("")+
+   '<button type="button" data-act="bg-own">'+ic("scissors")+'Cut a scene from your videos…</button></div>';
+ }
+ if(sh.type==="settings"){
+  const row=(t,s,on,act)=>'<div class="tg"><div>'+t+'<small>'+s+'</small></div><button type="button" class="sw '+(on?"on":"")+'" data-act="'+act+'" aria-label="'+t+'"></button></div>';
+  inner='<h3>Settings</h3>'+row("Use as Home screen","Off: your old launcher comes back",S.isHome,"set-home")+row("Wi-Fi only","Big files wait for Wi-Fi",S.wifiOnly,"set-wifi")+row("Link card on Home","Shows a copied video link on Home",S.showCard,"set-card")+row("Continue watching on Home","Your last videos on Home",S.showCW,"cw-t")+
+   '<div class="tg"><div>Save to<small>Movies/'+NAME+' · visible in Gallery</small></div>'+ic("chev")+'</div><div class="tg"><div>Credits & licenses<small>Blender Foundation, NASA, Internet Archive</small></div>'+ic("chev")+'</div><div class="tg"><div>Privacy policy</div>'+ic("ext")+'</div>';
+ }
+ return '<div class="ovl" data-act="sheet-bg"><div class="sh" data-stop="1"><span class="grab"></span>'+inner+'</div></div>';
+}
+function dlgHTML(){
+ if(S.dlg!=="role")return "";
+ return '<div class="dlg"><div class="box"><h4>Set '+NAME+' as your default home app?</h4>'+
+  '<button type="button" class="opt-r on" data-act="noop"><span class="rr"></span><span class="ai" style="background:none">'+LOGO(30)+'</span>'+NAME+'</button>'+
+  '<button type="button" class="opt-r" data-act="noop"><span class="rr"></span><span class="ai" style="background:#3E6A8E">'+ic("homeic")+'</span>System launcher</button>'+
+  '<div class="acts"><button type="button" data-act="role-cancel">Cancel</button><button type="button" data-act="role-ok">Set as default</button></div></div></div>';
+}
+
+/* ------------------------------------------------------------------------
+   Рендер
+   ------------------------------------------------------------------------ */
+let lastKey="";
+function screenKey(){return S.screen==="app"?"app-"+S.tab:S.screen==="ed"?"ed-"+S.tool:S.screen==="other"?"o-"+S.other:S.screen;}
+function render(){
+ const keep={};scr.querySelectorAll("video[data-keep]").forEach(v=>{keep[v.dataset.keep]=v;});
+ const sc=document.getElementById("ascroll"), st=sc?sc.scrollTop:0;
+ const key=screenKey(), same=key===lastKey;
+ scr.innerHTML=screenHTML();
+ const s=scr.firstElementChild;if(s&&!same)s.classList.add("enter");
+ scr.querySelectorAll("video[data-keep]").forEach(v=>{const o=keep[v.dataset.keep];if(o&&o!==v){v.replaceWith(o);o.play().catch(()=>{});}});
+ if(same){const n=document.getElementById("ascroll");if(n)n.scrollTop=st;}
+ lastKey=key;
+ ovl.innerHTML=sheetHTML()+dlgHTML();
+ $("#sbRight").innerHTML=(activeDls().length?'<span class="dl"><svg viewBox="0 0 24 24">'+P.save+'</svg></span>':"")+'<svg viewBox="0 0 24 24"><path d="M2 20h3v-4H2zm5 0h3v-8H7zm5 0h3V8h-3zm5 0h3V3h-3z"/></svg><svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="10" rx="2" fill="none" stroke="#fff" stroke-width="2"/><rect x="4" y="9" width="11" height="6" fill="#fff"/></svg>';
+ $("#sbTime").textContent=clock();
+ document.querySelector(".nav .home").classList.toggle("pulse",!!S.clip.text&&S.clip.ts>S.seenTs&&S.screen!=="launcher"&&S.screen!=="stock");
+ wireLive();
+ paintClips();
+}
+function wireLive(){
+ const pv=document.getElementById("pvid");
+ if(pv){pv.playbackRate=S.speed;pv.loop=S.loopOn||pv.loop;const pl=pv.play();if(pl)pl.catch(()=>{pv.muted=true;pv.play().catch(()=>{});});
+  pv.ontimeupdate=()=>{const c=$("#pcur"),d=$("#pdur"),f=$("#pfill");if(!c)return;c.textContent=fmtT(pv.currentTime);d.textContent=fmtT(pv.duration||0);f.style.width=(pv.currentTime/(pv.duration||1)*100)+"%";const x=libById(S.playing);if(x&&x.kind==="video"&&pv.duration)x.watched=Math.max(x.watched,Math.min(.97,pv.currentTime/pv.duration));};
+  pv.onplay=pv.onpause=()=>{const b=$("#ppBtn");if(b)b.innerHTML=icf(pv.paused?"play":"pause");};
+  pv.onended=()=>{const b=$("#ppBtn");if(b)b.innerHTML=icf("play");};
+ }
+ const ev=document.getElementById("edv")||document.getElementById("gifv");
+ if(ev&&S.screen==="ed"){
+  const ranged=["trim","gif","loop"].includes(S.tool);
+  ev.ontimeupdate=()=>{const d=ev.duration||1;if(ranged){if(ev.currentTime<S.trim.a*d-.05||ev.currentTime>S.trim.b*d)ev.currentTime=S.trim.a*d;}else if(S.tool!=="frame"&&ev.currentTime>=d-.05){ev.currentTime=0;}
+   const ph=$("#ph");if(ph)ph.style.left=(ev.currentTime/d*100)+"%";const tc=$("#edtc");if(tc)tc.textContent=fmtT1(ev.currentTime);if(S.tool==="frame"){const a=$("#tA");if(a)a.textContent=fmtT1(ev.currentTime);}};
+  ev.onloadedmetadata=()=>{if(ranged)ev.currentTime=S.trim.a*ev.duration;};
+  if(S.tool==="frame"){ev.loop=true;}
+  ev.play().catch(()=>{});
+ }
+ const strip=document.getElementById("strip");if(strip)wireStrip(strip);
+}
+function wireStrip(strip){
+ strip.onpointerdown=e=>{
+  const r=strip.getBoundingClientRect();const h=e.target.dataset&&e.target.dataset.h;
+  const ev=document.getElementById("edv")||document.getElementById("gifv");
+  const at=x=>Math.max(0,Math.min(1,(x-r.left)/r.width));
+  if(!h){if(ev&&ev.duration){ev.currentTime=at(e.clientX)*ev.duration;}return;}
+  strip.setPointerCapture(e.pointerId);
+  const maxLen=S.tool==="gif"?.6:S.tool==="loop"?1:1, minLen=.08;
+  const mv=m=>{let p=at(m.clientX);if(h==="a"){S.trim.a=Math.min(p,S.trim.b-minLen);if(S.trim.b-S.trim.a>maxLen)S.trim.a=S.trim.b-maxLen;}else{S.trim.b=Math.max(p,S.trim.a+minLen);if(S.trim.b-S.trim.a>maxLen)S.trim.b=S.trim.a+maxLen;}paintStrip();if(ev&&ev.duration)ev.currentTime=(h==="a"?S.trim.a:S.trim.b)*ev.duration-(h==="b"?.3:0);};
+  const up=()=>{strip.removeEventListener("pointermove",mv);strip.removeEventListener("pointerup",up);strip.removeEventListener("pointercancel",up);render();};
+  strip.addEventListener("pointermove",mv);strip.addEventListener("pointerup",up);strip.addEventListener("pointercancel",up);
+ };
+}
+function paintStrip(){
+ const st=$("#strip");if(!st)return;const a=S.trim.a*100,b=S.trim.b*100;
+ const d=st.querySelectorAll(".dim");d[0].style.width=a+"%";d[1].style.width=(100-b)+"%";
+ const sel=st.querySelector(".sel");sel.style.left=a+"%";sel.style.right=(100-b)+"%";
+ st.querySelector('[data-h="a"]').style.left="calc("+a+"% - 8px)";st.querySelector('[data-h="b"]').style.left="calc("+b+"% - 8px)";
+ const x=libById(S.studio),vd=x&&x.film==="bbb"?16:10;
+ const A=$("#tA"),B=$("#tB"),L=$("#tL");if(A)A.textContent=fmtT1(S.trim.a*vd);if(B)B.textContent=fmtT1(S.trim.b*vd);if(L)L.textContent=fmtT1((S.trim.b-S.trim.a)*vd);
+}
+
+/* ------------------------------------------------------------------------
+   Живі оновлення без перерендеру (завантаження, задачі Studio)
+   ------------------------------------------------------------------------ */
+function tick(){
+ let changed=false;
+ for(const d of S.dls){
+  if(d.phase==="wait"){if(!S.wifiOnly){d.phase="dl";log("Wi-Fi є → DownloadManager продовжує "+d.title);}continue;}
+  if(d.phase==="dl"){d.speed=Math.max(2,d.speed+(Math.random()-.5)*1.4);const step=d.speed/d.mb*100*.25*(d.mb>300?3:1.6);d.p=Math.min(100,d.p+step);
+   if(d.p>=100){if(d.segs){d.phase="mux";d.p=100;d.muxT=0;log("HlsSaver: "+d.segs+" сегментів .ts склеєно → Media3 Transformer (без перекодування) → один MP4","k");changed=true;}else finishDl(d),changed=true;}}
+  else if(d.phase==="mux"){d.muxT+=1;if(d.muxT>6){finishDl(d);changed=true;}}
+  const t=document.querySelector('[data-dltxt="'+d.id+'"]');if(t)t.textContent=Math.floor(d.p)+"%";
+  document.querySelectorAll('[data-dlbar="'+d.id+'"]').forEach(b=>b.style.width=d.p+"%");
+  document.querySelectorAll('[data-dlsub="'+d.id+'"]').forEach(b=>b.textContent=dlSub(d));
+  const r=document.querySelector('[data-ring="'+d.id+'"]');if(r){const c=2*Math.PI*13;r.setAttribute("stroke-dashoffset",(c*(1-d.p/100)).toFixed(1));}
+ }
+ const avg=document.getElementById("lnAvg");if(avg){const a=activeDls();if(a.length)avg.textContent=Math.floor(a.reduce((s,d)=>s+d.p,0)/a.length);}
+ const j=S.job;
+ if(j&&!j.done){j.p=Math.min(100,j.p+j.rate);const jp=$("#jobP"),jb=$("#jobBar");if(jp)jp.textContent=Math.floor(j.p)+"%";if(jb)jb.style.width=j.p+"%";if(j.p>=100){finishJob();changed=true;}}
+ if(changed)render();
+}
+setInterval(tick,250);
+setInterval(()=>{const c=document.querySelector(".clock");if(c&&(S.screen==="launcher"||S.screen==="stock"))c.textContent=clock();$("#sbTime").textContent=clock();},10000);
+
+function startDl(info,res,q,film){
+ const o=info.opts[q||0];
+ const d={id:"d"+(++uid),title:info.title,th:info.th,dur:info.dur,mb:o.mb||80,opt:o,p:0,speed:6+Math.random()*6,phase:S.wifiOnly&&(o.mb||80)>50?"wait":"dl",segs:res.kind==="hls"?(info.segs||200):0,film:film||info.film||null,lic:info.lic,src:res.kind==="hls"?"HLS · "+res.host:KIND_LABEL[res.kind]||"Link"};
+ S.dls.push(d);
+ if(res.kind==="hls")log("HLS: master.m3u8 → "+info.opts.length+" варіанти, обрано "+o.l+" → "+d.segs+" сегментів (без EXT-X-KEY)","k");
+ else if(res.kind==="drive")log("Drive: drive.usercontent.google.com/download?id=…&confirm=t → DownloadManager","k");
+ else log("DownloadManager.enqueue → Movies/"+NAME+"/"+(res.file||info.title.replace(/\W+/g,"-").toLowerCase()+".mp4")+" ("+fmtMB(d.mb)+")","k");
+ if(d.phase==="wait")log("Лише Wi-Fi: файл > 50 МБ чекає на Wi-Fi (NETWORK_UNMETERED)");
+ return d;
+}
+function finishDl(d){
+ d.phase="done";d.p=100;
+ const f=d.film&&FILMS[d.film];
+ const it={id:"L"+(++uid),film:d.film||"bbb",title:d.title,kind:"video",dur:d.dur||(f?f.dur:120),mb:d.mb,dim:d.opt.dim,fmt:d.opt.fmt.replace("HLS → ",""),watched:0,src:d.src,lic:d.lic||(f?f.lic:"Your file"),th:d.th||(f?f.th:"img/th_bbb.jpg"),v:f?f.v:"media/clip_bbb.mp4",at:Date.now()};
+ if(!d.film&&!d.th){it.th=null;it.film="bbb";}
+ S.lib.unshift(it);d.libId=it.id;
+ log("ACTION_DOWNLOAD_COMPLETE "+d.id+" → MediaScanner → Movies/"+NAME+"/ ✓","g");
+ toast("Saved · "+d.title,"check");
+ if(S.card&&S.card.dlId===d.id){S.card.state="done";S.card.libId=it.id;}
+ if(d.segs)test("hls");
+ if(d.film&&!S.card)test("discover");
+ if(S.card&&S.card.dlId===d.id)test("card");
+}
+function runTool(){
+ const x=libById(S.studio), tool=S.tool;
+ const what={trim:"Media3 Transformer · ClippingConfiguration",audio:"Transformer · setRemoveVideo → AAC",gif:"Кадри → власний GIF-енкодер (у Android його немає) / MP4-петля",status:"Transformer × N частин",frame:"MediaMetadataRetriever.getFrameAtTime",compress:"Transformer · Presentation 480p",loop:"Кліп → filesDir/home_bg.mp4"}[tool];
+ S.job={tool,p:0,rate:tool==="frame"?50:tool==="loop"?12:tool==="status"?5:8,done:false,what};
+ log("Studio: "+TOOL_T[tool]+" → "+what,"k");
+ if(tool==="frame")grabFrame();
+ render();
+}
+function finishJob(){
+ const j=S.job, x=libById(S.studio), f=FILMS[x.film];j.done=true;j.p=100;
+ const vd=x.film==="bbb"?16:10, len=(S.trim.b-S.trim.a)*x.dur/ (x.dur/vd)*1;
+ let it=null;
+ if(j.tool==="trim"){it=Object.assign({},x,{id:"L"+(++uid),title:x.title+" (trim)",kind:"clip",dur:Math.max(1,(S.trim.b-S.trim.a)*vd),mb:x.mb*(S.trim.b-S.trim.a),watched:0});j.doneText="Trimmed copy saved";j.doneSub=fmtT1((S.trim.b-S.trim.a)*vd)+" · Movies/"+NAME;test("trim");}
+ if(j.tool==="audio"){it=Object.assign({},x,{id:"L"+(++uid),title:x.title+" (audio)",kind:"audio",mb:S.opt.fmt==="WAV"?x.dur*176.4/1000:x.dur*(+S.opt.br)/8/1000,fmt:S.opt.fmt,dim:S.opt.fmt==="WAV"?"PCM 16-bit":"AAC · "+S.opt.br+" kbps",watched:0});j.doneText="Audio saved";j.doneSub=S.opt.fmt+" · Music/"+NAME+" · plays in any player";test("audio");}
+ if(j.tool==="gif"){it=Object.assign({},x,{id:"L"+(++uid),title:x.title+" · loop",kind:"gif",dur:(S.trim.b-S.trim.a)*vd,mb:1.6,fmt:"GIF · "+S.opt.gfps+" fps",dim:S.opt.gw+" px",watched:0});j.doneText=S.opt.gfmt==="GIF"?"GIF saved":"Loop saved";j.doneSub=S.opt.gfmt==="GIF"?S.opt.gw+" px · "+S.opt.gfps+" fps · Pictures/"+NAME:"MP4 · loops in any player · Movies/"+NAME;}
+ if(j.tool==="status"){const n=Math.ceil(x.dur/+S.opt.part);it=Object.assign({},x,{id:"L"+(++uid),title:x.title+" · part 1 of "+n,kind:"status",dur:+S.opt.part,mb:x.mb/n,watched:0});j.doneText=n+" parts saved";j.doneSub="Movies/"+NAME+"/Status · ready to post in order";}
+ if(j.tool==="compress"){it=Object.assign({},x,{id:"L"+(++uid),title:x.title+" ("+S.opt.cmp+")",kind:"clip",mb:x.mb*.4,dim:S.opt.cmp,watched:0});j.doneText="Smaller copy saved";j.doneSub=S.opt.cmp+" · original kept";}
+ if(j.tool==="frame"){j.doneText="Frame saved";j.doneSub="JPG · Pictures/"+NAME;}
+ if(j.tool==="loop"){S.homeBg={film:x.film};j.doneText="Home background set";j.doneSub="Press Home to see it";test("loop");log("Home: фон = "+x.title+", "+fmtT1((S.trim.b-S.trim.a)*vd)+", muted loop, пауза при вимкненому екрані","g");}
+ if(it){S.lib.unshift(it);j.newId=it.id;}else j.newId=x.id;
+ toast(j.doneText,"check");
+ log("Studio ✓ "+j.doneText,"g");
+}
+function grabFrame(){
+ const v=document.getElementById("edv");if(!v)return;
+ try{const c=document.createElement("canvas");c.width=320;c.height=180;c.getContext("2d").drawImage(v,0,0,320,180);const url=c.toDataURL("image/jpeg",.8);setTimeout(()=>{const o=$("#frameOut");if(o)o.innerHTML='<img src="'+url+'" alt="Grabbed frame" style="width:100%;border-radius:12px;display:block">';},450);}catch(e){}
+}
+
+/* ------------------------------------------------------------------------
+   Навігація
+   ------------------------------------------------------------------------ */
+function go(screen,extra){S.screen=screen;S.sheet=null;S.drawer=false;S.lnMenu=false;S.ctx=false;Object.assign(S,extra||{});render();}
+function openApp(){
+ if(!S.onboarded){go("splash");log("Запуск "+NAME+": LoaderScreen (перший запуск)");setTimeout(()=>{if(S.screen==="splash"){go("onb",{onb:0});log("LoaderScreen → OnboardingScreen");}},1500);return;}
+ if(S.homeReq&&!S.isHome){go("req");return;}
+ go("app");log("MainActivity → AppScreen ("+S.tab+")");
+}
+function pressHome(){
+ const pv=document.getElementById("pvid");
+ if(S.screen==="player"&&pv&&!pv.paused){S.pip=S.playing;log("PlayerActivity (окрема, не HOME) · onUserLeaveHint → enterPictureInPictureMode(16:9)","k");test("pip");}
+ if(!S.isHome){go("stock");log("HOME → системний лаунчер (роль HOME не наша)");return;}
+ const wasLn=S.screen==="launcher";
+ if(S.card&&S.card.state==="done"&&!wasLn)S.card=null;
+ go("launcher");
+ log(wasLn?"onNewIntent(HOME) — уже на головному":"onNewIntent(CATEGORY_HOME) → LauncherScreen");
+ setTimeout(checkClip,120);
+}
+function checkClip(){
+ if(S.screen!=="launcher")return;
+ const c=S.clip;
+ if(!c.text||c.ts<=S.seenTs){log("onWindowFocusChanged(true) → ClipDescription.timestamp не новий → буфер не читаємо","t");return;}
+ S.seenTs=c.ts;
+ const r=resolve(c.text);
+ log("onWindowFocusChanged(true) → getPrimaryClipDescription() (без тосту) → новий → getPrimaryClip() (Android 12+: тост «вставлено»)");
+ if(r.kind==="none"){log("ClipGate: не посилання → нічого не показуємо","t");return;}
+ if(r.kind==="blocked"){log("ClipGate: "+r.svc+" → у блок-листі, картку не показуємо","t");test("blocked");return;}
+ if(r.kind==="soft"||r.kind==="page"){log("ClipGate: "+r.host+" — не файл, картку не показуємо","t");return;}
+ const info=infoFor(r);
+ if(info.drm){log("Probe: master.m3u8 → #EXT-X-KEY METHOD=SAMPLE-AES, KEYFORMAT=com.widevine → захищено, картку не показуємо","r");test("drm");return;}
+ if(!S.showCard){log("ClipGate: картку вимкнено в налаштуваннях","t");return;}
+ S.card={res:r,info,state:"ready"};render();
+ log("ClipGate: "+KIND_LABEL[r.kind]+" → probe → картка «"+info.title+"»","g");
+}
+function submitLink(raw){
+ S.input=raw;S.res=null;S.probing=true;render();
+ log("Check: "+raw.slice(0,70));
+ setTimeout(()=>{
+  S.probing=false;const r=resolve(raw);S.res=r;
+  if(okKind(r.kind)){const info=infoFor(r);if(info.drm){S.res={kind:"hls",drm:true};log("Probe: #EXT-X-KEY METHOD≠NONE → захищений стрім, відмова (не розшифровуємо)","r");test("drm");render();return;}
+   S.res=null;S.sheet={type:"link",res:r,info,q:defaultQ(info)};log("Probe: "+KIND_LABEL[r.kind]+" → "+info.opts.length+" варіант(и)","k");}
+  else{if(r.kind==="blocked"){log("LinkResolver: "+r.svc+" → Blocked","r");test("blocked");}else log("LinkResolver: "+r.kind,"t");}
+  render();
+ },650);
+}
+function defaultQ(info){let best=0;info.opts.forEach((o,i)=>{const h=parseInt(o.dim.split("×")[1]||"0");const bh=parseInt(info.opts[best].dim.split("×")[1]||"0");if(h<=1080&&h>bh)best=i;});return info.opts.length>1&&/HLS/.test(info.opts[0].fmt)?1:best;}
+function copyText(t,note){S.clip={text:t,ts:Date.now()};log("ClipboardManager: скопійовано «"+t.slice(0,60)+(t.length>60?"…":"")+"»"+(note?" ("+note+")":""));render();toastSys();}
+function toastSys(){toast("Copied","clip");}
+
+/* ------------------------------------------------------------------------
+   Події
+   ------------------------------------------------------------------------ */
+document.getElementById("phone").addEventListener("click",e=>{
+ const el=e.target.closest("[data-act]");if(!el)return;
+ if(el.dataset.act==="sheet-bg"&&e.target.closest("[data-stop]"))return;
+ const a=el.dataset.act;
+ const pv=document.getElementById("pvid");
+ switch(a){
+  case "noop":break;
+  case "back":
+   if(S.sheet||S.dlg){S.sheet=null;render();break;}
+   if(S.drawer||S.lnMenu){S.drawer=false;S.lnMenu=false;render();break;}
+   if(S.screen==="launcher"){log("Назад на головному — нічого (як у будь-якого лаунчера)","t");break;}
+   if(S.screen==="player"){go("app");break;}
+   if(S.screen==="ed"){S.job=null;go(S.edFrom==="player"?"player":"app",{tab:S.edFrom==="player"?S.tab:"studio"});break;}
+   if(S.screen==="other"){if(S.ctx){S.ctx=false;render();break;}go(S.isHome?"launcher":"stock");break;}
+   if(S.screen==="onb"&&S.onb>0){S.onb--;render();break;}
+   if(S.screen==="app"&&S.tab!=="save"){S.tab="save";render();break;}
+   if(S.screen==="app"||S.screen==="role"||S.screen==="req"){go(S.isHome?"launcher":"stock");break;}
+   break;
+  case "home":pressHome();break;
+  case "recents":toast("Recents","layers");log("Недавні (системні)","t");break;
+  case "open-app":openApp();break;
+  case "launch":{const k=el.dataset.app;if(k==="browser"||k==="msg"){go("other",{other:k==="browser"?"browser":"msg"});log("Відкрито «"+APPS[k][0]+"» (інша апка) — Activity "+NAME+" втратила фокус");}else toast(APPS[k][0]+" — інша апка","ext");break;}
+  case "onb-next":if(S.onb<2){S.onb++;render();}else{S.onboarded=true;go("role");log("Онбординг завершено (прапорець onboarded у DataStore)");}break;
+  case "ask-role":S.dlg="role";render();log("RoleManager.createRequestRoleIntent(ROLE_HOME)");break;
+  case "role-cancel":S.dlg=null;log("Роль HOME: відмова","r");if(S.homeReq)go("req");else go("app",{tab:"save"});break;
+  case "role-ok":S.dlg=null;S.isHome=true;log("Роль HOME надано → MainActivity перезапущено як HOME","g");go("launcher");toast(NAME+" is your Home screen","check");test("role");setTimeout(checkClip,150);break;
+  case "role-later":go("app",{tab:"save"});log("Maybe later → AppScreen без ролі HOME");break;
+  case "role-again":go("role");break;
+  case "tab":S.tab=el.dataset.tab;if(S.screen!=="app")go("app");else render();break;
+  case "paste":{if(!S.clip.text){toast("Clipboard is empty","clip");break;}S.input=S.clip.text;const i=$("#linkIn");if(i)i.value=S.input;log("Кнопка Paste → getPrimaryClip() (Android 12+: тост «вставлено»)");break;}
+  case "settings":S.sheet={type:"settings"};S.lnMenu=false;render();break;
+  case "q":S.sheet.q=+el.dataset.k;render();break;
+  case "sheet-save":{const sh=S.sheet;const d=startDl(sh.info,sh.res,sh.q);if(S.card&&S.card.res.url===sh.res.url){S.card.state="dl";S.card.dlId=d.id;}S.sheet=null;S.input="";if(S.screen==="app")S.tab="save";render();toast(d.phase==="wait"?"Waiting for Wi-Fi":"Saving · "+d.title,"save");break;}
+  case "dl-cancel":{const d=S.dls.find(z=>z.id===el.dataset.id);if(d){d.phase="fail";log("DownloadManager.remove("+d.id+")","t");}render();break;}
+  case "cat-dl":{const k=el.dataset.film,d0=dlOfFilm(k);if(d0){d0.phase="fail";render();break;}const f=FILMS[k];const q=f.files.length-1;startDl({title:f.title,th:f.th,dur:f.dur,opts:f.files,film:k,lic:f.lic},{kind:"archive",host:f.src==="NASA Image Library"?"images.nasa.gov":"archive.org"},q,k);render();toast("Saving · "+f.title,"save");break;}
+  case "cat-open":{const k=el.dataset.film,f=FILMS[k];S.sheet={type:"link",res:{kind:k==="orion"?"nasa":"archive",host:k==="orion"?"images.nasa.gov":"archive.org",url:""},info:{title:f.title,th:f.th,dur:f.dur,opts:f.files,lic:f.lic,film:k},q:f.files.length-1};render();break;}
+  case "play-film":{const x=S.lib.find(z=>z.film===el.dataset.film&&z.kind==="video");if(x){S.playing=x.id;go("player");}break;}
+  case "play":{const id=el.dataset.id||S.studio;const x=libById(id);if(!x)break;S.playing=x.id;S.pip=null;go("player");log("PlayerScreen: ExoPlayer → "+x.title);break;}
+  case "pp":if(pv){pv.paused?pv.play():pv.pause();}break;
+  case "seek":if(pv)pv.currentTime=Math.max(0,pv.currentTime+ +el.dataset.d*(pv.duration>30?1:.15));break;
+  case "scrub":{if(!pv)break;const r=el.getBoundingClientRect();pv.currentTime=(e.clientX-r.left)/r.width*(pv.duration||0);break;}
+  case "speed":{const L=[1,1.25,1.5,2,.5];S.speed=L[(L.indexOf(S.speed)+1)%L.length];if(pv)pv.playbackRate=S.speed;const s=$("#spdL");if(s)s.textContent=S.speed+"×";break;}
+  case "loop-t":S.loopOn=!S.loopOn;if(pv)pv.loop=S.loopOn;el.classList.toggle("on",S.loopOn);toast(S.loopOn?"Loop on":"Loop off","loop");break;
+  case "pip":S.pip=S.playing;log("PlayerActivity → enterPictureInPictureMode(Rational(16,9)); HOME-Activity сама в PiP не може","k");test("pip");if(S.isHome){go("launcher");setTimeout(checkClip,120);}else go("stock");break;
+  case "pip-open":S.playing=S.pip;S.pip=null;go("player");break;
+  case "share":toast("Android share sheet","share");log("Intent.ACTION_SEND video/mp4 через FileProvider","t");break;
+  case "menu":S.sheet={type:"menu",id:el.dataset.id};render();break;
+  case "del":{S.lib=S.lib.filter(x=>x.id!==el.dataset.id);if(S.studio===el.dataset.id)S.studio=S.lib[0]&&S.lib[0].id;S.sheet=null;if(S.screen==="player")go("app",{tab:"library"});else render();toast("Deleted from phone","trash");log("MediaStore.delete → файл видалено","t");break;}
+  case "filter":S.filter=el.dataset.f;render();break;
+  case "to-studio":S.studio=el.dataset.id;go("app",{tab:"studio"});break;
+  case "tool":{const id=el.dataset.id;if(id)S.studio=id;let x=libById(S.studio);if(!x||!["video","clip"].includes(x.kind)){x=S.lib.find(z=>z.kind==="video");S.studio=x.id;}S.edFrom=S.screen==="player"?"player":"app";S.tool=el.dataset.tool;S.job=null;S.trim=el.dataset.tool==="gif"?{a:.2,b:.6}:el.dataset.tool==="loop"?{a:.1,b:.8}:{a:.18,b:.62};go("ed");break;}
+  case "opt":S.opt[el.dataset.k]=el.dataset.v;render();break;
+  case "opt-dim":S.opt.dim=!S.opt.dim;S.dimBg=S.opt.dim;render();break;
+  case "run-tool":runTool();break;
+  case "job-again":S.job=null;render();break;
+  case "pick-src":S.sheet={type:"pick"};render();break;
+  case "pick":S.studio=el.dataset.id;S.sheet=null;render();break;
+  case "card-x":S.card=null;render();log("Картку закрито (URL у ClipGate.dismissed)","t");break;
+  case "card-save":{const c=S.card;const d=startDl(c.info,c.res,defaultQ(c.info));c.state="dl";c.dlId=d.id;render();break;}
+  case "card-opts":{const c=S.card;S.sheet={type:"link",res:c.res,info:c.info,q:defaultQ(c.info)};render();break;}
+  case "ln-menu":S.lnMenu=!S.lnMenu;render();break;
+  case "dim-t":S.dimBg=!S.dimBg;S.lnMenu=false;render();break;
+  case "cw-t":S.showCW=!S.showCW;S.lnMenu=false;render();break;
+  case "bg-pick":S.lnMenu=false;S.sheet={type:"bg"};render();break;
+  case "bg-set":S.homeBg={key:el.dataset.k};S.sheet=null;render();log("Home: фон = "+HOME_BG[el.dataset.k].label);break;
+  case "bg-own":S.sheet=null;S.studio=S.lib.find(z=>z.kind==="video").id;S.tool="loop";S.edFrom="app";S.trim={a:.1,b:.8};S.job=null;go("ed");break;
+  case "drawer":S.drawer=true;S.lnMenu=false;render();break;
+  case "drawer-x":S.drawer=false;render();break;
+  case "set-home":S.isHome=!S.isHome;log(S.isHome?"Роль HOME знову наша":"Роль HOME → системний вибір лаунчера (Settings.ACTION_HOME_SETTINGS)",S.isHome?"g":"t");render();break;
+  case "set-wifi":S.wifiOnly=!S.wifiOnly;$("#fWifi").checked=S.wifiOnly;render();break;
+  case "set-card":S.showCard=!S.showCard;render();break;
+  case "copy-in":copyText(el.dataset.url,"з іншої апки");break;
+  case "ctx":S.ctx=true;render();break;
+  case "ctx-x":S.ctx=false;render();break;
+  case "ctx-kin":{S.ctx=false;const u="https://archive.org/download/ElephantsDream/ed_hd.mp4";log("ACTION_PROCESS_TEXT → "+NAME+" (меню виділення тексту)","k");S.tab="save";go("app");submitLink(u);break;}
+  case "sheet-bg":S.sheet=null;render();break;
+ }
+});
+document.getElementById("phone").addEventListener("submit",e=>{
+ if(e.target.id!=="pasteForm")return;e.preventDefault();
+ const v=($("#linkIn").value||"").trim();if(!v){S.res={kind:"none"};render();return;}
+ submitLink(v);
+});
+document.getElementById("phone").addEventListener("input",e=>{if(e.target.id==="linkIn")S.input=e.target.value;});
+
+/* ------------------------------------------------------------------------
+   Панель тестування
+   ------------------------------------------------------------------------ */
+function paintClips(){
+ $("#clipNow").textContent=S.clip.text||"порожньо";
+ $("#clips").innerHTML=SAMPLES.map((s,i)=>'<div class="clipr'+(S.clip.text===s.url?" cur":"")+'"><code>'+esc(s.url)+'</code><small>'+esc(s.note)+'</small><button class="btn'+(S.clip.text===s.url?" hot":"")+'" type="button" data-clip="'+i+'">'+(S.clip.text===s.url?"Скопійовано":"Копіювати")+'</button></div>').join("");
+}
+$("#clips").addEventListener("click",e=>{const b=e.target.closest("[data-clip]");if(!b)return;copyText(SAMPLES[+b.dataset.clip].url);});
+const PACTS=[["stock","Системний лаунчер"],["first","Перший запуск"],["launcher","Наш головний"],["save","Save"],["discover","Discover"],["library","Library"],["studio","Studio"],["player","Плеєр"],["msg","Месенджер"],["browser","Браузер"],["share","Поділитися → "+NAME]];
+$("#pacts").innerHTML=PACTS.map(p=>'<button class="btn" type="button" data-pact="'+p[0]+'">'+p[1]+'</button>').join("");
+document.addEventListener("click",e=>{
+ const b=e.target.closest("[data-pact]");if(!b)return;const p=b.dataset.pact;
+ if(p==="reset"){S=fresh();S.studio=S.lib[0].id;$("#fHomeReq").checked=false;$("#fWifi").checked=false;logEl.innerHTML="";paintTests();render();log("Скинуто: чистий телефон, "+NAME+" ще не відкривали");return;}
+ if(p==="clear-log"){logEl.innerHTML="";return;}
+ if(p==="stock")return go("stock");
+ if(p==="first"){S.onboarded=false;S.isHome=false;return openApp();}
+ if(p==="launcher"){if(!S.isHome){S.isHome=true;S.onboarded=true;log("(панель) роль HOME видано без діалогу");}return pressHome();}
+ if(["save","discover","library","studio"].includes(p)){S.onboarded=true;S.tab=p;return go("app");}
+ if(p==="player"){S.playing=S.lib.find(x=>x.kind==="video").id;return go("player");}
+ if(p==="msg"||p==="browser")return go("other",{other:p});
+ if(p==="share"){const u="https://archive.org/details/night_of_the_living_dead_dvd";S.onboarded=true;S.tab="save";go("app");log("ACTION_SEND text/plain від іншої апки → "+NAME);return submitLink(u);}
+});
+$("#fHomeReq").addEventListener("change",e=>{S.homeReq=e.target.checked;log("Remote Config: home_required = "+S.homeReq);render();});
+$("#fWifi").addEventListener("change",e=>{S.wifiOnly=e.target.checked;log("Налаштування: лише Wi-Fi = "+S.wifiOnly);render();});
+
+/* ------------------------------------------------------------------------
+   Кадри для маркету — ті самі екрани в статичному стані
+   ------------------------------------------------------------------------ */
+function snapshot(mut,fn){const keep=S;S=JSON.parse(JSON.stringify(keep));S.tests={};mut(S);STATIC=true;let h="";try{h=fn();}finally{STATIC=false;S=keep;}return h;}
+function frame(cls,title,html){return '<div class="shot '+cls+'"><h4>'+title+'</h4><div class="mini"><div class="ph"><div class="scrn"><div class="scale">'+html+'</div></div></div></div></div>';}
+function paintShots(){
+ const C=SAMPLES[0];
+ const shots=[
+  ["s1","Your home,<br><em>in motion</em>",snapshot(s=>{s.screen="launcher";s.isHome=true;const r=resolve(C.url);s.card={res:r,info:infoFor(r),state:"ready"};},launcherHTML)],
+  ["s2","Copy a link.<br><em>Keep the video.</em>",snapshot(s=>{s.screen="app";s.tab="save";s.isHome=true;s.dls=[{id:"z1",title:"Night of the Living Dead",th:"img/th_notld.jpg",dur:5732,mb:596.4,opt:FILMS.notld.files[0],p:46,speed:11.2,phase:"dl",segs:0}];},()=>appHTML())],
+  ["s3","Free films<br>you can <em>keep</em>",snapshot(s=>{s.screen="app";s.tab="discover";},()=>appHTML())],
+  ["s4","Cut the scene<br><em>you love</em>",snapshot(s=>{s.screen="ed";s.tool="trim";s.trim={a:.22,b:.64};s.studio=s.lib[0].id;},edHTML)],
+  ["s5","Pull the sound<br>from <em>any video</em>",snapshot(s=>{s.screen="ed";s.tool="audio";s.studio=s.lib[0].id;},edHTML)],
+  ["s6","Ready for <em>Status</em><br>in one tap",snapshot(s=>{s.screen="ed";s.tool="status";s.opt.part="60";s.studio=s.lib[3].id;},edHTML)]
+ ];
+ $("#shots").innerHTML=shots.map(s=>frame(s[0],s[1],'<div class="screen" style="border-radius:0;width:350px;height:758px"><div class="scr" style="bottom:0">'+s[2].replace('<video','<video')+'</div></div>')).join("");
+ const fit=()=>document.querySelectorAll(".shot .scrn").forEach(el=>{const w=el.clientWidth;el.querySelector(".scale").style.transform="scale("+(w/350)+")";});
+ fit();window.addEventListener("resize",fit);
+}
+
+/* ------------------------------------------------------------------------
+   Бренд, назва
+   ------------------------------------------------------------------------ */
+const NAMES=[["Framefall: Video Downloader",true],["Framefall: Video Home Launcher",false],["Framefall: Video Saver & Home",false]];
+function paintBrand(){
+ $("#heroLogo").outerHTML=LOGO(0,"logo");
+ $("#namebox").innerHTML=NAMES.map(n=>'<div class="'+(n[1]?"cur":"")+'"><span>'+n[0]+'</span><span>'+n[0].length+'/30</span></div>').join("")+'<div style="color:var(--dim);font-size:12px"><span>Назва в Play — до 30 символів; варіанти з тим самим брендом</span><span></span></div>';
+ const masks=[["50%","коло"],["28%","squircle"],["16%","квадрат"],["50% 50% 50% 14%","крапля"]];
+ $("#brandBody").innerHTML=
+  '<div class="rc"><h3>Іконка</h3><p>Кадр кіноплівки з перфорацією і стрілкою «play ↓»: кнопка відтворення, перевернута вниз, читається як «завантажити». Та сама родина, що й Redwave: градієнтний квадрат і біла фігура.</p><div class="icons-row">'+LOGO(96)+LOGO(64)+LOGO(48)+LOGO(32)+LOGO(24)+'</div>'+
+  '<div class="masks">'+masks.map(m=>'<div><span style="width:64px;height:64px;border-radius:'+m[0]+';overflow:hidden;display:block">'+LOGO(64).replace('rx="14"','rx="0"')+'</span>'+m[1]+'</div>').join("")+'</div><p class="src">Адаптивна іконка Android: передній шар — плівка, фон — градієнт; маски залежать від лаунчера.</p></div>'+
+  '<div class="rc"><h3>Чому Framefall</h3><p>Frame + fall: кадри «падають» у телефон. Це те саме, що показує іконка: кадр плівки зі стрілкою вниз. Одне слово, легко вимовити, і воно не звучить як ще один «All Video Downloader».</p><p>Перевірка в Google Play США 12.10.2026: ні «Framefall», ні «Frame Fall» не знайдено. Kinora, яку я пропонував спершу, зайнята (4 апки, зокрема Kinora: Movie Recommendations). Запасні вільні назви: Cinedrop, Moviedrop, Glowframe.</p><p class="src">Це пошук у Play, не перевірка торгової марки.</p></div>'+
+  '<div class="rc"><h3>Кольори</h3><div class="swatches">'+[["#FFC94D","amber hi"],["#FF8A2A","orange"],["#F2511B","flame"],["#0A0705","ink"],["#16100C","card"],["#FFF6EC","paper"],["#B3A293","muted"],["#47E0A0","ok"]].map(c=>'<div class="sw-c"><i style="background:'+c[0]+'"></i><span>'+c[1]+' '+c[0]+'</span></div>').join("")+'</div><p class="src">Redwave — червоний «концерт», Driftglass — бірюзове скло, Framefall — тепле світло проєктора.</p></div>'+
+  '<div class="rc"><h3>Шрифти</h3><div class="typo"><span class="d">Framefall 9:41</span><span class="u">Onest — інтерфейс і все, що прийшло з файлу</span><span class="m">JetBrains Mono — розміри, таймкоди 0:42.5</span></div><p class="src">Unbounded і Onest мають кирилицю, тож назви файлів українською теж працюють (урок Redwave з Archivo).</p></div>';
+}
+
+/* ------------------------------------------------------------------------
+   Старт
+   ------------------------------------------------------------------------ */
+window.__framefall={render,paintShots,paintBrand,setResearch:h=>{$("#researchBody").innerHTML=h;},setPort:h=>{$("#portBody").innerHTML=h;}};
+paintTests();paintBrand();render();paintShots();
+log("Телефон увімкнено: системний лаунчер. "+NAME+" встановлено, ще не відкривали.");
+})();
+</script>

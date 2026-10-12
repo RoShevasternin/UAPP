@@ -27,3 +27,4 @@
 - [Звіти про наші апки: стиль](app-report-style.md) — прототип і відео зверху, макет маркету; без цифр/статусу, тонкощі коротко
 - [Шпалери з роллю HOME: аналіз](wallpaper-home-analysis.md) — артефакт 08.10.2026 для нової апки-шпалер; 2 шпалерні апки ховають лаунчер, масово — «Home App» ігри
 - [Driftglass: тестова апка шпалер](driftglass-app.md) — LibGDX-апка на Redmi (09.10.2026): AD_MODE як Redwave, лише EN, лаунчер: одна сторінка з авто-папками, усі апки свайпом угору
+- [Framefall: тестова апка Video Downloader](framefall-app.md) — poc/TEST_APP/Game Framefall: дослідження Play + прототип v1 (12.10.2026); відеофон на Home, Studio, легальні джерела; Kinora зайнята
