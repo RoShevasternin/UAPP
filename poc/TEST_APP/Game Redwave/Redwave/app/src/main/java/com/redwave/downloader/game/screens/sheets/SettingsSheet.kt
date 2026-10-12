@@ -22,8 +22,8 @@ import com.redwave.downloader.game.utils.px
 // SettingsSheet — шестерня на Home (VELDAN, 07.10.2026):
 //   • перемикач «Use as Home screen»: увімкнути — системний діалог ролі; вимкнути —
 //     системний екран вибору головного застосунку (забрати роль сама апка не може);
-//   • Privacy Policy — для людей і модератора Google Play (адреса з RemoteFlags.privacy);
-//   • версія; у debug-збірці — скинути онбординг і що прийшло з Remote Config.
+//   • Privacy Policy — для людей і модератора Google Play (адреса з AppFlags.privacy);
+//   • версія; у debug-збірці — скинути онбординг і що прийшло з конфігу сервера.
 // Роль обов'язкова (home_required) і її забрали → на наступному вході екран-вимога (GDXGame.resume).
 // ─────────────────────────────────────────────────────────────────────────────
 class SettingsSheet(screen: AdvancedScreen) : ASheet(screen) {
@@ -97,7 +97,7 @@ class SettingsSheet(screen: AdvancedScreen) : ASheet(screen) {
             y -= px(22f) + px(18f)
             val ey = lbl(Copy.Settings.DEBUG.uppercase(), msdf.monoSemi(10.5f, GameColor.pink_FF8A98, spacing = 10f))
             ey.setPosition(0f, y + px(4f)); add(ey)
-            // AD_MODE: «чорний» режим поверх Remote Config, перемикання перезапускає апку
+            // AD_MODE: «наша реклама» поверх картки сервера, перемикання перезапускає апку
             y -= cardH
             val adOn = gdxGame.bridge.isAdMode()
             val adTgl = AToggle(screen, adOn)
@@ -136,8 +136,8 @@ class SettingsSheet(screen: AdvancedScreen) : ASheet(screen) {
         }
     }
 
-    /** Remote Config + стан реклами (лічильник треків, останній показ, чи завантажено). */
-    private fun debugText() = gdxGame.bridge.remoteFlagsDebug() + "\n" + gdxGame.bridge.adsDebug()
+    /** Конфіг сервера + стан реклами (провайдер, лічильники front/back і треків). */
+    private fun debugText() = gdxGame.bridge.configDebug() + "\n" + gdxGame.bridge.adsDebug()
 
     /** Увімкнути — діалог ролі; вимкнути — системний вибір головного застосунку (роль забирає лише система). */
     private fun switchHome() {

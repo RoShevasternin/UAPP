@@ -32,7 +32,7 @@ import kotlin.math.abs
 // OnboardingScreen — 3 слайди: фото з Ken Burns, скляна картка, що «пливе»,
 // крок, заголовок, опис, крапки + «→» (слайди 1–2) або CTA ролі HOME (3).
 // Свайп (поріг 45) гортає, «Назад» — попередній слайд.
-// 3-й слайд — роль HOME. Remote Config home_required (рішення VELDAN 07.10.2026):
+// 3-й слайд — роль HOME. AppFlags.homeRequired з картки сервера (app_open = custom*, рішення VELDAN 12.10.2026):
 //   true  — лише «Set as Home screen»; відмова — лишаємось тут з поясненням;
 //   false — під нею вторинна текстова «Maybe later» (видна, але не кричить) → апка без ролі.
 // Skip веде на 3-й слайд. KEY_GATE — той самий екран як вимога, коли роль обов'язкова, а її
@@ -47,7 +47,7 @@ class OnboardingScreen : RedwaveScreen() {
 
     private val gate = gdxGame.navigationManager.key == KEY_GATE
     val isGate get() = gate
-    /** Чи обов'язкова роль — з Remote Config; змінився на льоту → onFlagsChanged перебудовує слайд. */
+    /** Чи обов'язкова роль — з картки сервера (AppFlags); змінився на льоту → onFlagsChanged перебудовує слайд. */
     private var required = gdxGame.flags.homeRequired
     private var index = 0
     /** Користувач відмовив у системному діалозі — підказка стає червоною. */
@@ -330,7 +330,7 @@ class OnboardingScreen : RedwaveScreen() {
         animHideScreen { gdxGame.navigateFirst() }
     }
 
-    /** Remote Config змінився, поки ми тут (GDXGame.onRemoteFlags): показати / сховати «Maybe later». */
+    /** Режим змінився, поки ми тут (GDXGame.onFlagsChanged): показати / сховати «Maybe later». */
     fun onFlagsChanged() {
         val r = gdxGame.flags.homeRequired
         if (r == required) return

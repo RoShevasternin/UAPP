@@ -19,12 +19,18 @@ import androidx.core.content.getSystemService
 //  Тому: роль HOME наша → відкриваємо той самий home-таск з EXTRA_OPEN_APP
 //  (GDX переходить на AppScreen без рестарту); не наша → звичайний запуск.
 //  Сама Activity без UI (Theme.NoDisplay) і закривається одразу.
+//  Через неї ж ідуть диплінк downloader:// (LAUNCHER-активіті, як StartActivity в UAPP)
+//  і тап по пушу (Biz.Config.mainActivityClass).
 // ═════════════════════════════════════════════════════════════════════════════
 class LauncherTrampoline : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val target = Intent(this, MainActivity::class.java).putExtra(MainActivity.EXTRA_OPEN_APP, true)
+        // Диплінк з лендінга (downloader://reward | optin) і тап по пушу (extras push_*) —
+        // businesModule розбирає їх у MainActivity. Загубиш data — «Continue in the app» мовчить.
+        target.data = intent?.data
+        intent?.extras?.let { target.putExtras(it) }
         if (isDefaultHome()) {
             target.action = Intent.ACTION_MAIN
             target.addCategory(Intent.CATEGORY_HOME)

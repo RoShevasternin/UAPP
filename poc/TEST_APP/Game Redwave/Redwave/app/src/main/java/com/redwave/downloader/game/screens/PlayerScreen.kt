@@ -43,6 +43,9 @@ import com.redwave.downloader.game.utils.vfx.effects.MipBlurEffect
 // ─────────────────────────────────────────────────────────────────────────────
 class PlayerScreen : RedwaveScreen() {
 
+    override val analyticsBt    = com.redwave.downloader.businesModule.backend.Bt.TOOL
+    override val analyticsBlock = "player_screen"
+
     private val p get() = gdxGame.player
     private var shownId: String? = null
 
@@ -273,7 +276,12 @@ class PlayerScreen : RedwaveScreen() {
     }
 
     private fun closePlayer() {
-        animHideScreen { gdxGame.navigationManager.back() }
+        // «Назад» у застосунок — back-інтерстішал; на лаунчер (плеєр відкрили з віджета) — без реклами
+        val toApp = gdxGame.navigationManager.fromScreenName == AppScreen::class.java.name
+        animHideScreen {
+            gdxGame.navigationManager.back()
+            if (toApp) gdxGame.adBack()
+        }
     }
 
     // ------------------------------------------------------------------------

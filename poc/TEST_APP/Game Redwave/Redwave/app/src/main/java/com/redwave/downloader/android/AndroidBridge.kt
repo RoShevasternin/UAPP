@@ -47,14 +47,16 @@ import com.redwave.downloader.MainActivity
 import com.redwave.downloader.android.ringtone.RingtoneMaker
 import com.redwave.downloader.android.ringtone.SystemSounds
 import com.redwave.downloader.android.ringtone.WaveformPeaks
-import com.redwave.downloader.core.config.RemoteFlags
+import com.redwave.downloader.businesModule.Biz
+import com.redwave.downloader.businesModule.backend.Bt
+import com.redwave.downloader.businesModule.backend.Events
+import com.redwave.downloader.core.config.AppFlags
 import com.redwave.downloader.core.link.AudioSniffer
 import com.redwave.downloader.core.model.DownloadStatus
 import com.redwave.downloader.core.model.Track
 import com.redwave.downloader.core.ringtone.CutSelection
 import com.redwave.downloader.core.ringtone.SaveAs
 import com.redwave.downloader.core.viz.SpectrumAnalyzer
-import com.redwave.downloader.game.platform.AdStatus
 import com.redwave.downloader.game.platform.DownloadProgress
 import com.redwave.downloader.game.platform.DownloadRequest
 import com.redwave.downloader.game.platform.FolderFile
@@ -243,21 +245,31 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
     }
 
     // ------------------------------------------------------------------------
-    // Remote Config (RemoteFlagsSource)
+    // Конфіг з нашого сервера (ServerConfig)
     // ------------------------------------------------------------------------
-    /** Офлайн — RemoteFlags.DEFAULT (RemoteFlagsSource.effective). */
-    override fun remoteFlags(): RemoteFlags = RemoteFlagsSource.effective
-    override fun hasRemoteFlags(): Boolean = RemoteFlagsSource.hasRemote()
-    override fun refreshRemoteFlags(timeoutMs: Long, onDone: (RemoteFlags) -> Unit) {
-        main.post { RemoteFlagsSource.refresh(timeoutMs) { f -> runGDX { onDone(f) } } }
+    /** Офлайн — AppFlags.DEFAULT (ServerConfig.flags). */
+    override fun appFlags(): AppFlags = ServerConfig.flags
+    override fun hasConfig(): Boolean = ServerConfig.hasConfig()
+    override fun loadConfig(timeoutMs: Long, onDone: () -> Unit) {
+        main.post {
+            var done = false
+            fun finish(why: String) {
+                if (done) return
+                done = true
+                log("config for splash: $why")
+                runGDX { onDone() }
+            }
+            main.postDelayed({ finish("timeout ${timeoutMs}ms") }, timeoutMs)
+            ServerConfig.refresh(force = false) { finish("done") }   // уже йде / щойно був — без другого запиту
+        }
     }
-    override fun remoteFlagsDebug(): String = RemoteFlagsSource.debugLine()
-    override fun isAdMode(): Boolean = RemoteFlagsSource.isAdMode()
+    override fun configDebug(): String = ServerConfig.debugLine()
+    override fun isAdMode(): Boolean = ServerConfig.isAdMode()
 
     /** Перезапуск процесу: новий таск через трамплін (він сам вирішить — home-таск чи звичайний). */
     override fun setAdMode(on: Boolean) {
         main.post {
-            RemoteFlagsSource.setAdMode(on)
+            ServerConfig.setAdMode(on)
             val restart = Intent.makeRestartActivityTask(ComponentName(ctx, com.redwave.downloader.LauncherTrampoline::class.java))
             ctx.startActivity(restart)
             Runtime.getRuntime().exit(0)
@@ -787,7 +799,7 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
         defaultAppFor(Intent(android.provider.MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA)),
     )
 
-    // ── Довге натискання: App info / Uninstall (RemoteFlags.isUninstall) ──
+    // ── Довге натискання: App info / Uninstall (AppFlags.isUninstall) ──
     /** Системні апки й апки робочого профілю не видаляємо — лише «App info». */
     override fun canUninstall(app: LauncherApp?): Boolean {
         if (app == null) return true
@@ -895,30 +907,56 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
     }
 
     // ------------------------------------------------------------------------
-    // Реклама (AdsManager живе на весь процес, тут лише перенос у main і назад у GL)
+    // Бізнес-логіка UAPP: черга старту, реклама (adsmodule), події
     // ------------------------------------------------------------------------
-    override fun appOpenStatus(): AdStatus = AdsManager.appOpenStatus()
-
-    override fun showAppOpen(onReturn: Boolean, awayMs: Long, onDone: (shown: Boolean) -> Unit) {
+    override fun runStartupFlow(onDone: () -> Unit) {
         main.post {
-            if (!isActivityResumed()) { runGDX { onDone(false) }; return@post }
-            AdsManager.showAppOpen(activity, onReturn, awayMs) { shown -> runGDX { onDone(shown) } }
+            var done = false
+            val finish = { if (!done) { done = true; runGDX { onDone() } } }
+            if (activity.isFinishing) { finish(); return@post }
+            // Порядок як у LoaderScreen еталона: опт-ін → стартовий app_open → далі (у всіх гілках)
+            Biz.runStartupFlow(
+                activity = activity,
+                requestPermission = { onResult -> activity.requestPushPermission(onResult) },
+                openGateAndContinue = { activity.appOpenManager.showOnLoader(activity) { finish() } },
+            )
         }
     }
 
-    override fun onTrackDownloaded() { main.post { AdsManager.onTrackDownloaded() } }
+    override fun appOpenOnReturn() {
+        main.post { if (isActivityResumed()) activity.appOpenManager.onReturnToApp() }
+    }
 
-    override fun isInterstitialDue(): Boolean = AdsManager.isInterstitialDue()
+    override fun onFrontNavigation() {
+        main.post { if (isActivityResumed() && !isTextInputActive) activity.adManager.onFrontNavigation() }
+    }
 
-    override fun showInterstitial(onDone: (shown: Boolean) -> Unit) {
+    override fun onBackNavigation() {
+        main.post { if (isActivityResumed() && !isTextInputActive) activity.adManager.onBackNavigation() }
+    }
+
+    // ── showInterstitial кожні 2 треки (лічильник переживає перезапуск) ──
+    private val adsPrefs = ctx.getSharedPreferences("redwave_ads", Context.MODE_PRIVATE)
+    private var downloadsSinceInterstitial: Int
+        get() = adsPrefs.getInt("downloads", 0)
+        set(v) = adsPrefs.edit().putInt("downloads", v).apply()
+
+    override fun onTrackDownloaded() { downloadsSinceInterstitial += 1 }
+
+    override fun isInterstitialDue(): Boolean = downloadsSinceInterstitial >= INTERSTITIAL_EVERY
+
+    override fun showInterstitial() {
         main.post {
             // У фоні (трек докачався, поки людина в іншій апці) — не показуємо: лишається в черзі
-            if (!isActivityResumed() || isTextInputActive) { runGDX { onDone(false) }; return@post }
-            AdsManager.showInterstitial(activity) { shown -> runGDX { onDone(shown) } }
+            if (!isActivityResumed() || isTextInputActive) return@post
+            downloadsSinceInterstitial = 0
+            activity.adManager.showInterstitial()
         }
     }
 
-    override fun adsDebug(): String = AdsManager.debugLine()
+    override fun adsDebug(): String = activity.adManager.debugLine() + " · dl $downloadsSinceInterstitial/$INTERSTITIAL_EVERY"
+
+    override fun screenView(bt: Bt, block: String) = Events.screenView(bt, block)
 
     private fun isActivityResumed() =
         !activity.isFinishing && activity.lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)
@@ -942,5 +980,7 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
         const val USER_AGENT = "Redwave/1.0 (Android)"
         /** Швидше за будь-яку людську відповідь: діалог ролі навіть не показався. */
         const val DIALOG_SUPPRESSED_MS = 700L
+        /** showInterstitial — після кожних N завантажених треків. */
+        const val INTERSTITIAL_EVERY = 2
     }
 }

@@ -4,12 +4,14 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.redwave.downloader.businesModule.backend.Bt
 import com.redwave.downloader.game.actors.ui.ASheet
 import com.redwave.downloader.game.actors.ui.AToast
 import com.redwave.downloader.game.utils.Block
 import com.redwave.downloader.game.utils.TIME_ANIM_SCREEN
 import com.redwave.downloader.game.utils.advanced.AdvancedGroup
 import com.redwave.downloader.game.utils.advanced.AdvancedScreen
+import com.redwave.downloader.game.utils.gdxGame
 import com.redwave.downloader.game.utils.px
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -35,8 +37,16 @@ abstract class RedwaveScreen : AdvancedScreen() {
 
     abstract fun buildContent()
 
+    // ── Події screen_view (businesModule, як AdvancedScreen в UAPP) ──
+    /** Bt — спільний словник парку; технічні екрани (Splash, онбординг) лишають null. */
+    open val analyticsBt   : Bt?     = null
+    /** snake_case, після релізу НЕ перейменовується (ключ у звітах сервера). */
+    open val analyticsBlock: String? = null
+
     override fun show() {
         super.show()
+        val bt = analyticsBt; val block = analyticsBlock
+        if (bt != null && block != null) gdxGame.bridge.screenView(bt, block)
         // rootConstraintLayout з T35 лежить поверх content на весь екран — без цього він ковтає всі дотики
         rootConstraintLayout.touchable = Touchable.childrenOnly
     }

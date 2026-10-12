@@ -20,7 +20,7 @@ import com.redwave.downloader.game.utils.msdf
 import com.redwave.downloader.game.utils.px
 
 /**
- * Довге натискання на іконку в лаунчері (Remote Config is_uninstall = true) — як у системного
+ * Довге натискання на іконку в лаунчері (AppFlags.isUninstall = true) — як у системного
  * лаунчера: «App info» і «Uninstall». app = null — сама Redwave (іконка в доку).
  * Системні апки й апки робочого профілю — лише «App info».
  */

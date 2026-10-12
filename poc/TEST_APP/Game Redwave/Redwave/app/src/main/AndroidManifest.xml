@@ -18,14 +18,15 @@
          старі файли Music/Redwave нам уже не належать — без цього їх не видно й не видалити. -->
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
-    <!-- Лаунчер: «Uninstall» на довге натискання (Remote Config is_uninstall) — системний діалог
+    <!-- Лаунчер: «Uninstall» на довге натискання (AppFlags.isUninstall з картки сервера) — системний діалог
          ACTION_DELETE; без цього дозволу на API 28+ він не відкривається. Звичайний дозвіл, без запиту. -->
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <!-- AdMob: рекламний ідентифікатор (Android 13+). play-services-ads додає його й сам через
          злиття маніфестів, тут — явно, щоб було видно (Play Console → Advertising ID: «Yes»). -->
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
-    <!-- POST_NOTIFICATIONS свідомо НЕМАЄ: сповіщення медіасесії звільнені від нього на 13+,
-         сповіщення DownloadManager показує системний провайдер. ◌ перевірити на девайсі -->
+    <!-- Пуші (businesModule, Android 13+): запит НЕ на старті, а нашим діалогом опт-іну з черги
+         старту — голий системний діалог на сплеші випалює дозвіл назавжди (дві відмови). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <queries>
         <!-- сітка застосунків лаунчера: без QUERY_ALL_PACKAGES -->
@@ -68,7 +69,7 @@
         android:theme="@style/Theme.Redwave"
         tools:ignore="UnusedAttribute">
 
-        <!-- AdMob: ТЕСТОВИЙ App ID Google (разом з тестовими блоками в AdsManager). Перед релізом — свій. -->
+        <!-- AdMob: ТЕСТОВИЙ App ID Google. Блоки приходять з картки сервера (ad_units.admob). Перед релізом — свій App ID. -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3940256099942544~3347511713" />
@@ -107,7 +108,34 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- Повернення з веб-лендінга (businesModule). Схему (останній сегмент пакета)
+                 віддати серверній команді — deeplink_scheme у картці апки.
+                 reward — людина вивела монети на лендінгу й повертається;
+                 optin  — тапнула на лендінгу «увімкнути сповіщення». -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="downloader" />
+                <data android:host="reward" />
+                <data android:host="optin" />
+            </intent-filter>
         </activity>
+
+        <!-- FCM: ротація токена (onNewToken) і факт показу серверного пуша (businesModule) -->
+        <service
+            android:name=".businesModule.push.PushService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notification" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="rewards" />
 
         <service
             android:name=".playback.PlaybackService"

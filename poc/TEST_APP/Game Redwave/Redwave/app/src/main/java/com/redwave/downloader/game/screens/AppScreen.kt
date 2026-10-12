@@ -2,6 +2,7 @@ package com.redwave.downloader.game.screens
 
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.redwave.downloader.businesModule.backend.Bt
 import com.redwave.downloader.game.actors.ui.AMiniPlayer
 import com.redwave.downloader.game.actors.ui.ATabBar
 import com.redwave.downloader.game.screens.base.RedwaveScreen
@@ -33,6 +34,14 @@ class AppScreen : RedwaveScreen() {
 
         /** Остання вкладка — щоб повернення з плеєра вело туди ж. */
         private var lastTab = TAB_HOME
+
+        /** screen_view кожної вкладки: Bt зі спільного словника, block — не перейменовувати після релізу. */
+        private val TAB_ANALYTICS = listOf(
+            Bt.TOOL    to "home_tab",
+            Bt.CATALOG to "discover_tab",
+            Bt.CATALOG to "library_tab",
+            Bt.TOOL    to "ringtone_tab",
+        )
     }
 
     private val pages = arrayOfNulls<ATabPage>(4)
@@ -47,8 +56,8 @@ class AppScreen : RedwaveScreen() {
     override val toastBottom: Float get() = pageBottom() + px(14f)
 
     override fun buildContent() {
-        // Зміна вкладки — природна пауза: тут же інтерстішал, якщо настав (кожні 2 треки)
-        tabBar = ATabBar(this, safeNavBarUI) { select(it); gdxGame.maybeInterstitial() }
+        // Зміна вкладки — front-навігація: інтерстішал за частотою з картки (або «кожні 2 треки», якщо настав)
+        tabBar = ATabBar(this, safeNavBarUI) { i -> val changed = i != current; select(i); if (changed) gdxGame.adFront() }
         tabBar.setBounds(0f, 0f, worldWidth, tabBarH)
 
         mini = AMiniPlayer(this) { openPlayer() }
@@ -78,6 +87,8 @@ class AppScreen : RedwaveScreen() {
         lastTab = i
         tabBar.select(i)
         page.onShown()
+        val (bt, block) = TAB_ANALYTICS[i]
+        gdxGame.bridge.screenView(bt, block)
     }
 
     private fun createPage(i: Int): ATabPage {
@@ -100,6 +111,7 @@ class AppScreen : RedwaveScreen() {
 
     fun openPlayer() {
         if (gdxGame.player.now == null) return
+        gdxGame.adFront()
         gdxGame.navigationManager.navigate(PlayerScreen::class.java.name, AppScreen::class.java.name)
     }
 

@@ -1,23 +1,29 @@
 package com.redwave.downloader
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.SystemClock
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.browser.customtabs.CustomTabsClient
-import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.badlogic.gdx.backends.android.AndroidFragmentApplication
-import com.redwave.downloader.android.AdsManager
+import com.redwave.downloader.adsmodule.AdConfig
+import com.redwave.downloader.adsmodule.AdManager
+import com.redwave.downloader.adsmodule.AppOpenManager
+import com.redwave.downloader.adsmodule.BrowserUtil
 import com.redwave.downloader.android.AndroidBridge
 import com.redwave.downloader.android.ClipWatcher
-import com.redwave.downloader.android.RemoteFlagsSource
+import com.redwave.downloader.android.ServerConfig
+import com.redwave.downloader.businesModule.Biz
+import com.redwave.downloader.businesModule.backend.Backend
+import com.redwave.downloader.businesModule.backend.Events
+import com.redwave.downloader.businesModule.push.PushOptIn
+import com.redwave.downloader.core.config.AppFlags
+import com.redwave.downloader.core.launcher.HomePlacement
 import com.redwave.downloader.databinding.ActivityMainBinding
 import com.redwave.downloader.game.GDXFragment
 import com.redwave.downloader.util.log
@@ -37,6 +43,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     companion object {
         /** Від LauncherTrampoline: тапнули іконку — показати застосунок, а не лаунчер. */
         const val EXTRA_OPEN_APP = "redwave.open_app"
+        private const val KEY_EXIT_SEEN = "exit_seen_ts"
         private var current: java.lang.ref.WeakReference<MainActivity>? = null
     }
 
@@ -51,21 +58,74 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     private val onceInsets = AtomicBoolean(true)
 
     // ------------------------------------------------------------------------
-    // Автовідкриття Custom Tab при поверненні на Home
+    // Реклама (adsmodule, як в UAPP): app_open, front / back / interstitial
+    // ------------------------------------------------------------------------
+    lateinit var appOpenManager: AppOpenManager
+        private set
+    lateinit var adManager: AdManager
+        private set
+
+    // ── Дозвіл на пуші (businesModule, правка 6.1) ───────────────────────────
+    // Launcher ОБОВ'ЯЗКОВО реєструється до onStart — тому property, а не виклик у методі.
+    private var onPushPermissionResult: ((Boolean) -> Unit)? = null
+    private val pushPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        internalNavigation = false
+        onPushPermissionResult?.invoke(granted)
+        onPushPermissionResult = null
+    }
+
+    /** Черга старту (опт-ін) і повернення з лендінга просять системний запит через активіті. */
+    fun requestPushPermission(onResult: (Boolean) -> Unit) {
+        if (android.os.Build.VERSION.SDK_INT < 33) { onResult(true); return }
+        onPushPermissionResult = onResult
+        internalNavigation = true            // системний діалог — не «інша апка»
+        pushPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+    }
+
+    // ------------------------------------------------------------------------
+    // Вкладка на «Додому» / після «Недавніх» (плейсменти click_home / clear_history)
     // ------------------------------------------------------------------------
     /**
-     * Відкрити вкладку на найближчому onResume. Вмикають: HOME-інтент (onNewIntent) і вихід
-     * в іншу апку (onStop). Вимикається ПЕРЕД запуском вкладки — закриття вкладки лишає на
-     * лаунчері, без циклу.
+     * Відкрити вкладку на найближчому onResume. Вмикають: вихід в іншу апку / «Недавні» (onStop)
+     * і холодний старт як HOME. Вимикається ПЕРЕД запуском вкладки — закриття вкладки лишає на
+     * лаунчері, без циклу. Нас сховала НАША ж вкладка чи реклама (AdConfig.isFullscreenAdShowing,
+     * AppOpenManager.isShowingAd) — не вмикається: «Додому» поверх нашої вкладки = закрити її.
      */
     private var shouldLaunchCustomTab = false
 
     /**
-     * Нас закрила НАША ж вкладка. Без цього onStop (спрацьовує, бо вкладка нас сховала)
-     * знову ввімкнув би автозапуск → закрив вкладку → вона знову відкрилась. «Додому» поверх
-     * нашої вкладки = закрити її, а не «повернутись з іншої апки».
+     * Після виходу прийшов HOME-інтент → людина натиснула «Додому» (click_home). Повернулись на
+     * лаунчер без HOME-інтенту (очистили «Недавні», закрили їх) → clear_history.
      */
-    private var ownTabInFront = false
+    private var homeIntentSinceLeave = false
+
+    /**
+     * Нас сховала НАША вкладка / реклама — фіксуємо в onStop, а не вгадуємо в onResume: стартова
+     * вкладка відкривається між onStart і onResume (одразу після системного дозволу на пуші), і
+     * onResume, скинувши AdConfig.isFullscreenAdShowing, зарахував би її закриття як вихід → друга вкладка.
+     */
+    private var stoppedByOwnAd = false
+
+    /** Холодний старт замінив живу MainActivity (Android перезапускає її, коли надали роль HOME) — не «Додому». */
+    private var replacedPrevious = false
+
+    /**
+     * Плейсмент холодного старту як HOME. «Очистити все» в «Недавніх» знімає і наш home-таск, і процес
+     * (MIUI OneKeyClean, заміряно на Redmi 12.10.2026): живого onResume немає — дивимось, чому помер
+     * попередній процес (HomePlacement). Кожен вихід рахуємо раз: timestamp — у prefs.
+     */
+    private fun coldHomePlacement(): String {
+        if (android.os.Build.VERSION.SDK_INT < 30) return AppFlags.PL_CLICK_HOME
+        val prefs = getSharedPreferences("redwave_home", MODE_PRIVATE)
+        val exit = runCatching {
+            getSystemService(android.app.ActivityManager::class.java)
+                .getHistoricalProcessExitReasons(packageName, 0, 1).firstOrNull()
+        }.getOrNull()?.takeIf { it.timestamp > prefs.getLong(KEY_EXIT_SEEN, 0L) }
+        exit?.let { prefs.edit().putLong(KEY_EXIT_SEEN, it.timestamp).apply() }
+        val pl = HomePlacement.forColdHome(exit?.reason, exit?.description)
+        log("cold HOME: last exit reason=${exit?.reason} '${exit?.description}' → $pl")
+        return pl
+    }
 
     /**
      * Наші ж системні екрани (налаштування ролі/WRITE_SETTINGS, шер, браузер з посилання) —
@@ -74,7 +134,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     var internalNavigation = false
 
     // ------------------------------------------------------------------------
-    // Повернення в апку — для App Open (AdsManager / AdPolicy)
+    // Повернення в апку — для app_open (AppOpenManager, рішення в GDXGame)
     // ------------------------------------------------------------------------
     /** Коли пішли в іншу апку / «Недавні» / вимкнули екран (elapsedRealtime); 0 — не йшли. */
     private var leftAt = 0L
@@ -101,7 +161,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         log("MainActivity.onCreate restored=${savedInstanceState != null}")
         // Страховка: другий екземпляр (HOME-таск vs звичайний) — старий закриваємо,
         // два GDX-застосунки в одному процесі ділять статики Gdx.*
-        current?.get()?.takeIf { it !== this && !it.isFinishing }?.let { log("finish previous MainActivity"); it.finish() }
+        current?.get()?.takeIf { it !== this && !it.isFinishing }?.let { log("finish previous MainActivity"); replacedPrevious = true; it.finish() }
         current = java.lang.ref.WeakReference(this)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -111,7 +171,27 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         clipWatcher = ClipWatcher(this, bridge)
         bridge.clipWatcher = clipWatcher
         val b = bridge
-        RemoteFlagsSource.onChanged = { f -> AdsManager.onFlags(); b.emit { onRemoteFlags(f) } }
+        ServerConfig.onChanged = { f -> adManager.preloadAdmobInterstitial(); b.emit { onFlagsChanged(f) } }
+
+        appOpenManager = AppOpenManager(application)
+        adManager      = AdManager(this)
+
+        // Повернення з веба з монетами (downloader://reward): монет у Redwave не видно —
+        // Wallet нарахує сам (події для сервера), свого діалогу немає.
+        Biz.onWebReward = { coins -> log("web reward +$coins (UI немає)") }
+        // З лендінга за дозволом (downloader://optin): системний запит тут, нагорода — токеном назад у вкладку
+        Biz.onWebOptIn = { act ->
+            PushOptIn.requestFromWeb(
+                act,
+                requestPermission = { onResult -> requestPushPermission(onResult) },
+                reopenTab = { token ->
+                    // gate_open руками: URL будуємо самі (&granted=), BrowserUtil.openAd так не вміє
+                    Events.gateOpen("optin_return")
+                    val base = Backend.gateUrl("optin_return")
+                    if (base != null) BrowserUtil.open(act, if (token != null) "$base&granted=$token" else base)
+                },
+            )
+        }
 
         // Системні бари лишаємо видимими (лаунчер не ховає навігацію) — GDX лише
         // відступає safe area. Висоти фіксуємо один раз, як у T35.
@@ -137,6 +217,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
                 .commitNow()
         }
 
+        Biz.onActivityIntent(this, intent)   // диплінк з лендінга + тап по пушу: холодний старт
         handleIntent(intent, isNew = false)
     }
 
@@ -149,6 +230,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
+        Biz.onActivityIntent(this, intent)   // живий процес (singleTask)
         handleIntent(intent, isNew = true)
     }
 
@@ -162,76 +244,66 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         log("onConfigurationChanged $newConfig")
     }
 
+    override fun onStart() { super.onStart(); Biz.onStart(this) }
+
     override fun onResume() {
         super.onResume()
         bridge.onActivityResumed()
-        // Апку могли запустити офлайн (AdMob = false), а тепер інтернет є — прапорці ті самі, onChanged не прийде
-        AdsManager.onFlags()
 
-        ownTabInFront = false
         internalNavigation = false
-        // App Open: повернення (не довше години — вирішує AdPolicy) або тап по іконці
+        // Повернулись з НАШОЇ вкладки / реклами — не «повернення в апку» і не привід для нової вкладки
+        val fromOwnAd = stoppedByOwnAd
+        if (fromOwnAd) { stoppedByOwnAd = false; AdConfig.isFullscreenAdShowing = false; shouldLaunchCustomTab = false }
+
+        // app_open: повернення в застосунок або тап по іконці (GDXGame вирішує, чи ми в застосунку)
         val away = if (leftAt > 0) SystemClock.elapsedRealtime() - leftAt else -1L
         leftAt = 0L
-        if (!returnViaHome && (away >= 0 || openedFromIcon)) {
+        if (!fromOwnAd && !returnViaHome && (away >= 0 || openedFromIcon)) {
             val fromIcon = openedFromIcon
             bridge.emit { onAppForeground(away, fromIcon) }
         }
         returnViaHome = false
         openedFromIcon = false
+
         // Лише як головний екран: відкриті з іконки, ми — звичайна апка.
-        // Що відкривати й чи взагалі — Remote Config (RemoteFlags.enabledUrlAd + url); офлайн — ні.
+        // Чи відкривати — картка сервера (app_open = custom*, AppFlags.homeTabs), офлайн — ні.
         if (shouldLaunchCustomTab && bridge.isDefaultHome()) {
             shouldLaunchCustomTab = false            // СПЕРШУ — інакше цикл
-            val flags = RemoteFlagsSource.effective
+            val pl = if (homeIntentSinceLeave) AppFlags.PL_CLICK_HOME else AppFlags.PL_CLEAR_HISTORY
+            val flags = ServerConfig.flags
             when {
-                !flags.adActive    -> log("auto Custom Tab off (enabled_url_ad=${flags.enabledUrlAd}, url='${flags.url}')")
-                !bridge.isOnline() -> log("auto Custom Tab skipped: offline")
-                else               -> { log("auto Custom Tab → ${flags.url}"); openCustomTab(flags.url) }
+                !flags.homeTabs    -> log("home tab off [$pl] (${ServerConfig.debugLine().replace('\n', ' ')})")
+                !bridge.isOnline() -> log("home tab skipped [$pl]: offline")
+                else               -> { log("home tab → pl=$pl"); BrowserUtil.openAd(this, ServerConfig.fallbackTabUrl(), pl) }
             }
         }
-        // Прапорці перевіряємо на кожному вході (частоту ріже minimumFetchInterval)
-        RemoteFlagsSource.refresh(10_000L) {}
+        homeIntentSinceLeave = false
+        // Конфіг сервера перевіряємо на кожному вході (частоту ріже ServerConfig.REFRESH_MS)
+        ServerConfig.refresh(force = false)
     }
 
     override fun onStop() {
         super.onStop()
+        Biz.onStop(this)   // плануємо локальні пуші за правилами картки
         // Прапорці стосуються наступного повернення. Зайвий HOME на живій Activity (MIUI шле по два)
         // без onResume лишив би returnViaHome = true і з'їв би наступне справжнє повернення.
         returnViaHome = false
         openedFromIcon = false
         when {
-            internalNavigation    -> {}                    // наш системний екран — не рахується
-            ownTabInFront         -> {}                    // нас сховала наша ж вкладка
-            AdsManager.isShowing  -> {}                    // нас сховала наша ж реклама AdMob
-            else                  -> {                     // інша апка / «Недавні» / вимкнений екран
+            internalNavigation                -> {}        // наш системний екран — не рахується
+            AdConfig.isFullscreenAdShowing ||
+            appOpenManager.isShowingAd        -> stoppedByOwnAd = true   // наша вкладка / інтерстішал / App Open
+            else                              -> {         // інша апка / «Недавні» / вимкнений екран
                 shouldLaunchCustomTab = true
+                homeIntentSinceLeave = false
                 leftAt = SystemClock.elapsedRealtime()
             }
         }
     }
 
-    private fun openCustomTab(url: String) {
-        ownTabInFront = true
-        val uri = url.toUri()
-        try {
-            val pkg = CustomTabsClient.getPackageName(this, null)
-            if (pkg != null) {
-                CustomTabsIntent.Builder().setShowTitle(true).build()
-                    .apply { intent.setPackage(pkg) }
-                    .launchUrl(this, uri)
-            } else {
-                startActivity(Intent(Intent.ACTION_VIEW, uri))   // браузера з Custom Tabs немає
-            }
-        } catch (e: ActivityNotFoundException) {
-            ownTabInFront = false
-            log("no app for $url")
-        }
-    }
-
     override fun onDestroy() {
         log("MainActivity.onDestroy changingConfig=$isChangingConfigurations finishing=$isFinishing")
-        if (current?.get() === this) RemoteFlagsSource.onChanged = null
+        if (current?.get() === this) ServerConfig.onChanged = null
         bridge.dispose()
         super.onDestroy()
     }
@@ -253,15 +325,9 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
             log("debug clip → $link")
             bridge.emit { onClipboardLink(link) }
         }
-        // Лише debug: підміна Remote Config для тестів на телефоні ("" — прибрати підміну):
-        // adb shell am start -n com.redwave.downloader/.MainActivity --es redwave.debug_flags '{"enabled_url_ad":true,"url":"https://google.com","home_required":false,"is_uninstall":true}'
-        if (BuildConfig.DEBUG) intent.getStringExtra("redwave.debug_flags")?.let { json ->
-            log("debug flags → $json")
-            RemoteFlagsSource.setDebugOverride(json)
-        }
-        // Лише debug: забути останній показ реклами й лічильник треків (не чекати 3 хв):
-        // adb shell am start -n com.redwave.downloader/.MainActivity --ez redwave.debug_ads_reset true
-        if (BuildConfig.DEBUG && intent.getBooleanExtra("redwave.debug_ads_reset", false)) AdsManager.debugReset()
+        // Лише debug: режим як при іншому провайдері app_open у картці (na / admob / custom_google; "" — прибрати):
+        // adb shell am start -n com.redwave.downloader/.MainActivity --es redwave.debug_app_open na
+        if (BuildConfig.DEBUG) intent.getStringExtra("redwave.debug_app_open")?.let { ServerConfig.setAppOpenOverride(it) }
         when {
             intent.getBooleanExtra(EXTRA_OPEN_APP, false) -> {
                 log("open app (icon), new = $isNew")
@@ -270,11 +336,13 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
             }
             intent.action == Intent.ACTION_MAIN && intent.hasCategory(Intent.CATEGORY_HOME) -> {
                 log("HOME intent (new = $isNew)")
-                // Холодний старт як HOME (надали роль, ребут) → вкладка. Для живої Activity вмикає
-                // лише onStop від іншої апки: «Додому» на самому лаунчері (MIUI шле їх по два)
+                // Холодний старт як HOME (надали роль, ребут) → вкладка click_home. Для живої Activity
+                // вмикає лише onStop від іншої апки: «Додому» на самому лаунчері (MIUI шле їх по два)
                 // і «Додому» поверх нашої вкладки вкладку не відкривають.
-                if (!isNew) shouldLaunchCustomTab = true
+                if (!isNew && !replacedPrevious) shouldLaunchCustomTab = true
                 if (isNew) returnViaHome = true
+                // Холодний старт: «Недавні» очистили (процес убили) — clear_history, інакше click_home
+                homeIntentSinceLeave = isNew || coldHomePlacement() == AppFlags.PL_CLICK_HOME
                 bridge.emit { onHomePressed() }
             }
             intent.action == Intent.ACTION_SEND && intent.type == "text/plain" -> {

@@ -15,7 +15,7 @@ object Copy {
         const val SKIP = "Skip"
         const val NEXT = "Next"
         const val SET_HOME = "Set as Home screen"
-        /** Remote Config home_required = true: лише «Set as Home screen». */
+        /** AppFlags.homeRequired (app_open = custom*): лише «Set as Home screen». */
         const val HOME_REQUIRED = "Redwave works as your Home screen. It’s required to use the app."
         const val HOME_DECLINED = "Redwave can’t work without being your Home screen. Tap the button and choose Redwave."
         /** home_required = false: ще й «Maybe later» — роль бажана, не обов'язкова. */
@@ -164,7 +164,7 @@ object Copy {
         const val DEBUG_RESET = "Reset onboarding"
         const val DEBUG_AD_MODE = "AD_MODE"
         const val DEBUG_AD_ON = "On · ad on Home, Home required, no uninstall"
-        const val DEBUG_AD_OFF = "Off · clean mode from Remote Config"
+        const val DEBUG_AD_OFF = "Off · mode from server config"
     }
 
     object Role {

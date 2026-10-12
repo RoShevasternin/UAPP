@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.utils.Align
 import com.redwave.downloader.core.copy.Copy
 import com.redwave.downloader.game.actors.ui.AShape
-import com.redwave.downloader.game.platform.AdStatus
 import com.redwave.downloader.game.screens.base.RedwaveScreen
 import com.redwave.downloader.game.utils.GameColor
 import com.redwave.downloader.game.utils.actor.lbl
@@ -21,8 +20,9 @@ import com.redwave.downloader.game.utils.px
 // ─────────────────────────────────────────────────────────────────────────────
 // SplashScreen — лого + смужки, поки вантажаться атласи, звуки й AppState.
 // Не менше 1.2 с. Далі: Onboarding (перший запуск) або AppScreen / Launcher.
-// Перший запуск онлайн (прапорців Remote Config ще немає в кеші) — чекаємо Firebase до 3 с;
-// не відповів або офлайн → RemoteFlags.DEFAULT. Далі прапорці з кешу одразу, оновлення — у фоні.
+// Конфіг нашого сервера (businesModule): немає кешу і є інтернет — чекаємо /appconfig до 5 с;
+// не відповів або офлайн → AppFlags.DEFAULT. Є кеш — йдемо одразу, оновлення у фоні.
+// Далі, якщо перший екран — застосунок: черга старту UAPP (опт-ін на пуші → app_open) → екран.
 // Лого й світіння — власні текстури (атласи ще в дорозі).
 // ─────────────────────────────────────────────────────────────────────────────
 class SplashScreen : RedwaveScreen() {
@@ -52,9 +52,9 @@ class SplashScreen : RedwaveScreen() {
         gdxGame.spriteManager.loadAll()
         gdxGame.soundManager.load()
         gdxGame.model.load { modelLoaded = true }
-        // Офлайн чекати нема чого: прапорці все одно DEFAULT
-        if (gdxGame.bridge.hasRemoteFlags() || !gdxGame.bridge.isOnline()) flagsReady = true
-        else gdxGame.bridge.refreshRemoteFlags(3_000L) { flagsReady = true }
+        // Офлайн чекати нема чого: режим все одно DEFAULT. Кеш є — сервер оновить у фоні (onFlagsChanged)
+        if (gdxGame.bridge.hasConfig() || !gdxGame.bridge.isOnline()) { flagsReady = true; gdxGame.bridge.loadConfig(CONFIG_WAIT_MS) {} }
+        else gdxGame.bridge.loadConfig(CONFIG_WAIT_MS) { flagsReady = true }
     }
 
     override fun buildContent() {
@@ -114,10 +114,6 @@ class SplashScreen : RedwaveScreen() {
         }
         val elapsed = System.currentTimeMillis() - startedAt
         if (!navigated && assetsDone && modelLoaded && flagsReady && elapsed >= 1200L) {
-            // App Open при відкритті: лише якщо далі застосунок (не онбординг, не лаунчер) і онлайн.
-            // Ще вантажиться — чекаємо до AD_WAIT_MS від старту Splash, далі йдемо без реклами.
-            val ad = if (gdxGame.firstScreenIsApp() && gdxGame.bridge.isOnline()) gdxGame.bridge.appOpenStatus() else AdStatus.NONE
-            if (ad == AdStatus.LOADING && elapsed < AD_WAIT_MS) return
             navigated = true
             gdxGame.onReady()
             val go = {
@@ -126,15 +122,17 @@ class SplashScreen : RedwaveScreen() {
                     gdxGame.navigateFirst()
                 }
             }
-            if (ad == AdStatus.READY) gdxGame.bridge.showAppOpen(onReturn = false, awayMs = 0L) { go() } else go()
+            // Як LoaderScreen в UAPP: опт-ін → app_open (вкладка custom* / AdMob до 3 с) → застосунок.
+            // Онбординг і лаунчер — без черги: вона відбудеться на першому вході в застосунок.
+            if (gdxGame.firstScreenIsApp()) gdxGame.runStartupFlow { go() } else go()
         }
     }
 
     override fun onBackPressed() {}
 
     private companion object {
-        /** Скільки Splash максимум чекає App Open (від свого старту). */
-        const val AD_WAIT_MS = 3_500L
+        /** Скільки Splash максимум чекає /appconfig на першому запуску. */
+        const val CONFIG_WAIT_MS = 5_000L
     }
 
     /** .sp-bars: 7 стовпчиків, ping-pong 0.9 с із затримкою 110 мс на кожен. */

@@ -5,45 +5,73 @@
 головний екран** (роль HOME), який ловить скопійовані аудіолінки.
 
 Стек як в іграх UAPP: **Kotlin + LibGDX 1.14.2 + scene2d**, UI малюється в GL, Android-бік —
-тонкий шар сервісів. **Еталона немає** (правила теки — `poc/TEST_APP/CLAUDE.md`): ні `businesModule`,
-ні `adsmodule`, ні TikTok/білінгу, доки VELDAN окремо не скаже. **Firebase — лише Remote Config**
-(рішення VELDAN 07.10.2026, проєкт `redwave-original`, `app/google-services.json`); Analytics немає.
-**Реклама — AdMob напряму** (App Open + Interstitial, розділ нижче), зараз лише тестові блоки Google;
-вмикає Remote Config `is_enable_admob`.
+тонкий шар сервісів. Еталона немає (правила теки — `poc/TEST_APP/CLAUDE.md`), **але з 12.10.2026
+(рішення VELDAN) тут бізнес-логіка UAPP**: `businesModule` + `adsmodule` з еталона
+`june/Game T1-1/T1-integrated` (розділ нижче). Firebase — **лише FCM** (проєкт `redwave-original`,
+`app/google-services.json`); Remote Config і Analytics прибрано. TikTok / Meta SDK і білінгу немає.
 
-## Реклама AdMob (рішення VELDAN 07.10.2026)
+## Бізнес-логіка UAPP (рішення VELDAN 12.10.2026)
 
-Вмикач — `is_enable_admob` у Remote Config (рішення VELDAN 08.10.2026): `false`, офлайн або без відповіді Firebase —
-SDK не ініціалізується, нічого не вантажиться й не показується, треки не рахуються. Частота — `core/ads/AdPolicy.kt`
-(+ `AdPolicyTest`), SDK — `android/AdsManager.kt`, де показувати — `GDXGame`. `AD_ID` — явно в маніфесті.
+`businesModule/` — копія еталона **без змін** (лише префікс пакета): конфіг з нашого сервера
+(`/appconfig`, атрибуція `atk`, гейтвей лендінгів), події, `Wallet`/`Econ` (монет у UI немає), опт-ін на
+пуші, локальні пуші (WorkManager), FCM-токен, повернення з веба. **Правки від серверної команди
+(`DEV_TASKS`) бекпортувати і сюди** — модуль копіюється, а не шариться.
 
-| Що | Коли | Обмеження |
-|---|---|---|
-| App Open | відкриття апки: холодний старт з іконки (Splash чекає рекламу до 3,5 с), іконка Redwave на нашому лаунчері | не частіше раз на 3 хв від будь-якої повноекранної |
-| App Open | повернення в апку з іншої апки / «Недавніх» / вимкненого екрана, якщо не було ≤ 1 год | те саме; > 1 год — не показуємо |
-| Interstitial | кожні 2 завантажені треки: через 1,5 с після тосту «Downloaded» або на наступній зміні вкладки | не поверх шторки й поля вводу, не у фоні; ≥ 60 с після попередньої |
+`adsmodule/` — з еталона з відмінностями (кожна — коментарем у шапці файлу):
+- `AdManager` — лише інтерстішал (front / back / interstitial); банера й нативки немає (рішення VELDAN), без Glide;
+- `AppOpenManager` — повернення з фону повідомляє апка (`onReturnToApp`), а не `ProcessLifecycleOwner`:
+  процес «повертається» на кожне «Додому», а там свої плейсменти;
+- `UserDetector` — без TikTok і AnalyticsManager; `AdPref` — prefs `redwave_ads_prefs`.
 
-**Лише в застосунку** (`AppScreen`, `PlayerScreen`): на лаунчері (роль HOME), онбордингу, екрані-вимозі й першому запуску —
-ні. «Додому» → лаунчер — не повернення. Наші вкладка, системні екрани й сама реклама (`AdsManager.isShowing`) у `onStop`
-не рахуються виходом. Стан (останній показ, лічильник треків) — SharedPreferences `redwave_ads`, переживає перезапуск.
-**Перед релізом:** свій App ID у маніфесті + свої блоки в `AdsManager`, згода UMP (ЄЕЗ), реклама в Privacy Policy і Data safety.
+Конфіг — `android/ServerConfig.kt` (як `initAds` еталона): `Biz.startSession` → Install Referrer (сирий, поки
+`atk` не видано) → `Biz.fetchConfig` → `AdConfig.remoteConfig` + кеш `AdPref`. Оновлення — на кожному `onResume`
+(release — не частіше 5 хв). Сервер не відповів — кеш минулого запуску; фолбека на Firebase немає.
+Перший запуск онлайн без кешу — Splash чекає `/appconfig` до 5 с.
 
-## Remote Config — параметр `redwave_config` (JSON)
+### Режим — з картки сервера (`core/config/AppFlags.kt` + `AppFlagsTest`)
 
-Розбір — `core/config/RemoteFlags.kt` (+ `RemoteFlagsTest`), Firebase — `android/RemoteFlagsSource.kt`.
-
-| Поле | true | false | Офлайн / без відповіді Firebase |
+| Провайдер `app_open` для типу юзера | Вкладка на «Додому» / «Недавні» | Роль HOME | Uninstall з лаунчера |
 |---|---|---|---|
-| `enabled_url_ad` + `url` | сторінка `url` у Custom Tab на «Додому» з іншої апки й після «Недавніх» (лише з роллю HOME і онлайн) | нічого не відкривається | false |
-| `home_required` | 3-й слайд лише з «Set as Home screen»; без ролі — екран-вимога на кожному вході | ще й «Maybe later», апка працює без ролі | false |
-| `is_uninstall` | довге натискання на іконку в лаунчері → App info / Uninstall | довге натискання нічого не робить | true |
-| `is_enable_admob` | реклама AdMob: App Open + Interstitial (розділ вище) | AdMob немає взагалі | false |
-| `privacy_url` (необов.) | адреса Privacy Policy в Settings | — | `https://redwave-privacy.oyutetijep68.workers.dev/privacy` |
+| `custom` / `custom_google` / `custom_tiktok` / `custom_facebook` | так (лише з роллю й онлайн) | обов'язкова, без «Maybe later» | ні |
+| `na` / `admob` / конфігу немає | ні | «Maybe later» є | так |
 
-**Немає інтернету → значення з колонки «Без відповіді» завжди**, навіть якщо в кеші Firebase інші
-(рішення VELDAN 07.10.2026; `RemoteFlagsSource.effective`). Перший запуск онлайн: Splash чекає Firebase до 3 с. Далі — кеш Firebase одразу, `fetchAndActivate` на кожному
-`onResume` (release — не частіше 5 хв) + real-time listener. Послаблення прапорців діє одразу, посилення
-(`home_required` → true) — на наступному вході. Privacy Policy — `../privacy-policy/` (Cloudflare, проєкт `redwave-privacy`; оновлення — «New deployment» з текою `public`).
+**Немає інтернету → другий рядок завжди** (рішення VELDAN 07.10.2026, перенесено з Remote Config).
+Послаблення діє одразу, посилення (роль стала обов'язковою) — на наступному вході.
+
+### Плейсменти (ключ доходу `<app>-<pl>`, після релізу НЕ перейменовувати)
+
+| pl | Коли | Де |
+|---|---|---|
+| `click_home` | «Додому» з іншої апки; холодний старт як HOME (ребут, оновлення) | `MainActivity.onResume` |
+| `clear_history` | повернулись на лаунчер без HOME-інтенту; **холодний старт після очищення «Недавніх»** | те саме + `core/launcher/HomePlacement` |
+| `app_open` | черга старту (Splash → застосунок; або перший вхід у застосунок, якщо процес стартував як лаунчер / з онбордингу); повернення в застосунок | `AppOpenManager` |
+| `front` | перемикання вкладки, відкриття плеєра (частота — `front_navigation` у картці) | `GDXGame.adFront` |
+| `back` | «Назад» з плеєра в застосунок (`back_navigation`) | `GDXGame.adBack` |
+| `interstitial` | кожні 2 завантажені треки (`showInterstitial`) | `GDXGame.maybeInterstitial` |
+| `optin_return` | повернення у вкладку після дозволу на пуші з лендінга | `MainActivity` (`Biz.onWebOptIn`) |
+
+`admob` у картці — AdMob App Open / Interstitial замість вкладки (блоки з `ad_units.admob`). **Лише в
+застосунку** (`AppScreen`, `PlayerScreen`): на лаунчері, онбордингу, екрані-вимозі — ні.
+
+⚠️ **MIUI «Очистити все» в «Недавніх» вбиває процес Redwave** (`OneKeyClean`) разом із home-таском — живого
+`onResume` немає, `onDestroy` приходить не завжди (заміряно на Redmi 12.10.2026). Тому `clear_history` при
+холодному старті визначаємо за причиною смерті попереднього процесу (`ApplicationExitInfo`, Android 11+):
+`OTHER` + «OneKeyClean» / `USER_REQUESTED` + «remove task». Нестача пам'яті / оновлення / ребут → `click_home`.
+
+⚠️ «Нас сховала наша вкладка / реклама» фіксується в `onStop` (`stoppedByOwnAd`), а не в `onResume`:
+стартова вкладка відкривається між `onStart` і `onResume` (одразу після системного дозволу), і перевірка в
+`onResume` давала другу вкладку `clear_history` після закриття першої.
+
+### Пуші й диплінк
+
+Опт-ін — черга старту UAPP (`Biz.runStartupFlow`): свій діалог **без монет** («Turn on notifications…»,
+тексти — `App.kt`, `Biz.Config`) → системний запит → `app_open`. Тап по пушу й диплінк ідуть через
+`LauncherTrampoline` (він прокидає `data` і `extras`). Схема диплінка **`downloader`** (`downloader://reward`,
+`downloader://optin`) — віддати серверній команді (`deeplink_scheme`). `Biz.onWebReward` — без UI (монет немає).
+Локальні пуші перевіряються тільки на release; кампанії в картці зараз `comeback` (24 год) і `comeback_3d`.
+
+Privacy Policy — `../privacy-policy/` (Cloudflare, проєкт `redwave-privacy`; оновлення — «New deployment» з текою `public`).
+⚠️ Після переходу на наш сервер і FCM політика й Data safety застаріли (там Remote Config) — оновити перед релізом.
 
 Спілкування й коментарі в коді — **українською**. UI апки — **англійською** (маркет США).
 
@@ -96,18 +124,22 @@ Debug-хуки (лише debug-збірка):
 ```bash
 # лаунчер без зміни дефолтного HOME + імітація лінка з буфера (adb на Android 13 не пише в буфер)
 adb shell am start -a android.intent.action.MAIN -c android.intent.category.HOME -n com.redwave.downloader/.MainActivity --es redwave.debug_clip "https://…/blue-room.m4a"
-# Settings → Debug → AD_MODE: «чорний» режим поверх Remote Config (реклама на Home + AdMob, роль обов'язкова, без Uninstall),
+# Settings → Debug → AD_MODE: «наша реклама» поверх картки (вкладки на «Додому», роль обов'язкова, без Uninstall),
 # перемикання перезапускає апку; вимкнути можна й з екрана-вимоги (кнопка AD_MODE OFF зліва вгорі)
-# підміна Remote Config (живе до очищення: --es redwave.debug_flags ""); у Settings → Debug видно джерело прапорців
-adb shell am start -n com.redwave.downloader/.MainActivity --es redwave.debug_flags '{"enabled_url_ad":true,"url":"https://google.com","home_required":false,"is_uninstall":true,"is_enable_admob":true}'
-# реклама: забути останній показ і лічильник треків (не чекати 3 хв); стан видно в Settings → Debug (ads(test) · dl 1/2 · …)
-adb shell am start -n com.redwave.downloader/.MainActivity --ez redwave.debug_ads_reset true
+# режим як при іншому провайдері app_open (na / admob / custom_google; "" — прибрати); реклама лишається з картки.
+# У Settings → Debug видно джерело конфігу, atk, тип юзера, режим і лічильники реклами
+adb shell am start -n com.redwave.downloader/.MainActivity --es redwave.debug_app_open na
+# диплінк з лендінга (невалідний токен = тиша, це норма)
+adb shell am start -a android.intent.action.VIEW -d "downloader://reward?h=test"
 # «повернення в апку» без «Недавніх»: піти в Settings і повернути Redwave наперед
 adb shell am start -a android.settings.SETTINGS && sleep 3 && adb shell am start -n com.redwave.downloader/.MainActivity
+# лог бізнес-логіки: MODEL OUR … atk=yes, openAd URL … pl=…, cold HOME: last exit …, localpush: scheduled …
+adb logcat -s redwave:V
 ```
 
 **Release (R8, повний режим) перевіряти на девайсі**, не лише збирати: debug без мініфікації не ловить
-вирізаних конструкторів. Заміряно 08.10.2026 — AdMob тягнув WorkManager 2.7.0 / Room 2.2.5, у release краш на
+вирізаних конструкторів. У `mapping.txt` не перейменовані `adsmodule.RemoteConfigModel` (Gson) і
+`businesModule.push.LocalPush$PushWorker` (WorkManager) — правила в `proguard-rules.pro`. Заміряно 08.10.2026 — AdMob тягнув WorkManager 2.7.0 / Room 2.2.5, у release краш на
 старті (`Failed to create an instance of androidx.work.impl.WorkDatabase`); лікується явним
 `androidx.work:work-runtime` свіжої версії в `app/build.gradle.kts`. Перевірка без ключа апки: зібрати
 `assembleRelease`, `zipalign` + `apksigner` debug-ключем (`~/.android/debug.keystore`, пароль `android`) → `adb install -r`.

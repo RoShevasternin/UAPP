@@ -137,8 +137,8 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
         super.resume()
         Blit.dispose()
         // Роль HOME могли забрати в налаштуваннях, поки ми були у фоні → назад на екран-вимогу.
-        // Лише коли роль обов'язкова (Remote Config home_required) — перевіряємо на кожному вході.
-        // Інтернет міг зникнути / з'явитись → прапорці інші (офлайн — DEFAULT): оновити 3-й слайд
+        // Лише коли роль обов'язкова (картка сервера: app_open = custom*) — перевіряємо на кожному вході.
+        // Інтернет міг зникнути / з'явитись → режим інший (офлайн — DEFAULT): оновити 3-й слайд
         (currentScreen as? OnboardingScreen)?.onFlagsChanged()
         if (isReady && model.state.onboarded && currentScreen !is OnboardingScreen && currentScreen !is SplashScreen && !isUnlocked) {
             log("HOME role required but not held → gate")
@@ -172,12 +172,12 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
         player.applyEq()
     }
 
-    /** Прапорці Firebase Remote Config (кеш або DEFAULT). */
-    val flags get() = bridge.remoteFlags()
+    /** Режим з картки нашого сервера (кеш AdPref або DEFAULT), див. AppFlags. */
+    val flags get() = bridge.appFlags()
 
     /**
-     * Чи можна в апку. Роль HOME обов'язкова лише з home_required = true (Remote Config,
-     * рішення VELDAN 07.10.2026): тоді без ролі — тільки екран-вимога (OnboardingScreen з KEY_GATE).
+     * Чи можна в апку. Роль HOME обов'язкова лише в режимі «наша реклама» (app_open = custom*,
+     * рішення VELDAN 12.10.2026): тоді без ролі — тільки екран-вимога (OnboardingScreen з KEY_GATE).
      * Інакше роль бажана: «Maybe later» на 3-му слайді, перемикач у Settings.
      */
     val isUnlocked: Boolean get() = model.state.onboarded && (bridge.isDefaultHome() || !flags.homeRequired)
@@ -193,29 +193,44 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
             model.update { it.copy(onboarded = true) }
             pendingHome = false
             nav.navigateRoot(AppScreen::class.java.name)
+            runStartupFlow()
             return
         }
         when {
             !model.state.onboarded   -> nav.navigateRoot(OnboardingScreen::class.java.name)
             !isUnlocked              -> nav.navigateRoot(OnboardingScreen::class.java.name, OnboardingScreen.KEY_GATE)
             pendingHome              -> nav.navigateRoot(LauncherScreen::class.java.name)
-            else                     -> nav.navigateRoot(AppScreen::class.java.name)
+            else                     -> { nav.navigateRoot(AppScreen::class.java.name); runStartupFlow() }
         }
         pendingHome = false
     }
 
     // ------------------------------------------------------------------------
-    // Реклама: App Open + Interstitial (частота — AdPolicy, показ — AdsManager)
+    // Бізнес-логіка UAPP: черга старту, app_open, інтерстішал (adsmodule вирішує провайдера)
     // ------------------------------------------------------------------------
     /**
-     * Лише всередині застосунку: вкладки й плеєр. На лаунчері (роль HOME) реклами AdMob немає —
-     * повноекранна реклама на головному екрані = «disruptive ads» за правилами Google Play;
-     * на онбордингу й екрані-вимозі — теж ні.
+     * Лише всередині застосунку: вкладки й плеєр. На лаунчері (роль HOME) app_open / інтерстішалів
+     * немає — там свої плейсменти click_home / clear_history (MainActivity); на онбордингу й
+     * екрані-вимозі — теж ні.
      */
     private val isInApp: Boolean get() = currentScreen is AppScreen || currentScreen is PlayerScreen
 
-    /** Splash: чи поведе перший екран у застосунок (тоді є сенс у App Open). Перший запуск — ні. */
+    /** Черга старту (опт-ін → app_open) уже була в цьому процесі. */
+    var startupFlowDone = false
+        private set
+
+    /** Splash: чи поведе перший екран у застосунок (тоді — черга старту). Перший запуск — ні. */
     fun firstScreenIsApp(): Boolean = model.state.onboarded && isUnlocked && !pendingHome
+
+    /**
+     * Черга старту UAPP: опт-ін на пуші → стартовий app_open → onDone. Раз на процес: зі Splash,
+     * а якщо процес стартував як лаунчер або з онбордингу — на першому вході в застосунок.
+     */
+    fun runStartupFlow(onDone: () -> Unit = {}) {
+        if (startupFlowDone) { onDone(); return }
+        startupFlowDone = true
+        bridge.runStartupFlow(onDone)
+    }
 
     /**
      * Повернулись у Redwave / тапнули іконку. Навігація з onAppIconPressed ще в черзі GL —
@@ -225,14 +240,27 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
         if (!isReady || !isUnlocked) return
         com.redwave.downloader.game.utils.runGDX {
             if (!isInApp) return@runGDX
-            bridge.showAppOpen(onReturn = !fromIcon, awayMs = awayMs) { shown -> if (!shown) maybeInterstitial() }
+            if (!startupFlowDone) runStartupFlow() else bridge.appOpenOnReturn()
         }
     }
 
-    /** Іконка Redwave на НАШОМУ лаунчері — таке саме відкриття апки, як тап у системному (App Open). */
+    /** Іконка Redwave на НАШОМУ лаунчері — таке саме відкриття апки, як тап у системному (app_open). */
     fun openAppFromLauncher() {
         navigationManager.navigate(AppScreen::class.java.name, LauncherScreen::class.java.name)
         onAppForeground(awayMs = -1L, fromIcon = true)
+    }
+
+    /** Перехід уперед у застосунку (вкладка, плеєр) — front-інтерстішал за частотою з картки. */
+    fun adFront() {
+        if (!isReady || !isInApp) return
+        if (maybeInterstitial()) return
+        bridge.onFrontNavigation()
+    }
+
+    /** «Назад» з плеєра в застосунок — back-інтерстішал. */
+    fun adBack() {
+        if (!isReady) return
+        bridge.onBackNavigation()
     }
 
     /** Трек у бібліотеці → лічильник; інтерстішал — коли людина побачила тост «Downloaded». */
@@ -244,14 +272,15 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
     }
 
     /**
-     * Interstitial у природній паузі: після завантаження треку або при зміні вкладки.
-     * Не поверх шторки й не посеред набору тексту; не настав час — нічого (лічильник чекає).
+     * showInterstitial (pl=interstitial) кожні 2 треки — у природній паузі: після тосту «Downloaded»
+     * або на наступному переході. Не поверх шторки; не настав час — нічого (лічильник чекає).
      */
-    fun maybeInterstitial() {
-        if (!isReady || !isInApp) return
-        if ((currentScreen as? RedwaveScreen)?.sheet != null) return
-        if (!bridge.isInterstitialDue()) return
-        bridge.showInterstitial { }
+    fun maybeInterstitial(): Boolean {
+        if (!isReady || !isInApp) return false
+        if ((currentScreen as? RedwaveScreen)?.sheet != null) return false
+        if (!bridge.isInterstitialDue()) return false
+        bridge.showInterstitial()
+        return true
     }
 
     fun toast(text: String) {
@@ -308,11 +337,11 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
     override fun onPlaybackChanged() {}
 
     /**
-     * Прапорці змінились на льоту (real-time / debug). Послаблення діє одразу: роль стала
+     * Режим змінився на льоту (новий конфіг / інтернет). Послаблення діє одразу: роль стала
      * необов'язковою, а людина стоїть на екрані-вимозі → в апку. Посилення (роль стала
      * обов'язковою) — на наступному вході (resume / старт), щоб не викидати посеред дії.
      */
-    override fun onRemoteFlags(flags: com.redwave.downloader.core.config.RemoteFlags) {
+    override fun onFlagsChanged(flags: com.redwave.downloader.core.config.AppFlags) {
         if (!isReady) return
         val s = currentScreen
         if (s is OnboardingScreen) {

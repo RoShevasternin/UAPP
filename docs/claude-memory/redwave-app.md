@@ -1,6 +1,6 @@
 ---
 name: redwave-app
-description: Redwave Music Downloader — тестова апка Tools у poc/TEST_APP/Game Redwave (апка — у вкладеній Redwave/); з 07.10.2026 Android-проєкт LibGDX є і працює на девайсі (усі 5 екранів, Ф0–Ф8 у першому проході)
+description: Redwave Music Downloader — тестова апка Tools у poc/TEST_APP/Game Redwave (апка — у вкладеній Redwave/); LibGDX-апка працює на девайсі; з 12.10.2026 бізнес-логіка UAPP (businesModule) замість Remote Config
 metadata:
   type: project
 ---
@@ -105,3 +105,18 @@ HOME — [[home-launcher-poc]]; атласи пакує VELDAN у GUI — [[mind
   Everyone, 500K+, Data safety з Location/Installed apps/Device IDs. У відгуках (07–09.2026): «force you to put it
   as home app», «pop up every time I opened any app» — той самий механізм, ризик блокування вже після публікації.
 - Менеджер хоче категорію Tools. Акаунт — організація STAR ADS LLC (закритий тест 12×14 не обов'язковий).
+
+## Бізнес-логіка UAPP (VELDAN, 12.10.2026 — зроблено й перевірено на Redmi, debug + release)
+- Firebase Remote Config прибрано зовсім; Firebase лишився лише для FCM. `businesModule` з еталона без змін,
+  `adsmodule` урізаний (без банера/нативки — рішення VELDAN; AppOpenManager без ProcessLifecycleOwner).
+- **Режим з картки сервера**: app_open = custom* → вкладки на «Додому», роль обов'язкова, без Uninstall;
+  na / admob / офлайн → «Maybe later», Uninstall, вкладок немає. Картка `downloader` на сервері вже є
+  (12.10.2026: atk видається, усі профілі custom_google, кампанії пушів comeback / comeback_3d).
+- Нові плейсменти для менеджера: **`click_home`**, **`clear_history`** (VELDAN передає менеджеру). Решта як в UAPP:
+  app_open (черга старту), front (вкладки, плеєр), back (з плеєра), interstitial (кожні 2 треки), optin_return.
+- Опт-ін — без монет; схема диплінка **`downloader`** — віддати серверній команді.
+- Пастки: MIUI «Очистити все» вбиває процес Redwave (OneKeyClean) — clear_history на холодному старті за
+  ApplicationExitInfo; стартова вкладка між onStart і onResume — «наша реклама» фіксується в onStop.
+- Відкрите: Privacy Policy і Data safety застаріли (Remote Config → наш сервер + FCM + install referrer);
+  TikTok/Meta SDK не підключали; back з плеєра й локальний пуш (24 год) на девайсі не перевірені.
+- Деталі — `Game Redwave/Redwave/CLAUDE.md`. Див. [[uapp-server-patch-backport]].

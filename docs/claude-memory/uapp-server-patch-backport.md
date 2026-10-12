@@ -23,4 +23,8 @@ UAPP: серверна команда періодично присилає `DEV
 `businesModule` цільової апки з еталоном: якщо розходження є не лише в префіксі
 пакета, копіювати файли цілком не можна.
 
+**Поза парком:** з 12.10.2026 `businesModule` (без змін) і урізаний `adsmodule` є ще в
+`poc/TEST_APP/Game Redwave/Redwave` — бекпортувати і туди, звіряючи з відмінностями в її `CLAUDE.md`
+([[redwave-app]]).
+
 Див. [[uapp-employer-and-repo]], [[workflow-direct-edits]].

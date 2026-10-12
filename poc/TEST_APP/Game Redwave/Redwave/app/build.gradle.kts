@@ -93,21 +93,27 @@ dependencies {
     implementation("androidx.media3:media3-transformer:$media3")
     implementation("androidx.media3:media3-common:$media3")
 
-    // Custom Tabs: сторінка при поверненні на Home
+    // Custom Tabs: лендінги через гейтвей (BrowserUtil) — «Додому», «Недавні», app_open, front/back
     implementation("androidx.browser:browser:1.10.0")
 
     // probe + fetchText
     implementation("com.squareup.okhttp3:okhttp:5.5.0")
 
-    // Firebase: лише Remote Config (параметр redwave_config — див. RemoteFlags.kt). Без Analytics.
+    // Firebase: лише FCM (businesModule: токен пушів, PushService). Remote Config прибрано
+    // 12.10.2026 — режим і реклама з картки нашого сервера. Без Analytics.
     implementation(platform("com.google.firebase:firebase-bom:35.0.0"))
-    implementation("com.google.firebase:firebase-config")
+    implementation("com.google.firebase:firebase-messaging")
 
-    // AdMob: App Open + Interstitial (android/AdsManager.kt). Зараз — лише тестові блоки Google.
+    // businesModule + adsmodule (як в UAPP): Gson для конфігу, сирий Install Referrer для атрибуції
+    implementation("com.google.code.gson:gson:2.14.0")
+    implementation("com.android.installreferrer:installreferrer:2.2")
+
+    // AdMob: App Open + Interstitial (adsmodule, провайдер з картки сервера)
     implementation("com.google.android.gms:play-services-ads:25.5.0")
     // play-services-ads тягне WorkManager 2.7.0 + Room 2.2.5 (2021): їхні правила R8 писані до повного режиму,
     // і в release R8 вирізає конструктор WorkDatabase_Impl → краш на старті (заміряно 08.10.2026).
     // Свіжий WorkManager тягне Room 2.8 з правильними consumer-правилами.
+    // Ще й LocalPush (businesModule) планує локальні пуші через WorkManager.
     implementation("androidx.work:work-runtime:2.12.0")
 }
 

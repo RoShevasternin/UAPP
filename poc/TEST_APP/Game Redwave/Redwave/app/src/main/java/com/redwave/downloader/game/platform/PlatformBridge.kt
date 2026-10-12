@@ -1,6 +1,7 @@
 package com.redwave.downloader.game.platform
 
-import com.redwave.downloader.core.config.RemoteFlags
+import com.redwave.downloader.businesModule.backend.Bt
+import com.redwave.downloader.core.config.AppFlags
 import com.redwave.downloader.core.link.AudioSniffer
 import com.redwave.downloader.core.link.ResolvedLink
 import com.redwave.downloader.core.model.DownloadStatus
@@ -59,36 +60,40 @@ interface PlatformBridge {
     fun openHomeAppSettings()
     val appVersion: String
 
-    // ── Remote Config (Firebase) ─────────────────────────────────────────────
-    /** Що діє зараз: офлайн — RemoteFlags.DEFAULT, онлайн — кеш Firebase (або DEFAULT до першої відповіді). Не щокадру. */
-    fun remoteFlags(): RemoteFlags
-    /** Чи були прапорці з сервера хоч раз (кеш минулого запуску теж рахується). */
-    fun hasRemoteFlags(): Boolean
-    /** fetchAndActivate; onDone у GL-потоці рівно один раз — по відповіді або по таймауту. */
-    fun refreshRemoteFlags(timeoutMs: Long, onDone: (RemoteFlags) -> Unit)
-    /** Settings → Debug: звідки прапорці (remote / default / debug) і що в них. */
-    fun remoteFlagsDebug(): String
-    /** Debug AD_MODE: реклама + роль обов'язкова + без Uninstall поверх Remote Config. */
+    // ── Конфіг з нашого сервера (businesModule, ServerConfig) ───────────────
+    /** Режим з картки: app_open = custom* → «наша реклама»; офлайн / na / admob — DEFAULT. Не щокадру. */
+    fun appFlags(): AppFlags
+    /** Чи є конфіг (хоч з кешу минулого запуску). Ні — Splash чекає сервер. */
+    fun hasConfig(): Boolean
+    /** /appconfig; onDone у GL-потоці рівно один раз — по відповіді або по таймауту. */
+    fun loadConfig(timeoutMs: Long, onDone: () -> Unit)
+    /** Settings → Debug: звідки конфіг, atk, тип юзера, режим. */
+    fun configDebug(): String
+    /** Debug AD_MODE: «наша реклама» примусово (вкладки на «Додому», роль обов'язкова, без Uninstall). */
     fun isAdMode(): Boolean
     /** Увімкнути / вимкнути AD_MODE і перезапустити апку (лише debug-збірка). */
     fun setAdMode(on: Boolean)
 
-    // ── Реклама: AdMob App Open + Interstitial (AdsManager, зараз тестові блоки) ──
-    /** Частота — core/ads/AdPolicy; де показувати (лише в застосунку) — GDXGame. */
-    /** Splash: READY — показати; LOADING — є сенс почекати (до таймауту); NONE — не чекати. */
-    fun appOpenStatus(): AdStatus
+    // ── Бізнес-логіка UAPP: черга старту, реклама, події ─────────────────────
     /**
-     * App Open. onReturn = true — повернення в апку після awayMs мс поза нею; false — відкриття.
-     * onDone(shown) — у GL-потоці рівно один раз; shown = true — рекламу показали й закрили.
+     * Черга старту UAPP (Biz.runStartupFlow): опт-ін на пуші (свій діалог → системний запит) →
+     * стартовий app_open (вкладка custom* / AdMob App Open) → onDone у GL-потоці рівно один раз.
      */
-    fun showAppOpen(onReturn: Boolean, awayMs: Long, onDone: (shown: Boolean) -> Unit)
-    /** Трек завантажено — лічильник для інтерстішала (кожні 2). */
+    fun runStartupFlow(onDone: () -> Unit)
+    /** app_open при поверненні в застосунок (AppOpenManager.onReturnToApp). */
+    fun appOpenOnReturn()
+    /** Інтерстішал на переходах (AdManager): частоту front/back рахує картка сервера. */
+    fun onFrontNavigation()
+    fun onBackNavigation()
+    /** Трек завантажено — лічильник для showInterstitial (кожні 2). */
     fun onTrackDownloaded()
     fun isInterstitialDue(): Boolean
-    /** Interstitial, якщо настав час; onDone(shown) — у GL-потоці рівно один раз. */
-    fun showInterstitial(onDone: (shown: Boolean) -> Unit)
-    /** Settings → Debug: лічильник, останній показ, чи завантажено. */
+    /** showInterstitial (pl=interstitial / AdMob), скидає лічильник треків. */
+    fun showInterstitial()
+    /** Settings → Debug: провайдер інтерстішала, лічильники. */
     fun adsDebug(): String
+    /** Подія screen_view (Events): bt — спільний словник парку, block — snake_case, не перейменовувати. */
+    fun screenView(bt: Bt, block: String)
 
     // ── Буфер ────────────────────────────────────────────────────────────────
     /**
@@ -181,7 +186,7 @@ interface PlatformBridge {
     fun launchApp(app: LauncherApp)
     /** Док лаунчера: дефолтні апки ролей [Телефон, Повідомлення, Браузер, Камера]; null — немає дефолту. */
     fun dockApps(): List<LauncherApp?>
-    /** Довге натискання в лаунчері (RemoteFlags.isUninstall). app = null — сама Redwave. */
+    /** Довге натискання в лаунчері (AppFlags.isUninstall). app = null — сама Redwave. */
     fun canUninstall(app: LauncherApp?): Boolean
     fun openAppInfo(app: LauncherApp?)
     fun uninstallApp(app: LauncherApp?)
@@ -200,8 +205,8 @@ interface PlatformEvents {
     fun onDownloadFinished(id: Long, success: Boolean, localUri: String?)
     fun onAppsChanged()
     fun onPlaybackChanged()
-    /** Прапорці Remote Config змінились (fetch / real-time / debug з adb). */
-    fun onRemoteFlags(flags: RemoteFlags)
+    /** Режим змінився (новий конфіг сервера / інтернет). */
+    fun onFlagsChanged(flags: AppFlags)
     /**
      * Людина повернулась у Redwave з іншої апки / «Недавніх» / вимкненого екрана (не через «Додому»,
      * не з нашої реклами, вкладки чи системного екрана): awayMs — скільки її не було.
@@ -209,8 +214,6 @@ interface PlatformEvents {
      */
     fun onAppForeground(awayMs: Long, fromIcon: Boolean)
 }
-
-enum class AdStatus { READY, LOADING, NONE }
 
 data class ProbeResult(
     val decision: AudioSniffer.Decision,
