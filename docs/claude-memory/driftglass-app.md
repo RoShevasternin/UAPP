@@ -30,7 +30,7 @@ metadata:
 - **12.10.2026: Firebase Remote Config + AdMob як у Redwave** (коміт a5b3df1). Параметр `driftglass_config`, значення VELDAN:
   enabled_url_ad false, url google.com, home_required false, is_uninstall true, is_enable_admob true.
   ✔ Firebase `driftglass-original` створив VELDAN 12.10.2026, `google-services.json` у git, апка бере `[remote]`.
-  (gcloud на Маці — інший акаунт, roshevasternin@, до Firebase VELDAN доступу не має — консоль робить VELDAN.)
+  (gcloud на Маці — інший акаунт, roshevasternin@, без доступу до Firebase-проєктів VELDAN — консоль робить VELDAN.)
   Privacy Policy (`Game Driftglass/privacy-policy/`) ще не викладено на Cloudflare (`driftglass-privacy`) — інструкція в її README.
 - **Маркет-кіт** `Game Driftglass/market/`: 6 скрінів з телефона в debug-режимі StoreDemo (вигадані апки з нашими
   іконками Material Symbols — VELDAN просив «щоб не потрапили зайві апки, усе легально»), feature, icon, LISTING.md.
