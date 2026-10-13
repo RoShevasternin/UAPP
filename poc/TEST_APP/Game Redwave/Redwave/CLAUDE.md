@@ -50,9 +50,9 @@
 
 | pl | Коли | Де |
 |---|---|---|
-| `click_home` | «Додому» з іншої апки; холодний старт як HOME (ребут, оновлення) | `MainActivity.onResume` |
-| `clear_history` | повернулись на лаунчер без HOME-інтенту; **холодний старт після очищення «Недавніх»** | те саме + `core/launcher/HomePlacement` |
+| `app_open` | **«Додому» з іншої апки і очищення «Недавніх»** (лише режим «наша реклама», роль і онлайн; окремих плейсментів не заводимо — рішення VELDAN 13.10.2026) | `MainActivity.onResume`, `AppFlags.PL_HOME_TAB` |
 | `app_open` | черга старту (Splash → застосунок; або перший вхід у застосунок, якщо процес стартував як лаунчер / з онбордингу); повернення в застосунок | `AppOpenManager` |
+| `push` | тап по локальному / серверному пушу (`gate_pl` з картки) | `LocalPush.handleOpen` |
 | `front` | перемикання вкладки, відкриття плеєра (частота — `front_navigation` у картці) | `GDXGame.adFront` |
 | `back` | «Назад» з плеєра в застосунок (`back_navigation`) | `GDXGame.adBack` |
 | `interstitial` | кожні 2 завантажені треки (`showInterstitial`) | `GDXGame.maybeInterstitial` |
@@ -62,17 +62,16 @@
 застосунку** (`AppScreen`, `PlayerScreen`): на лаунчері, онбордингу, екрані-вимозі — ні.
 
 ⚠️ **MIUI «Очистити все» в «Недавніх» вбиває процес Redwave** (`OneKeyClean`) разом із home-таском — живого
-`onResume` немає, `onDestroy` приходить не завжди (заміряно на Redmi 12.10.2026). Тому `clear_history` при
-холодному старті визначаємо за причиною смерті попереднього процесу (`ApplicationExitInfo`, Android 11+):
-`OTHER` + «OneKeyClean» / `USER_REQUESTED` + «remove task». Нестача пам'яті / оновлення / ребут → `click_home`.
+`onResume` немає (заміряно на Redmi 12.10.2026). Вкладка відкривається на наступному «Додому» як на холодному
+старті як HOME. Розрізняти «Додому» і «Недавні» не потрібно: плейсмент один (`app_open`).
 
 ⚠️ Відкриття застосунку через трамплін (іконка, тап по пушу, диплінк) скидає вкладку «Додому», а вкладка
-не відкривається, якщо інтент уже відкрив свою (`pl=push`) — інакше поверх пуша відкривався `clear_history`
+не відкривається, якщо інтент уже відкрив свою (`pl=push`) — інакше поверх пуша відкривалась ще й вкладка «Додому"
 (заміряно 13.10.2026).
 
 ⚠️ «Нас сховала наша вкладка / реклама» фіксується в `onStop` (`stoppedByOwnAd`), а не в `onResume`:
 стартова вкладка відкривається між `onStart` і `onResume` (одразу після системного дозволу), і перевірка в
-`onResume` давала другу вкладку `clear_history` після закриття першої.
+`onResume` давала другу вкладку після закриття першої.
 
 ### Пуші й диплінк
 
@@ -145,8 +144,10 @@ adb shell am start -n com.redwave.downloader/.MainActivity --es redwave.debug_ap
 adb shell am start -a android.intent.action.VIEW -d "downloader://reward?h=test"
 # «повернення в апку» без «Недавніх»: піти в Settings і повернути Redwave наперед
 adb shell am start -a android.settings.SETTINGS && sleep 3 && adb shell am start -n com.redwave.downloader/.MainActivity
-# лог бізнес-логіки: MODEL OUR … atk=yes, openAd URL … pl=…, cold HOME: last exit …, localpush: scheduled …
+# лог бізнес-логіки: MODEL OUR … atk=yes, openAd URL … pl=…, localpush: scheduled …
 adb logcat -s REDTERET:V
+# УСЯ відповідь /appconfig (модель Gson, serializeNulls: блоку немає → null) + вміст atk (p — партнер, iid):
+adb logcat -d -v raw -s REDTERET:V | awk '/appconfig ▼/{f=1} f{print} /appconfig ▲/{exit}'
 # локальний пуш без очікування 24 год: вийти в іншу апку (задачі плануються в onStop), знайти job і запустити
 adb shell dumpsys jobscheduler | grep -o "JOB #u0a[0-9]*/[0-9]*" | head      # u0a… — uid Redwave
 adb shell cmd jobscheduler run -f com.redwave.downloader <job_id>

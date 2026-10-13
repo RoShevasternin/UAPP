@@ -112,11 +112,13 @@ HOME — [[home-launcher-poc]]; атласи пакує VELDAN у GUI — [[mind
 - **Режим з картки сервера**: app_open = custom* → вкладки на «Додому», роль обов'язкова, без Uninstall;
   na / admob / офлайн → «Maybe later», Uninstall, вкладок немає. Картка `downloader` на сервері вже є
   (12.10.2026: atk видається, усі профілі custom_google, кампанії пушів comeback / comeback_3d).
-- Нові плейсменти для менеджера: **`click_home`**, **`clear_history`** (VELDAN передає менеджеру). Решта як в UAPP:
-  app_open (черга старту), front (вкладки, плеєр), back (з плеєра), interstitial (кожні 2 треки), optin_return.
+- **Вкладка на «Додому» / після «Недавніх» — `pl=app_open`** (13.10.2026 VELDAN передумав: без нових плейсментів
+  click_home / clear_history). Решта як в UAPP: app_open (черга старту), front (вкладки, плеєр), back (з плеєра),
+  interstitial (кожні 2 треки), push, optin_return.
+- У лозі вся відповідь /appconfig (модель + вміст atk) — команда в `Redwave/CLAUDE.md`, щоб VELDAN бачив, що додали на сервері.
 - Опт-ін — без монет; схема диплінка **`downloader`** — віддати серверній команді.
-- Пастки: MIUI «Очистити все» вбиває процес Redwave (OneKeyClean) — clear_history на холодному старті за
-  ApplicationExitInfo; стартова вкладка між onStart і onResume — «наша реклама» фіксується в onStop.
+- Пастки: MIUI «Очистити все» вбиває процес Redwave (OneKeyClean) — вкладка на наступному холодному старті як HOME;
+  стартова вкладка між onStart і onResume — «наша реклама» фіксується в onStop.
 - 13.10.2026: **TikTok SDK як в еталоні** (VELDAN: «TikTok — основа, де ми рекламуємось; install referrer — основа
   системи»). Повний прогін на Redmi (чиста установка, debug + release): усі плейсменти, опт-ін обидві гілки, back з
   плеєра (виправлено: системне «Назад» ішло повз closePlayer), локальний пуш через `jobscheduler run -f` показався,

@@ -120,6 +120,7 @@ object ServerConfig {
                     log("MODEL OUR · atk=${if (Backend.atk != null) "yes" else "no"} user=${AdConfig.userType.name.lowercase()} " +
                         "app_open=${AdConfig.getProvider(AdType.APP_OPEN).value} interstitial=${AdConfig.getProvider(AdType.INTERSTITIAL).value} " +
                         "tiktok=${model.tiktok?.isValid == true} campaigns=${model.notifications?.campaigns?.size ?: 0}")
+                    logFullModel(model)
                 } else {
                     log("Our config failed → кеш AdPref [$origin]")
                 }
@@ -131,6 +132,29 @@ object ServerConfig {
                 w.forEach { it() }
             }
         }
+    }
+
+    // ── Уся відповідь сервера в лог (VELDAN 13.10.2026: бачити, що серверна команда додала в картку) ──
+    // Модель — як її розібрав Gson (усі блоки, з якими працює апка); serializeNulls — блоку немає → видно `null`.
+    // Поля, яких модель не знає (новий блок на сервері), сюди не потраплять — їх видно лише в сирій відповіді.
+    // По рядку на лог: logcat ріже довгі повідомлення (~4 КБ).
+    // Дивитись: adb logcat -s REDTERET:V | sed -n '/appconfig ▼/,/appconfig ▲/p'
+    private fun logFullModel(model: com.redwave.downloader.adsmodule.RemoteConfigModel) {
+        val json = runCatching {
+            com.google.gson.GsonBuilder().setPrettyPrinting().serializeNulls().disableHtmlEscaping().create().toJson(model)
+        }.getOrElse { "toJson failed: ${it.message}" }
+        log("──── /appconfig ▼  gate=${Backend.gate} · iid=${Backend.iid}")
+        log("atk (вміст підпису: p — партнер, e — апка, iid — установка) = ${atkPayload()}")
+        json.lineSequence().forEach { log(it) }
+        log("──── /appconfig ▲")
+    }
+
+    /** atk = base64url(JSON) + «~» + підпис. Підпис не перевіряємо — лише показуємо, що всередині. */
+    private fun atkPayload(): String {
+        val atk = Backend.atk ?: return "немає (органіка до резолву або сервер не видав)"
+        return runCatching {
+            String(android.util.Base64.decode(atk.substringBefore('~'), android.util.Base64.URL_SAFE or android.util.Base64.NO_PADDING))
+        }.getOrElse { "не розібрався: ${it.message}" }
     }
 
     // ── TikTok SDK (як initTikTok у MainActivity еталона): ключі — блок `tiktok` картки ──

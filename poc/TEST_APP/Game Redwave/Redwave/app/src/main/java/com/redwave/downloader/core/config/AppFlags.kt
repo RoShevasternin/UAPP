@@ -6,7 +6,7 @@ package com.redwave.downloader.core.config
 //
 //  Вирішує провайдер app_open для типу цього юзера (config.<organic|paid|gclid…>.app_open):
 //    • custom / custom_google / custom_tiktok / custom_facebook — «наша реклама»:
-//        вкладка на «Додому» (pl=click_home) і після очищення «Недавніх» (pl=clear_history),
+//        вкладка на «Додому» і після очищення «Недавніх» (pl=app_open),
 //        роль HOME обов'язкова (без «Maybe later»), видалити з лаунчера не можна;
 //    • na / admob / немає конфігу — «Maybe later» є, видаляти можна, вкладок на «Додому» немає.
 //  Немає інтернету → DEFAULT завжди (рішення VELDAN 07.10.2026, перенесено з Remote Config).
@@ -27,9 +27,11 @@ data class AppFlags(
         /** Cloudflare (Workers static assets) акаунта STAR ADS LLC; сторінка — Game Redwave/privacy-policy/public. */
         const val DEFAULT_PRIVACY_URL = "https://redwave-privacy.oyutetijep68.workers.dev/privacy"
 
-        /** Плейсменти вкладки — ключ доходу <app>-<pl>, після релізу НЕ перейменовувати. */
-        const val PL_CLICK_HOME    = "click_home"
-        const val PL_CLEAR_HISTORY = "clear_history"
+        /**
+         * Плейсмент вкладки на «Додому» / після «Недавніх» — той самий app_open, що й на старті
+         * (рішення VELDAN 13.10.2026: нових плейсментів на сервері не заводимо). Ключ доходу <app>-<pl>.
+         */
+        const val PL_HOME_TAB = "app_open"
 
         val DEFAULT = AppFlags()
         private val OURS = AppFlags(homeTabs = true, homeRequired = true, isUninstall = false)

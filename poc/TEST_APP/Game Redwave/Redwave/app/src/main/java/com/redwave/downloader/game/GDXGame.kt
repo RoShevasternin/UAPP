@@ -210,7 +210,7 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
     // ------------------------------------------------------------------------
     /**
      * Лише всередині застосунку: вкладки й плеєр. На лаунчері (роль HOME) app_open / інтерстішалів
-     * немає — там свої плейсменти click_home / clear_history (MainActivity); на онбордингу й
+     * немає — там своя вкладка на «Додому» / «Недавні» (MainActivity, pl=app_open); на онбордингу й
      * екрані-вимозі — теж ні.
      */
     private val isInApp: Boolean get() = currentScreen is AppScreen || currentScreen is PlayerScreen

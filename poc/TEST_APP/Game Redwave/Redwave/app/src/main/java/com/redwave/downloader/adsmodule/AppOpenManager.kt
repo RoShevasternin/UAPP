@@ -14,8 +14,8 @@ import com.google.android.gms.ads.appopen.AppOpenAd
 
 // Redwave: копія еталона з однією відмінністю — повернення з фону апка повідомляє САМА
 // (MainActivity → GDXGame → onReturnToApp), а не ProcessLifecycleOwner. Redwave буває
-// головним екраном: процес «повертається з фону» на кожне «Додому», а там свої плейсменти
-// (click_home / clear_history), і app_open поверх них дав би дві вкладки. app_open — лише
+// головним екраном: процес «повертається з фону» на кожне «Додому», а там свою вкладку відкриває
+// MainActivity (теж pl=app_open), і цей менеджер поверх неї дав би другу. Тут app_open — лише
 // коли людина реально повертається в застосунок (AppScreen / PlayerScreen) або відкриває його.
 class AppOpenManager(
     private val application: Application

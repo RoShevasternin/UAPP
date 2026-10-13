@@ -23,7 +23,6 @@ import com.redwave.downloader.businesModule.backend.Backend
 import com.redwave.downloader.businesModule.backend.Events
 import com.redwave.downloader.businesModule.push.PushOptIn
 import com.redwave.downloader.core.config.AppFlags
-import com.redwave.downloader.core.launcher.HomePlacement
 import com.redwave.downloader.databinding.ActivityMainBinding
 import com.redwave.downloader.game.GDXFragment
 import com.redwave.downloader.util.log
@@ -43,7 +42,6 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     companion object {
         /** Від LauncherTrampoline: тапнули іконку — показати застосунок, а не лаунчер. */
         const val EXTRA_OPEN_APP = "redwave.open_app"
-        private const val KEY_EXIT_SEEN = "exit_seen_ts"
         private var current: java.lang.ref.WeakReference<MainActivity>? = null
     }
 
@@ -83,7 +81,8 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     }
 
     // ------------------------------------------------------------------------
-    // Вкладка на «Додому» / після «Недавніх» (плейсменти click_home / clear_history)
+    // Вкладка на «Додому» / після «Недавніх» — плейсмент app_open (рішення VELDAN 13.10.2026:
+    // окремих плейсментів не заводимо, це те саме «відкриття» в ключі доходу <app>-app_open)
     // ------------------------------------------------------------------------
     /**
      * Відкрити вкладку на найближчому onResume. Вмикають: вихід в іншу апку / «Недавні» (onStop)
@@ -94,12 +93,6 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
     private var shouldLaunchCustomTab = false
 
     /**
-     * Після виходу прийшов HOME-інтент → людина натиснула «Додому» (click_home). Повернулись на
-     * лаунчер без HOME-інтенту (очистили «Недавні», закрили їх) → clear_history.
-     */
-    private var homeIntentSinceLeave = false
-
-    /**
      * Нас сховала НАША вкладка / реклама — фіксуємо в onStop, а не вгадуємо в onResume: стартова
      * вкладка відкривається між onStart і onResume (одразу після системного дозволу на пуші), і
      * onResume, скинувши AdConfig.isFullscreenAdShowing, зарахував би її закриття як вихід → друга вкладка.
@@ -108,24 +101,6 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
 
     /** Холодний старт замінив живу MainActivity (Android перезапускає її, коли надали роль HOME) — не «Додому». */
     private var replacedPrevious = false
-
-    /**
-     * Плейсмент холодного старту як HOME. «Очистити все» в «Недавніх» знімає і наш home-таск, і процес
-     * (MIUI OneKeyClean, заміряно на Redmi 12.10.2026): живого onResume немає — дивимось, чому помер
-     * попередній процес (HomePlacement). Кожен вихід рахуємо раз: timestamp — у prefs.
-     */
-    private fun coldHomePlacement(): String {
-        if (android.os.Build.VERSION.SDK_INT < 30) return AppFlags.PL_CLICK_HOME
-        val prefs = getSharedPreferences("redwave_home", MODE_PRIVATE)
-        val exit = runCatching {
-            getSystemService(android.app.ActivityManager::class.java)
-                .getHistoricalProcessExitReasons(packageName, 0, 1).firstOrNull()
-        }.getOrNull()?.takeIf { it.timestamp > prefs.getLong(KEY_EXIT_SEEN, 0L) }
-        exit?.let { prefs.edit().putLong(KEY_EXIT_SEEN, it.timestamp).apply() }
-        val pl = HomePlacement.forColdHome(exit?.reason, exit?.description)
-        log("cold HOME: last exit reason=${exit?.reason} '${exit?.description}' → $pl")
-        return pl
-    }
 
     /**
      * Наші ж системні екрани (налаштування ролі/WRITE_SETTINGS, шер, браузер з посилання) —
@@ -271,7 +246,7 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         if (shouldLaunchCustomTab && AdConfig.isFullscreenAdShowing) { shouldLaunchCustomTab = false; log("home tab skipped: intent already opened a tab") }
         if (shouldLaunchCustomTab && bridge.isDefaultHome()) {
             shouldLaunchCustomTab = false            // СПЕРШУ — інакше цикл
-            val pl = if (homeIntentSinceLeave) AppFlags.PL_CLICK_HOME else AppFlags.PL_CLEAR_HISTORY
+            val pl = AppFlags.PL_HOME_TAB
             val flags = ServerConfig.flags
             when {
                 !flags.homeTabs    -> log("home tab off [$pl] (${ServerConfig.debugLine().replace('\n', ' ')})")
@@ -279,7 +254,6 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
                 else               -> { log("home tab → pl=$pl"); BrowserUtil.openAd(this, ServerConfig.fallbackTabUrl(), pl) }
             }
         }
-        homeIntentSinceLeave = false
         // Конфіг сервера перевіряємо на кожному вході (частоту ріже ServerConfig.REFRESH_MS)
         ServerConfig.refresh(force = false)
     }
@@ -297,7 +271,6 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
             appOpenManager.isShowingAd        -> stoppedByOwnAd = true   // наша вкладка / інтерстішал / App Open
             else                              -> {         // інша апка / «Недавні» / вимкнений екран
                 shouldLaunchCustomTab = true
-                homeIntentSinceLeave = false
                 leftAt = SystemClock.elapsedRealtime()
             }
         }
@@ -334,20 +307,18 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
             intent.getBooleanExtra(EXTRA_OPEN_APP, false) -> {
                 log("open app (icon), new = $isNew")
                 // Відкриття застосунку (іконка, пуш, диплінк через трамплін) — не повернення на лаунчер:
-                // інакше після виходу в іншу апку onResume відкрив би ще й clear_history (заміряно 13.10.2026)
+                // інакше після виходу в іншу апку onResume відкрив би ще й вкладку «Додому» (заміряно 13.10.2026)
                 shouldLaunchCustomTab = false
                 if (isNew) openedFromIcon = true
                 bridge.emit { onAppIconPressed() }
             }
             intent.action == Intent.ACTION_MAIN && intent.hasCategory(Intent.CATEGORY_HOME) -> {
                 log("HOME intent (new = $isNew)")
-                // Холодний старт як HOME (надали роль, ребут) → вкладка click_home. Для живої Activity
+                // Холодний старт як HOME (ребут, MIUI вбив процес очищенням «Недавніх») → вкладка. Для живої Activity
                 // вмикає лише onStop від іншої апки: «Додому» на самому лаунчері (MIUI шле їх по два)
                 // і «Додому» поверх нашої вкладки вкладку не відкривають.
                 if (!isNew && !replacedPrevious) shouldLaunchCustomTab = true
                 if (isNew) returnViaHome = true
-                // Холодний старт: «Недавні» очистили (процес убили) — clear_history, інакше click_home
-                homeIntentSinceLeave = isNew || coldHomePlacement() == AppFlags.PL_CLICK_HOME
                 bridge.emit { onHomePressed() }
             }
             intent.action == Intent.ACTION_SEND && intent.type == "text/plain" -> {

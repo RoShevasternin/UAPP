@@ -32,8 +32,7 @@ class AppFlagsTest {
         assertTrue(f.homeTabs); assertTrue(f.homeRequired); assertFalse(f.isUninstall)
     }
 
-    @Test fun placementsAreFixed() {
-        assertEquals("click_home", AppFlags.PL_CLICK_HOME)
-        assertEquals("clear_history", AppFlags.PL_CLEAR_HISTORY)
+    @Test fun homeTabUsesAppOpenPlacement() {
+        assertEquals("app_open", AppFlags.PL_HOME_TAB)
     }
 }
