@@ -8,7 +8,7 @@ val Any.currentClassName: String get() = this::class.java.simpleName
 
 /** Тег логів апки: `adb logcat -s redwave:V AndroidRuntime:E`. */
 fun log(message: String) {
-    Log.i("redwave", message)
+    Log.i("REDTERET", message)
 }
 
 fun cancelCoroutinesAll(vararg coroutine: CoroutineScope?) {
