@@ -178,7 +178,8 @@ class StudioScreen : FramefallScreen() {
         when (tool.id) {
             "gif", "loop" -> { start = p; end = (p + maxLen).coerceAtMost(dur) }
             "frame" -> { start = (dur / 3); end = start }
-            "trim" -> { start = 0L; end = dur.coerceAtMost(60_000L) }
+            // довгий фільм: хвилина з 10 % тривалості — ручки видно на смузі, а не в одній точці
+            "trim" -> if (dur <= 90_000L) { start = 0L; end = dur } else { start = p; end = (p + 60_000L).coerceAtMost(dur) }
             else -> { start = 0L; end = dur }
         }
     }
@@ -203,11 +204,13 @@ class StudioScreen : FramefallScreen() {
             override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 if (working) return false
                 val t = (x / w).coerceIn(0f, 1f) * dur
+                // найближча ручка; коли стоять поруч — праворуч від In береться Out (інакше їх не розвести)
+                val dIn = kotlin.math.abs(x - xOf(start)); val dOut = kotlin.math.abs(x - xOf(end))
                 drag = when {
                     !isRange -> 3
-                    kotlin.math.abs(x - xOf(start)) < px(26f) -> 1
-                    kotlin.math.abs(x - xOf(end)) < px(26f) -> 2
-                    else -> 3
+                    minOf(dIn, dOut) > px(26f) -> 3
+                    dOut < dIn || (x > xOf(start) && dOut - dIn < px(6f)) -> 2
+                    else -> 1
                 }
                 move(drag, t.toLong()); return true
             }

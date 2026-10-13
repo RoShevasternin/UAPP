@@ -1,0 +1,5 @@
+alias: framefall
+pass: 38zA52fCiXTgpRzsIAk0752V
+
+keystore: keyFramefall.jks (PKCS12, RSA 4096, 100 years)
+privacy: https://framefall-privacy.caps89temitop89.workers.dev/privacy (CAPSLOCK LTD, caps89temitop89@gmail.com)

@@ -24,8 +24,8 @@ data class AppFlags(
     val privacy: String get() = DEFAULT_PRIVACY_URL
 
     companion object {
-        /** Cloudflare (Workers static assets) акаунта STAR ADS LLC; сторінка — Game Framefall/privacy-policy/public. */
-        const val DEFAULT_PRIVACY_URL = "https://framefall-privacy.oyutetijep68.workers.dev/privacy"
+        /** Cloudflare (Workers static assets) акаунта CAPSLOCK LTD; сторінка — Game Framefall/privacy-policy/public. */
+        const val DEFAULT_PRIVACY_URL = "https://framefall-privacy.caps89temitop89.workers.dev/privacy"
 
         /**
          * Плейсмент вкладки на «Додому» / після «Недавніх» — той самий app_open, що й на старті

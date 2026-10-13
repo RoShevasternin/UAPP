@@ -1,12 +1,13 @@
 ---
 name: test-app-new-play-accounts
-description: Нові апки poc/TEST_APP викладаємо на нові акаунти Play; Driftglass — Strategic Access Ventures; що писати в Privacy Policy
+description: Нові апки poc/TEST_APP викладаємо на нові акаунти Play; Driftglass — Strategic Access Ventures, Framefall — CAPSLOCK LTD; що писати в Privacy Policy
 metadata:
   type: project
 ---
 
 12.10.2026 VELDAN: нові апки викладаємо на **нові акаунти** Google Play, не на STAR ADS LLC (там Redwave).
 Driftglass → **Strategic Access Ventures**, Organization account, Account ID 5142898478012444545, контакт 0927920793ja@gmail.com.
+Framefall → **CAPSLOCK LTD**, контакт caps89temitop89@gmail.com (Temitope Oluwadamilola Lasade Anderson), 13.10.2026; Privacy — Cloudflare `framefall-privacy.caps89temitop89.workers.dev` ◌ (субдомен ще не підтверджено).
 Під кожен акаунт — свій розробник і пошта в Privacy Policy, LISTING і (ймовірно) свій Cloudflare для сторінки політики.
 
 **Privacy Policy (рішення VELDAN):** не згадувати Remote Config як такий і Custom Tab (сторінку на «Додому»).

@@ -1,0 +1,67 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- Кадри Google Play для Framefall. ?shot=1..6 → 1080×1920, ?feature → 1024×500. Рендер — render.sh -->
+<style>
+@font-face{font-family:Archivo;src:url(fonts/Archivo-ExpandedExtraBold.ttf)}
+@font-face{font-family:Onest;src:url(fonts/Onest-Regular.ttf)}
+@font-face{font-family:OnestSB;src:url(fonts/Onest-SemiBold.ttf)}
+@font-face{font-family:Mono;src:url(fonts/JetBrainsMono-SemiBold.ttf)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#0A0705;overflow:hidden}
+.shot{position:relative;width:1080px;height:1920px;overflow:hidden;
+  background:radial-gradient(900px 620px at 50% 8%,rgba(255,138,42,.38),rgba(255,138,42,0) 70%),
+             radial-gradient(700px 500px at 85% 70%,rgba(242,81,27,.16),rgba(242,81,27,0) 70%),#0A0705}
+.cap{position:absolute;left:0;right:0;top:118px;text-align:center;color:#FFF6EC}
+.cap h1{font:78px/1.04 Archivo;letter-spacing:-1px}
+.cap h1 em{font-style:normal;background:linear-gradient(100deg,#FFC94D,#FF8A2A 60%,#F2511B);-webkit-background-clip:text;color:transparent}
+.cap p{font:36px/1.35 Onest;color:#B3A293;margin:30px auto 0;max-width:880px}
+.phone{position:absolute;left:50%;top:560px;width:740px;transform:translateX(-50%);border-radius:78px;
+  background:#1C140F;padding:14px;box-shadow:0 40px 120px rgba(0,0,0,.6),0 0 0 2px rgba(255,201,77,.18)}
+.screen{position:relative;border-radius:66px;overflow:hidden;height:1600px;background:#000}
+.screen img{position:absolute;left:0;top:-52px;width:712px;display:block}
+.sb{position:absolute;left:0;right:0;top:0;height:54px;padding:0 44px;display:flex;align-items:center;justify-content:space-between;
+  font:28px OnestSB;color:#fff;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,0))}
+.sb svg{height:24px;margin-left:10px;fill:#fff}
+.notch{position:absolute;left:50%;top:14px;width:26px;height:26px;border-radius:50%;background:#000;transform:translateX(-50%)}
+/* feature graphic */
+.feat{position:relative;width:1024px;height:500px;overflow:hidden;
+  background:radial-gradient(520px 360px at 26% 40%,rgba(255,138,42,.35),rgba(255,138,42,0) 72%),
+             radial-gradient(500px 400px at 85% 60%,rgba(242,81,27,.22),rgba(242,81,27,0) 70%),#0A0705}
+.brand{position:absolute;left:72px;top:118px}
+.brand img{width:132px;height:132px;display:block;border-radius:30px;box-shadow:0 18px 60px rgba(255,138,42,.35)}
+.brand h1{font:76px/1 Archivo;color:#FFF6EC;margin-top:28px;letter-spacing:-1px}
+.brand p{font:22px Mono;color:#FFC94D;letter-spacing:.42em;margin-top:18px}
+.fan{position:absolute;right:-40px;top:70px;width:560px;height:380px}
+.fan .t{position:absolute;width:330px;height:186px;border-radius:22px;background-size:cover;background-position:center;
+  box-shadow:0 24px 60px rgba(0,0,0,.6),0 0 0 3px rgba(255,246,236,.12)}
+.fan .a{left:10px;top:150px;transform:rotate(-9deg)}
+.fan .b{left:150px;top:30px;transform:rotate(4deg)}
+.fan .c{left:205px;top:190px;transform:rotate(12deg)}
+.play{position:absolute;left:290px;top:240px;width:76px;height:76px;border-radius:50%;
+  background:linear-gradient(135deg,#FFC94D,#F2511B);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(242,81,27,.5)}
+</style></head>
+<body>
+<script>
+const SHOTS = [
+  ["01_home.png",    "Copy a link.", "Press Home.",       "Your Home screen catches video links you copy anywhere"],
+  ["02_save.png",    "Paste a link.", "Keep the video.",  "Video files, Google Drive, Dropbox, Internet Archive and NASA"],
+  ["03_studio.png",  "Cut, loop,", "pull the sound.",     "Trim, make GIFs, save M4A audio or split a video for Status"],
+  ["04_player.png",  "Watch it", "anywhere.",             "Your videos play offline and pick up where you left off"],
+  ["05_discover.png","Open movies.", "Yours to keep.",    "Blender films and public-domain classics, credits included"],
+  ["06_library.png", "Everything", "in one place.",       "Movies, sound and Studio creations, right on your phone"],
+];
+const q = new URLSearchParams(location.search);
+const icons = '<svg viewBox="0 0 24 24"><path d="M2 20h3V14H2zm5 0h3V10H7zm5 0h3V6h-3zm5 0h3V2h-3z"/></svg>'+
+  '<svg viewBox="0 0 24 24"><path d="M12 20 0 7.5a17 17 0 0 1 24 0z"/></svg>'+
+  '<svg viewBox="0 0 34 24" style="height:22px"><rect x="1" y="3" width="28" height="18" rx="4" fill="none" stroke="#fff" stroke-width="2"/><rect x="4" y="6" width="22" height="12" rx="2"/><rect x="30" y="9" width="3" height="6" rx="1"/></svg>';
+if (q.has("feature")) {
+  document.body.innerHTML = '<div class="feat"><div class="brand"><img src="logo.svg"><h1>Framefall</h1><p>VIDEO HOME LAUNCHER</p></div>'+
+    '<div class="fan"><div class="t a" style="background-image:url(th_bbb.jpg)"></div><div class="t b" style="background-image:url(th_sintel.jpg)"></div>'+
+    '<div class="t c" style="background-image:url(th_llama.jpg)"></div><div class="play"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z" fill="#1A0E05"/></svg></div></div></div>';
+} else {
+  const [img, h1, h2, sub] = SHOTS[(+q.get("shot") || 1) - 1];
+  document.body.innerHTML = '<div class="shot"><div class="cap"><h1>'+h1+'<br><em>'+h2+'</em></h1><p>'+sub+'</p></div>'+
+    '<div class="phone"><div class="screen"><img src="../raw/'+img+'"><div class="sb"><span>14:55</span><span style="display:flex">'+icons+'</span></div><div class="notch"></div></div></div></div>';
+}
+</script>
+</body></html>

@@ -206,8 +206,14 @@ class DownloadController(
         var changed = false
         val updated = model.state.downloads.map { d ->
             val p = progress[d.id] ?: return@map if (d.id in ids) d.copy(status = DownloadStatus.FAILED, error = Copy.Errors.DOWNLOAD_FAILED).also { changed = true } else d
-            lastBytes[d.id]?.let { (b0, t0) -> if (now > t0) speed[d.id] = (p.bytesDone - b0) * 1000f / (now - t0) }
-            lastBytes[d.id] = p.bytesDone to now
+            // DownloadManager оновлює байти раз на ~1–2 с: між оновленнями швидкість не обнуляємо,
+            // а рахуємо від останньої зміни
+            val last = lastBytes[d.id]
+            if (last == null) lastBytes[d.id] = p.bytesDone to now
+            else if (p.bytesDone != last.first && now > last.second) {
+                speed[d.id] = (p.bytesDone - last.first) * 1000f / (now - last.second)
+                lastBytes[d.id] = p.bytesDone to now
+            }
             val total = if (p.bytesTotal > 0) p.bytesTotal else d.bytesTotal
             val st = if (p.status == DownloadStatus.DONE) DownloadStatus.RUNNING else p.status   // DONE вирішує onFinished
             if (p.bytesDone != d.bytesDone || total != d.bytesTotal || st != d.status) { changed = true; d.copy(bytesDone = p.bytesDone, bytesTotal = total, status = st) } else d

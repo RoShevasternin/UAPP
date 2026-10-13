@@ -130,6 +130,12 @@ Settings → Debug: AD_MODE, скинути онбординг, джерело �
 
 AdMob App ID у маніфесті — **тестовий** Google; перед релізом — свій.
 
+## Публікація
+
+Акаунт Play — **CAPSLOCK LTD** (`caps89temitop89@gmail.com`, VELDAN 13.10.2026). Усе для консолі — `../market/LISTING.md`,
+графіка — `../market/` (`render.sh`), AAB — `sh ../release/build_aab.sh` (ключ `../release/keyFramefall.jks`, пароль у
+`meta-data.txt`), Privacy Policy — `../privacy-policy/` (Cloudflare `framefall-privacy`, адреса вшита в `AppFlags.DEFAULT_PRIVACY_URL`).
+
 ## Серверній команді (картка `framefall`)
 
 - `organic` → `na` або `admob` (модератор Google не має потрапити в чорний режим), рекламні типи (`ttclid`…) → `custom*`;

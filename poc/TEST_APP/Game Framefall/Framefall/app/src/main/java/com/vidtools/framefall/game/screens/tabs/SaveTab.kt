@@ -243,10 +243,10 @@ class SaveTab(app: AppScreen) : ATabPage(app) {
         if (items.isEmpty()) return 0f
         val pad = px(12f); val gap = px(12f); val rowH = px(44f)
         val head = lbl(Copy.Save.SAVING, msdf.bold(16f))
-        val n = lbl(" ${items.size}", msdf.bold(16f, GameColor.accentText_FFB04A))
+        val n = lbl("${items.size}", msdf.bold(16f, GameColor.accentText_FFB04A))
         val h = pad + head.height + items.size * (gap + rowH) + pad
         g.addActor(ARect(app, px(20f), GameColor.card_16100C, stroke = GameColor.line_white_7).apply { setSize(w, h) })
-        head.setPosition(pad, h - pad - head.height); n.setPosition(pad + head.width, head.y)
+        head.setPosition(pad, h - pad - head.height); n.setPosition(pad + head.width + px(6f), head.y)
         g.addActor(head); g.addActor(n)
         var y = head.y
         items.forEach { d ->
@@ -262,6 +262,7 @@ class SaveTab(app: AppScreen) : ATabPage(app) {
         private lateinit var pct: AMsdfLabel
         private lateinit var sub: AMsdfLabel
         private lateinit var bar: AProgressBar
+        private var subW = 0f
         init { setSize(w, h) }
 
         override fun addActorsOnGroup() {
@@ -282,7 +283,8 @@ class SaveTab(app: AppScreen) : ATabPage(app) {
             bar.setPosition(mx, height / 2f - px(4f))
             sub.setPosition(mx, -px(2f))
             addActor(title); addActor(pct); addActor(bar); addActor(sub)
-            pct.x = mx + mw - pct.width
+            pct.setPosition(mx + mw - pct.width, title.y)
+            subW = mw
             refresh(true)
         }
 
@@ -301,7 +303,9 @@ class SaveTab(app: AppScreen) : ATabPage(app) {
             if (d.status == DownloadStatus.FAILED) { sub.setText(Copy.Errors.DOWNLOAD_FAILED); sub.pack(); return }
             val sp = gdxGame.downloads.speed[id] ?: 0f
             val total = if (d.bytesTotal > 0) Fmt.mb(d.bytesTotal) else "?"
-            sub.setText("${Fmt.mb(d.bytesDone)} of $total MB · ${Fmt.speed(sp)} · ${d.format ?: ""}"); sub.pack()
+            // швидкість — лише коли вже відома (DownloadManager оновлює байти раз на ~1–2 с)
+            sub.setText("${Fmt.mb(d.bytesDone)} of $total MB" + (if (sp > 1000f) " · ${Fmt.speed(sp)}" else "") + " · ${d.format ?: ""}"); sub.pack()
+            if (subW > 0f && sub.width > subW) sub.width = subW
         }
     }
 
