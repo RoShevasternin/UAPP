@@ -1,0 +1,230 @@
+{
+ "version": 1,
+ "featured": "sintel",
+ "films": [
+  {
+   "id": "sintel",
+   "title": "Sintel",
+   "by": "Blender Foundation",
+   "year": 2010,
+   "license": "CC BY 3.0",
+   "pd": false,
+   "durationSec": 888,
+   "thumb": "th_sintel",
+   "about": "A girl, a baby dragon and a long search. By the Blender Foundation.",
+   "page": "https://archive.org/details/Sintel",
+   "files": [
+    {
+     "label": "240p",
+     "dim": "564×240",
+     "sizeBytes": 77410288,
+     "format": "MP4 · 512 kbps",
+     "url": "https://archive.org/download/Sintel/sintel-2048-stereo_512kb.mp4"
+    },
+    {
+     "label": "2K",
+     "dim": "2048×872",
+     "sizeBytes": 282690045,
+     "format": "MP4 · H.264",
+     "url": "https://archive.org/download/Sintel/sintel-2048-stereo.mp4"
+    }
+   ]
+  },
+  {
+   "id": "bbb",
+   "title": "Big Buck Bunny",
+   "by": "Blender Foundation",
+   "year": 2008,
+   "license": "CC BY 3.0",
+   "pd": false,
+   "durationSec": 596,
+   "thumb": "th_bbb",
+   "about": "A giant rabbit takes revenge on three bullies of the forest.",
+   "page": "https://archive.org/details/BigBuckBunny_124",
+   "files": [
+    {
+     "label": "360p",
+     "dim": "640×360",
+     "sizeBytes": 61878609,
+     "format": "MP4 · H.264",
+     "url": "https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
+    }
+   ]
+  },
+  {
+   "id": "tos",
+   "title": "Tears of Steel",
+   "by": "Blender Foundation",
+   "year": 2012,
+   "license": "CC BY 3.0",
+   "pd": false,
+   "durationSec": 734,
+   "thumb": "th_tos",
+   "about": "Sci-fi in Amsterdam: a group of warriors and scientists try to save the world.",
+   "page": "https://archive.org/details/Tears-of-Steel",
+   "files": [
+    {
+     "label": "360p",
+     "dim": "862×360",
+     "sizeBytes": 76435802,
+     "format": "MP4 · H.264",
+     "url": "https://archive.org/download/Tears-of-Steel/tears_of_steel_720p.mp4"
+    }
+   ]
+  },
+  {
+   "id": "ed",
+   "title": "Elephants Dream",
+   "by": "Orange Open Movie Project",
+   "year": 2006,
+   "license": "CC BY 3.0",
+   "pd": false,
+   "durationSec": 654,
+   "thumb": "th_ed",
+   "about": "The first open movie, made with Blender: two men in an endless machine.",
+   "page": "https://archive.org/details/ElephantsDream",
+   "files": [
+    {
+     "label": "240p",
+     "dim": "426×240",
+     "sizeBytes": 47311688,
+     "format": "MP4 · 512 kbps",
+     "url": "https://archive.org/download/ElephantsDream/ed_hd_512kb.mp4"
+    },
+    {
+     "label": "360p",
+     "dim": "640×360",
+     "sizeBytes": 67801890,
+     "format": "MP4 · H.264",
+     "url": "https://archive.org/download/ElephantsDream/ed_hd.mp4"
+    }
+   ]
+  },
+  {
+   "id": "llama",
+   "title": "Caminandes 3: Llamigos",
+   "by": "Blender Foundation",
+   "year": 2016,
+   "license": "CC BY 3.0",
+   "pd": false,
+   "durationSec": 150,
+   "thumb": "th_llama",
+   "about": "Koro the llama meets a penguin who wants his berries.",
+   "page": "https://archive.org/details/CaminandesLlamigos",
+   "files": [
+    {
+     "label": "1080p",
+     "dim": "1920×1080",
+     "sizeBytes": 38041423,
+     "format": "WebM · VP9",
+     "url": "https://archive.org/download/CaminandesLlamigos/Caminandes_%20Llamigos-1080p.webm"
+    },
+    {
+     "label": "1080p",
+     "dim": "1920×1080",
+     "sizeBytes": 138945811,
+     "format": "MP4 · H.264",
+     "url": "https://archive.org/download/CaminandesLlamigos/Caminandes_%20Llamigos-1080p.mp4"
+    }
+   ]
+  },
+  {
+   "id": "orion",
+   "title": "Earth from Orion, Day 1",
+   "by": "NASA",
+   "year": 2022,
+   "license": "Public domain · NASA",
+   "pd": true,
+   "durationSec": 242,
+   "thumb": "th_orion",
+   "about": "First imagery from the Orion spacecraft on the Artemis I mission.",
+   "page": "https://images.nasa.gov/details/jsc2022m000270_Orion_First_Imagery_Timelapse_and_Original_221117",
+   "files": [
+    {
+     "label": "Mobile",
+     "dim": "",
+     "sizeBytes": 10291901,
+     "format": "MP4",
+     "url": "https://images-assets.nasa.gov/video/jsc2022m000270_Orion_First_Imagery_Timelapse_and_Original_221117/jsc2022m000270_Orion_First_Imagery_Timelapse_and_Original_221117~mobile.mp4"
+    },
+    {
+     "label": "Medium",
+     "dim": "",
+     "sizeBytes": 71561309,
+     "format": "MP4",
+     "url": "https://images-assets.nasa.gov/video/jsc2022m000270_Orion_First_Imagery_Timelapse_and_Original_221117/jsc2022m000270_Orion_First_Imagery_Timelapse_and_Original_221117~medium.mp4"
+    }
+   ]
+  },
+  {
+   "id": "moon",
+   "title": "A Trip to the Moon",
+   "by": "Georges Méliès",
+   "year": 1902,
+   "license": "Public domain",
+   "pd": true,
+   "durationSec": 678,
+   "thumb": "th_moon",
+   "about": "Astronomers fly to the Moon in a cannon shell. A landmark of early cinema.",
+   "page": "https://archive.org/details/ATripToTheMoon20Fps",
+   "files": [
+    {
+     "label": "240p",
+     "dim": "320×240",
+     "sizeBytes": 54621336,
+     "format": "MP4 · 512 kbps",
+     "url": "https://archive.org/download/ATripToTheMoon20Fps/TripToTheMoon20Fps_512kb.mp4"
+    },
+    {
+     "label": "480p",
+     "dim": "640×480",
+     "sizeBytes": 154308170,
+     "format": "MP4 · 20 fps",
+     "url": "https://archive.org/download/ATripToTheMoon20Fps/TripToTheMoon20Fps.mp4"
+    }
+   ]
+  },
+  {
+   "id": "nosf",
+   "title": "Nosferatu · Part 1",
+   "by": "F. W. Murnau",
+   "year": 1922,
+   "license": "Public domain",
+   "pd": true,
+   "durationSec": 1190,
+   "thumb": "th_nosf",
+   "about": "The silent horror classic. Part 1 of 5 on Internet Archive.",
+   "page": "https://archive.org/details/Nosferatu_DVD_quality",
+   "files": [
+    {
+     "label": "240p",
+     "dim": "320×240",
+     "sizeBytes": 86457002,
+     "format": "MP4 · 512 kbps",
+     "url": "https://archive.org/download/Nosferatu_DVD_quality/nosferatu-1of5_512kb.mp4"
+    }
+   ]
+  },
+  {
+   "id": "notld",
+   "title": "Night of the Living Dead",
+   "by": "George A. Romero",
+   "year": 1968,
+   "license": "Public domain",
+   "pd": true,
+   "durationSec": 5732,
+   "thumb": "th_notld",
+   "about": "Strangers hide in a farmhouse while the dead walk outside.",
+   "page": "https://archive.org/details/night_of_the_living_dead_dvd",
+   "files": [
+    {
+     "label": "480p",
+     "dim": "640×480",
+     "sizeBytes": 596399542,
+     "format": "MP4 · H.264",
+     "url": "https://archive.org/download/night_of_the_living_dead_dvd/Night.mp4"
+    }
+   ]
+  }
+ ]
+}

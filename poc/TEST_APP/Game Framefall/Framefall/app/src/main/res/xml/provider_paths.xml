@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Share і «відкрити в Галереї»: файли з Movies|Music|Pictures/Framefall віддаємо через FileProvider (file:// Android блокує). -->
+<paths>
+    <external-path name="movies" path="Movies/" />
+    <external-path name="music" path="Music/" />
+    <external-path name="pictures" path="Pictures/" />
+    <files-path name="files" path="." />
+</paths>

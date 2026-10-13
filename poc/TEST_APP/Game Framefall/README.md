@@ -6,8 +6,9 @@
 посиланням із буфера і «Continue watching».
 
 - **Живий прототип:** https://claude.ai/artifact/5L7TpzbpbrTptLSVq66UJw (копія — `prototype/`)
-- **Стан на 12.10.2026:** дослідження зроблено, прототип v1 чекає на рішення VELDAN. Android-проєкту
-  ще немає. Він з'явиться в `Framefall/` за методикою Redwave: прототип → port-kit → LibGDX.
+- **Стан на 13.10.2026:** Android-проєкт є — `Framefall/` (пакет `com.vidtools.framefall`), зібраний з каркаса
+  Redwave з бізнес-логікою UAPP (сервер, `atk`, реклама, білий / чорний режим), перевірений на Redmi (debug і release).
+  Правила, плейсменти й що віддати серверній команді — `Framefall/CLAUDE.md`.
 
 ## Що в теці
 
@@ -17,6 +18,8 @@
 | `prototype/img`, `prototype/media` | справжні фрагменти відкритих фільмів (Blender CC BY, NASA, Internet Archive — суспільне надбання); `media/SOURCES.md` — титри, `media/make_media.sh` — як відтворити |
 | `prototype/tools/walk.js` | прогін прототипу в Playwright зі скріншотами |
 | `research/` | ринок Play США (909 апок, 31 тис. відгуків), правила Google, легальні джерела, Android-факти, дані й скрипти |
+| `Framefall/` | Android-проєкт (LibGDX), див. `Framefall/CLAUDE.md` |
+| `assets/` | іконки атласу, іконка лаунчера, текстури, петлі відеофону, скрипти (`assets/README.md`) |
 | `assets/brand/` | лого SVG і PNG 512, квадратна іконка під маску Play |
 | `market/icon_512.png` | іконка для Play Console |
 

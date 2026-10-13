@@ -3,7 +3,8 @@
 Тут лежать **нові апки, які не є іграми парку RBX** (перша — `Game Redwave/`, категорія Tools;
 свої правила й план переносу — `Game Redwave/Redwave/CLAUDE.md`, `Game Redwave/PORTING.md`; друга — `Game Driftglass/`,
 живі шпалери + роль HOME, правила — `Game Driftglass/Driftglass/CLAUDE.md`).
-Далі — `Game Driftglass/` (живі шпалери + HOME) і `Game Framefall/` (відеозавантажувач + HOME, поки прототип).
+Далі — `Game Driftglass/` (живі шпалери + HOME) і `Game Framefall/` (відеозавантажувач + HOME, правила —
+`Game Framefall/Framefall/CLAUDE.md`).
 Кожна апка — окрема тека, свій пакет, свій Gradle-проєкт. Кодом між собою не діляться.
 
 ## Структура теки апки — як в іграх парку
@@ -33,9 +34,11 @@ Game <Назва>/
 - рекламу, аналітику чи сервер додаємо лише тоді, коли VELDAN окремо скаже, і під потреби
   конкретної апки.
 
-**Виняток — Redwave (рішення VELDAN 12.10.2026):** там `businesModule` + `adsmodule` з еталона, режим і
-реклама — з картки нашого сервера, вкладка на «Додому» / «Недавні» з плейсментом `app_open`. Деталі й відмінності від
-еталона — `Game Redwave/Redwave/CLAUDE.md`. Правки серверної команди (`DEV_TASKS`) бекпортуються і туди.
+**Виняток — Redwave (рішення VELDAN 12.10.2026) і Framefall (13.10.2026, з каркаса Redwave):** там `businesModule` +
+`adsmodule` з еталона, режим і реклама — з картки нашого сервера, вкладка на «Додому» / «Недавні» з плейсментом
+`app_open`. Деталі — `Game Redwave/Redwave/CLAUDE.md`, `Game Framefall/Framefall/CLAUDE.md`. Правки серверної команди
+(`DEV_TASKS`) бекпортуються і туди. Картку сервер шукає за **останнім сегментом пакета** — у нової апки він має бути
+унікальним (`downloader` — Redwave, `framefall` — Framefall).
 
 ## Стек — як у LibGDX-апках UAPP
 

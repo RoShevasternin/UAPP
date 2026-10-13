@@ -1,6 +1,6 @@
 ---
 name: framefall-app
-description: Framefall: Video Downloader — третя апка poc/TEST_APP (відеозавантажувач з легальних джерел + роль HOME з відеофоном); 12.10.2026 дослідження й прототип v1, Android-проєкту ще немає
+description: Framefall: Video Downloader — третя апка poc/TEST_APP; 13.10.2026 Android-проєкт з каркаса Redwave (businesModule, реклама, білий/чорний режим), пакет com.vidtools.framefall, відео через OES-текстуру, Studio на Transformer
 metadata:
   type: project
 ---
@@ -36,6 +36,17 @@ Compress, Home background. Буфер — 13 тестових посилань, 
 
 **Відкриті рішення:** назва й пакет (пропозиція `com.framefall.video`), реклама, home_required (пропозиція
 false), MP3 (LAME) і GIF, HLS / PeerTube / системні живі шпалери — у v1 чи v1.1.
+
+**13.10.2026 — Android-проєкт `Framefall/` (VELDAN: «по цій же логіці, що Redwave»):** скопійовано каркас
+Redwave, музичне прибрано. Пакет `com.vidtools.framefall` — бо сервер ключує картку за ОСТАННІМ сегментом пакета
+(`com.framefall.downloader` дістав би картку Redwave `downloader`). Картки `framefall` ще немає → шаблон
+`custom_google` → чорний режим для всіх. Вкладки Save / Discover / Library / Studio; відео — ExoPlayer у
+SurfaceTexture → OES-текстура в GDX (`AVideo`), живий відеофон на Home; Discover — `assets/catalog.json` з прямими
+лінками archive.org / NASA; Studio — Transformer + свій GifEncoder. Firebase-проєкту немає (google-services опційний).
+Перевірено на Redmi debug + release: онбординг, роль, опт-ін, app_open / front / back, «Додому» в обох режимах,
+збереження прямого лінка й сторінки архіву (шторка якості), плеєр VP9 1080p і повний екран, усі 7 інструментів Studio.
+Відкрите: картка `framefall` і TikTok-ключі від серверної команди, Firebase, свій AdMob App ID, Privacy Policy, маркет-кадри.
+Деталі — `Framefall/CLAUDE.md`. Пов'язане: [[redwave-app]].
 
 **How to apply:** правки прототипу — `Artifact read` URL → правка → publish з `url` (разом з `files`, якщо
 змінились медіа) → перезаписати `prototype/index.html` (зверху doctype + charset + коментар з URL).

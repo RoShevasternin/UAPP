@@ -1,0 +1,426 @@
+
+all.png
+size: 1024, 1024
+format: RGBA8888
+filter: MipMapLinearLinear, Linear
+repeat: none
+ic_alert
+  rotate: false
+  xy: 2, 702
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_ban
+  rotate: false
+  xy: 198, 898
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_bell
+  rotate: false
+  xy: 2, 602
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_camera
+  rotate: false
+  xy: 298, 898
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_check
+  rotate: false
+  xy: 2, 502
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_chev_down
+  rotate: false
+  xy: 398, 898
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_chev_left
+  rotate: false
+  xy: 2, 402
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_chev_right
+  rotate: false
+  xy: 498, 898
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_chev_up
+  rotate: false
+  xy: 2, 302
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_clip
+  rotate: false
+  xy: 598, 898
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_clock
+  rotate: false
+  xy: 2, 202
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_cloud
+  rotate: false
+  xy: 698, 898
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_compass
+  rotate: false
+  xy: 2, 102
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_compress
+  rotate: false
+  xy: 798, 898
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_download
+  rotate: false
+  xy: 2, 2
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_expand
+  rotate: false
+  xy: 898, 898
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_ext
+  rotate: false
+  xy: 102, 702
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_file
+  rotate: false
+  xy: 102, 602
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_film
+  rotate: false
+  xy: 102, 502
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_folder
+  rotate: false
+  xy: 102, 402
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_fwd10
+  rotate: false
+  xy: 102, 302
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_gauge
+  rotate: false
+  xy: 102, 202
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_gear
+  rotate: false
+  xy: 102, 102
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_gif
+  rotate: false
+  xy: 102, 2
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_globe
+  rotate: false
+  xy: 202, 798
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_grid
+  rotate: false
+  xy: 202, 698
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_heart
+  rotate: false
+  xy: 302, 798
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_home
+  rotate: false
+  xy: 202, 598
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_image
+  rotate: false
+  xy: 302, 698
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_info
+  rotate: false
+  xy: 402, 798
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_layers
+  rotate: false
+  xy: 202, 498
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_link
+  rotate: false
+  xy: 302, 598
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_lock
+  rotate: false
+  xy: 402, 698
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_loop
+  rotate: false
+  xy: 502, 798
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_moon
+  rotate: false
+  xy: 202, 398
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_more
+  rotate: false
+  xy: 302, 498
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_msg
+  rotate: false
+  xy: 402, 598
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_music
+  rotate: false
+  xy: 502, 698
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_mute
+  rotate: false
+  xy: 602, 798
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_pause_fill
+  rotate: false
+  xy: 202, 298
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_phone
+  rotate: false
+  xy: 302, 398
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_pip
+  rotate: false
+  xy: 402, 498
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_play_fill
+  rotate: false
+  xy: 502, 598
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_plus
+  rotate: false
+  xy: 602, 698
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_rew10
+  rotate: false
+  xy: 702, 798
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_scissors
+  rotate: false
+  xy: 202, 198
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_search
+  rotate: false
+  xy: 302, 298
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_share
+  rotate: false
+  xy: 402, 398
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_shield
+  rotate: false
+  xy: 502, 498
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_sliders
+  rotate: false
+  xy: 602, 598
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_split
+  rotate: false
+  xy: 702, 698
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_star
+  rotate: false
+  xy: 802, 798
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_timer
+  rotate: false
+  xy: 202, 98
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_trash
+  rotate: false
+  xy: 302, 198
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_volume
+  rotate: false
+  xy: 402, 298
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_wand
+  rotate: false
+  xy: 502, 398
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_wifi
+  rotate: false
+  xy: 602, 498
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_wifi_off
+  rotate: false
+  xy: 702, 598
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ic_x
+  rotate: false
+  xy: 802, 698
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ph_glyph
+  rotate: false
+  xy: 2, 802
+  size: 192, 192
+  orig: 192, 192
+  offset: 0, 0
+  index: -1

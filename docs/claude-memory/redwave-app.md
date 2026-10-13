@@ -110,8 +110,9 @@ HOME — [[home-launcher-poc]]; атласи пакує VELDAN у GUI — [[mind
 - Firebase Remote Config прибрано зовсім; Firebase лишився лише для FCM. `businesModule` з еталона без змін,
   `adsmodule` урізаний (без банера/нативки — рішення VELDAN; AppOpenManager без ProcessLifecycleOwner).
 - **Режим з картки сервера**: app_open = custom* → вкладки на «Додому», роль обов'язкова, без Uninstall;
-  na / admob / офлайн → «Maybe later», Uninstall, вкладок немає. Картка `downloader` на сервері вже є
-  (12.10.2026: atk видається, усі профілі custom_google, кампанії пушів comeback / comeback_3d).
+  na / admob / офлайн → «Maybe later», Uninstall, вкладок немає. Сервер шукає картку за ОСТАННІМ сегментом
+  пакета і на невідомий віддає шаблон (custom_google скрізь, без tiktok) — так було 12.10.2026. Справжня картка
+  `downloader` з'явилась 13.10.2026: усі типи юзера `na` (білий режим для всіх), tiktok — ще немає.
 - **Вкладка на «Додому» / після «Недавніх» — `pl=app_open`** (13.10.2026 VELDAN передумав: без нових плейсментів
   click_home / clear_history). Решта як в UAPP: app_open (черга старту), front (вкладки, плеєр), back (з плеєра),
   interstitial (кожні 2 треки), push, optin_return.
