@@ -124,9 +124,10 @@ Settings → Debug: AD_MODE, скинути онбординг, джерело �
 
 ## Firebase / FCM
 
-`app/google-services.json` **немає**: Firebase-проєкт апки має створити VELDAN в акаунті Framefall (gcloud на цьому Маці —
-інший акаунт). Плагін `google-services` підключається, лише коли файл є (`app/build.gradle.kts`); без нього апка
-працює повністю, крім серверних пушів (`FCM token sync failed` у лозі — очікувано). Поклали файл — пересібрати.
+`app/google-services.json` — Firebase-проєкт **`framefall`** (номер 606408967320, акаунт CAPSLOCK LTD, з 13.10.2026). Лише FCM:
+токен іде на наш сервер подією `push_token` (`Biz.syncPushToken`, кожен холодний старт). Перевірено на Redmi: токен
+`|T|606408967320|*` у `shared_prefs/com.google.android.gms.appid.xml` (`adb shell run-as com.vidtools.framefall cat …`).
+Плагін `google-services` підключається, лише коли файл є (`app/build.gradle.kts`) — без файлу збірка не падає, але пушів немає.
 
 AdMob App ID у маніфесті — **тестовий** Google; перед релізом — свій.
 
@@ -143,7 +144,7 @@ AdMob App ID у маніфесті — **тестовий** Google; перед �
 - `deeplink_scheme = framefall`;
 - свої тексти пушів (без монет, колеса, квізів);
 - домен лендінга під відео-тематику в гейтвеї;
-- доступ до FCM-проєкту Framefall, коли його створять.
+- доступ до FCM-проєкту `framefall` (606408967320) — щоб слати пуші на токени з `push_token`.
 
 ## Конвенції (як у Redwave / T35)
 

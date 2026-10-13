@@ -130,7 +130,7 @@ Archive / NASA / Commons — `OpenArchives`, `Commons.directUrl`; Studio — `Co
 
 | Розділ | Відповідь |
 |---|---|
-| Privacy policy | `https://framefall-privacy.caps89temitop89.workers.dev/privacy` — спершу опублікувати (`../privacy-policy/README.md`) і відкрити з телефона |
+| Privacy policy | `https://framefall-privacy.caps89temitop89.workers.dev/` ✔ опубліковано 13.10.2026 (`/privacy` — та сама сторінка, вона вшита в апку) |
 | Ads | **Yes, my app contains ads** |
 | App access | **All functionality is available without special access** ◌ — логіна немає; див. «Тонкощі» про роль HOME |
 | Content rating | анкета IARC, §3.1 |
@@ -222,9 +222,9 @@ Release notes (en-US) — 3 абстрактні пункти, як у парк�
 - [ ] **Серверна команда: картка `framefall`** з `organic` → `na` або `admob` (зараз шаблон `custom_google` = чорний режим
       для всіх, і модератор теж потрапить у нього), `tiktok` app_id / secret, `deeplink_scheme = framefall`, свої тексти
       пушів без монет. Перевірити: `adb logcat -d -v raw -s FRAMEFALL:V | grep -A10 "^──── /appconfig"`.
-- [ ] Cloudflare → `framefall-privacy` → Deploy теки `privacy-policy/public`; адреса відкривається з телефона. Якщо
-      субдомен вийшов інший — поміняти `DEFAULT_PRIVACY_URL` і перезібрати AAB.
-- [ ] ◌ Firebase-проєкт Framefall → `Framefall/app/google-services.json` → перезібрати (без нього — все, крім серверних пушів).
+- [x] Cloudflare `framefall-privacy` — опубліковано, `/` і `/privacy` віддають політику CAPSLOCK LTD.
+- [x] Firebase-проєкт `framefall` → `Framefall/app/google-services.json` (13.10.2026), FCM-токен на девайсі є.
+- [ ] Зібрати AAB (`sh release/build_aab.sh`) — уже з `google-services.json`.
 - [ ] ◌ Свій AdMob App ID у `AndroidManifest.xml` (зараз тестовий Google): потрібен, лише якщо в картці буде `admob`.
 - [ ] ◌ UMP-згода, якщо країни не лише США.
 - [ ] Назва вільна (пошук у Play), App content заповнено, Data safety збігається з політикою.

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "606408967320",
+    "project_id": "framefall",
+    "storage_bucket": "framefall.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606408967320:android:8f3ae7c61e2cb3639e7ced",
+        "android_client_info": {
+          "package_name": "com.vidtools.framefall"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSFnGKaisIhSEyJut--n4EKihL9oOct8c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

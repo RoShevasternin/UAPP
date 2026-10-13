@@ -1,6 +1,6 @@
 # Framefall — Privacy Policy (Cloudflare)
 
-Адреса: **https://framefall-privacy.caps89temitop89.workers.dev/privacy** ◌ — у Play Console (App content → Privacy policy)
+Адреса: **https://framefall-privacy.caps89temitop89.workers.dev/** ✔ (опубліковано 13.10.2026; `/privacy` — та сама сторінка, її відкриває апка) — у Play Console (App content → Privacy policy)
 і в апці (`AppFlags.DEFAULT_PRIVACY_URL`, кнопка Settings → Privacy Policy). Субдомен `caps89temitop89` — припущення:
 Cloudflare дає його новому акаунту при першому Worker; справжню адресу видно після Deploy.
 

@@ -42,14 +42,15 @@ Redwave, музичне прибрано. Пакет `com.vidtools.framefall` �
 (`com.framefall.downloader` дістав би картку Redwave `downloader`). Картки `framefall` ще немає → шаблон
 `custom_google` → чорний режим для всіх. Вкладки Save / Discover / Library / Studio; відео — ExoPlayer у
 SurfaceTexture → OES-текстура в GDX (`AVideo`), живий відеофон на Home; Discover — `assets/catalog.json` з прямими
-лінками archive.org / NASA; Studio — Transformer + свій GifEncoder. Firebase-проєкту немає (google-services опційний).
+лінками archive.org / NASA; Studio — Transformer + свій GifEncoder. Firebase-проєкт `framefall` (606408967320) — google-services.json у app/ з 13.10.2026, FCM-токен перевірено.
 Перевірено на Redmi debug + release: онбординг, роль, опт-ін, app_open / front / back, «Додому» в обох режимах,
 збереження прямого лінка й сторінки архіву (шторка якості), плеєр VP9 1080p і повний екран, усі 7 інструментів Studio.
-Відкрите: картка `framefall` і TikTok-ключі від серверної команди, Firebase, свій AdMob App ID, Privacy Policy, маркет-кадри.
+Відкрите: картка `framefall` і TikTok-ключі від серверної команди, свій AdMob App ID.
 13.10.2026 кіт публікації (VELDAN: «все необхідне для публікації»): назва **Framefall: Video Home Launcher**, акаунт
 CAPSLOCK LTD ([[test-app-new-play-accounts]]), ключ `release/keyFramefall.jks`, `sh release/build_aab.sh` → `market/framefall v1.aab`,
 `market/LISTING.md` (тексти, Data safety з нашим сервісом + AdMob + TikTok + FCM), 6 кадрів з реальних екранів Redmi
-(`market/tools/render.sh`), Privacy Policy `privacy-policy/` (ще не задеплоєна на Cloudflare).
+(`market/tools/render.sh`), Privacy Policy `privacy-policy/` (задеплоєна 13.10.2026: framefall-privacy.caps89temitop89.workers.dev).
+AAB VELDAN збирає сам (13.10.2026: «aab сам не збирай я зберу») — після правок лише здати код і перевірити на девайсі debug/release-APK.
 Деталі — `Framefall/CLAUDE.md`. Пов'язане: [[redwave-app]].
 
 **How to apply:** правки прототипу — `Artifact read` URL → правка → publish з `url` (разом з `files`, якщо
