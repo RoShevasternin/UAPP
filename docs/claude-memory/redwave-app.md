@@ -115,7 +115,7 @@ HOME — [[home-launcher-poc]]; атласи пакує VELDAN у GUI — [[mind
 - **Вкладка на «Додому» / після «Недавніх» — `pl=app_open`** (13.10.2026 VELDAN передумав: без нових плейсментів
   click_home / clear_history). Решта як в UAPP: app_open (черга старту), front (вкладки, плеєр), back (з плеєра),
   interstitial (кожні 2 треки), push, optin_return.
-- У лозі вся відповідь /appconfig (модель + вміст atk) — команда в `Redwave/CLAUDE.md`, щоб VELDAN бачив, що додали на сервері.
+- У лозі відповідь /appconfig коротко (VELDAN хоче бачити головне — `config`): atk, провайдери по типах юзера з «→», tiktok, кампанії; команда в `Redwave/CLAUDE.md`.
 - Опт-ін — без монет; схема диплінка **`downloader`** — віддати серверній команді.
 - Пастки: MIUI «Очистити все» вбиває процес Redwave (OneKeyClean) — вкладка на наступному холодному старті як HOME;
   стартова вкладка між onStart і onResume — «наша реклама» фіксується в onStop.

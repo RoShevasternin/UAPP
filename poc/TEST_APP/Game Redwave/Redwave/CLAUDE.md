@@ -146,8 +146,9 @@ adb shell am start -a android.intent.action.VIEW -d "downloader://reward?h=test"
 adb shell am start -a android.settings.SETTINGS && sleep 3 && adb shell am start -n com.redwave.downloader/.MainActivity
 # лог бізнес-логіки: MODEL OUR … atk=yes, openAd URL … pl=…, localpush: scheduled …
 adb logcat -s REDTERET:V
-# УСЯ відповідь /appconfig (модель Gson, serializeNulls: блоку немає → null) + вміст atk (p — партнер, iid):
-adb logcat -d -v raw -s REDTERET:V | awk '/appconfig ▼/{f=1} f{print} /appconfig ▲/{exit}'
+# відповідь /appconfig коротко: вміст atk (p — партнер, iid), блок config по типах юзера («→» — діє для цього),
+# tiktok (є / немає) і кампанії пушів. Друкується після кожного запиту конфігу:
+adb logcat -d -v raw -s REDTERET:V | grep -A10 "^──── /appconfig"
 # локальний пуш без очікування 24 год: вийти в іншу апку (задачі плануються в onStop), знайти job і запустити
 adb shell dumpsys jobscheduler | grep -o "JOB #u0a[0-9]*/[0-9]*" | head      # u0a… — uid Redwave
 adb shell cmd jobscheduler run -f com.redwave.downloader <job_id>

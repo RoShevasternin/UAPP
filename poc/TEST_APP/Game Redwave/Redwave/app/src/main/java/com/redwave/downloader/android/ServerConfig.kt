@@ -116,11 +116,7 @@ object ServerConfig {
                     AdConfig.remoteConfig = model
                     App.adPref.saveConfig(model)
                     origin = "server"
-                    // Коротко, без усіх юнітів: провайдери для типу цього юзера + що є в картці
-                    log("MODEL OUR · atk=${if (Backend.atk != null) "yes" else "no"} user=${AdConfig.userType.name.lowercase()} " +
-                        "app_open=${AdConfig.getProvider(AdType.APP_OPEN).value} interstitial=${AdConfig.getProvider(AdType.INTERSTITIAL).value} " +
-                        "tiktok=${model.tiktok?.isValid == true} campaigns=${model.notifications?.campaigns?.size ?: 0}")
-                    logFullModel(model)
+                    logModel(model)
                 } else {
                     log("Our config failed → кеш AdPref [$origin]")
                 }
@@ -134,19 +130,37 @@ object ServerConfig {
         }
     }
 
-    // ── Уся відповідь сервера в лог (VELDAN 13.10.2026: бачити, що серверна команда додала в картку) ──
-    // Модель — як її розібрав Gson (усі блоки, з якими працює апка); serializeNulls — блоку немає → видно `null`.
-    // Поля, яких модель не знає (новий блок на сервері), сюди не потраплять — їх видно лише в сирій відповіді.
-    // По рядку на лог: logcat ріже довгі повідомлення (~4 КБ).
-    // Дивитись: adb logcat -s REDTERET:V | sed -n '/appconfig ▼/,/appconfig ▲/p'
-    private fun logFullModel(model: com.redwave.downloader.adsmodule.RemoteConfigModel) {
-        val json = runCatching {
-            com.google.gson.GsonBuilder().setPrettyPrinting().serializeNulls().disableHtmlEscaping().create().toJson(model)
-        }.getOrElse { "toJson failed: ${it.message}" }
-        log("──── /appconfig ▼  gate=${Backend.gate} · iid=${Backend.iid}")
-        log("atk (вміст підпису: p — партнер, e — апка, iid — установка) = ${atkPayload()}")
-        json.lineSequence().forEach { log(it) }
-        log("──── /appconfig ▲")
+    // ── Відповідь сервера в лог — коротко (VELDAN 13.10.2026): головне — блок config ──
+    // Провайдери по рядку на тип юзера, «→» — розділ, що діє для ЦЬОГО юзера; далі tiktok і кампанії пушів.
+    // Юніти (ad_units) і economy не друкуємо — вони довгі, а режим і реклама вирішуються тут.
+    // Дивитись: adb logcat -s REDTERET:V | grep -A9 "/appconfig"
+    private fun logModel(model: com.redwave.downloader.adsmodule.RemoteConfigModel) {
+        val c = model.config
+        val mine = when (AdConfig.userType) {
+            com.redwave.downloader.adsmodule.UserType.ORGANIC       -> "organic"
+            com.redwave.downloader.adsmodule.UserType.PAID          -> "paid"
+            com.redwave.downloader.adsmodule.UserType.PAID_GOOGLE   -> if (c?.gclid != null) "gclid" else "paid"
+            com.redwave.downloader.adsmodule.UserType.PAID_TIKTOK   -> if (c?.ttclid != null) "ttclid" else "paid"
+            com.redwave.downloader.adsmodule.UserType.PAID_FACEBOOK -> if (c?.fbclid != null) "fbclid" else "paid"
+        }
+        log("──── /appconfig · atk=${if (Backend.atk != null) "yes" else "no"} · user=${AdConfig.userType.name.lowercase()} · gate=${Backend.gate}")
+        log("atk = ${atkPayload()}")
+        log("config:")
+        listOf("organic" to c?.organic, "paid" to c?.paid, "gclid" to c?.gclid, "ttclid" to c?.ttclid, "fbclid" to c?.fbclid)
+            .forEach { (name, p) ->
+                val row = p?.let { "app_open=${it.appOpen}  interstitial=${it.interstitial}  banner=${it.banner}  native=${it.native}" } ?: "немає"
+                log("${if (name == mine) "→" else " "} ${name.padEnd(8)} $row")
+            }
+        val tt = model.tiktok
+        log("tiktok = " + when {
+            tt == null      -> "немає"
+            !tt.isValid     -> "неповний (app_id=${tt.appIdRaw}, secret=${if (tt.secret.isNullOrBlank()) "немає" else "є"})"
+            else            -> "app_id=${tt.appIds.joinToString(",")} · secret є"
+        })
+        val camps = model.notifications?.campaigns.orEmpty()
+            .joinToString(", ") { "${it.id}·${it.trigger}${it.delayH?.let { h -> "·${h.toInt()}h" } ?: ""}" }
+        log("notifications = ${camps.ifEmpty { "немає" }}")
+        log("────")
     }
 
     /** atk = base64url(JSON) + «~» + підпис. Підпис не перевіряємо — лише показуємо, що всередині. */
