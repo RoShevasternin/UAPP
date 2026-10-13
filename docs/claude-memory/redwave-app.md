@@ -117,6 +117,11 @@ HOME — [[home-launcher-poc]]; атласи пакує VELDAN у GUI — [[mind
 - Опт-ін — без монет; схема диплінка **`downloader`** — віддати серверній команді.
 - Пастки: MIUI «Очистити все» вбиває процес Redwave (OneKeyClean) — clear_history на холодному старті за
   ApplicationExitInfo; стартова вкладка між onStart і onResume — «наша реклама» фіксується в onStop.
-- Відкрите: Privacy Policy і Data safety застаріли (Remote Config → наш сервер + FCM + install referrer);
-  TikTok/Meta SDK не підключали; back з плеєра й локальний пуш (24 год) на девайсі не перевірені.
+- 13.10.2026: **TikTok SDK як в еталоні** (VELDAN: «TikTok — основа, де ми рекламуємось; install referrer — основа
+  системи»). Повний прогін на Redmi (чиста установка, debug + release): усі плейсменти, опт-ін обидві гілки, back з
+  плеєра (виправлено: системне «Назад» ішло повз closePlayer), локальний пуш через `jobscheduler run -f` показався,
+  тап → pl=push (виправлено: поверх відкривався clear_history), optin/reward диплінки.
+- Картка `downloader` на сервері 13.10.2026 — шаблон чужої гри: немає блоку `tiktok`, organic = custom_google
+  (модератор Google теж отримає «чорний» режим), тексти пушів про монети/колесо, economy зі спінами.
+- Відкрите: Privacy Policy і Data safety застаріли (наш сервер + FCM + install referrer + TikTok SDK); Meta SDK немає.
 - Деталі — `Game Redwave/Redwave/CLAUDE.md`. Див. [[uapp-server-patch-backport]].

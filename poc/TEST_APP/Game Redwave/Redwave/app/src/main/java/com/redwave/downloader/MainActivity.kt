@@ -267,6 +267,8 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
 
         // Лише як головний екран: відкриті з іконки, ми — звичайна апка.
         // Чи відкривати — картка сервера (app_open = custom*, AppFlags.homeTabs), офлайн — ні.
+        // Інтент щойно сам відкрив вкладку (тап по пушу з gate_pl, повернення з лендінга) — другу не відкриваємо
+        if (shouldLaunchCustomTab && AdConfig.isFullscreenAdShowing) { shouldLaunchCustomTab = false; log("home tab skipped: intent already opened a tab") }
         if (shouldLaunchCustomTab && bridge.isDefaultHome()) {
             shouldLaunchCustomTab = false            // СПЕРШУ — інакше цикл
             val pl = if (homeIntentSinceLeave) AppFlags.PL_CLICK_HOME else AppFlags.PL_CLEAR_HISTORY
@@ -331,6 +333,9 @@ class MainActivity : AppCompatActivity(), AndroidFragmentApplication.Callbacks {
         when {
             intent.getBooleanExtra(EXTRA_OPEN_APP, false) -> {
                 log("open app (icon), new = $isNew")
+                // Відкриття застосунку (іконка, пуш, диплінк через трамплін) — не повернення на лаунчер:
+                // інакше після виходу в іншу апку onResume відкрив би ще й clear_history (заміряно 13.10.2026)
+                shouldLaunchCustomTab = false
                 if (isNew) openedFromIcon = true
                 bridge.emit { onAppIconPressed() }
             }

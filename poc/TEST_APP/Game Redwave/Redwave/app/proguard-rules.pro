@@ -35,5 +35,9 @@
 # планування. Після оновлення апки мапа обфускації інша — без -keep задача старого білда
 # не знайде свій клас і пуш мовчки загубиться.
 -keep class com.redwave.downloader.businesModule.push.LocalPush$PushWorker { *; }
+#TikTok -----------------------------------------------------------------
+-keep class com.tiktok.** { *; }
+# TikTok SDK має необов'язковий трекінг покупок через Play Billing — білінгу в Redwave немає
+-dontwarn com.android.billingclient.**
 # Google Install Referrer
 -keep class com.android.installreferrer.api.** { *; }

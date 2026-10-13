@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import com.android.installreferrer.api.InstallReferrerClient
 import com.android.installreferrer.api.InstallReferrerStateListener
+import com.redwave.downloader.services.analytics.AnalyticsManager
 import com.redwave.downloader.util.log
+import com.tiktok.TikTokBusinessSdk
 
 // Визначає тип юзера через Install Referrer
 //
@@ -14,14 +16,21 @@ import com.redwave.downloader.util.log
 //   fbclid → PAID_FACEBOOK
 //   немає мітки → ORGANIC
 //
-// Redwave: копія еталона БЕЗ TikTok і AnalyticsManager (у Redwave немає ні TikTok SDK,
-// ні Firebase Analytics — рішення VELDAN). Логіка визначення типу та сирий referrer — ті самі.
+// ═══ ПРАВКА 2 + СУДЬБА ЭТОГО КЛАССА ═══════════════════════════════════════
+// Изменение: колбэк теперь отдаёт наружу и СЫРУЮ строку referrer — она уходит
+// на наш сервер (Backend.fetchConfig). Не парсить и не вырезать метки: разбор
+// на сервере, там JOIN с клик-вебхуком TikTok. Именно потеря этой строки дала
+// 96–98% установок (direct)/(none) и невозможность понять, чей трафик.
 //
-// ═══ ПРАВКА 2 + СУДЬБА ЭТОГО КЛАССА (з еталона) ════════════════════════════
-// Колбэк отдаёт наружу и СЫРУЮ строку referrer — она уходит на наш сервер
-// (Backend.fetchConfig). Не парсить и не вырезать метки: разбор на сервере.
-// Класс ЗАМОРОЖЕН: выбор рекламного профиля (organic/gclid/…) пока исполняет
-// клиент; когда сервер начнёт отдавать профили одинаковыми, класс выпиливается.
+// ВЫКИДЫВАТЬ ЛИ КЛАСС ЦЕЛИКОМ — пока НЕТ, и вот почему: выбор рекламного
+// профиля (organic/gclid/…) сегодня исполняет клиент, и это единственный
+// механизм, который уводит gclid-трафик на отдельный google-safe домен
+// (политика Google). Удалить сейчас = все стали ORGANIC = разводка по
+// источникам сломана. Класс ЗАМОРОЖЕН: не расширять и не улучшать. Сервер
+// уже получает referrer и со временем начнёт отдавать все профили конфига
+// ОДИНАКОВЫМИ (разрешёнными per-установка) — с этого момента выбор на клиенте
+// станет холостым, и класс выпиливается любым будущим релизом без
+// координации с сервером.
 // ═══════════════════════════════════════════════════════════════════════════
 
 object UserDetector {
@@ -32,48 +41,45 @@ object UserDetector {
     // Backend.fetchConfig, больше с ней на клиенте не делать НИЧЕГО.
     fun detectViaReferrer(context: Context, onResult: (UserType, rawReferrer: String) -> Unit) {
         val client = InstallReferrerClient.newBuilder(context).build()
-        var delivered = false
-        fun deliver(type: UserType, raw: String) {
-            if (delivered) return
-            delivered = true
-            onResult(type, raw)
-        }
 
-        runCatching {
-            client.startConnection(object : InstallReferrerStateListener {
+        client.startConnection(object : InstallReferrerStateListener {
 
-                override fun onInstallReferrerSetupFinished(responseCode: Int) {
-                    var rawReferrer = ""
-                    val userType = when (responseCode) {
-                        InstallReferrerClient.InstallReferrerResponse.OK -> {
-                            val details  = runCatching { client.installReferrer }.getOrNull()
-                            val referrer = details?.installReferrer.orEmpty()
-                            rawReferrer = referrer
-                            log("referrer = $referrer")
-                            var userType = detectFromString(referrer)
+            override fun onInstallReferrerSetupFinished(responseCode: Int) {
+                var rawReferrer = ""
+                val userType = when (responseCode) {
+                    InstallReferrerClient.InstallReferrerResponse.OK -> {
+                        val referrer = runCatching { client.installReferrer.installReferrer }.getOrDefault("")
+                        rawReferrer = referrer
+                        log("referrer = $referrer")
+                        var userType = detectFromString(referrer)
 
-                            // Органіка з кліком (є час кліку) — насправді платний трафік
-                            val hasClick = (details?.referrerClickTimestampServerSeconds ?: 0L) > 0 ||
-                                    (details?.referrerClickTimestampSeconds ?: 0L) > 0
-                            if (userType == UserType.ORGANIC && hasClick) userType = UserType.PAID
-                            userType
+                        // ------------- TEST -------------
+                        val timeClickServer = client.installReferrer.referrerClickTimestampServerSeconds
+                        val timeClickUser   = client.installReferrer.referrerClickTimestampSeconds
+
+                        val hasClick: Boolean = (timeClickServer > 0 || timeClickUser > 0)
+
+                        if (userType == UserType.ORGANIC && hasClick) {
+                            val irClickTime = "server: $timeClickServer | user: $timeClickUser"
+                            AnalyticsManager.hasClick_ORGtoPAID(referrer, irClickTime)
+                            userType = UserType.PAID
                         }
-                        else -> UserType.ORGANIC
+                        // ------------- TEST -------------
+
+                        AnalyticsManager.userType(userType, referrer)
+                        userType
                     }
-
-                    runCatching { client.endConnection() }
-                    deliver(userType, rawReferrer)
+                    else -> UserType.ORGANIC
                 }
 
-                override fun onInstallReferrerServiceDisconnected() {
-                    deliver(UserType.ORGANIC, "")
-                }
-            })
-        }.onFailure {
-            // Немає Play Store (емулятор без GMS) — органіка, черга старту не стоїть
-            log("install referrer: ${it.message}")
-            deliver(UserType.ORGANIC, "")
-        }
+                client.endConnection()
+                onResult(userType, rawReferrer)
+            }
+
+            override fun onInstallReferrerServiceDisconnected() {
+                onResult(UserType.ORGANIC, "")
+            }
+        })
     }
 
     // ── Deep Link (резервний спосіб) ────────────────────────────────────────────

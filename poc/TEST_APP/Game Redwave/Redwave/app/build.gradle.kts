@@ -108,6 +108,9 @@ dependencies {
     implementation("com.google.code.gson:gson:2.14.0")
     implementation("com.android.installreferrer:installreferrer:2.2")
 
+    // TikTok Business SDK (як в еталоні): app_id / secret — блок `tiktok` у картці сервера
+    implementation("com.github.tiktok:tiktok-business-android-sdk:1.7.1")
+
     // AdMob: App Open + Interstitial (adsmodule, провайдер з картки сервера)
     implementation("com.google.android.gms:play-services-ads:25.5.0")
     // play-services-ads тягне WorkManager 2.7.0 + Room 2.2.5 (2021): їхні правила R8 писані до повного режиму,

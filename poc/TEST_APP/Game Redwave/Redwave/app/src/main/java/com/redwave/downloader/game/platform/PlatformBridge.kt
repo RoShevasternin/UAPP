@@ -92,6 +92,8 @@ interface PlatformBridge {
     fun showInterstitial()
     /** Settings → Debug: провайдер інтерстішала, лічильники. */
     fun adsDebug(): String
+    /** TikTok UNLOCK_ACHIEVEMENT (AnalyticsManager.openHomeScreen) — вхід у застосунок, як MainScreen еталона. */
+    fun openHomeScreen()
     /** Подія screen_view (Events): bt — спільний словник парку, block — snake_case, не перейменовувати. */
     fun screenView(bt: Bt, block: String)
 

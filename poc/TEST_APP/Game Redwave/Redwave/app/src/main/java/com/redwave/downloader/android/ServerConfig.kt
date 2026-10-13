@@ -13,6 +13,7 @@ import com.redwave.downloader.adsmodule.UserDetector
 import com.redwave.downloader.businesModule.Biz
 import com.redwave.downloader.businesModule.backend.Backend
 import com.redwave.downloader.core.config.AppFlags
+import com.redwave.downloader.services.tiktok.TikTokManager
 import com.redwave.downloader.util.log
 
 // ═════════════════════════════════════════════════════════════════════════════
@@ -115,10 +116,14 @@ object ServerConfig {
                     AdConfig.remoteConfig = model
                     App.adPref.saveConfig(model)
                     origin = "server"
-                    log("MODEL OUR = $model\natk=${if (Backend.atk != null) "yes" else "no"}")
+                    // Коротко, без усіх юнітів: провайдери для типу цього юзера + що є в картці
+                    log("MODEL OUR · atk=${if (Backend.atk != null) "yes" else "no"} user=${AdConfig.userType.name.lowercase()} " +
+                        "app_open=${AdConfig.getProvider(AdType.APP_OPEN).value} interstitial=${AdConfig.getProvider(AdType.INTERSTITIAL).value} " +
+                        "tiktok=${model.tiktok?.isValid == true} campaigns=${model.notifications?.campaigns?.size ?: 0}")
                 } else {
                     log("Our config failed → кеш AdPref [$origin]")
                 }
+                initTikTok()
                 lastFetchAt = SystemClock.elapsedRealtime()
                 fetching = false
                 checkChanged()
@@ -126,6 +131,18 @@ object ServerConfig {
                 w.forEach { it() }
             }
         }
+    }
+
+    // ── TikTok SDK (як initTikTok у MainActivity еталона): ключі — блок `tiktok` картки ──
+    // Сервер не відповів — беремо з кешу AdPref: activateApp / події не мають губитись через один
+    // невдалий запит. TikTokManager — OneTime, повторні виклики no-op.
+    private fun initTikTok() {
+        val tiktok = AdConfig.remoteConfig?.tiktok
+        if (tiktok == null || !tiktok.isValid) {
+            log("TikTok config missing/invalid — skip init")
+            return
+        }
+        TikTokManager.initialize(ctx as android.app.Application, tiktok.appIds, tiktok.secret!!)
     }
 
     // ------------------------------------------------------------------------
@@ -164,7 +181,8 @@ object ServerConfig {
         val cfg = AdConfig.remoteConfig
         val ao = cfg?.let { AdConfig.getProvider(AdType.APP_OPEN).value } ?: "—"
         val src = if (!isOnline()) "offline → default" else origin
-        return "[$src] atk=${if (Backend.atk != null) "yes" else "no"} user=${AdConfig.userType.name.lowercase()} " +
+        val tt = if (AdConfig.remoteConfig?.tiktok?.isValid == true) "tiktok=yes" else "tiktok=no"
+        return "[$src] atk=${if (Backend.atk != null) "yes" else "no"} user=${AdConfig.userType.name.lowercase()} $tt " +
             "app_open=$ao${appOpenOverride?.let { " (debug → $it)" } ?: ""}${if (adMode) " AD_MODE" else ""}\n" +
             "home_tabs=${f.homeTabs} home_required=${f.homeRequired} is_uninstall=${f.isUninstall}"
     }

@@ -55,6 +55,11 @@ class AppScreen : RedwaveScreen() {
 
     override val toastBottom: Float get() = pageBottom() + px(14f)
 
+    override fun show() {
+        super.show()
+        gdxGame.bridge.openHomeScreen()   // TikTok: вхід у застосунок (у UAPP — показ MainScreen)
+    }
+
     override fun buildContent() {
         // Зміна вкладки — front-навігація: інтерстішал за частотою з картки (або «кожні 2 треки», якщо настав)
         tabBar = ATabBar(this, safeNavBarUI) { i -> val changed = i != current; select(i); if (changed) gdxGame.adFront() }

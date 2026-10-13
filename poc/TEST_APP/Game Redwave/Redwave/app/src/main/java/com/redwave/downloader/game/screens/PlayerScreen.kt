@@ -275,6 +275,11 @@ class PlayerScreen : RedwaveScreen() {
         sleepL.x = (sleepL.parent.width - sleepL.width) / 2f
     }
 
+    /** Системне «Назад» — той самий вихід, що й кнопка: з back-інтерстішалом. Шторку закриває база. */
+    override fun onBackPressed() {
+        if (sheet != null) super.onBackPressed() else closePlayer()
+    }
+
     private fun closePlayer() {
         // «Назад» у застосунок — back-інтерстішал; на лаунчер (плеєр відкрили з віджета) — без реклами
         val toApp = gdxGame.navigationManager.fromScreenName == AppScreen::class.java.name

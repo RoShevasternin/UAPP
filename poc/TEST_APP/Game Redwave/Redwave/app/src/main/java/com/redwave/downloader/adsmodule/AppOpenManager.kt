@@ -82,6 +82,7 @@ class AppOpenManager(
         // Теперь каждый пропуск уходит событием gate_skip с причиной — иначе такие
         // потери невидимы и ищутся сутками.
         fun skip(reason: String) {
+            com.redwave.downloader.util.log("app_open skip: $reason")
             Events.track("gate_skip", slot = "app_open", block = reason)
             onDone()
         }

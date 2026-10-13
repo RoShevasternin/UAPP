@@ -915,6 +915,7 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
             val finish = { if (!done) { done = true; runGDX { onDone() } } }
             if (activity.isFinishing) { finish(); return@post }
             // Порядок як у LoaderScreen еталона: опт-ін → стартовий app_open → далі (у всіх гілках)
+            log("startup flow: opt-in → app_open")
             Biz.runStartupFlow(
                 activity = activity,
                 requestPermission = { onResult -> activity.requestPushPermission(onResult) },
@@ -957,6 +958,11 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
     override fun adsDebug(): String = activity.adManager.debugLine() + " · dl $downloadsSinceInterstitial/$INTERSTITIAL_EVERY"
 
     override fun screenView(bt: Bt, block: String) = Events.screenView(bt, block)
+
+    override fun openHomeScreen() {
+        runCatching { com.redwave.downloader.services.analytics.AnalyticsManager.openHomeScreen() }
+            .onFailure { log("TikTok openHomeScreen: ${it.message}") }
+    }
 
     private fun isActivityResumed() =
         !activity.isFinishing && activity.lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)

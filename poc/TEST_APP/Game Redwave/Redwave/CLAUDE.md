@@ -8,7 +8,8 @@
 тонкий шар сервісів. Еталона немає (правила теки — `poc/TEST_APP/CLAUDE.md`), **але з 12.10.2026
 (рішення VELDAN) тут бізнес-логіка UAPP**: `businesModule` + `adsmodule` з еталона
 `june/Game T1-1/T1-integrated` (розділ нижче). Firebase — **лише FCM** (проєкт `redwave-original`,
-`app/google-services.json`); Remote Config і Analytics прибрано. TikTok / Meta SDK і білінгу немає.
+`app/google-services.json`); Remote Config і Firebase Analytics прибрано. **TikTok SDK — як в еталоні**
+(ключі з картки, рішення VELDAN 13.10.2026). Meta SDK і білінгу немає.
 
 ## Бізнес-логіка UAPP (рішення VELDAN 12.10.2026)
 
@@ -21,7 +22,14 @@
 - `AdManager` — лише інтерстішал (front / back / interstitial); банера й нативки немає (рішення VELDAN), без Glide;
 - `AppOpenManager` — повернення з фону повідомляє апка (`onReturnToApp`), а не `ProcessLifecycleOwner`:
   процес «повертається» на кожне «Додому», а там свої плейсменти;
-- `UserDetector` — без TikTok і AnalyticsManager; `AdPref` — prefs `redwave_ads_prefs`.
+- `UserDetector` — як в еталоні; `AnalyticsManager` — лише TikTok-провайдер (без Firebase Analytics);
+  `AdPref` — prefs `redwave_ads_prefs`.
+
+**TikTok** (`services/tiktok/TikTokManager`, як `initTikTok` еталона): app_id / secret — блок `tiktok` картки
+сервера; ініціалізація після кожної відповіді `/appconfig` (або з кешу AdPref), OneTime. Подія
+`UNLOCK_ACHIEVEMENT` — на кожен показ `AppScreen` (як MainScreen еталона). Немає блоку → лог
+`TikTok config missing/invalid — skip init`. R8: `-keep com.tiktok.**` + `-dontwarn com.android.billingclient.**`
+(SDK має необов'язковий трекінг покупок, білінгу в Redwave немає).
 
 Конфіг — `android/ServerConfig.kt` (як `initAds` еталона): `Biz.startSession` → Install Referrer (сирий, поки
 `atk` не видано) → `Biz.fetchConfig` → `AdConfig.remoteConfig` + кеш `AdPref`. Оновлення — на кожному `onResume`
@@ -57,6 +65,10 @@
 `onResume` немає, `onDestroy` приходить не завжди (заміряно на Redmi 12.10.2026). Тому `clear_history` при
 холодному старті визначаємо за причиною смерті попереднього процесу (`ApplicationExitInfo`, Android 11+):
 `OTHER` + «OneKeyClean» / `USER_REQUESTED` + «remove task». Нестача пам'яті / оновлення / ребут → `click_home`.
+
+⚠️ Відкриття застосунку через трамплін (іконка, тап по пушу, диплінк) скидає вкладку «Додому», а вкладка
+не відкривається, якщо інтент уже відкрив свою (`pl=push`) — інакше поверх пуша відкривався `clear_history`
+(заміряно 13.10.2026).
 
 ⚠️ «Нас сховала наша вкладка / реклама» фіксується в `onStop` (`stoppedByOwnAd`), а не в `onResume`:
 стартова вкладка відкривається між `onStart` і `onResume` (одразу після системного дозволу), і перевірка в
@@ -113,7 +125,7 @@ cd "/Users/admin/Apps/UAPP/poc/TEST_APP/Game Redwave/Redwave"
 sh ./gradlew assembleDebug                                       # gradlew часто без біта виконання
 adb install -r -t app/build/outputs/apk/debug/app-debug.apk      # MIUI: INSTALL_FAILED_USER_RESTRICTED → просто повторити
 adb shell monkey -p com.redwave.downloader -c android.intent.category.LAUNCHER 1
-adb logcat -s redwave:V AndroidRuntime:E
+adb logcat -s REDTERET:V AndroidRuntime:E                       # тег логів — util/util.kt
 adb exec-out screencap -p > /tmp/shot.png                        # скріншот — відкрити й подивитись
 ```
 
@@ -134,7 +146,10 @@ adb shell am start -a android.intent.action.VIEW -d "downloader://reward?h=test"
 # «повернення в апку» без «Недавніх»: піти в Settings і повернути Redwave наперед
 adb shell am start -a android.settings.SETTINGS && sleep 3 && adb shell am start -n com.redwave.downloader/.MainActivity
 # лог бізнес-логіки: MODEL OUR … atk=yes, openAd URL … pl=…, cold HOME: last exit …, localpush: scheduled …
-adb logcat -s redwave:V
+adb logcat -s REDTERET:V
+# локальний пуш без очікування 24 год: вийти в іншу апку (задачі плануються в onStop), знайти job і запустити
+adb shell dumpsys jobscheduler | grep -o "JOB #u0a[0-9]*/[0-9]*" | head      # u0a… — uid Redwave
+adb shell cmd jobscheduler run -f com.redwave.downloader <job_id>
 ```
 
 **Release (R8, повний режим) перевіряти на девайсі**, не лише збирати: debug без мініфікації не ловить
