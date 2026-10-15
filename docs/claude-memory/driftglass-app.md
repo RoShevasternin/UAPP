@@ -39,3 +39,7 @@ metadata:
   Головний екран — **одна сторінка, без гортання вбік** (VELDAN не хоче сторінок); усі апки з тими ж папками —
   свайпом угору, вертикальний скрол. Ігри без категорії (казино, 1win) не потрапляють у Games.
 - **Акаунт Play:** Strategic Access Ventures (12.10.2026) — [[test-app-new-play-accounts]]. Privacy Policy переписано під нього (коміт 1461165), адреса — `driftglass-privacy.0927920793ja.workers.dev` ◌ (субдомен звірити після публікації).
+- **15.10.2026: бізнес-логіка UAPP як у Redwave / Framefall** (коміт 7367d03): businesModule + урізаний adsmodule +
+  TikTok скопійовано з Framefall, Remote Config прибрано, Firebase лише FCM. Картка сервера **`home`** (VELDAN: пакет
+  com.driftglass.home не міняти — картку вже опубліковано), диплінк `home://`. Privacy і Data safety оновлено.
+  Debug і release збираються; на Redmi ще НЕ перевірено (MIUI скасовує USB-установку, на телефоні була інша апка).
