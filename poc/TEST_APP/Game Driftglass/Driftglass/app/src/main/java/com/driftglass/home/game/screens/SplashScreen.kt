@@ -2,7 +2,6 @@ package com.driftglass.home.game.screens
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
-import com.driftglass.home.game.platform.AdStatus
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
@@ -47,9 +46,9 @@ class SplashScreen : DgScreen() {
         gdxGame.spriteManager.loadAll()
         gdxGame.soundManager.load()
         gdxGame.model.load { modelLoaded = true }
-        // Перший запуск онлайн: чекаємо Firebase до 3 с (як Redwave), далі — кеш одразу
-        if (gdxGame.bridge.hasRemoteFlags() || !gdxGame.bridge.isOnline()) flagsReady = true
-        else gdxGame.bridge.refreshRemoteFlags(3_000L) { flagsReady = true }
+        // Офлайн чекати нема чого: режим все одно DEFAULT. Кеш є — сервер оновить у фоні (onFlagsChanged)
+        if (gdxGame.bridge.hasConfig() || !gdxGame.bridge.isOnline()) { flagsReady = true; gdxGame.bridge.loadConfig(CONFIG_WAIT_MS) {} }
+        else gdxGame.bridge.loadConfig(CONFIG_WAIT_MS) { flagsReady = true }
     }
 
     override fun buildContent() {
@@ -84,10 +83,6 @@ class SplashScreen : DgScreen() {
         }
         val elapsed = System.currentTimeMillis() - startedAt
         if (!navigated && assetsDone && modelLoaded && flagsReady && elapsed >= 1000L) {
-            // App Open при відкритті: лише якщо далі застосунок (не онбординг, не лаунчер) і онлайн.
-            // Ще вантажиться — чекаємо до AD_WAIT_MS від старту Splash, далі йдемо без реклами.
-            val ad = if (gdxGame.firstScreenIsApp() && gdxGame.bridge.isOnline()) gdxGame.bridge.appOpenStatus() else AdStatus.NONE
-            if (ad == AdStatus.LOADING && elapsed < AD_WAIT_MS) return
             navigated = true
             gdxGame.onReady()
             val go = {
@@ -96,13 +91,15 @@ class SplashScreen : DgScreen() {
                     gdxGame.navigateFirst()
                 }
             }
-            if (ad == AdStatus.READY) gdxGame.bridge.showAppOpen(onReturn = false, awayMs = 0L) { go() } else go()
+            // Як LoaderScreen в UAPP: опт-ін → app_open (вкладка custom* / AdMob до 3 с) → застосунок.
+            // Онбординг і лаунчер — без черги: вона відбудеться на першому вході в застосунок.
+            if (gdxGame.firstScreenIsApp()) gdxGame.runStartupFlow { go() } else go()
         }
     }
 
     private companion object {
-        /** Скільки Splash максимум чекає App Open (від свого старту). */
-        const val AD_WAIT_MS = 3_500L
+        /** Скільки Splash максимум чекає /appconfig на першому запуску. */
+        const val CONFIG_WAIT_MS = 5_000L
     }
 
     override fun onBackPressed() {}

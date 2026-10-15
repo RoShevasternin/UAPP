@@ -3,8 +3,8 @@ plugins {
     id("kotlinx-serialization")
 }
 
-// Firebase (лише Remote Config, як у Redwave): плагін — коли є app/google-services.json.
-// Без файлу збірка йде, а RemoteFlagsSource бере AppFlags.DEFAULT (реклами немає). Як створити — ../FIREBASE.md.
+// Firebase (лише FCM, як у Redwave / Framefall): плагін — коли є app/google-services.json (проєкт driftglass-original).
+// Без файлу збірка йде, але FCM-токена немає (локальні пуші й конфіг сервера працюють).
 if (file("google-services.json").exists()) apply(plugin = "com.google.gms.google-services")
 
 android {
@@ -73,16 +73,24 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.8.0")
     implementation("androidx.activity:activity-ktx:1.13.0")
     implementation("androidx.datastore:datastore-preferences:1.2.1")
-    implementation("androidx.browser:browser:1.10.0")   // AD_MODE: Custom Tab на «Додому»
+    implementation("androidx.browser:browser:1.10.0")   // Custom Tabs: лендінги через гейтвей (BrowserUtil) — «Додому», app_open, front/back
 
-    // Firebase: лише Remote Config (параметр driftglass_config), як у Redwave ---------------------
+    // Firebase: лише FCM (businesModule: токен пушів, PushService). Remote Config прибрано
+    // 15.10.2026 — режим і реклама з картки нашого сервера (як Redwave / Framefall). Без Analytics.
     implementation(platform("com.google.firebase:firebase-bom:35.0.0"))
-    implementation("com.google.firebase:firebase-config")
+    implementation("com.google.firebase:firebase-messaging")
 
-    // AdMob: App Open + Interstitial (вмикач — Remote Config is_enable_admob) ------------------
+    // businesModule + adsmodule (як в UAPP): Gson для конфігу, сирий Install Referrer для атрибуції
+    implementation("com.google.code.gson:gson:2.14.0")
+    implementation("com.android.installreferrer:installreferrer:2.2")
+
+    // TikTok Business SDK (як в еталоні): app_id / secret — блок `tiktok` у картці сервера
+    implementation("com.github.tiktok:tiktok-business-android-sdk:1.7.1")
+
+    // AdMob: App Open + Interstitial (adsmodule, провайдер з картки сервера) ------------------
     implementation("com.google.android.gms:play-services-ads:25.5.0")
     // play-services-ads тягне WorkManager 2.7.0 + Room 2.2.5: у release (R8 повний) краш на старті
-    // (Redwave, 08.10.2026) — свіжий WorkManager явно
+    // (Redwave, 08.10.2026) — свіжий WorkManager явно. Ще й LocalPush (businesModule) планує пуші через WorkManager.
     implementation("androidx.work:work-runtime:2.12.0")
 
     // LibGDX Core ------------------------------------------------------------------------

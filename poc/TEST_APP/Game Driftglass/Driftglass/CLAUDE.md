@@ -2,28 +2,60 @@
 
 Нова апка (не гра парку RBX): **живі шейдерні шпалери + власний головний екран** (роль HOME).
 Прототип — https://claude.ai/artifact/XXRnR3cEUCuAS5h3Mb7QkW (копія `../prototype/index.html`).
-Правила теки — `poc/TEST_APP/CLAUDE.md`: еталона немає. Перенесено зі стеку Redwave (LibGDX 1.14.2 + scene2d, MSDF,
-`PlatformBridge`). **Firebase — лише Remote Config, реклама — AdMob напряму, як у Redwave** (рішення VELDAN 12.10.2026);
-Analytics немає. Маркет-кіт — `../market/` (`LISTING.md`, `README.md`), Privacy Policy — `../privacy-policy/`.
+Правила теки — `poc/TEST_APP/CLAUDE.md`. Перенесено зі стеку Redwave (LibGDX 1.14.2 + scene2d, MSDF, `PlatformBridge`).
+**З 15.10.2026 (рішення VELDAN) тут бізнес-логіка UAPP, як у Redwave і Framefall**: `businesModule` + `adsmodule`
+з еталона (розділ нижче). Firebase — **лише FCM** (проєкт `driftglass-original`, `app/google-services.json`);
+Remote Config прибрано. TikTok SDK — як в еталоні. Analytics, Meta SDK і білінгу немає.
+Маркет-кіт — `../market/` (`LISTING.md`, `README.md`), Privacy Policy — `../privacy-policy/`.
 
-## Remote Config + AdMob (як у Redwave, рішення VELDAN 12.10.2026)
+## Бізнес-логіка UAPP (рішення VELDAN 15.10.2026, як Redwave / Framefall)
 
-Параметр **`driftglass_config`** (JSON), значення VELDAN — `../firebase/driftglass_config.json`, як створити — `../FIREBASE.md`.
-Проєкт Firebase — `driftglass-original` (VELDAN, 12.10.2026), `app/google-services.json` у git. Без цього файлу плагін
-google-services не підключається (умова в `app/build.gradle.kts`), а `RemoteFlagsSource` бере `AppFlags.DEFAULT` — реклами немає.
+Модулі скопійовано з **Framefall** (він — найсвіжіша копія каркаса Redwave), лише префікс пакета:
+`businesModule/` — копія еталона **без змін**: конфіг з нашого сервера (`/appconfig`), атрибуція `atk`, гейтвей
+лендінгів, події, `Wallet`/`Econ` (монет у UI немає), опт-ін на пуші, локальні пуші (WorkManager), FCM-токен,
+повернення з веба. **Правки серверної команди (`DEV_TASKS`) бекпортувати і сюди.**
+`adsmodule/` — урізаний, як у Redwave: `AdManager` лише інтерстішал (front / back / interstitial), `AppOpenManager` —
+повернення в апку повідомляє сама апка (`onReturnToApp`), `AnalyticsManager` — лише TikTok; prefs `driftglass_ads_prefs`.
 
-- `android/RemoteFlagsSource.kt` — порт Redwave 1:1: офлайн → DEFAULT, Splash чекає Firebase до 3 с на першому запуску,
-  `fetchAndActivate` на кожному `onResume`, real-time listener.
-- `android/AdsManager.kt` + `core/ads/AdPolicy.kt` (+ `AdPolicyTest`) — порт Redwave, тестові блоки Google.
-  App Open — відкриття апки (Splash чекає до 3,5 с; іконка Driftglass на нашому лаунчері) і повернення ≤ 1 год,
-  не частіше раз на 3 хв; Interstitial — кожні 2 дії зі шпалерами (Apply / Save у Studio / кадр на систему),
-  у паузі (через 1,5 с, зміна вкладки), ≥ 60 с після попередньої. **Лише в застосунку** (вкладки, Preview, Studio) —
-  на лаунчері, онбордингу й екрані-вимозі ні. Перевірено на Redmi 12.10.2026: App Open з іконки, Interstitial після
-  2 збережень у Studio; release (R8) стартує без крашу (WorkManager 2.12 явно, як у Redwave).
-- **Перед релізом:** свій App ID у маніфесті + свої блоки в `AdsManager`, згода UMP (ЄЕЗ).
+**Картка на сервері — `home`** (останній сегмент пакета `com.driftglass.home`; VELDAN 15.10.2026: картку вже додано й
+опубліковано, пакет не міняємо). Диплінк — **`home://reward`**, **`home://optin`** (`deeplink_scheme` у картці).
+
+Конфіг — `android/ServerConfig.kt` (копія Framefall): `Biz.startSession` → Install Referrer (поки `atk` не видано) →
+`Biz.fetchConfig` → `AdConfig.remoteConfig` + кеш `AdPref`; оновлення на кожному `onResume` (release — не частіше 5 хв);
+Splash на першому запуску онлайн чекає `/appconfig` до 5 с.
+
+### Режим — з картки (`core/config/AppFlags.kt` + `AppFlagsTest`)
+
+| Провайдер `app_open` для типу юзера | Вкладка на «Додому» / «Недавні» | Роль HOME | Uninstall з лаунчера |
+|---|---|---|---|
+| `custom` / `custom_google` / `custom_tiktok` / `custom_facebook` | так (лише з роллю й онлайн) | обов'язкова, без «Maybe later» | ні |
+| `na` / `admob` / конфігу немає / офлайн | ні | «Maybe later» є | так |
+
+### Плейсменти (ключ доходу `<app>-<pl>`, після релізу НЕ перейменовувати)
+
+| pl | Коли | Де |
+|---|---|---|
+| `app_open` | «Додому» з іншої апки й очищення «Недавніх» (лише режим «наша реклама», роль і онлайн) | `MainActivity.onResume`, `AppFlags.PL_HOME_TAB` |
+| `app_open` | черга старту (Splash → застосунок, або перший вхід у застосунок з лаунчера / онбордингу); повернення в застосунок | `AppOpenManager` |
+| `push` | тап по пушу (`gate_pl` з картки) | `LocalPush.handleOpen` |
+| `front` | зміна вкладки, відкриття Preview / Studio | `GDXGame.adFront` |
+| `back` | «Назад» з Preview / Studio у застосунок | `GDXGame.adBack` |
+| `interstitial` | кожні 2 дії зі шпалерами (Apply / Save у Studio / кадр на систему) | `GDXGame.maybeInterstitial` |
+| `optin_return` | повернення у вкладку після дозволу на пуші з лендінга | `MainActivity` (`Biz.onWebOptIn`) |
+
+Реклама **лише в застосунку** (вкладки, Preview, Studio): на лаунчері, онбордингу, екрані-вимозі — ні.
+Події: `screen_view` — вкладки (`discover_tab`, `my_glass_tab`, `settings_tab`), `preview`, `studio`; TikTok
+`UNLOCK_ACHIEVEMENT` — кожен показ `AppScreen`. Опт-ін — без монет (тексти в `App.kt`).
+Пастки — ті самі, що в Redwave (`Game Redwave/Redwave/CLAUDE.md`): MIUI «Очистити все» вбиває процес → вкладка на
+холодному старті як HOME; «наша реклама» фіксується в `onStop` (`stoppedByOwnAd`); відкриття через трамплін скидає вкладку «Додому».
 
 ```bash
-adb shell am start -n com.driftglass.home/.MainActivity --ez driftglass.debug_ads_reset true   # забути показ і лічильник
+# режим як при іншому провайдері app_open (na / admob / custom_google; "" — прибрати); реклама лишається з картки
+adb shell am start -n com.driftglass.home/.MainActivity --es driftglass.debug_app_open na
+# відповідь /appconfig коротко: atk, config по типах юзера («→» — діє для цього), tiktok, кампанії пушів
+adb logcat -d -v raw -s driftglass:V | grep -A10 "^──── /appconfig"
+# диплінк з лендінга (невалідний токен = тиша, це норма)
+adb shell am start -a android.intent.action.VIEW -d "home://reward?h=test"
 ```
 
 ## StoreDemo — чисті скріни для Google Play (запит VELDAN 12.10.2026)
@@ -38,28 +70,11 @@ adb shell am start -n com.driftglass.home/.MainActivity --ez driftglass.store_de
 Спілкування й коментарі в коді — **українською**. UI апки — **лише англійською** (рішення VELDAN 09.10.2026:
 `GDXGame.applyLanguage` → EN; переклади uk/ru лишились у `core/i18n/Strings.kt` на потім, перемикача мови немає).
 
-## AD_MODE (як у Redwave, рішення VELDAN 09.10.2026)
+## AD_MODE (debug, як у Redwave)
 
-Прапорці — `core/config/AppFlags.kt` (+ `AppFlagsTest`), поля й JSON-імена як у Redwave `RemoteFlags`,
-джерело — Remote Config (`android/RemoteFlagsSource.kt`); debug — підміна поверх нього.
-
-| Поле | true | false (DEFAULT) |
-|---|---|---|
-| `enabled_url_ad` + `url` | Custom Tab з `url` на «Додому» з іншої апки, після «Недавніх» / «Очистити все», після вимкненого екрана (лише з роллю HOME і онлайн) | нічого |
-| `home_required` | пояснення ролі без «Maybe later»; без ролі — екран-вимога на кожному вході й resume | «Maybe later» є |
-| `is_uninstall` | довге натискання на іконку в лаунчері → App info / Uninstall | довге натискання нічого не робить |
-
-AD_MODE = `enabled_url_ad` + url (з Remote Config, якщо https, інакше google.com) + `home_required` + `!is_uninstall` + AdMob. Логіка вкладки —
-`MainActivity` (1:1 з Redwave): `onStop` від «іншої апки» вмикає, `onResume` відкриває; наша вкладка й
-наші системні екрани (`internalNavigation`) не рахуються; холодний старт як HOME теж відкриває.
-Перевірено на Redmi 09.10.2026: Settings → «Додому» → вкладка; закрити вкладку → лаунчер без повтору;
-«Недавні» → «Очистити все» → вкладка; довге натискання — нічого. **Не перевірено:** екран-вимога після зняття ролі.
-
-```bash
-# Settings → Debug → AD_MODE (перемикання перезапускає апку); на екрані-вимозі — кнопка AD_MODE OFF зліва вгорі
-# підміна з adb ("" — прибрати):
-adb shell am start -n com.driftglass.home/.MainActivity --es driftglass.debug_flags '{"enabled_url_ad":true,"url":"https://google.com","home_required":true,"is_uninstall":false}'
-```
+Settings → Debug → AD_MODE — «наша реклама» поверх картки (вкладки на «Додому», роль обов'язкова, без Uninstall),
+перемикання перезапускає апку; на екрані-вимозі — кнопка AD_MODE OFF зліва вгорі. Логіка вкладки — `MainActivity`
+(1:1 з Framefall). У Settings → Debug видно джерело конфігу, atk, тип юзера, режим і лічильники реклами.
 
 ## Лаунчер: одна сторінка з авто-папками + усі апки свайпом угору (рішення VELDAN 09.10.2026)
 

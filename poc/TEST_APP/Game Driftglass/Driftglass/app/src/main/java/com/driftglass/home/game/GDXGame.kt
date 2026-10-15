@@ -155,37 +155,76 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
     }
 
     // ------------------------------------------------------------------------
-    // AD_MODE (AppFlags): роль обов'язкова, без Uninstall; вкладку на «Додому» відкриває MainActivity
+    // Режим з картки нашого сервера (кеш AdPref або DEFAULT), див. AppFlags
     // ------------------------------------------------------------------------
-    val flags get() = bridge.flags()
+    val flags get() = bridge.appFlags()
 
-    /** Потрібен екран-вимога: роль обов'язкова, а її немає. */
+    /** Потрібен екран-вимога: роль обов'язкова («наша реклама»), а її немає. */
     val needsHomeRole: Boolean get() = flags.homeRequired && !bridge.isDefaultHome()
 
     // ------------------------------------------------------------------------
-    // Реклама: App Open + Interstitial (частота — AdPolicy, показ — AdsManager), як у Redwave
+    // Бізнес-логіка UAPP: черга старту, app_open, інтерстішал (adsmodule вирішує провайдера),
+    // як у Redwave / Framefall (рішення VELDAN 15.10.2026)
     // ------------------------------------------------------------------------
     /**
-     * Лише всередині застосунку: вкладки, Preview, Studio. На лаунчері (роль HOME) реклами AdMob немає —
-     * повноекранна реклама на головному екрані = «disruptive ads» за правилами Google Play;
-     * на онбордингу й екрані-вимозі — теж ні.
+     * Лише всередині застосунку: вкладки, Preview, Studio. На лаунчері (роль HOME) app_open / інтерстішалів
+     * немає — там своя вкладка на «Додому» / «Недавні» (MainActivity, pl=app_open); на онбордингу й
+     * екрані-вимозі — теж ні.
      */
     private val isInApp: Boolean get() = currentScreen.let { it is AppScreen || it is com.driftglass.home.game.screens.PreviewScreen || it is com.driftglass.home.game.screens.StudioScreen }
 
-    /** Splash: чи поведе перший екран у застосунок (тоді є сенс у App Open). Перший запуск — ні. */
+    /** Черга старту (опт-ін → app_open) уже була в цьому процесі. */
+    var startupFlowDone = false
+        private set
+
+    /** Splash: чи поведе перший екран у застосунок (тоді — черга старту). Перший запуск — ні. */
     fun firstScreenIsApp(): Boolean = model.state.onboarded && !needsHomeRole && !pendingHome
 
-    /** Повернулись у Driftglass / тапнули іконку. Екран перевіряємо наступним проходом черги GL. */
+    /**
+     * Черга старту UAPP: опт-ін на пуші → стартовий app_open → onDone. Раз на процес: зі Splash,
+     * а якщо процес стартував як лаунчер або з онбордингу — на першому вході в застосунок.
+     */
+    fun runStartupFlow(onDone: () -> Unit = {}) {
+        if (startupFlowDone) { onDone(); return }
+        startupFlowDone = true
+        bridge.runStartupFlow(onDone)
+    }
+
+    /**
+     * Повернулись у Driftglass / тапнули іконку. Навігація з onAppIconPressed ще в черзі GL —
+     * екран перевіряємо наступним проходом черги, коли AppScreen уже стоїть.
+     */
     override fun onAppForeground(awayMs: Long, fromIcon: Boolean) {
         if (!isReady || !model.state.onboarded || needsHomeRole) return
         com.driftglass.home.game.utils.runGDX {
             if (!isInApp) return@runGDX
-            bridge.showAppOpen(onReturn = !fromIcon, awayMs = awayMs) { shown -> if (!shown) maybeInterstitial() }
+            if (!startupFlowDone) runStartupFlow() else bridge.appOpenOnReturn()
         }
     }
 
-    override fun onRemoteFlags(flags: com.driftglass.home.core.config.AppFlags) {
+    /**
+     * Режим змінився на льоту (новий конфіг / інтернет). Послаблення діє одразу: роль стала
+     * необов'язковою, а людина стоїть на екрані-вимозі → в апку. Посилення (роль стала
+     * обов'язковою) — на наступному вході (resume / старт), щоб не викидати посеред дії.
+     */
+    override fun onFlagsChanged(flags: com.driftglass.home.core.config.AppFlags) {
         log("flags changed: $flags")
+        if (!isReady) return
+        val s = currentScreen
+        if (s is OnboardingScreen && model.state.onboarded && !needsHomeRole) navigationManager.navigateRoot(AppScreen::class.java.name)
+    }
+
+    /** Перехід уперед у застосунку (вкладка, Preview, Studio) — front-інтерстішал за частотою з картки. */
+    fun adFront() {
+        if (!isReady || !isInApp) return
+        if (maybeInterstitial()) return
+        bridge.onFrontNavigation()
+    }
+
+    /** «Назад» з Preview / Studio в застосунок — back-інтерстішал. */
+    fun adBack() {
+        if (!isReady) return
+        bridge.onBackNavigation()
     }
 
     /** Застосували / зберегли шпалери → лічильник; інтерстішал — коли людина побачила тост. */
@@ -197,14 +236,15 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
     }
 
     /**
-     * Interstitial у природній паузі: після дії зі шпалерами, при зміні вкладки, перед Preview.
-     * Не поверх шторки; не настав час — нічого (лічильник чекає).
+     * showInterstitial (pl=interstitial) кожні 2 дії зі шпалерами — у природній паузі: після тосту
+     * або на наступному переході. Не поверх шторки; не настав час — нічого (лічильник чекає).
      */
-    fun maybeInterstitial() {
-        if (!isReady || !isInApp) return
-        if ((currentScreen as? DgScreen)?.sheet != null) return
-        if (!bridge.isInterstitialDue()) return
-        bridge.showInterstitial { }
+    fun maybeInterstitial(): Boolean {
+        if (!isReady || !isInApp) return false
+        if ((currentScreen as? DgScreen)?.sheet != null) return false
+        if (!bridge.isInterstitialDue()) return false
+        bridge.showInterstitial()
+        return true
     }
 
     // ------------------------------------------------------------------------
@@ -257,7 +297,7 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
         when {
             !model.state.onboarded || needsHomeRole -> nav.navigateRoot(OnboardingScreen::class.java.name)
             pendingHome && home    -> nav.navigateRoot(LauncherScreen::class.java.name)
-            else                   -> nav.navigateRoot(AppScreen::class.java.name)
+            else                   -> { nav.navigateRoot(AppScreen::class.java.name); runStartupFlow() }
         }
         pendingHome = false
     }
@@ -272,7 +312,7 @@ class GDXGame(val bridge: PlatformBridge) : AdvancedGame(), PlatformEvents {
     // ------------------------------------------------------------------------
     /** Поставити шпалери на Home (вимикає цикл дня — людина обрала сама). Кадр на екран блокування — за налаштуванням. */
     fun applyWallpaper(id: String, alsoLock: Boolean = model.state.settings.lockStill) {
-        bridge.onWallpaperAction()
+        bridge.onWallpaperAction()   // інтерстішал — на наступній паузі в застосунку (Apply веде на лаунчер)
         model.update { it.copy(applied = id, dayCycle = false, changedAt = System.currentTimeMillis()) }
         log("apply $id → Home")
         if (alsoLock && model.state.settings.lockStill) model.wallpaper(id)?.let { setStill(it, system = false, lock = true) {} }

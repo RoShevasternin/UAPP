@@ -28,6 +28,12 @@ class AppScreen : DgScreen() {
         const val TAB_MY_GLASS = 2
         const val TAB_SETTINGS = 3
         private var lastTab = TAB_DISCOVER
+        /** screen_view по вкладках (bt — словник парку, block — не перейменовувати після релізу). Studio — свій екран. */
+        private val TAB_ANALYTICS = mapOf(
+            TAB_DISCOVER to (com.driftglass.home.businesModule.backend.Bt.CATALOG to "discover_tab"),
+            TAB_MY_GLASS to (com.driftglass.home.businesModule.backend.Bt.CATALOG to "my_glass_tab"),
+            TAB_SETTINGS to (com.driftglass.home.businesModule.backend.Bt.TOOL to "settings_tab"),
+        )
     }
 
     private val pages = arrayOfNulls<TabPage>(4)
@@ -37,9 +43,15 @@ class AppScreen : DgScreen() {
     val tabBarH get() = px(60f) + safeNavBarUI
     override val toastBottom: Float get() = tabBarH + px(14f)
 
+    override fun show() {
+        super.show()
+        gdxGame.bridge.openHomeScreen()   // TikTok: вхід у застосунок (у UAPP — показ MainScreen)
+    }
+
     override fun buildContent() {
+        // Зміна вкладки — front-навігація: інтерстішал за частотою з картки (або «кожні 2 дії», якщо настав)
         tabBar = ATabBar(this, safeNavBarUI) { i ->
-            if (i == TAB_STUDIO) openStudio() else select(i)
+            if (i == TAB_STUDIO) openStudio() else { val changed = i != current; select(i); if (changed) gdxGame.adFront() }
         }
         tabBar.setBounds(0f, 0f, worldWidth, tabBarH)
         content.addActor(statusScrim(this, GameColor.background))
@@ -57,11 +69,10 @@ class AppScreen : DgScreen() {
         page.clearActions()
         page.addAction(Actions.parallel(Actions.fadeIn(0.25f), Actions.moveTo(0f, 0f, 0.3f, Interpolation.pow3Out)))
         current = i
-        val changed = lastTab != i
         lastTab = i
         tabBar.select(i)
         page.onShown()
-        if (changed) gdxGame.maybeInterstitial()   // зміна вкладки — природна пауза (як Redwave)
+        TAB_ANALYTICS[i]?.let { (bt, block) -> gdxGame.bridge.screenView(bt, block) }
     }
 
     private fun createPage(i: Int): TabPage {
@@ -77,11 +88,13 @@ class AppScreen : DgScreen() {
 
     fun openStudio(w: com.driftglass.home.core.model.Wallpaper? = null) {
         gdxGame.draft = (w ?: gdxGame.model.homeWallpaper()).copy()
+        gdxGame.adFront()
         gdxGame.navigationManager.navigate(StudioScreen::class.java.name, AppScreen::class.java.name)
     }
 
     fun openPreview(id: String) {
         gdxGame.previewId = id
+        gdxGame.adFront()
         gdxGame.navigationManager.navigate(PreviewScreen::class.java.name, AppScreen::class.java.name)
     }
 

@@ -34,11 +34,11 @@ Game <Назва>/
 - рекламу, аналітику чи сервер додаємо лише тоді, коли VELDAN окремо скаже, і під потреби
   конкретної апки.
 
-**Виняток — Redwave (рішення VELDAN 12.10.2026) і Framefall (13.10.2026, з каркаса Redwave):** там `businesModule` +
+**Виняток — Redwave (рішення VELDAN 12.10.2026), Framefall (13.10.2026, з каркаса Redwave) і Driftglass (15.10.2026):** там `businesModule` +
 `adsmodule` з еталона, режим і реклама — з картки нашого сервера, вкладка на «Додому» / «Недавні» з плейсментом
 `app_open`. Деталі — `Game Redwave/Redwave/CLAUDE.md`, `Game Framefall/Framefall/CLAUDE.md`. Правки серверної команди
 (`DEV_TASKS`) бекпортуються і туди. Картку сервер шукає за **останнім сегментом пакета** — у нової апки він має бути
-унікальним (`downloader` — Redwave, `framefall` — Framefall).
+унікальним (`downloader` — Redwave, `framefall` — Framefall, `home` — Driftglass).
 
 ## Стек — як у LibGDX-апках UAPP
 

@@ -61,14 +61,14 @@ class SettingsTab(app: AppScreen) : TabPage(app) {
         // ── Debug: AD_MODE як у Redwave (реклама на Home, роль обов'язкова, без Uninstall), перемикання перезапускає апку ──
         if (IS_DEBUG) {
             section(col, "DEBUG")
-            val adOn = gdxGame.flags.isAdMode
-            col.addActor(settingsRow(app, W, "AD_MODE", if (adOn) "On · ad on Home, Home required, no uninstall" else "Off · Remote Config", toggle = adOn) {
+            val adOn = gdxGame.bridge.isAdMode()
+            col.addActor(settingsRow(app, W, "AD_MODE", if (adOn) "On · ad on Home, Home required, no uninstall" else "Off · mode from server card", toggle = adOn) {
                 gdxGame.toast("Restarting…")
                 com.badlogic.gdx.utils.Timer.schedule(object : com.badlogic.gdx.utils.Timer.Task() {
                     override fun run() { gdxGame.bridge.setAdMode(!adOn) }
                 }, 0.35f)
             })
-            val dl = lbl(gdxGame.bridge.flagsDebug() + "\n" + gdxGame.bridge.adsDebug() + (if (gdxGame.bridge.isStoreDemo) "\nstore demo: on" else ""), msdf.label(10f, GameColor.white_55, spacing = 0f)).apply { setWrap(true); width = W - px(8f); height = prefHeight }
+            val dl = lbl(gdxGame.bridge.configDebug() + "\n" + gdxGame.bridge.adsDebug() + (if (gdxGame.bridge.isStoreDemo) "\nstore demo: on" else ""), msdf.label(10f, GameColor.white_55, spacing = 0f)).apply { setWrap(true); width = W - px(8f); height = prefHeight }
             col.addActor(group(app, W, dl.height + px(6f)) { dl.setPosition(px(4f), 0f); addActor(dl) })
         }
     }

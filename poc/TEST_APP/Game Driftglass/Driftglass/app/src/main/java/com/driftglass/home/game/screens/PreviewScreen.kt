@@ -35,6 +35,9 @@ import java.util.Locale
 // ─────────────────────────────────────────────────────────────────────────────
 class PreviewScreen : DgScreen() {
 
+    override val analyticsBt = com.driftglass.home.businesModule.backend.Bt.CATALOG
+    override val analyticsBlock = "preview"
+
     private val wp = gdxGame.model.wallpaper(gdxGame.previewId) ?: Catalog.ALL.first()
     private var ghostOn = true
     private var alsoLock = gdxGame.model.state.settings.lockStill
@@ -157,5 +160,14 @@ class PreviewScreen : DgScreen() {
                 b.requestDefaultHome { isHome -> if (isHome) { gdxGame.toast(L.tRole); gdxGame.navigationManager.navigateRoot(LauncherScreen::class.java.name) } }
             },
         ))
+    }
+
+    /** «Назад» у застосунок — back-інтерстішал (частота з картки); на лаунчер — без реклами. */
+    override fun onBackPressed() {
+        if (sheet != null) { super.onBackPressed(); return }
+        val from = gdxGame.navigationManager.fromScreenName
+        val toApp = from == AppScreen::class.java.name || from == PreviewScreen::class.java.name
+        super.onBackPressed()
+        if (toApp) gdxGame.adBack()
     }
 }

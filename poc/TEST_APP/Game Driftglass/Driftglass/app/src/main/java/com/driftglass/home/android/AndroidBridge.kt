@@ -36,7 +36,10 @@ import androidx.core.content.getSystemService
 import androidx.core.graphics.createBitmap
 import androidx.core.net.toUri
 import com.driftglass.home.MainActivity
-import com.driftglass.home.game.platform.AdStatus
+import com.driftglass.home.businesModule.Biz
+import com.driftglass.home.businesModule.backend.Bt
+import com.driftglass.home.businesModule.backend.Events
+import com.driftglass.home.core.config.AppFlags
 import com.driftglass.home.game.platform.BatteryState
 import com.driftglass.home.game.platform.LauncherApp
 import com.driftglass.home.game.platform.PlatformBridge
@@ -123,53 +126,96 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
         ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName ?: "?"
     }.getOrDefault("?")
 
-    override fun isOnline(): Boolean = RemoteFlagsSource.isOnline()
+    override fun isOnline(): Boolean = ServerConfig.isOnline()
 
     // ------------------------------------------------------------------------
-    // Remote Config
+    // Конфіг з нашого сервера (ServerConfig, картка `home`)
     // ------------------------------------------------------------------------
-    override fun flags() = RemoteFlagsSource.effective
-    override fun hasRemoteFlags(): Boolean = RemoteFlagsSource.hasRemote()
-    override fun refreshRemoteFlags(timeoutMs: Long, onDone: (com.driftglass.home.core.config.AppFlags) -> Unit) {
-        main.post { RemoteFlagsSource.refresh(timeoutMs) { f -> runGDX { onDone(f) } } }
+    /** Офлайн — AppFlags.DEFAULT (ServerConfig.flags). */
+    override fun appFlags(): AppFlags = ServerConfig.flags
+    override fun hasConfig(): Boolean = ServerConfig.hasConfig()
+    override fun loadConfig(timeoutMs: Long, onDone: () -> Unit) {
+        main.post {
+            var done = false
+            fun finish(why: String) {
+                if (done) return
+                done = true
+                log("config for splash: $why")
+                runGDX { onDone() }
+            }
+            main.postDelayed({ finish("timeout ${timeoutMs}ms") }, timeoutMs)
+            ServerConfig.refresh(force = false) { finish("done") }   // уже йде / щойно був — без другого запиту
+        }
     }
+    override fun configDebug(): String = ServerConfig.debugLine()
+    override fun isAdMode(): Boolean = ServerConfig.isAdMode()
 
     /** Перезапуск процесу: новий таск через трамплін (він сам вирішить — home-таск чи звичайний). */
     override fun setAdMode(on: Boolean) {
         main.post {
-            RemoteFlagsSource.setAdMode(on)
+            ServerConfig.setAdMode(on)
             val restart = Intent.makeRestartActivityTask(ComponentName(ctx, com.driftglass.home.LauncherTrampoline::class.java))
             ctx.startActivity(restart)
             Runtime.getRuntime().exit(0)
         }
     }
 
-    override fun flagsDebug(): String = RemoteFlagsSource.debugLine()
-
     // ------------------------------------------------------------------------
-    // Реклама (AdsManager живе на весь процес, тут лише перенос у main і назад у GL)
+    // Бізнес-логіка UAPP: черга старту, реклама (adsmodule), події — як Framefall / Redwave
     // ------------------------------------------------------------------------
-    override fun appOpenStatus(): AdStatus = AdsManager.appOpenStatus()
-
-    override fun showAppOpen(onReturn: Boolean, awayMs: Long, onDone: (shown: Boolean) -> Unit) {
+    override fun runStartupFlow(onDone: () -> Unit) {
         main.post {
-            if (!isActivityResumed()) { runGDX { onDone(false) }; return@post }
-            AdsManager.showAppOpen(activity, onReturn, awayMs) { shown -> runGDX { onDone(shown) } }
+            var done = false
+            val finish = { if (!done) { done = true; runGDX { onDone() } } }
+            if (activity.isFinishing) { finish(); return@post }
+            // Порядок як у LoaderScreen еталона: опт-ін → стартовий app_open → далі (у всіх гілках)
+            log("startup flow: opt-in → app_open")
+            Biz.runStartupFlow(
+                activity = activity,
+                requestPermission = { onResult -> activity.requestPushPermission(onResult) },
+                openGateAndContinue = { activity.appOpenManager.showOnLoader(activity) { finish() } },
+            )
         }
     }
 
-    override fun onWallpaperAction() { main.post { AdsManager.onWallpaperAction() } }
+    override fun appOpenOnReturn() {
+        main.post { if (isActivityResumed()) activity.appOpenManager.onReturnToApp() }
+    }
 
-    override fun isInterstitialDue(): Boolean = AdsManager.isInterstitialDue()
+    override fun onFrontNavigation() {
+        main.post { if (isActivityResumed() && !isTextInputActive) activity.adManager.onFrontNavigation() }
+    }
 
-    override fun showInterstitial(onDone: (shown: Boolean) -> Unit) {
+    override fun onBackNavigation() {
+        main.post { if (isActivityResumed() && !isTextInputActive) activity.adManager.onBackNavigation() }
+    }
+
+    // ── showInterstitial кожні 2 дії зі шпалерами (лічильник переживає перезапуск) ──
+    private val adsPrefs = ctx.getSharedPreferences("driftglass_ads", Context.MODE_PRIVATE)
+    private var actionsSinceInterstitial: Int
+        get() = adsPrefs.getInt("actions", 0)
+        set(v) = adsPrefs.edit().putInt("actions", v).apply()
+
+    override fun onWallpaperAction() { actionsSinceInterstitial += 1 }
+
+    override fun isInterstitialDue(): Boolean = actionsSinceInterstitial >= INTERSTITIAL_EVERY
+
+    override fun showInterstitial() {
         main.post {
-            if (!isActivityResumed() || isTextInputActive) { runGDX { onDone(false) }; return@post }
-            AdsManager.showInterstitial(activity) { shown -> runGDX { onDone(shown) } }
+            if (!isActivityResumed() || isTextInputActive) return@post
+            actionsSinceInterstitial = 0
+            activity.adManager.showInterstitial()
         }
     }
 
-    override fun adsDebug(): String = AdsManager.debugLine()
+    override fun adsDebug(): String = activity.adManager.debugLine() + " · act $actionsSinceInterstitial/$INTERSTITIAL_EVERY"
+
+    override fun screenView(bt: Bt, block: String) = Events.screenView(bt, block)
+
+    override fun openHomeScreen() {
+        runCatching { com.driftglass.home.services.analytics.AnalyticsManager.openHomeScreen() }
+            .onFailure { log("TikTok openHomeScreen: ${it.message}") }
+    }
 
     private fun isActivityResumed() =
         !activity.isFinishing && activity.lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)
@@ -478,5 +524,7 @@ class AndroidBridge(private val activity: MainActivity) : PlatformBridge {
     companion object {
         /** Швидше за будь-яку людську відповідь: діалог ролі навіть не показався. */
         const val DIALOG_SUPPRESSED_MS = 700L
+        /** showInterstitial — після кожних N дій зі шпалерами (Apply / Save у Studio / кадр на систему). */
+        const val INTERSTITIAL_EVERY = 2
     }
 }

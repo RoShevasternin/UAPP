@@ -38,8 +38,16 @@ abstract class DgScreen : AdvancedScreen() {
     /** Activity.onResume (повернулись з іншої апки / системного екрана): перевірити роль, мову. */
     open fun onResumed() {}
 
+    // ── Події screen_view (businesModule, як AdvancedScreen в UAPP) ──
+    /** Bt — спільний словник парку; технічні екрани (Splash, онбординг, лаунчер) лишають null. */
+    open val analyticsBt   : com.driftglass.home.businesModule.backend.Bt? = null
+    /** snake_case, після релізу НЕ перейменовується (ключ у звітах сервера). */
+    open val analyticsBlock: String? = null
+
     override fun show() {
         super.show()
+        val bt = analyticsBt; val block = analyticsBlock
+        if (bt != null && block != null) com.driftglass.home.game.utils.gdxGame.bridge.screenView(bt, block)
         // rootConstraintLayout з T35 лежить поверх content на весь екран — без цього він ковтає всі дотики
         rootConstraintLayout.touchable = Touchable.childrenOnly
     }

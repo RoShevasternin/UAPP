@@ -55,7 +55,7 @@ class OnboardingScreen : DgScreen() {
             setBounds(0f, 0f, w, h); touchable = com.badlogic.gdx.scenes.scene2d.Touchable.disabled
         })
         if (requirementOnly) showExplain(instant = true) else showPage(0, instant = true)
-        if (required && IS_DEBUG && gdxGame.bridge.flags().isAdMode) addAdModeOff()
+        if (required && IS_DEBUG && gdxGame.bridge.isAdMode()) addAdModeOff()
     }
 
     /** Debug: вийти з AD_MODE прямо з екрана-вимоги (до Settings без ролі не дістатись). */
@@ -179,6 +179,7 @@ class OnboardingScreen : DgScreen() {
         log("onboarding: Maybe later — працюємо без ролі")
         gdxGame.model.update { it.copy(onboarded = true) }
         gdxGame.navigationManager.navigateRoot(AppScreen::class.java.name)
+        gdxGame.runStartupFlow()   // перший вхід у застосунок: опт-ін → app_open (як Redwave)
     }
 
     override fun onBackPressed() {

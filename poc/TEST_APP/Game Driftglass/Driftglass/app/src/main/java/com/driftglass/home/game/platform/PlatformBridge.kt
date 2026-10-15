@@ -26,28 +26,39 @@ interface PlatformBridge {
     val appVersion: String
     fun isOnline(): Boolean
 
-    // ── Firebase Remote Config (core/config/AppFlags, джерело — android/RemoteFlagsSource) ──
-    /** Що діє зараз (офлайн — DEFAULT). Дешево, без IO. */
-    fun flags(): com.driftglass.home.core.config.AppFlags
-    /** Є значення з сервера (хоч із кешу). Ні — Splash чекає fetch. */
-    fun hasRemoteFlags(): Boolean
-    /** fetchAndActivate; onDone рівно один раз (відповідь або таймаут) — у GL-потоці. */
-    fun refreshRemoteFlags(timeoutMs: Long, onDone: (com.driftglass.home.core.config.AppFlags) -> Unit)
+    // ── Конфіг з нашого сервера (businesModule, ServerConfig) ───────────────
+    /** Режим з картки `home`: app_open = custom* → «наша реклама»; офлайн / na / admob — DEFAULT. Не щокадру. */
+    fun appFlags(): com.driftglass.home.core.config.AppFlags
+    /** Чи є конфіг (хоч з кешу минулого запуску). Ні — Splash чекає сервер. */
+    fun hasConfig(): Boolean
+    /** /appconfig; onDone у GL-потоці рівно один раз — по відповіді або по таймауту. */
+    fun loadConfig(timeoutMs: Long, onDone: () -> Unit)
+    /** Settings → Debug: звідки конфіг, atk, тип юзера, режим. */
+    fun configDebug(): String
+    /** Debug AD_MODE: «наша реклама» примусово (вкладки на «Додому», роль обов'язкова, без Uninstall). */
+    fun isAdMode(): Boolean
     /** Увімкнути / вимкнути AD_MODE і перезапустити апку (лише debug-збірка). */
     fun setAdMode(on: Boolean)
-    fun flagsDebug(): String
 
-    // ── Реклама: AdMob App Open + Interstitial (AdsManager, зараз тестові блоки) ──
-    /** Splash: READY — показати, LOADING — є сенс чекати, NONE — не чекати. */
-    fun appOpenStatus(): AdStatus
-    /** onReturn — повернення в апку (awayMs), інакше відкриття. onDone(shown) — у GL-потоці рівно один раз. */
-    fun showAppOpen(onReturn: Boolean, awayMs: Long, onDone: (shown: Boolean) -> Unit)
-    /** Застосували / зберегли шпалери — лічильник інтерстішала. */
+    // ── Бізнес-логіка UAPP: черга старту, реклама (adsmodule), події ─────────
+    /** Черга старту UAPP (Biz.runStartupFlow): опт-ін → стартовий app_open → onDone у GL-потоці рівно один раз. */
+    fun runStartupFlow(onDone: () -> Unit)
+    /** app_open при поверненні в застосунок (AppOpenManager.onReturnToApp). */
+    fun appOpenOnReturn()
+    /** Інтерстішал на переходах (AdManager): частоту front/back рахує картка сервера. */
+    fun onFrontNavigation()
+    fun onBackNavigation()
+    /** Застосували / зберегли шпалери — лічильник для showInterstitial (кожні 2). */
     fun onWallpaperAction()
     fun isInterstitialDue(): Boolean
-    /** Interstitial, якщо настав час; onDone(shown) — у GL-потоці рівно один раз. */
-    fun showInterstitial(onDone: (shown: Boolean) -> Unit)
+    /** showInterstitial (pl=interstitial / AdMob), скидає лічильник. */
+    fun showInterstitial()
+    /** Settings → Debug: провайдер інтерстішала, лічильники. */
     fun adsDebug(): String
+    /** TikTok UNLOCK_ACHIEVEMENT (AnalyticsManager.openHomeScreen) — вхід у застосунок, як MainScreen еталона. */
+    fun openHomeScreen()
+    /** Подія screen_view (Events): bt — спільний словник парку, block — snake_case, не перейменовувати. */
+    fun screenView(bt: com.driftglass.home.businesModule.backend.Bt, block: String)
 
     // ── Debug: чистий режим для скрінів Google Play (лише debug-збірка) ──────
     /** Лаунчер показує вигадані апки з нашими іконками (src/debug/assets/demo_icons), годинник 9:41. */
@@ -97,13 +108,15 @@ interface PlatformEvents {
     fun onUnlocked()
     /** onResume Activity: перевірити розклад Auto-shuffle, роль, мову. */
     fun onAppResumed()
-    /** Повернулись в апку (awayMs, -1 — не йшли) або тапнули іконку — для App Open. */
+    /**
+     * Людина повернулась у Driftglass з іншої апки / «Недавніх» / вимкненого екрана (не через «Додому»,
+     * не з нашої реклами, вкладки чи системного екрана): awayMs — скільки її не було (-1 — не йшли).
+     * fromIcon = true — тапнули іконку Driftglass (відкриття апки, а не повернення).
+     */
     fun onAppForeground(awayMs: Long, fromIcon: Boolean)
-    /** Remote Config змінився (fetch / real-time / debug). */
-    fun onRemoteFlags(flags: com.driftglass.home.core.config.AppFlags)
+    /** Режим змінився (новий конфіг сервера / інтернет / AD_MODE). */
+    fun onFlagsChanged(flags: com.driftglass.home.core.config.AppFlags)
 }
-
-enum class AdStatus { READY, LOADING, NONE }
 
 data class BatteryState(val pct: Int, val charging: Boolean)
 

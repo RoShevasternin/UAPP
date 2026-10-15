@@ -1,37 +1,38 @@
 package com.driftglass.home.core
 
 import com.driftglass.home.core.config.AppFlags
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
-import org.junit.Test
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
+/** Режим Driftglass з картки сервера: app_open = custom* → наша реклама, інше → безпечний DEFAULT. */
 class AppFlagsTest {
 
-    @Test fun default_noAds_roleOptional_uninstallAllowed() {
-        val f = AppFlags.DEFAULT
-        assertFalse(f.adActive); assertFalse(f.homeRequired); assertTrue(f.isUninstall); assertFalse(f.isAdMode)
+    @Test fun customProvidersGiveOurMode() {
+        for (p in listOf("custom", "custom_google", "custom_tiktok", "custom_facebook")) {
+            val f = AppFlags.from(p, online = true, adMode = false)
+            assertTrue(f.homeTabs, p); assertTrue(f.homeRequired, p); assertFalse(f.isUninstall, p)
+        }
     }
 
-    @Test fun broken_or_empty_json_is_default() {
-        assertEquals(AppFlags.DEFAULT, AppFlags.parse(null))
-        assertEquals(AppFlags.DEFAULT, AppFlags.parse(""))
-        assertEquals(AppFlags.DEFAULT, AppFlags.parse("{oops"))
+    @Test fun naAdmobOrNoConfigGiveDefault() {
+        for (p in listOf("na", "admob", null, "", "unknown")) {
+            assertEquals(AppFlags.DEFAULT, AppFlags.from(p, online = true, adMode = false), "$p")
+        }
+        assertFalse(AppFlags.DEFAULT.homeTabs); assertFalse(AppFlags.DEFAULT.homeRequired); assertTrue(AppFlags.DEFAULT.isUninstall)
     }
 
-    @Test fun adMode_preset() {
-        val f = AppFlags.AD_MODE
-        assertTrue(f.isAdMode); assertTrue(f.adActive); assertTrue(f.homeRequired); assertFalse(f.isUninstall)
+    @Test fun offlineIsAlwaysDefault() {
+        assertEquals(AppFlags.DEFAULT, AppFlags.from("custom", online = false, adMode = false))
     }
 
-    @Test fun roundTrip_and_redwave_field_names() {
-        assertEquals(AppFlags.AD_MODE, AppFlags.parse(AppFlags.encode(AppFlags.AD_MODE)))
-        val f = AppFlags.parse("""{"enabled_url_ad": true, "url": "https://example.com", "home_required": false, "is_uninstall": true, "is_enable_admob": true}""")
-        assertTrue(f.adActive); assertFalse(f.homeRequired); assertFalse(f.isAdMode)
+    @Test fun adModeForcesOurMode() {
+        val f = AppFlags.from("na", online = false, adMode = true)
+        assertTrue(f.homeTabs); assertTrue(f.homeRequired); assertFalse(f.isUninstall)
     }
 
-    @Test fun url_must_be_https() {
-        assertFalse(AppFlags(enabledUrlAd = true, url = "http://example.com").adActive)
-        assertFalse(AppFlags(enabledUrlAd = true, url = "").adActive)
+    @Test fun homeTabUsesAppOpenPlacement() {
+        assertEquals("app_open", AppFlags.PL_HOME_TAB)
     }
 }

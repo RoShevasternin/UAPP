@@ -36,6 +36,9 @@ import kotlin.random.Random
 // ─────────────────────────────────────────────────────────────────────────────
 class StudioScreen : DgScreen() {
 
+    override val analyticsBt = com.driftglass.home.businesModule.backend.Bt.TOOL
+    override val analyticsBlock = "studio"
+
     private var d: Wallpaper = gdxGame.draft
     private lateinit var wall: AWallpaper
     private var panel: AdvancedGroup? = null
@@ -158,5 +161,14 @@ class StudioScreen : DgScreen() {
                 b.requestDefaultHome { isHome -> if (isHome) { gdxGame.toast(L.tRole); gdxGame.navigationManager.navigateRoot(LauncherScreen::class.java.name) } }
             },
         ))
+    }
+
+    /** «Назад» у застосунок — back-інтерстішал (частота з картки); на лаунчер — без реклами. */
+    override fun onBackPressed() {
+        if (sheet != null) { super.onBackPressed(); return }
+        val from = gdxGame.navigationManager.fromScreenName
+        val toApp = from == AppScreen::class.java.name || from == PreviewScreen::class.java.name
+        super.onBackPressed()
+        if (toApp) gdxGame.adBack()
     }
 }

@@ -76,7 +76,7 @@ PRIVACY
 економія — `PowerPolicy` (авто нижче 20 %); Studio (стиль, палітра, Motion / Scale / Grain, кубик, Save) — `StudioScreen`;
 цикл дня 4 слоти й Auto-shuffle unlock / hourly / daily — `MyGlassTab`, `ShufflePolicy`; подвійний тап — `LauncherScreen`;
 папки — `HomeLayout`; док — `dockApps`; кадр на системні шпалери й екран блокування — `setStillWallpaper`.
-«Long-press… app options» навмисно загально: що саме буде (App info / Uninstall), керує Remote Config `is_uninstall`.
+«Long-press… app options» навмисно загально: що саме буде (App info / Uninstall), керує картка сервера (режим «наша реклама» — без Uninstall).
 «Google» у списку папок — назва папки, як у самого Android; логотипів Google ні в кадрах, ні в описі немає.
 
 ### Графіка
@@ -131,7 +131,7 @@ PRIVACY
 - Users interact or exchange content — **No**.
 - Shares user's current physical location with others — **No**.
 - Digital purchases — **No**.
-- Unrestricted internet access (web browser / search engine) — **No** ◌ (Custom Tab з Remote Config — не браузер у самій апці).
+- Unrestricted internet access (web browser / search engine) — **No** ◌ (вкладки відкриває системний браузер — не браузер у самій апці).
 
 Очікуваний результат: **Everyone / PEGI 3 / USK 0**.
 
@@ -144,29 +144,36 @@ PRIVACY
 
 ## 4. Data safety
 
-Основа — офіційні таблиці Google: [Google Mobile Ads SDK](https://developers.google.com/admob/android/privacy/play-data-disclosure)
-і [Firebase](https://firebase.google.com/docs/android/play-data-disclosure) (Remote Config + Installations). Ті самі SDK і версії, що в Redwave ✔.
+Оновлено 15.10.2026 під бізнес-логіку UAPP (як у Framefall). Основа — офіційні таблиці Google ✔:
+[Google Mobile Ads SDK](https://developers.google.com/admob/android/privacy/play-data-disclosure),
+[Firebase (Cloud Messaging, Installations)](https://firebase.google.com/docs/android/play-data-disclosure); TikTok Business SDK — з
+[документації TikTok](https://business-api.tiktok.com/portal/docs?id=1739585600931842) ◌; наш сервіс — з коду `businesModule/backend`
+(`Backend.kt`, `Events.kt`): app instance ID (`iid`), install referrer, версія, події (app_open, screen_view, push_open…), токен пушів.
 
 ### Загальні питання
 
 | Питання | Відповідь |
 |---|---|
 | Does your app collect or share any of the required user data types? | **Yes** |
-| Is all of the user data collected by your app encrypted in transit? | **Yes** (AdMob — TLS, Firebase — HTTPS) ✔ |
+| Is all of the user data collected by your app encrypted in transit? | **Yes** (усе — HTTPS) ✔ |
 | Account creation | **My app does not allow users to create an account** |
-| Do you provide a way for users to request that their data is deleted? | **No** ◌ — даних у нас немає; рекламний ID людина скидає в налаштуваннях Android |
+| Do you provide a way for users to request that their data is deleted? | **Yes** ◌ — листом на контакт (так написано в політиці, розділ 10) |
 
 ### Типи даних
 
 | Категорія → тип | Collected | Shared | Ephemeral | Required | Purposes |
 |---|---|---|---|---|---|
 | Location → **Approximate location** | ✔ | ✔ | No | Required | Advertising or marketing; Analytics; Fraud prevention, security and compliance |
-| App activity → **App interactions** | ✔ | ✔ | No | Required | Advertising or marketing; Analytics; Fraud prevention, security and compliance |
+| App activity → **App interactions** | ✔ | ✔ | No | Required | App functionality; Analytics; Advertising or marketing; Fraud prevention, security and compliance |
 | App info and performance → **Diagnostics** | ✔ | ✔ | No | Required | Advertising or marketing; Analytics; Fraud prevention, security and compliance |
-| Device or other IDs → **Device or other IDs** | ✔ | ✔ | No | Required | Advertising or marketing; Analytics; Fraud prevention, security and compliance; **App functionality** (Firebase installation ID для Remote Config) |
+| Device or other IDs → **Device or other IDs** | ✔ | ✔ | No | Required | App functionality; Analytics; Advertising or marketing; Fraud prevention, security and compliance |
 
-**Не позначаємо** (обробляється лише на телефоні, нікуди не відправляється — так і в Privacy Policy):
-список встановлених апок і їхні категорії, акселерометр (паралакс), рівень батареї, створені шпалери й налаштування.
+Звідки: AdMob і TikTok збирають IP (→ приблизне місце), взаємодію з рекламою / події апки, діагностику, рекламний ID
+(Shared: Yes). Наш сервіс — app instance ID, події, токен пушів (App functionality, Analytics; іншим не передає).
+Firebase — installation ID і токен FCM (App functionality).
+
+**Не позначаємо** (обробляється лише на телефоні, нікуди не відправляється — так і в політиці, розділ 3):
+створені шпалери й налаштування, список встановлених апок і їхні категорії, акселерометр (паралакс), рівень батареї.
 ✔ Перевірено в коді: `listApps`, `updateParallax`, `battery()`, `DataStoreManager` нічого не шлють у мережу.
 
 ---
@@ -192,12 +199,13 @@ Release notes (en-US) — 3 абстрактні пункти, як у парк�
 
 ## 6. Що ще не зроблено перед кнопкою «Publish»
 
-- [x] Firebase: проєкт `driftglass-original`, `google-services.json`, параметр `driftglass_config` (VELDAN, 12.10.2026; апка отримує `[remote]`).
+- [x] Firebase: проєкт `driftglass-original`, `google-services.json` — з 15.10.2026 лише FCM (режим і реклама — картка `home` нашого сервера).
+- [ ] Серверній команді: схема диплінка **`home`** (`home://reward`, `home://optin`) — `deeplink_scheme` у картці; блок `tiktok` у картці.
 - [ ] Cloudflare → `driftglass-privacy` → викласти `privacy-policy/public` — покроково в `../privacy-policy/README.md`.
 - [ ] Свій AdMob App ID у маніфесті й свої блоки в `AdsManager` (зараз тестові Google).
 - [ ] Вікно згоди UMP для ЄЕЗ/UK (якщо країни не лише США — обов'язково).
 - [ ] Release-збірка `.aab`, підписана ключем апки (ключа Driftglass ще немає — створити й покласти в git, як в іграх парку).
-- [ ] Remote Config на момент рев'ю — ті самі значення, що й після публікації (див. «Тонкощі»).
+- [ ] Картка `home` на момент рев'ю — ті самі значення, що й після публікації (див. «Тонкощі»).
 
 ## Тонкощі
 
@@ -206,9 +214,9 @@ Release notes (en-US) — 3 абстрактні пункти, як у парк�
   брендів у кадрах немає. Статус-бар телефона (сповіщення) зрізано й замінено чистим «9:41».
 - ◌ **Демо-апки замість справжніх.** На справжньому телефоні в сітці будуть апки людини. Кадри показують ту саму
   розкладку (папки, док, свайп угору) — це нормальна практика для лаунчерів, але без обіцянки конкретних апок.
-- ◌ **Реклама на «Додому» (`enabled_url_ad`).** Сторінка в Custom Tab при поверненні на головний екран — той самий
-  механізм, що й у Redwave; Google Play може вважати його disruptive ads. Вимикати лише на час рев'ю — обман
-  модерації, ризик бану акаунта. У конфігу VELDAN 12.10.2026 `enabled_url_ad` = **false**.
-- ◌ **`home_required = true`** — рев'юер може оцінити як примус змінити лаунчер. У конфігу 12.10.2026 — **false**.
+- ◌ **Вкладка на «Додому» (`app_open` = custom* у картці `home`).** Сторінка в Custom Tab при поверненні на головний
+  екран — той самий механізм, що й у Redwave / Framefall; Google Play може вважати його disruptive ads. Вимикати лише
+  на час рев'ю — обман модерації, ризик бану акаунта. Той самий режим робить роль обов'язковою (без «Maybe later») —
+  рев'юер може оцінити як примус змінити лаунчер. Організку з типом `na` модератор бачить у білому режимі.
 - ✔ AdMob не показується на самому лаунчері, онбордингу й екрані-вимозі — лише у вкладках, Preview і Studio.
 - ◌ Назву перевірити на зайнятість пошуком у Google Play перед публікацією.

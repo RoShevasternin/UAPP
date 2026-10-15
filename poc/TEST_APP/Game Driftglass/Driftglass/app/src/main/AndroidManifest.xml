@@ -9,12 +9,15 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <!-- Лаунчер: «Видалити» на довге натискання — системний діалог ACTION_DELETE (API 28+). Звичайний дозвіл. -->
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
-    <!-- AD_MODE: офлайн Custom Tab не відкриваємо (як Redwave). Звичайний дозвіл. -->
+    <!-- Режим з картки сервера: офлайн — завжди DEFAULT, вкладки не відкриваємо (як Redwave). Звичайний дозвіл. -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- Firebase Remote Config і AdMob (рішення VELDAN 12.10.2026). Шпалери все одно генеруються на пристрої. -->
+    <!-- Наш сервер (businesModule: конфіг, події, лендінги), FCM і AdMob. Шпалери все одно генеруються на пристрої. -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- AdMob: рекламний ідентифікатор (Android 13+). play-services-ads додає його й сам — тут явно, щоб було видно. -->
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+    <!-- Пуші (businesModule, Android 13+): запит НЕ на старті, а нашим діалогом опт-іну з черги
+         старту — голий системний діалог на сплеші випалює дозвіл назавжди (дві відмови). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <queries>
         <!-- сітка застосунків лаунчера: без QUERY_ALL_PACKAGES -->
@@ -57,7 +60,7 @@
         android:theme="@style/Theme.Driftglass"
         tools:ignore="UnusedAttribute">
 
-        <!-- AdMob: ТЕСТОВИЙ App ID Google (разом з тестовими блоками в AdsManager). Перед релізом — свій. -->
+        <!-- AdMob: ТЕСТОВИЙ App ID Google. Блоки приходять з картки сервера (ad_units.admob). Перед релізом — свій App ID. -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3940256099942544~3347511713" />
@@ -91,6 +94,33 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- Повернення з веб-лендінга (businesModule). Схема — останній сегмент пакета (картка `home`);
+                 віддати серверній команді — deeplink_scheme у картці апки.
+                 reward — людина вивела монети на лендінгу й повертається;
+                 optin  — тапнула на лендінгу «увімкнути сповіщення». -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="home" />
+                <data android:host="reward" />
+                <data android:host="optin" />
+            </intent-filter>
         </activity>
+
+        <!-- FCM: ротація токена (onNewToken) і факт показу серверного пуша (businesModule) -->
+        <service
+            android:name=".businesModule.push.PushService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notification" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="rewards" />
     </application>
 </manifest>

@@ -25,7 +25,8 @@
 `june/Game T9/RBX RUSH` + `april_may/Game T2/RSBUX COUNTER with ADS` +
 `june/Game T7-1/RBX Treasure` + `april_may/Game T3/Rbux Drop` + `april_may/Game T6/Skinly` + `june/Game T7/RBX Treasure` + `june/Game T8/RBX COINS` + `june/Game T2-1/RSBUX COUNTER with ADS` + `july/Game T10/RBX Sakura` + `july/Game T23/RBX Racing`.
 Поза парком `businesModule` є ще в **`poc/TEST_APP/Game Redwave/Redwave`** (тестова апка-лаунчер, 12.10.2026) і
-**`poc/TEST_APP/Game Framefall/Framefall`** (відеозавантажувач з каркаса Redwave, 13.10.2026): модуль без змін,
+**`poc/TEST_APP/Game Framefall/Framefall`** (відеозавантажувач з каркаса Redwave, 13.10.2026) і
+**`poc/TEST_APP/Game Driftglass/Driftglass`** (живі шпалери + HOME, 15.10.2026): модуль без змін,
 `adsmodule` урізаний — правки сервера бекпортувати і туди.
 
 ## Основне завдання по цьому репо
