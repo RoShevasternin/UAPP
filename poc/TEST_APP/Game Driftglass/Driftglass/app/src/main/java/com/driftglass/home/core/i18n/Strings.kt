@@ -60,6 +60,10 @@ object L {
     val ex3 get() = t("Switch back any time: Settings → Use as Home screen.",
         "Повернутися можна будь-коли: Налаштування → Головний екран.",
         "Вернуться можно в любой момент: Настройки → Главный экран.")
+    /** Замість ex3 у режимі «наша реклама»: перемикача «Use as Home screen» там немає — не обіцяємо його. */
+    val ex3Req get() = t("Your apps sort into folders on their own, and the clock sits right on your wallpaper.",
+        "Апки самі розкладаються по папках, а годинник — просто на шпалерах.",
+        "Приложения сами раскладываются по папкам, а часы — прямо на обоях.")
     val setHome get() = t("Set as home screen", "Зробити головним екраном", "Сделать главным экраном")
     val later get() = t("Maybe later", "Можливо, пізніше", "Может, позже")
 

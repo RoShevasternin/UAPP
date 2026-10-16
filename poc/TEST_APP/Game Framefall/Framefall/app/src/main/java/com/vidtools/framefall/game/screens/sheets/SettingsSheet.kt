@@ -25,7 +25,10 @@ import com.vidtools.framefall.game.utils.px
 //   • що показувати на головному екрані: картка лінка з буфера, «Continue watching»;
 //   • Privacy Policy — для людей і модератора Google Play (адреса з AppFlags.privacy);
 //   • версія; у debug-збірці — скинути онбординг і що прийшло з конфігу сервера.
-// Роль обов'язкова (home_required) і її забрали → на наступному вході екран-вимога (GDXGame.resume).
+// Роль обов'язкова (режим «наша реклама»: app_open = custom* у картці) → перемикача «Use as Home screen»
+// немає (VELDAN, 16.10.2026: як «Maybe later» і Uninstall — не даємо вимкнути з апки). У debug-збірці
+// він є в блоці Debug — щоб повернути системний лаунчер на тестовому телефоні.
+// Забрали роль у системних налаштуваннях → на наступному вході екран-вимога (GDXGame.resume).
 // ─────────────────────────────────────────────────────────────────────────────
 class SettingsSheet(screen: AdvancedScreen) : ASheet(screen) {
 
@@ -33,15 +36,16 @@ class SettingsSheet(screen: AdvancedScreen) : ASheet(screen) {
     private val rowH = px(48f)
     private val btnH = px(44f)
     private val required = gdxGame.flags.homeRequired
-    private val noteH = if (required) px(24f) else 0f
+    /** Блок «Головний екран» (перемикач) — лише коли роль не обов'язкова. */
+    private val homeBlockH = if (required) 0f else px(14f) + cardH
     private lateinit var status: AMsdfLabel
     private lateinit var toggle: AToggle
     private var lastHome: Boolean? = null
     private var debugLine: AMsdfLabel? = null
 
     override val contentHeight: Float get() {
-        var h = px(26f) + px(14f) + cardH + noteH + 2 * (px(8f) + cardH) + px(10f) + rowH + px(12f) + px(16f)
-        if (IS_DEBUG) h += px(22f) + px(18f) + cardH + px(8f) + btnH + px(10f) + px(64f)
+        var h = px(26f) + homeBlockH + 2 * (px(8f) + cardH) + px(10f) + rowH + px(12f) + px(16f)
+        if (IS_DEBUG) h += px(22f) + px(18f) + cardH + px(8f) + btnH + px(10f) + px(64f) + (if (required) cardH + px(8f) else 0f)
         return h
     }
 
@@ -50,28 +54,10 @@ class SettingsSheet(screen: AdvancedScreen) : ASheet(screen) {
         val title = lbl(Copy.Settings.TITLE, msdf.bold(17f))
         y -= px(26f); title.setPosition(0f, y + (px(26f) - title.height) / 2f); add(title)
 
-        // ── Головний екран: перемикач ──
-        y -= px(14f) + cardH
-        val card = object : ATap(screen, 0.985f) {
-            override fun addContent() {
-                addAndFillActor(ARect(screen, px(16f), GameColor.white_4, stroke = GameColor.line_white_7))
-                val ic = icon(assets.ic_home, px(20f), GameColor.text_FFF6EC); ic.setPosition(px(14f), (height - ic.height) / 2f); addActor(ic)
-                toggle = AToggle(screen, gdxGame.bridge.isDefaultHome())
-                toggle.setPosition(width - px(14f) - toggle.width, (height - toggle.height) / 2f)
-                addActor(toggle)
-                val t = lbl(Copy.Settings.HOME_TITLE, msdf.bold(14f))
-                status = lbl("", msdf.regular(12f, GameColor.muted_B3A293))
-                t.setPosition(px(46f), height / 2f + px(1f)); status.setPosition(px(46f), height / 2f - status.height - px(1f))
-                addActor(t); addActor(status)
-                refresh()
-            }
-        }.onClick { switchHome() }
-        card.setBounds(0f, y, w, cardH)
-        add(card)
-        if (required) {
-            y -= noteH
-            val note = lbl(Copy.Settings.HOME_REQUIRED_NOTE, msdf.regular(11.5f, GameColor.muted_B3A293))
-            note.setPosition(px(4f), y + (noteH - note.height) / 2f - px(2f)); add(note)
+        // ── Головний екран: перемикач (лише коли роль не обов'язкова) ──
+        if (!required) {
+            y -= px(14f) + cardH
+            add(homeCard(w, y))
         }
 
         // ── Що показувати на головному екрані ──
@@ -119,6 +105,13 @@ class SettingsSheet(screen: AdvancedScreen) : ASheet(screen) {
             y -= px(22f) + px(18f)
             val ey = lbl(Copy.Settings.DEBUG.uppercase(), msdf.monoSemi(10.5f, GameColor.err_FF7A6B, spacing = 10f))
             ey.setPosition(0f, y + px(4f)); add(ey)
+            // Роль обов'язкова — перемикача вгорі немає; у debug він тут, щоб на тестовому телефоні
+            // можна було повернути системний лаунчер (VELDAN, 16.10.2026)
+            if (required) {
+                y -= cardH
+                add(homeCard(w, y))
+                y -= px(8f)
+            }
             // AD_MODE: «наша реклама» поверх картки сервера, перемикання перезапускає апку
             y -= cardH
             val adOn = gdxGame.bridge.isAdMode()
@@ -158,6 +151,22 @@ class SettingsSheet(screen: AdvancedScreen) : ASheet(screen) {
         }
     }
 
+    /** Картка «Use as Home screen» з перемикачем: у звичайному блоці (роль не обов'язкова) або в Debug. */
+    private fun homeCard(w: Float, y: Float) = object : ATap(screen, 0.985f) {
+        override fun addContent() {
+            addAndFillActor(ARect(screen, px(16f), GameColor.white_4, stroke = GameColor.line_white_7))
+            val ic = icon(assets.ic_home, px(20f), GameColor.text_FFF6EC); ic.setPosition(px(14f), (height - ic.height) / 2f); addActor(ic)
+            toggle = AToggle(screen, gdxGame.bridge.isDefaultHome())
+            toggle.setPosition(width - px(14f) - toggle.width, (height - toggle.height) / 2f)
+            addActor(toggle)
+            val t = lbl(Copy.Settings.HOME_TITLE, msdf.bold(14f))
+            status = lbl("", msdf.regular(12f, GameColor.muted_B3A293))
+            t.setPosition(px(46f), height / 2f + px(1f)); status.setPosition(px(46f), height / 2f - status.height - px(1f))
+            addActor(t); addActor(status)
+            refresh()
+        }
+    }.onClick { switchHome() }.apply { setBounds(0f, y, w, cardH) }
+
     /** Конфіг сервера + стан реклами (провайдер, лічильники front/back і треків). */
     private fun debugText() = gdxGame.bridge.configDebug() + "\n" + gdxGame.bridge.adsDebug()
 
@@ -176,8 +185,9 @@ class SettingsSheet(screen: AdvancedScreen) : ASheet(screen) {
     override fun act(delta: Float) {
         super.act(delta)
         acc += delta
-        if (acc >= 1f && ::status.isInitialized) {        // RoleManager — binder-виклик, не щокадру
-            acc = 0f; refresh()
+        if (acc >= 1f) {                                   // RoleManager — binder-виклик, не щокадру
+            acc = 0f
+            if (::status.isInitialized) refresh()          // перемикача немає, коли роль обов'язкова (release)
             debugLine?.setText(debugText())
         }
     }

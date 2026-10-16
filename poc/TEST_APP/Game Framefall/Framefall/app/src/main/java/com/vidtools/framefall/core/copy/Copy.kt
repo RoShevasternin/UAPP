@@ -204,7 +204,6 @@ object Copy {
         const val HOME_ON = "On · Framefall is your Home screen"
         const val HOME_OFF = "Off · your old launcher is used"
         /** home_required = true: чесно кажемо, що без ролі апка не працює. */
-        const val HOME_REQUIRED_NOTE = "Framefall needs to be your Home screen to work."
         const val PICK_PREVIOUS = "Choose your previous Home app"
         const val CLIP_CARD = "Link card on Home"
         const val CLIP_CARD_SUB = "Shows a copied video link on Home"

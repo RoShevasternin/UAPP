@@ -26,10 +26,10 @@ Splash на першому запуску онлайн чекає `/appconfig` �
 
 ### Режим — з картки (`core/config/AppFlags.kt` + `AppFlagsTest`)
 
-| Провайдер `app_open` для типу юзера | Вкладка на «Додому» / «Недавні» | Роль HOME | Uninstall з лаунчера |
-|---|---|---|---|
-| `custom` / `custom_google` / `custom_tiktok` / `custom_facebook` | так (лише з роллю й онлайн) | обов'язкова, без «Maybe later» | ні |
-| `na` / `admob` / конфігу немає / офлайн | ні | «Maybe later» є | так |
+| Провайдер `app_open` для типу юзера | Вкладка на «Додому» / «Недавні» | Роль HOME | Перемикач «Use as Home screen» у Settings | Uninstall з лаунчера |
+|---|---|---|---|---|
+| `custom` / `custom_google` / `custom_tiktok` / `custom_facebook` | так (лише з роллю й онлайн) | обов'язкова, без «Maybe later»; на поясненні ролі замість «Switch back… Settings» — `ex3Req` | **немає** (VELDAN, 16.10.2026); у debug — у блоці DEBUG | ні |
+| `na` / `admob` / конфігу немає / офлайн | ні | «Maybe later» є | є | так |
 
 ### Плейсменти (ключ доходу `<app>-<pl>`, після релізу НЕ перейменовувати)
 

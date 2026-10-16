@@ -121,7 +121,7 @@ class OnboardingScreen : DgScreen() {
         val pad = px(20f)
         val iw = cw - pad * 2
         val title = lbl(L.exTitle, msdf.title(21f)).apply { setWrap(true); width = iw; height = prefHeight }
-        val lines = listOf(L.ex1, L.ex2, L.ex3).map { t ->
+        val lines = listOf(L.ex1, L.ex2, if (required) L.ex3Req else L.ex3).map { t ->
             lbl(t, msdf.regular(13f, GameColor.white_92.cpy().apply { a = 0.82f })).apply { setWrap(true); width = iw - px(31f); height = prefHeight }
         }
         val btnH = px(46f)

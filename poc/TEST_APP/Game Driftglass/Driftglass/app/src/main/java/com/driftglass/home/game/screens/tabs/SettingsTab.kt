@@ -21,6 +21,7 @@ import com.driftglass.home.util.log
 // SettingsTab: головний екран (роль, подвійний дотик, паралакс, підписи, сітка),
 // батарея (економія), екран блокування (кадр), про апку, debug (AD_MODE). Мови немає — лише англійська.
 // Вимкнути роль = системний екран вибору лаунчера (самі ми її не знімаємо — Android не дає).
+// Режим «наша реклама» (роль обов'язкова) — перемикача немає, у debug-збірці він у блоці DEBUG.
 // ─────────────────────────────────────────────────────────────────────────────
 class SettingsTab(app: AppScreen) : TabPage(app) {
 
@@ -33,12 +34,10 @@ class SettingsTab(app: AppScreen) : TabPage(app) {
         col.addActor(header(L.settings))
 
         section(col, L.secHome)
-        col.addActor(settingsRow(app, W, L.useHome, if (home) L.roleOn else L.roleOff, toggle = home) {
-            if (home) gdxGame.bridge.openHomeAppSettings()
-            else gdxGame.bridge.requestDefaultHome { isHome ->
-                if (isHome) { gdxGame.toast(L.tRole); gdxGame.navigationManager.navigateRoot(LauncherScreen::class.java.name) } else rebuild()
-            }
-        })
+        // Роль обов'язкова (режим «наша реклама»: app_open = custom* у картці) → перемикача немає
+        // (VELDAN, 16.10.2026: як «Maybe later» і Uninstall). У debug-збірці він є в блоці DEBUG.
+        val required = gdxGame.flags.homeRequired
+        if (!required) col.addActor(homeRow(home))
         col.addActor(settingsRow(app, W, L.doubleTap, null, toggle = s.doubleTap) { set { it.copy(doubleTap = !it.doubleTap) } })
         col.addActor(settingsRow(app, W, L.parallax, L.parallaxSub, toggle = s.parallax) { set { it.copy(parallax = !it.parallax) } })
         col.addActor(settingsRow(app, W, L.labels, null, toggle = s.labels) { set { it.copy(labels = !it.labels) } })
@@ -61,6 +60,8 @@ class SettingsTab(app: AppScreen) : TabPage(app) {
         // ── Debug: AD_MODE як у Redwave (реклама на Home, роль обов'язкова, без Uninstall), перемикання перезапускає апку ──
         if (IS_DEBUG) {
             section(col, "DEBUG")
+            // Роль обов'язкова — перемикача вгорі немає; тут він, щоб на тестовому телефоні повернути системний лаунчер
+            if (required) col.addActor(homeRow(home))
             val adOn = gdxGame.bridge.isAdMode()
             col.addActor(settingsRow(app, W, "AD_MODE", if (adOn) "On · ad on Home, Home required, no uninstall" else "Off · mode from server card", toggle = adOn) {
                 gdxGame.toast("Restarting…")
@@ -70,6 +71,14 @@ class SettingsTab(app: AppScreen) : TabPage(app) {
             })
             val dl = lbl(gdxGame.bridge.configDebug() + "\n" + gdxGame.bridge.adsDebug() + (if (gdxGame.bridge.isStoreDemo) "\nstore demo: on" else ""), msdf.label(10f, GameColor.white_55, spacing = 0f)).apply { setWrap(true); width = W - px(8f); height = prefHeight }
             col.addActor(group(app, W, dl.height + px(6f)) { dl.setPosition(px(4f), 0f); addActor(dl) })
+        }
+    }
+
+    /** «Use as Home screen»: увімкнути — діалог ролі; вимкнути — системний вибір головного застосунку. */
+    private fun homeRow(home: Boolean) = settingsRow(app, W, L.useHome, if (home) L.roleOn else L.roleOff, toggle = home) {
+        if (home) gdxGame.bridge.openHomeAppSettings()
+        else gdxGame.bridge.requestDefaultHome { isHome ->
+            if (isHome) { gdxGame.toast(L.tRole); gdxGame.navigationManager.navigateRoot(LauncherScreen::class.java.name) } else rebuild()
         }
     }
 
