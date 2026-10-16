@@ -128,3 +128,6 @@ HOME — [[home-launcher-poc]]; атласи пакує VELDAN у GUI — [[mind
   (модератор Google теж отримає «чорний» режим), тексти пушів про монети/колесо, economy зі спінами.
 - Відкрите: Privacy Policy і Data safety застаріли (наш сервер + FCM + install referrer + TikTok SDK); Meta SDK немає.
 - Деталі — `Game Redwave/Redwave/CLAUDE.md`. Див. [[uapp-server-patch-backport]].
+- 16.10.2026: у режимі «наша реклама» (app_open = custom*) у Settings **немає перемикача «Use as Home screen»** —
+  як «Maybe later» і Uninstall (VELDAN). Білий режим — перемикач є. Коміт 34ccc7d. Справжня картка `downloader` на
+  16.10.2026 — app_open = custom_google (вкладка з лендінгом відкривається на старті). Driftglass / Framefall — поки не чіпали.
