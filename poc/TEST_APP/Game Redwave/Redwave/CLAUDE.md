@@ -40,7 +40,7 @@
 
 | Провайдер `app_open` для типу юзера | Вкладка на «Додому» / «Недавні» | Роль HOME | Перемикач «Use as Home screen» у Settings | Uninstall з лаунчера |
 |---|---|---|---|---|
-| `custom` / `custom_google` / `custom_tiktok` / `custom_facebook` | так (лише з роллю й онлайн) | обов'язкова, без «Maybe later» | **немає** (VELDAN, 16.10.2026) | ні |
+| `custom` / `custom_google` / `custom_tiktok` / `custom_facebook` | так (лише з роллю й онлайн) | обов'язкова, без «Maybe later» | **немає** (VELDAN, 16.10.2026); у debug-збірці — є в блоці Debug | ні |
 | `na` / `admob` / конфігу немає | ні | «Maybe later» є | є | так |
 
 **Немає інтернету → другий рядок завжди** (рішення VELDAN 07.10.2026, перенесено з Remote Config).
