@@ -155,7 +155,6 @@ object Copy {
         const val HOME_ON = "On · Redwave is your Home screen"
         const val HOME_OFF = "Off · your system Home screen is used"
         /** home_required = true: чесно кажемо, що без ролі апка не працює. */
-        const val HOME_REQUIRED_NOTE = "Redwave needs to be your Home screen to work."
         /** Вимикання ролі = системний екран вибору головного застосунку. */
         const val PICK_PREVIOUS = "Choose your previous Home app"
         const val PRIVACY = "Privacy Policy"

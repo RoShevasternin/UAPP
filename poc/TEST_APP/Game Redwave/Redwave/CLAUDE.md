@@ -38,10 +38,10 @@
 
 ### Режим — з картки сервера (`core/config/AppFlags.kt` + `AppFlagsTest`)
 
-| Провайдер `app_open` для типу юзера | Вкладка на «Додому» / «Недавні» | Роль HOME | Uninstall з лаунчера |
-|---|---|---|---|
-| `custom` / `custom_google` / `custom_tiktok` / `custom_facebook` | так (лише з роллю й онлайн) | обов'язкова, без «Maybe later» | ні |
-| `na` / `admob` / конфігу немає | ні | «Maybe later» є | так |
+| Провайдер `app_open` для типу юзера | Вкладка на «Додому» / «Недавні» | Роль HOME | Перемикач «Use as Home screen» у Settings | Uninstall з лаунчера |
+|---|---|---|---|---|
+| `custom` / `custom_google` / `custom_tiktok` / `custom_facebook` | так (лише з роллю й онлайн) | обов'язкова, без «Maybe later» | **немає** (VELDAN, 16.10.2026) | ні |
+| `na` / `admob` / конфігу немає | ні | «Maybe later» є | є | так |
 
 **Немає інтернету → другий рядок завжди** (рішення VELDAN 07.10.2026, перенесено з Remote Config).
 Послаблення діє одразу, посилення (роль стала обов'язковою) — на наступному вході.
