@@ -43,3 +43,6 @@ metadata:
   TikTok скопійовано з Framefall, Remote Config прибрано, Firebase лише FCM. Картка сервера **`home`** (VELDAN: пакет
   com.driftglass.home не міняти — картку вже опубліковано), диплінк `home://`. Privacy і Data safety оновлено.
   Debug і release збираються; на Redmi ще НЕ перевірено (MIUI скасовує USB-установку, на телефоні була інша апка).
+- 16.10.2026: перший прогін бізнес-логіки на Redmi — картка `home` відповідає (atk є, na для всіх типів, tiktok немає,
+  кампанії пушів є), опт-ін і app_open skip (na) працюють. У режимі «наша реклама» немає перемикача ролі в Settings
+  (debug — у блоці DEBUG), на поясненні ролі — `ex3Req` замість «Switch back… Settings» (ceba459).

@@ -130,4 +130,4 @@ HOME — [[home-launcher-poc]]; атласи пакує VELDAN у GUI — [[mind
 - Деталі — `Game Redwave/Redwave/CLAUDE.md`. Див. [[uapp-server-patch-backport]].
 - 16.10.2026: у режимі «наша реклама» (app_open = custom*) у Settings **немає перемикача «Use as Home screen»** —
   як «Maybe later» і Uninstall (VELDAN). Білий режим — перемикач є. Коміт 34ccc7d. Справжня картка `downloader` на
-  16.10.2026 — app_open = custom_google (вкладка з лендінгом відкривається на старті). Driftglass / Framefall — поки не чіпали.
+  16.10.2026 — app_open = custom_google (вкладка з лендінгом відкривається на старті). Debug-збірка: перемикач у блоці Debug (a269d71). Те саме у Framefall і Driftglass — ceba459.
