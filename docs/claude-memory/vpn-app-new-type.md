@@ -46,3 +46,22 @@ metadata:
   Talk to Figma MCP (github grab/cursor-talk-to-figma-mcp, MIT, плагін у Community, без токена
   й лімітів; PNG віддає base64 «limited»; потрібні bun + websocket). Не брати figma-console-mcp
   і Framelink — потребують особистий токен і частково REST (Starter ≈ 6 запитів/міс).
+
+## Figma-файл і перевірений доступ (24.11.2026)
+
+- Файл **UAPP 2.0** (`figma.com/design/Dy3ZtwlDhwDW5QtJQFWsZI`), сторінка Seciro, секція
+  **«Seciro All-in-One» `5:1685`** — 75 екранів 375×812 (iPhone-макет). Порядок — рядами: зліва
+  направо, потім наступний ряд нижче (сортувати за y, потім x). Ряди: splash/онбординг/paywall →
+  Sign in + code + підписка скінчилась → Dashboard/scan/Result → VPN → Web Protection →
+  Safe QR Scanner → Storage Cleaner → Breach Check → Password Generator → Settings/My Account.
+  Тобто апка — **безпека «все в одному»**, VPN лише одна з функцій.
+- ✔ **Шлях A працює**: вбудований браузер уже залогінений, `window.figma` є (editorType figma,
+  повний доступ). `exportAsync` SVG_STRING / PNG 3x, `getImageByHash` — усе ок. Великі файли —
+  Blob + `<a download>` → падають у `~/Downloads` → `mv` у проєкт. Перевірено: VPN `5:3826` @3x =
+  1125×2436, 537 КБ. Скріншот (`computer screenshot`) на Figma-канвасі зависає — не потрібен.
+- Шрифти: Inter Medium/Bold, Inter Tight Medium/Bold (OFL — можна); SF Pro (≈31 текст, переважно
+  статус-бар iOS) — ліцензія Apple лише для Apple-платформ → на Android замінити Inter.
+- Ефекти: DROP_SHADOW ×486, BACKGROUND_BLUR ×25, GLASS ×5, LAYER_BLUR ×2 — тіні/блюр
+  запікати або робити як `VfxTexture`+`BlurEffect` Orbit Dash. Растрових заливок лише 5
+  (Safari-іконка 256, логотипи апок 512, 2 «img»). Решта — вектор (MSDF/SVG).
+- Статус-бар 9:41 і home-індикатор — частина iOS-макета, на Android не малювати.

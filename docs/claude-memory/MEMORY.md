@@ -30,4 +30,4 @@
 - [Framefall: тестова апка Video Downloader](framefall-app.md) — poc/TEST_APP/Game Framefall: з 13.10.2026 Android-проєкт з каркаса Redwave (UAPP-логіка), пакет com.vidtools.framefall (картка сервера = останній сегмент), OES-відео, Studio
 - [TEST_APP: нові апки — нові акаунти Play](test-app-new-play-accounts.md) — Driftglass = Strategic Access Ventures, Framefall = CAPSLOCK LTD; у політиці без Remote Config і Custom Tab, Firebase — загально
 - [UAPP: локально sparse-клон](uapp-sparse-local.md) — з 24.11.2026 на диску лише корінь, docs, november; старі теки повертати `git sparse-checkout add`
-- [VPN-апка: новий тип](vpn-app-new-type.md) — 24.11.2026, підписка, Kotlin+LibGDX, WireGuard, Android 10; дизайн з Figma БЕЗ MCP (SVG/браузер), якість як Orbit Dash (MSDF)
+- [VPN-апка: новий тип](vpn-app-new-type.md) — 24.11.2026, Seciro (безпека все-в-одному, 75 екранів у Figma 5:1685), Kotlin+LibGDX, WireGuard, Android 10; Figma через браузер + window.figma (перевірено)
