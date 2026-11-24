@@ -1,0 +1,98 @@
+<title>Seciro Prototype</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&family=Inter+Tight:wght@500;700&display=block">
+<style>
+/* Сторінка-обгортка прототипу: телефон 375×812 (кадр Figma) по центру + панель екранів.
+   Сама апка всередині телефона — світла, як у Figma; обгортка йде за темою переглядача. */
+:root {
+  --page: #e7ebf2;
+  --panel: #ffffff;
+  --ink: #141a24;
+  --muted: #5d6675;
+  --line: #d5dbe5;
+  --accent: #0b62da;
+  --chip: #eef3fb;
+  --ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #0f141c; --panel: #171e29; --ink: #e8edf5; --muted: #98a3b4; --line: #2a3443; --accent: #5b9bff; --chip: #1f2a3a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --page: #0f141c; --panel: #171e29; --ink: #e8edf5; --muted: #98a3b4; --line: #2a3443; --accent: #5b9bff; --chip: #1f2a3a;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--page); color: var(--ink); font-family: var(--ui); }
+#root { min-height: 100%; }
+
+.stage {
+  display: flex; gap: 28px; align-items: flex-start; justify-content: center;
+  padding-block: 24px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.phone-slot { flex: 0 0 auto; }
+.phone-shell {
+  border-radius: 44px; padding: 10px; background: #0d1118;
+  box-shadow: 0 24px 60px rgba(8, 30, 70, .28), inset 0 0 0 1.5px #2b3240;
+}
+.phone-clip { border-radius: 34px; overflow: hidden; position: relative; }
+
+.panel {
+  width: 260px; min-width: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 18px;
+  padding: 18px; display: flex; flex-direction: column; gap: 14px;
+}
+.panel h1 { font-size: 17px; margin: 0; font-weight: 700; letter-spacing: -.01em; text-wrap: balance; }
+.panel .sub { font-size: 12px; color: var(--muted); margin: 0; line-height: 1.45; }
+.panel .label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.scr-list { display: flex; flex-direction: column; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.scr-list button {
+  width: 100%; text-align: left; border: 0; background: transparent; color: var(--ink); font: 500 13px/1.3 var(--ui);
+  padding: 7px 10px; border-radius: 9px; cursor: pointer; display: flex; justify-content: space-between; gap: 8px;
+}
+.scr-list button:hover { background: var(--chip); }
+.scr-list button[aria-current="true"] { background: var(--accent); color: #fff; }
+.scr-list .nid { opacity: .6; font-variant-numeric: tabular-nums; font-size: 11px; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+.pbtn {
+  border: 1px solid var(--line); background: var(--panel); color: var(--ink); font: 500 13px var(--ui);
+  border-radius: 10px; padding: 8px 12px; cursor: pointer;
+}
+.pbtn:hover { border-color: var(--accent); }
+.pbtn:focus-visible, .scr-list button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.note { font-size: 12px; color: var(--muted); line-height: 1.45; margin: 0; }
+.note b { color: var(--ink); font-weight: 600; }
+
+@media (max-width: 720px) {
+  .stage { flex-direction: column; align-items: center; padding-block: 12px; gap: 16px; }
+  .panel { width: 100%; max-width: 420px; box-sizing: border-box; }
+  .phone-shell { border-radius: 0; padding: 0; background: transparent; box-shadow: none; }
+  .phone-clip { border-radius: 18px; }
+}
+
+/* ── Всередині апки ── */
+.app, .app * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+.app { font-family: "Inter", sans-serif; font-weight: 500; color: #000; user-select: none; }
+.tap { cursor: pointer; transition: transform .12s ease, filter .12s ease; }
+.tap:active { transform: scale(.98); filter: brightness(.94); }
+.hscroll { overflow-x: auto; scrollbar-width: none; cursor: grab; }
+.hscroll::-webkit-scrollbar { display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes inFwd { from { transform: translateX(28%); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes inBack { from { transform: translateX(-28%); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sheet { from { transform: translateY(100%); } to { transform: none; } }
+.enter-fwd { animation: inFwd .32s cubic-bezier(.2,.8,.2,1); }
+.enter-back { animation: inBack .32s cubic-bezier(.2,.8,.2,1); }
+.enter-fade { animation: fade .3s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .enter-fwd, .enter-back, .enter-fade { animation: none; }
+}
+</style>
+<div id="root"></div>
+<!--BUNDLE-->

@@ -1,0 +1,193 @@
+{
+ "id": "5:2530",
+ "name": "splash",
+ "type": "FRAME",
+ "x": 0,
+ "y": 0,
+ "w": 375,
+ "h": 812,
+ "fills": [
+  {
+   "solid": "#f1f4f9",
+   "a": 1
+  }
+ ],
+ "clip": true,
+ "children": [
+  {
+   "id": "5:2531",
+   "name": "home",
+   "type": "FRAME",
+   "x": 0,
+   "y": 655,
+   "w": 375,
+   "h": 157,
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 16,
+    "p": [
+     16,
+     16,
+     8,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "clip": true,
+   "children": [
+    {
+     "id": "5:2532",
+     "name": "text",
+     "type": "FRAME",
+     "x": 16,
+     "y": 16,
+     "w": 343,
+     "h": 112,
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 16,
+      "p": [
+       16,
+       0,
+       16,
+       0
+      ],
+      "main": "MIN",
+      "cross": "CENTER"
+     },
+     "children": [
+      {
+       "id": "5:2533",
+       "name": "Mobile Security & Private VPN",
+       "type": "TEXT",
+       "x": 0,
+       "y": 16,
+       "w": 343,
+       "h": 24,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Mobile Security & Private VPN",
+        "font": "Inter Tight Medium",
+        "size": 20,
+        "lh": "24",
+        "ls": "0%",
+        "align": "CENTER",
+        "valign": "TOP",
+        "auto": "HEIGHT"
+       }
+      },
+      {
+       "id": "5:2534",
+       "name": "Complete protection for your device, personal data, online privacy, and digital life.",
+       "type": "TEXT",
+       "x": 0,
+       "y": 56,
+       "w": 343,
+       "h": 40,
+       "fills": [
+        {
+         "solid": "#737373",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Complete protection for your device, personal data, online privacy, and digital life.",
+        "font": "Inter Medium",
+        "size": 14,
+        "lh": "20",
+        "ls": "0%",
+        "align": "CENTER",
+        "valign": "TOP",
+        "auto": "HEIGHT"
+       }
+      }
+     ]
+    },
+    {
+     "id": "5:2535",
+     "name": "Home",
+     "type": "RECTANGLE",
+     "x": 120.5,
+     "y": 144,
+     "w": 134,
+     "h": 5,
+     "fills": [
+      {
+       "solid": "#000000",
+       "a": 1
+      }
+     ],
+     "r": 100,
+     "skip": "ios"
+    }
+   ]
+  },
+  {
+   "id": "5:2536",
+   "name": "loader",
+   "type": "INSTANCE",
+   "x": 167.5,
+   "y": 540,
+   "w": 40,
+   "h": 40,
+   "comp": "loader / Property 1=1, Property 2=1",
+   "children": [
+    {
+     "id": "I5:2536;46:21061",
+     "name": "Ellipse",
+     "type": "ELLIPSE",
+     "x": 0,
+     "y": 0,
+     "w": 40,
+     "h": 40,
+     "strokes": [
+      {
+       "solid": "#0b62da",
+       "a": 1
+      }
+     ],
+     "sw": 4,
+     "sa": "INSIDE"
+    }
+   ]
+  },
+  {
+   "id": "5:2537",
+   "name": "system bar",
+   "type": "GROUP",
+   "x": 0,
+   "y": 0,
+   "w": 375,
+   "h": 52,
+   "skip": "ios"
+  },
+  {
+   "id": "5:2554",
+   "name": "logo",
+   "type": "FRAME",
+   "x": 88.5,
+   "y": 378,
+   "w": 198,
+   "h": 56,
+   "al": {
+    "mode": "HORIZONTAL",
+    "gap": 12,
+    "p": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "svg": "art/5-2530_logo_5-2554.svg"
+  }
+ ]
+}

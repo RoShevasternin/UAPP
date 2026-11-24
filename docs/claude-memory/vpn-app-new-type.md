@@ -65,3 +65,11 @@ metadata:
   запікати або робити як `VfxTexture`+`BlurEffect` Orbit Dash. Растрових заливок лише 5
   (Safari-іконка 256, логотипи апок 512, 2 «img»). Решта — вектор (MSDF/SVG).
 - Статус-бар 9:41 і home-індикатор — частина iOS-макета, на Android не малювати.
+
+## Проєкт (24.11.2026)
+
+- Тека: `november/Game Seciro/` → `claude/` (README з правилами, `figma/` дані, `tools/`), `prototype/`,
+  `Seciro/` (Gradle: core / desktop / android, ще не збирався), `release/`, `market/results/{icons,screenshots,aab}`.
+- Прототип: https://claude.ai/artifact/9z6HEgMhdhdYMEeTSKiwwZ (акаунт overchenkolila), ряд 1 готовий (build 2).
+  Вбудований браузер НЕ залогінений у claude.ai — перевірка знімком `claude/tools/proto-shot.sh` (headless Chrome).
+- Деталі й відкриті питання — `november/Game Seciro/claude/README.md`.

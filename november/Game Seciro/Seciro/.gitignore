@@ -1,0 +1,15 @@
+*.iml
+.gradle
+.kotlin/
+/local.properties
+/.idea/
+.DS_Store
+/build
+**/build/
+/captures
+.externalNativeBuild
+.cxx
+# Нативи libGDX — розпаковує copyAndroidNatives при кожній збірці
+/android/libs/
+# Десктоп: робоча тека запуску (prefs, журнали)
+/desktop/run/

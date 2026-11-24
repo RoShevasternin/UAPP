@@ -1,0 +1,31 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  ВЕРСІЇ ВСЬОГО ПРОЄКТУ — ТУТ І НІДЕ БІЛЬШЕ (як в Orbit Dash).
+#  libs.gdx.backend.android ← gdx-backend-android, libs.versions.jvm ← jvm
+# ═════════════════════════════════════════════════════════════════════════════
+
+[versions]
+# ── Версія апки — одна на всі платформи. Реліз: міняєш ТУТ, код +1 на кожне завантаження в Play
+appVersion        = "1.0.0"
+appVersionCode    = "1"
+
+# ── Мова і збірка (ті самі, що в Orbit Dash 24.11.2026)
+jvm               = "11"
+agp               = "9.4.1"
+kotlin            = "2.4.21"
+junit             = "4.13.2"
+
+# ── Рушій
+gdx               = "1.14.2"
+coroutines        = "1.11.0"
+
+[libraries]
+junit                   = { module = "junit:junit",                                  version.ref = "junit" }
+gdx                     = { module = "com.badlogicgames.gdx:gdx",                    version.ref = "gdx" }
+gdx-backend-android     = { module = "com.badlogicgames.gdx:gdx-backend-android",    version.ref = "gdx" }
+gdx-backend-lwjgl3      = { module = "com.badlogicgames.gdx:gdx-backend-lwjgl3",     version.ref = "gdx" }
+gdx-platform            = { module = "com.badlogicgames.gdx:gdx-platform",           version.ref = "gdx" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+android-gradle-plugin   = { module = "com.android.tools.build:gradle",               version.ref = "agp" }
+
+[plugins]
+kotlin-jvm              = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

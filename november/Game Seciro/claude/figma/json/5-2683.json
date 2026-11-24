@@ -1,0 +1,378 @@
+{
+ "id": "5:2683",
+ "name": "onb rev",
+ "type": "FRAME",
+ "x": 0,
+ "y": 0,
+ "w": 375,
+ "h": 812,
+ "fills": [
+  {
+   "solid": "#f1f4f9",
+   "a": 1
+  }
+ ],
+ "clip": true,
+ "children": [
+  {
+   "id": "5:2684",
+   "name": "Shape Set",
+   "type": "INSTANCE",
+   "x": 50,
+   "y": 76,
+   "w": 375,
+   "h": 375,
+   "opacity": 0.5,
+   "clip": true,
+   "comp": "Shape Set / Shape=Flower",
+   "svg": "art/5-2683_Shape_Set_5-2684.svg"
+  },
+  {
+   "id": "5:2685",
+   "name": "img",
+   "type": "FRAME",
+   "x": 17,
+   "y": 182,
+   "w": 342,
+   "h": 270,
+   "svg": "art/5-2683_img_5-2685.svg"
+  },
+  {
+   "id": "5:2714",
+   "name": "system bar",
+   "type": "GROUP",
+   "x": 0,
+   "y": 0,
+   "w": 375,
+   "h": 52,
+   "skip": "ios"
+  },
+  {
+   "id": "5:2731",
+   "name": "home",
+   "type": "FRAME",
+   "x": 0,
+   "y": 519,
+   "w": 375,
+   "h": 293,
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 16,
+    "p": [
+     16,
+     16,
+     8,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "children": [
+    {
+     "id": "5:2732",
+     "name": "VPN",
+     "type": "FRAME",
+     "x": 16,
+     "y": 16,
+     "w": 343,
+     "h": 144,
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 16,
+      "p": [
+       0,
+       16,
+       16,
+       16
+      ],
+      "main": "MIN",
+      "cross": "CENTER"
+     },
+     "children": [
+      {
+       "id": "5:2733",
+       "name": "Private Internet Access",
+       "type": "TEXT",
+       "x": 16,
+       "y": 0,
+       "w": 311,
+       "h": 72,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Private Internet Access",
+        "font": "Inter Tight Medium",
+        "size": 32,
+        "lh": "36",
+        "ls": "0%",
+        "align": "CENTER",
+        "valign": "TOP",
+        "auto": "HEIGHT"
+       }
+      },
+      {
+       "id": "5:2734",
+       "name": "Browse securely with encrypted connections that keep your online activity truly private.",
+       "type": "TEXT",
+       "x": 16,
+       "y": 88,
+       "w": 311,
+       "h": 40,
+       "fills": [
+        {
+         "solid": "#737373",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Browse securely with encrypted connections that keep your online activity truly private.",
+        "font": "Inter Medium",
+        "size": 14,
+        "lh": "20",
+        "ls": "0%",
+        "align": "CENTER",
+        "valign": "TOP",
+        "auto": "HEIGHT"
+       }
+      }
+     ]
+    },
+    {
+     "id": "5:2735",
+     "name": "Btn",
+     "type": "INSTANCE",
+     "x": 16,
+     "y": 176,
+     "w": 343,
+     "h": 56,
+     "fills": [
+      {
+       "solid": "#0b62da",
+       "a": 1
+      }
+     ],
+     "r": 100,
+     "al": {
+      "mode": "HORIZONTAL",
+      "gap": 8,
+      "p": [
+       16,
+       24,
+       16,
+       24
+      ],
+      "main": "CENTER",
+      "cross": "CENTER"
+     },
+     "clip": true,
+     "comp": "Btn / Btn=Prime, Size=56, Tap=off",
+     "children": [
+      {
+       "id": "I5:2735;46:20946",
+       "name": "material-symbols:check-circle",
+       "type": "INSTANCE",
+       "x": 24,
+       "y": 16,
+       "w": 24,
+       "h": 24,
+       "hidden": true,
+       "comp": "material-symbols:check-circle",
+       "children": [
+        {
+         "id": "I5:2735;46:20946;46:20739",
+         "name": "Vector",
+         "type": "VECTOR",
+         "x": 2,
+         "y": 2,
+         "w": 20,
+         "h": 20,
+         "fills": [
+          {
+           "solid": "#ffffff",
+           "a": 1
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "I5:2735;46:20947",
+       "name": "Label",
+       "type": "TEXT",
+       "x": 136.5,
+       "y": 18,
+       "w": 70,
+       "h": 20,
+       "fills": [
+        {
+         "solid": "#ffffff",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Continue",
+        "font": "Inter Medium",
+        "size": 16,
+        "lh": "20",
+        "ls": "0%",
+        "align": "LEFT",
+        "valign": "CENTER",
+        "auto": "WIDTH_AND_HEIGHT"
+       }
+      }
+     ]
+    },
+    {
+     "id": "5:2736",
+     "name": "navig",
+     "type": "FRAME",
+     "x": 145.5,
+     "y": 248,
+     "w": 84,
+     "h": 16,
+     "al": {
+      "mode": "HORIZONTAL",
+      "gap": 10,
+      "p": [
+       6,
+       6,
+       6,
+       6
+      ],
+      "main": "MIN",
+      "cross": "CENTER"
+     },
+     "children": [
+      {
+       "id": "5:2737",
+       "name": "Rectangle 1",
+       "type": "RECTANGLE",
+       "x": 6,
+       "y": 6,
+       "w": 4,
+       "h": 4,
+       "opacity": 0.25,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ],
+       "r": 2
+      },
+      {
+       "id": "5:2738",
+       "name": "Rectangle 2",
+       "type": "RECTANGLE",
+       "x": 20,
+       "y": 6,
+       "w": 16,
+       "h": 4,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ],
+       "r": 2
+      },
+      {
+       "id": "5:2739",
+       "name": "Rectangle 3",
+       "type": "RECTANGLE",
+       "x": 46,
+       "y": 6,
+       "w": 4,
+       "h": 4,
+       "opacity": 0.25,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ],
+       "r": 2
+      },
+      {
+       "id": "5:2740",
+       "name": "Rectangle 4",
+       "type": "RECTANGLE",
+       "x": 60,
+       "y": 6,
+       "w": 4,
+       "h": 4,
+       "opacity": 0.25,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ],
+       "r": 2
+      },
+      {
+       "id": "5:2741",
+       "name": "Rectangle 5",
+       "type": "RECTANGLE",
+       "x": 74,
+       "y": 6,
+       "w": 4,
+       "h": 4,
+       "opacity": 0.25,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ],
+       "r": 2
+      }
+     ]
+    },
+    {
+     "id": "5:2742",
+     "name": "Home",
+     "type": "RECTANGLE",
+     "x": 120.5,
+     "y": 280,
+     "w": 134,
+     "h": 5,
+     "fills": [
+      {
+       "solid": "#000000",
+       "a": 1
+      }
+     ],
+     "r": 100,
+     "skip": "ios"
+    }
+   ]
+  },
+  {
+   "id": "5:2743",
+   "name": "logo",
+   "type": "FRAME",
+   "x": 0,
+   "y": 52,
+   "w": 375,
+   "h": 64,
+   "al": {
+    "mode": "HORIZONTAL",
+    "gap": 0,
+    "p": [
+     12,
+     16,
+     12,
+     16
+    ],
+    "main": "SPACE_BETWEEN",
+    "cross": "CENTER"
+   },
+   "svg": "art/5-2683_logo_5-2743.svg"
+  }
+ ]
+}
