@@ -8,21 +8,21 @@
 // ─────────────────────────────────────────────────────────────────────────────
 import { useEffect, useRef, useState } from "react";
 
-import logoSplash from "../claude/figma/art/5-2530_logo_5-2554.svg";
-import logoHeader from "../claude/figma/art/5-2620_logo_5-2651.svg";
-import pwHeader from "../claude/figma/art/5-2948_logo_5-3052.svg";
-import imgOnb1 from "../claude/figma/art/5-2620_img_5-2655.svg";
-import shape2 from "../claude/figma/art/5-2557_Shape_Set_5-2558.svg";
-import img2 from "../claude/figma/art/5-2557_img_5-2592.svg";
-import shape3 from "../claude/figma/art/5-2683_Shape_Set_5-2684.svg";
-import img3 from "../claude/figma/art/5-2683_img_5-2685.svg";
-import shape4 from "../claude/figma/art/5-2747_Shape_Set_5-2748.svg";
-import img4 from "../claude/figma/art/5-2747_img_5-2749.svg";
-import shape5 from "../claude/figma/art/5-2815_Shape_Set_5-2816.svg";
-import img5 from "../claude/figma/art/5-2815_img_5-2817.svg";
-import shape6 from "../claude/figma/art/5-2874_Shape_Set_5-2875.svg";
-import img6 from "../claude/figma/art/5-2874_img_5-2876.svg";
-import imgPw from "../claude/figma/art/5-2948_img_5-2950.svg";
+import logoSplash from "../claude/figma/art3x/5-2530_logo_5-2554.png";
+import logoHeader from "../claude/figma/art3x/5-2620_logo_5-2651.png";
+import pwHeader from "../claude/figma/art3x/5-2948_logo_5-3052.png";
+import imgOnb1 from "../claude/figma/art3x/5-2620_img_5-2655.png";
+import shape2 from "../claude/figma/art3x/5-2557_Shape_Set_5-2558.png";
+import img2 from "../claude/figma/art3x/5-2557_img_5-2592.png";
+import shape3 from "../claude/figma/art3x/5-2683_Shape_Set_5-2684.png";
+import img3 from "../claude/figma/art3x/5-2683_img_5-2685.png";
+import shape4 from "../claude/figma/art3x/5-2747_Shape_Set_5-2748.png";
+import img4 from "../claude/figma/art3x/5-2747_img_5-2749.png";
+import shape5 from "../claude/figma/art3x/5-2815_Shape_Set_5-2816.png";
+import img5 from "../claude/figma/art3x/5-2815_img_5-2817.png";
+import shape6 from "../claude/figma/art3x/5-2874_Shape_Set_5-2875.png";
+import img6 from "../claude/figma/art3x/5-2874_img_5-2876.png";
+import imgPw from "../claude/figma/art3x/5-2948_img_5-2950.png";
 import icVpnLock from "../claude/figma/icons/vpn-lock.svg";
 import icSecurity from "../claude/figma/icons/security.svg";
 import icQr from "../claude/figma/icons/qr-code.svg";
@@ -42,7 +42,7 @@ import fr08 from "../claude/figma/frames/r1_08_5-2948.png";
 import fr09 from "../claude/figma/frames/r1_09_5-3055.png";
 import fr10 from "../claude/figma/frames/r1_10_5-3162.png";
 
-export const BUILD = 4;   // піднімати на кожну публікацію
+export const BUILD = 6;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
@@ -57,7 +57,8 @@ const FONT_TEXT = '"Inter", sans-serif';
 const Abs = ({ x, y, w, h, style, children, ...rest }) => (
   <div style={{ position: "absolute", left: x, top: y, width: w, height: h, ...style }} {...rest}>{children}</div>
 );
-const Art = ({ src, x, y }) => <img src={src} alt="" draggable={false} style={{ position: "absolute", left: x, top: y, pointerEvents: "none" }} />;
+// Ілюстрація — PNG @3x, відрендерений самою Figma (SVG-експорт Figma губить обрізання круглих рамок), w — ширина в юнітах кадру
+const Art = ({ src, x, y, w }) => <img src={src} alt="" draggable={false} style={{ position: "absolute", left: x, top: y, width: w, pointerEvents: "none" }} />;
 // Іконка Material з Figma як маска: колір задає код (у SVG лапки й # треба екранувати для CSS url())
 const maskUrl = (src) => `url("${src.replace(/"/g, "%22").replace(/#/g, "%23")}")`;
 const Icon = ({ src, color, size = 24 }) => (
@@ -75,7 +76,7 @@ function Btn({ kind = "prime", y, children, onClick }) {
   const prime = kind === "prime";
   return (
     <Abs x={16} y={y} w={343} h={56} className="tap" onClick={onClick} role="button"
-      style={{ borderRadius: 100, background: prime ? C.blue : C.bg, border: prime ? "none" : `1px solid ${a(C.blue, .15)}`,
+      style={{ borderRadius: 100, background: prime ? C.blue : C.bg, boxShadow: prime ? "none" : `inset 0 0 0 1px ${a(C.blue, .15)}`,
         display: "flex", alignItems: "center", justifyContent: "center", padding: "16px 24px",
         fontFamily: FONT_TEXT, fontSize: 16, lineHeight: "20px", color: prime ? C.white : C.blue }}>
       {children}
@@ -112,7 +113,7 @@ function Splash({ go }) {
   useEffect(() => { const t = setTimeout(() => go("onb1"), 2200); return () => clearTimeout(t); }, []);
   return (
     <>
-      <Art src={logoSplash} x={88.5} y={378} />
+      <Art src={logoSplash} w={198} x={88.5} y={378} />
       {/* loader — дуга 40×40, обведення 4, синя */}
       <Abs x={167.5} y={540} w={40} h={40} style={{ animation: "spin 1s linear infinite" }}>
         <svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="none" stroke={C.blue} strokeWidth="4" strokeDasharray="84.8 28.3" /></svg>
@@ -139,10 +140,10 @@ const ONB = [
 function Onb1({ go }) {
   return (
     <>
-      <Art src={imgOnb1} x={0.5} y={85} />
-      <Art src={logoHeader} x={0} y={52} />
+      <Art src={imgOnb1} w={374.667} x={0.5} y={85} />
+      <Art src={logoHeader} w={375} x={0} y={52} />
       <T x={32} y={443} w={311} size={32} lh={36} title>{"Protection\nMade Simple"}</T>
-      <T x={32} y={531} w={311} size={14} lh={20} color={C.grey}>Run one quick check to see what needs attention across your privacy, browsing, and storage.</T>
+      <T x={32} y={531} w={311} size={14} lh={20} color={C.grey}>{"Run one quick check to see what needs attention across your privacy, browsing,\nand storage."}</T>
       <Btn kind="third" y={623} onClick={() => go("onb2")}>I'm new here</Btn>
       <Btn y={695} onClick={() => go("signin")}>I already have an account</Btn>
       <Dots y={767} active={0} />
@@ -153,9 +154,9 @@ function Onb1({ go }) {
 function OnbPage({ p, go, next }) {
   return (
     <>
-      <Art src={p.shape} x={50} y={76} />
-      <Art src={p.img} x={16} y={p.imgY} />
-      <Art src={logoHeader} x={0} y={52} />
+      <Art src={p.shape} w={325} x={50} y={76} />
+      <Art src={p.img} w={344} x={16} y={p.imgY} />
+      <Art src={logoHeader} w={375} x={0} y={52} />
       <T x={32} y={535} w={311} size={32} lh={36} title>{p.title}</T>
       <T x={32} y={623} w={311} size={14} lh={20} color={C.grey}>{p.text}</T>
       <Btn y={695} onClick={() => go(next)}>{p.cta}</Btn>
@@ -217,7 +218,9 @@ function PlanCard({ p, on, onClick }) {
   return (
     <div className="tap" role="radio" aria-checked={on} onClick={onClick}
       style={{ width: 109, height: 114, borderRadius: 16, padding: "8px 16px 16px", display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
-        background: on ? C.white : a(C.blue, .15), border: `1px solid ${on ? C.blue : a(C.blue, .15)}`, transition: "background .15s, border-color .15s" }}>
+        background: on ? C.white : a(C.blue, .15),
+        // рамка Figma «всередину» не зсуває вміст — тому тінь-обвідка, а не border
+        boxShadow: `inset 0 0 0 1px ${on ? C.blue : a(C.blue, .15)}`, transition: "background .15s, box-shadow .15s" }}>
       <span style={{ height: 18, borderRadius: 12, padding: "2px 8px", fontSize: 9, lineHeight: "14px", whiteSpace: "nowrap",
         background: on ? p.tagColor : a(p.tagBg, .15), color: on ? C.white : p.tagColor }}>{p.tag}</span>
       <span style={{ fontSize: 14, lineHeight: "20px", textAlign: "center", whiteSpace: "pre-line" }}>{`${p.name}\n${p.price}`}</span>
@@ -231,8 +234,8 @@ function Paywall({ go, toast, plan, setPlan }) {
   const p = PLANS.find((x) => x.id === plan);
   return (
     <>
-      <Art src={imgPw} x={93.75} y={49.75} />
-      <Art src={pwHeader} x={0} y={52} />
+      <Art src={imgPw} w={187.667} x={93.75} y={49.75} />
+      <Art src={pwHeader} w={375} x={0} y={52} />
       {/* хіт-зони поверх SVG шапки: хрестик і Restore */}
       <Abs x={8} y={64} w={40} h={40} className="tap" role="button" aria-label="Close" onClick={() => go("dashboard")} style={{ borderRadius: 20 }} />
       <Abs x={306} y={66} w={61} h={36} className="tap" role="button" onClick={() => toast("Restoring purchases… No active subscription found on this Google account.")} />
@@ -316,15 +319,17 @@ function useScale() {
 
 export default function Seciro() {
   // Екран з посилання (#paywall) важливіший за збережений
-  const fromHash = () => { const h = (location.hash || "").slice(1); return ORDER.includes(h) ? h : null; };
+  // Локальна перевірка (claude/tools/proto-diff.py): #paywall~monthly!raw — лише екран 375×812 без обгортки й анімацій
+  const RAW = /!raw$/.test(location.hash);
+  const fromHash = () => { const h = (location.hash || "").slice(1).split(/[~!]/)[0]; return ORDER.includes(h) ? h : null; };
   const saved = store.get("seciro.screen");
   const [screen, setScreen] = useState(fromHash() || (ORDER.includes(saved) ? saved : "splash"));
   useEffect(() => { const f = () => { const h = fromHash(); if (h) { setDir("fade"); setScreen(h); } }; window.addEventListener("hashchange", f); return () => window.removeEventListener("hashchange", f); }, []);
   const [dir, setDir] = useState("fade");
-  const [plan, setPlan] = useState("weekly");
+  const [plan, setPlan] = useState(((location.hash.match(/~(\w+)/) || [])[1]) || "weekly");
   const [msg, setMsg] = useState(null);
   const [hist, setHist] = useState([]);
-  const scale = useScale();
+  const scale = useScale() ;
 
   const go = (id, how) => {
     setDir(how || (ORDER.indexOf(id) >= ORDER.indexOf(screen) ? "fwd" : "back"));
@@ -349,6 +354,16 @@ export default function Seciro() {
   const [frame, frameNode] = screen === "paywall" ? PW_FRAMES[plan] : [cur.frame, cur.node];
   const [overlay, setOverlay] = useState(0);   // 0 — вимкнено, інакше прозорість кадру Figma поверх телефона
   const slotW = 375 * scale + (window.innerWidth > 1000 ? 20 : 0);
+
+  if (RAW) return (
+    <div className="app" style={{ width: 375, height: 812, position: "relative", overflow: "hidden", background: C.bg }}>
+      {screen === "splash" && <Splash go={() => {}} />}
+      {screen === "onb1" && <Onb1 go={() => {}} />}
+      {onb && <OnbPage p={onb} go={() => {}} next={null} />}
+      {screen === "paywall" && <Paywall go={() => {}} toast={() => {}} plan={plan} setPlan={() => {}} />}
+      <GestureBar />
+    </div>
+  );
 
   return (
     <div className="stage">

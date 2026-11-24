@@ -73,3 +73,6 @@ metadata:
 - Прототип: https://claude.ai/artifact/9z6HEgMhdhdYMEeTSKiwwZ (акаунт overchenkolila), ряд 1 готовий (build 2).
   Вбудований браузер НЕ залогінений у claude.ai — перевірка знімком `claude/tools/proto-shot.sh` (headless Chrome).
 - Деталі й відкриті питання — `november/Game Seciro/claude/README.md`.
+- Точність прототипу (24.11, зауваження VELDAN): звіряти `claude/tools/proto-diff.py`, а не на око; уроки
+  (PNG @3x замість SVG, U+2028 у текстах Figma, Inter opsz 14 + antialiased, inset-рамки) — у `claude/README.md`.
+  Кадр Figma — зліва від прототипу, панель кнопок — справа (VELDAN).

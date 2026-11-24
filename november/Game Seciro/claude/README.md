@@ -28,6 +28,13 @@ Breach Check, генератор паролів. Kotlin + LibGDX. Початок
 - Поруч із телефоном — кадр Figma того самого екрана (paywall — під обраний тариф), «Compare» накладає
   Figma поверх прототипу з прозорістю. Новий екран → кадр у `figma/frames` і `frame` у `SCREENS` обов'язково.
 - Окремий екран за посиланням: `…/artifact/…#paywall` (id — `SCREENS` у `seciro.jsx`).
+- **Звірка піксель у піксель:** `python3 claude/tools/proto-diff.py [екран]` → таблиця різниці з Figma і
+  `claude/tools/out/diff-<екран>.png` (Figma | прототип | різниця). Норма після build 6: онбординг 0.3–0.6 %,
+  paywall ~1.2 % (рядок «Auto-Renewable…» у Figma — SF Pro, у нас Inter). Новий екран — додати в `SHOTS`.
+- **Уроки точності (24.11):** ілюстрації — PNG @3x з Figma (`figma/art3x`, позиції в `map.json`), бо SVG-експорт
+  Figma губить обрізання круглих рамок; тексти брати з `chars` Figma дослівно — там бувають ручні переноси U+2028
+  (Shift+Enter) → `\n`; Inter — `opsz` 14 + `-webkit-font-smoothing: antialiased` (інакше вужче й жирніше за Figma);
+  рамка «всередину» — `inset box-shadow`, не `border` (border зсуває вміст на 1 px). Те саме врахувати в Kotlin.
 - Знімок без claude.ai: `sh claude/tools/proto-shot.sh paywall /tmp/pw.png 900 1000` (headless Chrome).
 - Зроблено: ряд 1 — splash → онбординг (intro + 5) → paywall (3 тарифи, карусель можливостей, мок вікна Google Play).
   Далі: ряд 2 — Sign in, код, «підписка скінчилась», «немає підписки на цю пошту».

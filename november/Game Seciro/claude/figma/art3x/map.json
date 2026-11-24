@@ -1,0 +1,898 @@
+{
+ "art": {
+  "5:2554": {
+   "frame": "5:2530",
+   "name": "logo",
+   "file": "art3x/5-2530_logo_5-2554.png",
+   "x": 88.5,
+   "y": 378,
+   "rw": 198,
+   "rh": 56,
+   "pw": 198,
+   "ph": 56
+  },
+  "5:2651": {
+   "frame": "5:2620",
+   "name": "logo",
+   "file": "art3x/5-2620_logo_5-2651.png",
+   "x": 0,
+   "y": 52,
+   "rw": 375,
+   "rh": 64,
+   "pw": 375,
+   "ph": 64
+  },
+  "5:2655": {
+   "frame": "5:2620",
+   "name": "img",
+   "file": "art3x/5-2620_img_5-2655.png",
+   "x": 0.5,
+   "y": 85,
+   "rw": 374.5,
+   "rh": 375,
+   "pw": 374.6666666666667,
+   "ph": 375
+  },
+  "5:2558": {
+   "frame": "5:2557",
+   "name": "Shape Set",
+   "file": "art3x/5-2557_Shape_Set_5-2558.png",
+   "x": 50,
+   "y": 76,
+   "rw": 325,
+   "rh": 375,
+   "pw": 325,
+   "ph": 375
+  },
+  "5:2588": {
+   "frame": "5:2557",
+   "name": "logo",
+   "file": "art3x/5-2557_logo_5-2588.png",
+   "x": 0,
+   "y": 52,
+   "rw": 375,
+   "rh": 64,
+   "pw": 375,
+   "ph": 64
+  },
+  "5:2592": {
+   "frame": "5:2557",
+   "name": "img",
+   "file": "art3x/5-2557_img_5-2592.png",
+   "x": 16,
+   "y": 182,
+   "rw": 344,
+   "rh": 271,
+   "pw": 344,
+   "ph": 271
+  },
+  "5:2684": {
+   "frame": "5:2683",
+   "name": "Shape Set",
+   "file": "art3x/5-2683_Shape_Set_5-2684.png",
+   "x": 50,
+   "y": 76,
+   "rw": 325,
+   "rh": 375,
+   "pw": 325,
+   "ph": 375
+  },
+  "5:2685": {
+   "frame": "5:2683",
+   "name": "img",
+   "file": "art3x/5-2683_img_5-2685.png",
+   "x": 16,
+   "y": 181,
+   "rw": 344,
+   "rh": 272,
+   "pw": 344,
+   "ph": 272
+  },
+  "5:2743": {
+   "frame": "5:2683",
+   "name": "logo",
+   "file": "art3x/5-2683_logo_5-2743.png",
+   "x": 0,
+   "y": 52,
+   "rw": 375,
+   "rh": 64,
+   "pw": 375,
+   "ph": 64
+  },
+  "5:2748": {
+   "frame": "5:2747",
+   "name": "Shape Set",
+   "file": "art3x/5-2747_Shape_Set_5-2748.png",
+   "x": 50,
+   "y": 76,
+   "rw": 325,
+   "rh": 375,
+   "pw": 325,
+   "ph": 375
+  },
+  "5:2749": {
+   "frame": "5:2747",
+   "name": "img",
+   "file": "art3x/5-2747_img_5-2749.png",
+   "x": 16,
+   "y": 182,
+   "rw": 344,
+   "rh": 271,
+   "pw": 344,
+   "ph": 271
+  },
+  "5:2811": {
+   "frame": "5:2747",
+   "name": "logo",
+   "file": "art3x/5-2747_logo_5-2811.png",
+   "x": 0,
+   "y": 52,
+   "rw": 375,
+   "rh": 64,
+   "pw": 375,
+   "ph": 64
+  },
+  "5:2816": {
+   "frame": "5:2815",
+   "name": "Shape Set",
+   "file": "art3x/5-2815_Shape_Set_5-2816.png",
+   "x": 50,
+   "y": 76,
+   "rw": 325,
+   "rh": 375,
+   "pw": 325,
+   "ph": 375
+  },
+  "5:2817": {
+   "frame": "5:2815",
+   "name": "img",
+   "file": "art3x/5-2815_img_5-2817.png",
+   "x": 16,
+   "y": 182,
+   "rw": 344,
+   "rh": 271.05,
+   "pw": 344,
+   "ph": 271.3333333333333
+  },
+  "5:2870": {
+   "frame": "5:2815",
+   "name": "logo",
+   "file": "art3x/5-2815_logo_5-2870.png",
+   "x": 0,
+   "y": 52,
+   "rw": 375,
+   "rh": 64,
+   "pw": 375,
+   "ph": 64
+  },
+  "5:2875": {
+   "frame": "5:2874",
+   "name": "Shape Set",
+   "file": "art3x/5-2874_Shape_Set_5-2875.png",
+   "x": 50,
+   "y": 76,
+   "rw": 325,
+   "rh": 375,
+   "pw": 325,
+   "ph": 375
+  },
+  "5:2876": {
+   "frame": "5:2874",
+   "name": "img",
+   "file": "art3x/5-2874_img_5-2876.png",
+   "x": 16,
+   "y": 182,
+   "rw": 344,
+   "rh": 271,
+   "pw": 344,
+   "ph": 271
+  },
+  "5:2944": {
+   "frame": "5:2874",
+   "name": "logo",
+   "file": "art3x/5-2874_logo_5-2944.png",
+   "x": 0,
+   "y": 52,
+   "rw": 375,
+   "rh": 64,
+   "pw": 375,
+   "ph": 64
+  },
+  "5:2950": {
+   "frame": "5:2948",
+   "name": "img",
+   "file": "art3x/5-2948_img_5-2950.png",
+   "x": 93.75,
+   "y": 49.75,
+   "rw": 187.5,
+   "rh": 187.5,
+   "pw": 187.66666666666666,
+   "ph": 187.66666666666666
+  },
+  "5:3052": {
+   "frame": "5:2948",
+   "name": "logo",
+   "file": "art3x/5-2948_logo_5-3052.png",
+   "x": 0,
+   "y": 52,
+   "rw": 375,
+   "rh": 64,
+   "pw": 375,
+   "ph": 64
+  },
+  "5:3057": {
+   "frame": "5:3055",
+   "name": "img",
+   "file": "art3x/5-3055_img_5-3057.png",
+   "x": 93.75,
+   "y": 49.75,
+   "rw": 187.5,
+   "rh": 187.5,
+   "pw": 187.66666666666666,
+   "ph": 187.66666666666666
+  },
+  "5:3159": {
+   "frame": "5:3055",
+   "name": "logo",
+   "file": "art3x/5-3055_logo_5-3159.png",
+   "x": 0,
+   "y": 52,
+   "rw": 375,
+   "rh": 64,
+   "pw": 375,
+   "ph": 64
+  },
+  "5:3164": {
+   "frame": "5:3162",
+   "name": "img",
+   "file": "art3x/5-3162_img_5-3164.png",
+   "x": 93.75,
+   "y": 49.75,
+   "rw": 187.5,
+   "rh": 187.5,
+   "pw": 187.66666666666666,
+   "ph": 187.66666666666666
+  },
+  "5:3266": {
+   "frame": "5:3162",
+   "name": "logo",
+   "file": "art3x/5-3162_logo_5-3266.png",
+   "x": 0,
+   "y": 52,
+   "rw": 375,
+   "rh": 64,
+   "pw": 375,
+   "ph": 64
+  }
+ },
+ "lines": {
+  "5:2533": {
+   "frame": "5:2530",
+   "chars": "Mobile Security & Private VPN",
+   "lines": []
+  },
+  "5:2534": {
+   "frame": "5:2530",
+   "chars": "Complete protection for your device, personal data, online privacy, and digital life.",
+   "lines": [
+    [
+     "data, online privacy, and digital life.",
+     35.0508,
+     30.75
+    ]
+   ]
+  },
+  "5:2556": {
+   "frame": "5:2530",
+   "chars": "Seciro",
+   "lines": []
+  },
+  "5:2623": {
+   "frame": "5:2620",
+   "chars": "Protection\nMade Simple",
+   "lines": [
+    [
+     "Protection&#10;",
+     16.875,
+     23.8438
+    ]
+   ]
+  },
+  "5:2624": {
+   "frame": "5:2620",
+   "chars": "Run one quick check to see what needs attention across your privacy, browsing, and storage.",
+   "lines": [
+    [
+     "Run one quick check to see what needs ",
+     0.691406,
+     10.6804
+    ],
+    [
+     "and storage.",
+     91.1582,
+     50.6804
+    ]
+   ]
+  },
+  "I5:2625;46:20950": {
+   "frame": "5:2620",
+   "chars": "I'm new here",
+   "lines": []
+  },
+  "I5:2626;46:20947": {
+   "frame": "5:2620",
+   "chars": "I already have an account",
+   "lines": []
+  },
+  "5:2654": {
+   "frame": "5:2620",
+   "chars": "Seciro",
+   "lines": []
+  },
+  "5:2561": {
+   "frame": "5:2557",
+   "chars": "Your iPhone, Protected",
+   "lines": [
+    [
+     "Protected",
+     19.1562,
+     59.8438
+    ]
+   ]
+  },
+  "5:2562": {
+   "frame": "5:2557",
+   "chars": "Run a full security scan to keep your iPhone safe, private, and running at its best.",
+   "lines": [
+    [
+     "safe, private, and running at its best.",
+     22.5684,
+     30.75
+    ]
+   ]
+  },
+  "I5:2563;46:20947": {
+   "frame": "5:2557",
+   "chars": "Continue",
+   "lines": []
+  },
+  "5:2591": {
+   "frame": "5:2557",
+   "chars": "Seciro",
+   "lines": []
+  },
+  "5:2733": {
+   "frame": "5:2683",
+   "chars": "Private Internet Access",
+   "lines": [
+    [
+     "Access",
+     53.5625,
+     59.8438
+    ]
+   ]
+  },
+  "5:2734": {
+   "frame": "5:2683",
+   "chars": "Browse securely with encrypted connections that keep your online activity truly private.",
+   "lines": [
+    [
+     "that keep your online activity truly private.",
+     8.53418,
+     30.6804
+    ]
+   ]
+  },
+  "I5:2735;46:20947": {
+   "frame": "5:2683",
+   "chars": "Continue",
+   "lines": []
+  },
+  "5:2746": {
+   "frame": "5:2683",
+   "chars": "Seciro",
+   "lines": []
+  },
+  "5:2801": {
+   "frame": "5:2747",
+   "chars": "Block Online\nThreats",
+   "lines": [
+    [
+     "Threats",
+     31.125,
+     59.8438
+    ]
+   ]
+  },
+  "5:2802": {
+   "frame": "5:2747",
+   "chars": "Block dangerous websites, hidden trackers, and phishing attacks before they reach you.",
+   "lines": [
+    [
+     "Block dangerous websites, hidden trackers, ",
+     0.0625,
+     10.6804
+    ]
+   ]
+  },
+  "I5:2803;46:20947": {
+   "frame": "5:2747",
+   "chars": "Continue",
+   "lines": []
+  },
+  "5:2814": {
+   "frame": "5:2747",
+   "chars": "Seciro",
+   "lines": []
+  },
+  "5:2860": {
+   "frame": "5:2815",
+   "chars": "Smart QR\nProtection",
+   "lines": [
+    [
+     "Smart QR&#10;",
+     2.9375,
+     23.2344
+    ]
+   ]
+  },
+  "5:2861": {
+   "frame": "5:2815",
+   "chars": "Scan QR codes for malicious links before opening websites, files, or online content.",
+   "lines": [
+    [
+     "Scan QR codes for malicious links before ",
+     2.40625,
+     10.75
+    ]
+   ]
+  },
+  "I5:2862;46:20947": {
+   "frame": "5:2815",
+   "chars": "Continue",
+   "lines": []
+  },
+  "5:2873": {
+   "frame": "5:2815",
+   "chars": "Seciro",
+   "lines": []
+  },
+  "5:2934": {
+   "frame": "5:2874",
+   "chars": "Free Up\nMore Space",
+   "lines": [
+    [
+     "Free Up&#10;",
+     27.6406,
+     22.9219
+    ]
+   ]
+  },
+  "5:2935": {
+   "frame": "5:2874",
+   "chars": "Remove duplicate photos and large videos to free up space on your iPhone.",
+   "lines": [
+    [
+     "free up space on your iPhone.",
+     49.7959,
+     30.6804
+    ]
+   ]
+  },
+  "I5:2936;46:20947": {
+   "frame": "5:2874",
+   "chars": "Get Started",
+   "lines": []
+  },
+  "5:2947": {
+   "frame": "5:2874",
+   "chars": "Seciro",
+   "lines": []
+  },
+  "5:2978": {
+   "frame": "5:2948",
+   "chars": "One App.\nFewer Digital Worries.",
+   "lines": [
+    [
+     "One App.&#10;",
+     84.3594,
+     23.2344
+    ]
+   ]
+  },
+  "5:2979": {
+   "frame": "5:2948",
+   "chars": "Unlock every Seciro tool and keep your connection, browsing, links, and storage under control",
+   "lines": [
+    [
+     "browsing, links, and storage under control",
+     25.8828,
+     25.4403
+    ]
+   ]
+  },
+  "5:3003": {
+   "frame": "5:2948",
+   "chars": "Private VPN",
+   "lines": []
+  },
+  "5:3004": {
+   "frame": "5:2948",
+   "chars": "Browse securely anywhere",
+   "lines": []
+  },
+  "5:3009": {
+   "frame": "5:2948",
+   "chars": "Scam & Ad Blocker",
+   "lines": []
+  },
+  "5:3010": {
+   "frame": "5:2948",
+   "chars": "Block scams, trackers & ads",
+   "lines": []
+  },
+  "I5:3042;46:22071": {
+   "frame": "5:2948",
+   "chars": "3 day free trial",
+   "lines": []
+  },
+  "I5:3042;46:22072": {
+   "frame": "5:2948",
+   "chars": "Weekly\n$8.99",
+   "lines": [
+    [
+     "$8.99",
+     4.40137,
+     30.2727
+    ]
+   ]
+  },
+  "I5:3042;46:22073": {
+   "frame": "5:2948",
+   "chars": "$1.29/day",
+   "lines": []
+  },
+  "I5:3043;46:22076": {
+   "frame": "5:2948",
+   "chars": "Popular",
+   "lines": []
+  },
+  "I5:3043;46:22077": {
+   "frame": "5:2948",
+   "chars": "Monthly\n$29.99",
+   "lines": [
+    [
+     "$29.99",
+     2.28613,
+     30.2727
+    ]
+   ]
+  },
+  "I5:3043;46:22078": {
+   "frame": "5:2948",
+   "chars": "$0.99/day",
+   "lines": []
+  },
+  "I5:3044;46:22086": {
+   "frame": "5:2948",
+   "chars": "Saving",
+   "lines": []
+  },
+  "I5:3044;46:22087": {
+   "frame": "5:2948",
+   "chars": "Yearly\n$69.99",
+   "lines": [
+    [
+     "Yearly&#10;",
+     2.6748,
+     10.2727
+    ]
+   ]
+  },
+  "I5:3044;46:22088": {
+   "frame": "5:2948",
+   "chars": "$0.19/day",
+   "lines": []
+  },
+  "5:3045": {
+   "frame": "5:2948",
+   "chars": "Auto-Renewable, Cancel Anytime",
+   "lines": []
+  },
+  "I5:3046;46:20950": {
+   "frame": "5:2948",
+   "chars": "I already have an account",
+   "lines": []
+  },
+  "I5:3047;46:20947": {
+   "frame": "5:2948",
+   "chars": "Try 3 Days for $0.99",
+   "lines": []
+  },
+  "5:3049": {
+   "frame": "5:2948",
+   "chars": "Terms of Use",
+   "lines": []
+  },
+  "5:3050": {
+   "frame": "5:2948",
+   "chars": "Privacy Policy",
+   "lines": []
+  },
+  "5:3054": {
+   "frame": "5:2948",
+   "chars": "Restore",
+   "lines": []
+  },
+  "5:3085": {
+   "frame": "5:3055",
+   "chars": "One App.\nFewer Digital Worries.",
+   "lines": [
+    [
+     "One App.&#10;",
+     84.3594,
+     23.2344
+    ]
+   ]
+  },
+  "5:3086": {
+   "frame": "5:3055",
+   "chars": "Unlock every Seciro tool and keep your connection, browsing, links, and storage under control",
+   "lines": [
+    [
+     "browsing, links, and storage under control",
+     25.8828,
+     25.4403
+    ]
+   ]
+  },
+  "5:3110": {
+   "frame": "5:3055",
+   "chars": "Private VPN",
+   "lines": []
+  },
+  "5:3111": {
+   "frame": "5:3055",
+   "chars": "Browse securely anywhere",
+   "lines": []
+  },
+  "5:3116": {
+   "frame": "5:3055",
+   "chars": "Scam & Ad Blocker",
+   "lines": []
+  },
+  "5:3117": {
+   "frame": "5:3055",
+   "chars": "Block scams, trackers & ads",
+   "lines": []
+  },
+  "I5:3149;46:22066": {
+   "frame": "5:3055",
+   "chars": "3 day free trial",
+   "lines": []
+  },
+  "I5:3149;46:22067": {
+   "frame": "5:3055",
+   "chars": "Weekly\n$8.99",
+   "lines": [
+    [
+     "$8.99",
+     4.40137,
+     30.2727
+    ]
+   ]
+  },
+  "I5:3149;46:22068": {
+   "frame": "5:3055",
+   "chars": "$1.29/day",
+   "lines": []
+  },
+  "I5:3150;46:22081": {
+   "frame": "5:3055",
+   "chars": "Popular",
+   "lines": []
+  },
+  "I5:3150;46:22082": {
+   "frame": "5:3055",
+   "chars": "Monthly\n$29.99",
+   "lines": [
+    [
+     "$29.99",
+     2.28613,
+     30.2727
+    ]
+   ]
+  },
+  "I5:3150;46:22083": {
+   "frame": "5:3055",
+   "chars": "$0.99/day",
+   "lines": []
+  },
+  "I5:3151;46:22086": {
+   "frame": "5:3055",
+   "chars": "Saving",
+   "lines": []
+  },
+  "I5:3151;46:22087": {
+   "frame": "5:3055",
+   "chars": "Yearly\n$69.99",
+   "lines": [
+    [
+     "Yearly&#10;",
+     2.6748,
+     10.2727
+    ]
+   ]
+  },
+  "I5:3151;46:22088": {
+   "frame": "5:3055",
+   "chars": "$0.19/day",
+   "lines": []
+  },
+  "5:3152": {
+   "frame": "5:3055",
+   "chars": "Auto-Renewable, Cancel Anytime",
+   "lines": []
+  },
+  "I5:3153;46:20950": {
+   "frame": "5:3055",
+   "chars": "I already have an account",
+   "lines": []
+  },
+  "I5:3154;46:20947": {
+   "frame": "5:3055",
+   "chars": "Subscribe for $29.99 / month",
+   "lines": []
+  },
+  "5:3156": {
+   "frame": "5:3055",
+   "chars": "Terms of Use",
+   "lines": []
+  },
+  "5:3157": {
+   "frame": "5:3055",
+   "chars": "Privacy Policy",
+   "lines": []
+  },
+  "5:3161": {
+   "frame": "5:3055",
+   "chars": "Restore",
+   "lines": []
+  },
+  "5:3192": {
+   "frame": "5:3162",
+   "chars": "One App.\nFewer Digital Worries.",
+   "lines": [
+    [
+     "One App.&#10;",
+     84.3594,
+     23.2344
+    ]
+   ]
+  },
+  "5:3193": {
+   "frame": "5:3162",
+   "chars": "Unlock every Seciro tool and keep your connection, browsing, links, and storage under control",
+   "lines": [
+    [
+     "browsing, links, and storage under control",
+     25.8828,
+     25.4403
+    ]
+   ]
+  },
+  "5:3217": {
+   "frame": "5:3162",
+   "chars": "Private VPN",
+   "lines": []
+  },
+  "5:3218": {
+   "frame": "5:3162",
+   "chars": "Browse securely anywhere",
+   "lines": []
+  },
+  "5:3223": {
+   "frame": "5:3162",
+   "chars": "Scam & Ad Blocker",
+   "lines": []
+  },
+  "5:3224": {
+   "frame": "5:3162",
+   "chars": "Block scams, trackers & ads",
+   "lines": []
+  },
+  "I5:3256;46:22066": {
+   "frame": "5:3162",
+   "chars": "3 day free trial",
+   "lines": []
+  },
+  "I5:3256;46:22067": {
+   "frame": "5:3162",
+   "chars": "Weekly\n$8.99",
+   "lines": [
+    [
+     "$8.99",
+     4.40137,
+     30.2727
+    ]
+   ]
+  },
+  "I5:3256;46:22068": {
+   "frame": "5:3162",
+   "chars": "$1.29/day",
+   "lines": []
+  },
+  "I5:3257;46:22076": {
+   "frame": "5:3162",
+   "chars": "Popular",
+   "lines": []
+  },
+  "I5:3257;46:22077": {
+   "frame": "5:3162",
+   "chars": "Monthly\n$29.99",
+   "lines": [
+    [
+     "$29.99",
+     2.28613,
+     30.2727
+    ]
+   ]
+  },
+  "I5:3257;46:22078": {
+   "frame": "5:3162",
+   "chars": "$0.99/day",
+   "lines": []
+  },
+  "I5:3258;46:22091": {
+   "frame": "5:3162",
+   "chars": "Saving",
+   "lines": []
+  },
+  "I5:3258;46:22092": {
+   "frame": "5:3162",
+   "chars": "Yearly\n$69.99",
+   "lines": [
+    [
+     "Yearly&#10;",
+     2.6748,
+     10.2727
+    ]
+   ]
+  },
+  "I5:3258;46:22093": {
+   "frame": "5:3162",
+   "chars": "$0.19/day",
+   "lines": []
+  },
+  "5:3259": {
+   "frame": "5:3162",
+   "chars": "Auto-Renewable, Cancel Anytime",
+   "lines": []
+  },
+  "I5:3260;46:20950": {
+   "frame": "5:3162",
+   "chars": "I already have an account",
+   "lines": []
+  },
+  "I5:3261;46:20947": {
+   "frame": "5:3162",
+   "chars": "Subscribe for $69.99 / year",
+   "lines": []
+  },
+  "5:3263": {
+   "frame": "5:3162",
+   "chars": "Terms of Use",
+   "lines": []
+  },
+  "5:3264": {
+   "frame": "5:3162",
+   "chars": "Privacy Policy",
+   "lines": []
+  },
+  "5:3268": {
+   "frame": "5:3162",
+   "chars": "Restore",
+   "lines": []
+  }
+ }
+}
