@@ -87,9 +87,11 @@ CSS-переходи й анімації (інакше елементи «зас
 
 ## Залежності й питання до менеджера
 
-Звіт (3 мови, VELDAN): https://claude.ai/artifact/Hj3FPMn8KawTvA1gCBkAUa — кожна функція з макета: на пристрої / наш сервер /
-сторонній платний сервіс / на Android інакше; список питань менеджеру; тонкощі ✔/◌ з джерелами (VpnService Play,
-HIBP від $4.39/міс, Safe Browsing не комерційний → Web Risk). Копію в репо — лише на прохання VELDAN.
+**Кіт для менеджера** (3 мови, VELDAN): https://claude.ai/artifact/Hj3FPMn8KawTvA1gCBkAUa — вкладки «Прототип»
+(посилання + мініатюри), «Робимо самі», «Від вас потрібно» (9 питань: факт ✔/◌ + що потрібно; відповіді «Є / Немає / Не знаю»
++ коментар зберігаються в db сторінки, колекція `answers/<id>`: api, subs, vpn, web, breach, qr, support, design, play).
+Менеджеру потрібен доступ Contributor або Editor. Прочитати відповіді: ArtifactData list `answers`. Джерела фактів:
+VpnService Play, HIBP від $4.39/міс, Safe Browsing не комерційний → Web Risk. Копію в репо — лише на прохання VELDAN.
 - Інструкція Safari → **Google Chrome** (рішення VELDAN 24.11): логотип з «Apps Logo Set» (5:9492), кроки «Use secure DNS»;
   у текстах рендерера Safari → Chrome (`SUBST` у fig.jsx). Кроки залежать від того, чи буде наш DNS-сервер (питання в звіті).
 - «vpn btn» 5:8681: варіанти 2→5 — дуга обертається за годинниковою (прототип: `vpn-arc-spin`).

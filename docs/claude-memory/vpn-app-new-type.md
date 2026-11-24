@@ -79,5 +79,5 @@ metadata:
 - QA 24.11 (VELDAN: «немає іконок, прапори квадрати, хвилі не анімуються»): звіряти й живий режим (`proto-diff.py --live`),
   прокручені низи; збирач v7 у `claude/tools/figma-collector.js`; переходи двошарові; хвилі VPN процедурні.
   Оцінка реалізовності на Android — у `claude/README.md` (Web Protection = DNS-фільтр у нашому VpnService, не Safari).
-- Звіт залежностей для менеджера (24.11): https://claude.ai/artifact/Hj3FPMn8KawTvA1gCBkAUa (УКР/РУС/ENG). Апка вже є на iOS,
+- Кіт для менеджера (24.11): https://claude.ai/artifact/Hj3FPMn8KawTvA1gCBkAUa (УКР/РУС/ENG): прототип, «робимо самі», 9 питань з відповідями в db (`answers`) — на «перевір відповіді» читати ArtifactData list answers. Апка вже є на iOS,
   задача — Android; головні питання: API iOS, облік підписок, WireGuard на сервері, Web Protection (Chrome без розширень).
