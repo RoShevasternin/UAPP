@@ -74,7 +74,7 @@ import scanFull from "../claude/figma/scan/progress-full.png";
 import scanRowScan from "../claude/figma/scan/row-scanning.png";
 import scanRowOk from "../claude/figma/scan/row-ok.png";
 
-export const BUILD = 13;   // піднімати на кожну публікацію
+export const BUILD = 14;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
@@ -944,6 +944,14 @@ export default function Seciro() {
   const onAuth = (id) => { setScreen(id); store.set("seciro.screen", id); };
   const onIndex = (i) => { if (ONB_IDS[i] !== screen) { setScreen(ONB_IDS[i]); store.set("seciro.screen", ONB_IDS[i]); } };
   const [frame, frameNode] = screen === "paywall" ? PW_FRAMES[plan] : [cur.frame, cur.node];
+  // список екранів скролиться окремо; поточний екран сам підкручується в поле зору (лише список, не сторінку)
+  const listRef = useRef(null);
+  useEffect(() => {
+    const ul = listRef.current, b = ul && ul.querySelector('[aria-current="true"]'); if (!b) return;
+    const top = b.offsetTop - ul.offsetTop, bottom = top + b.offsetHeight;
+    if (top < ul.scrollTop + 8) ul.scrollTo({ top: top - 8, behavior: "smooth" });
+    else if (bottom > ul.scrollTop + ul.clientHeight - 8) ul.scrollTo({ top: bottom - ul.clientHeight + 8, behavior: "smooth" });
+  }, [screen]);
   const [overlay, setOverlay] = useState(0);   // 0 — вимкнено, інакше прозорість кадру Figma поверх телефона
   const slotW = 375 * scale + (window.innerWidth > 1000 ? 20 : 0);
 
@@ -1005,10 +1013,10 @@ export default function Seciro() {
       <aside className="panel" aria-label="Prototype screens">
         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
           <h1>Seciro · prototype</h1>
-          <p className="sub">Row 1 of the Figma: splash → onboarding → paywall. Click inside the phone like in the app.</p>
+          <p className="sub">Rows 1–3 of the Figma. Click inside the phone like in the app.</p>
         </div>
         <div className="label">Screens</div>
-        <ul className="scr-list">
+        <ul className="scr-list" ref={listRef}>
           {SCREENS.map((s) => (
             <li key={s.id}>
               <button aria-current={s.id === screen} onClick={() => go(s.id)}>
