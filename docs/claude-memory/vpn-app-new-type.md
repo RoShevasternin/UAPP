@@ -39,3 +39,10 @@ metadata:
   у репо поруч з проєктом; пакування — безкоштовним TexturePacker з libGDX (gdx-tools), не
   CLI TexturePacker (вотермарка, див. [[mindora-texturepacker-cli]]); фільтр Linear + mipmaps;
   перевірка — скріншот з телефона поруч зі скріншотом фрейму.
+- **Безкоштовний доступ до Figma (пошук 24.11.2026):** (A) основний — вбудований браузер +
+  глобальний `figma` у консолі сторінки (офіційно «в кожному вікні Figma»; у view-only його
+  прибирали → потрібен доступ на редагування); експорт `exportAsync` SVG/PNG і оригінали
+  заливок `getImageByHash(...).getBytesAsync()`; перевірити на першому файлі. (B) запасний —
+  Talk to Figma MCP (github grab/cursor-talk-to-figma-mcp, MIT, плагін у Community, без токена
+  й лімітів; PNG віддає base64 «limited»; потрібні bun + websocket). Не брати figma-console-mcp
+  і Framelink — потребують особистий токен і частково REST (Starter ≈ 6 запитів/міс).
