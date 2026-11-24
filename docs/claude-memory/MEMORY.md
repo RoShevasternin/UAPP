@@ -29,3 +29,4 @@
 - [Driftglass: тестова апка шпалер](driftglass-app.md) — LibGDX-апка: з 15.10.2026 businesModule як Redwave/Framefall (картка home, FCM), маркет-кіт, лише EN, лаунчер з авто-папками; privacy ще не на Cloudflare
 - [Framefall: тестова апка Video Downloader](framefall-app.md) — poc/TEST_APP/Game Framefall: з 13.10.2026 Android-проєкт з каркаса Redwave (UAPP-логіка), пакет com.vidtools.framefall (картка сервера = останній сегмент), OES-відео, Studio
 - [TEST_APP: нові апки — нові акаунти Play](test-app-new-play-accounts.md) — Driftglass = Strategic Access Ventures, Framefall = CAPSLOCK LTD; у політиці без Remote Config і Custom Tab, Firebase — загально
+- [UAPP: локально sparse-клон](uapp-sparse-local.md) — з 24.11.2026 на диску лише корінь, docs, november; старі теки повертати `git sparse-checkout add`
