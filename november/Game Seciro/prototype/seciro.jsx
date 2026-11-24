@@ -60,7 +60,7 @@ import r2f09 from "../claude/figma/frames/r2_09_5-4589.png";
 import r2f10 from "../claude/figma/frames/r2_10_5-4668.png";
 import r2f11 from "../claude/figma/frames/r2_11_5-4722.png";
 
-export const BUILD = 9;   // піднімати на кожну публікацію
+export const BUILD = 10;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
@@ -550,7 +550,9 @@ function CodeCard({ code, focus, error, onFocus, shake }) {
       )}
       <Abs x={16} y={lineY} w={311} h={1} style={{ background: a(C.grey, .15), transition: "top .3s cubic-bezier(.2,.8,.2,1)" }} />
       <Abs x={16} y={lineY + 16} w={311} h={64} style={{ transition: "top .3s cubic-bezier(.2,.8,.2,1)" }}>
-        <div className="tap" data-act="other" style={{ margin: "0 auto", width: 139, fontSize: 14, lineHeight: "20px", color: C.blue, textAlign: "center" }}>Use a different email</div>
+        <div className="tap" data-act="other" style={{ margin: "0 auto", width: 139, fontSize: 14, lineHeight: "20px", color: C.blue, textAlign: "center",
+          /* у Figma: UNDERLINE, товщина й відступ AUTO, skip ink */
+          textDecoration: "underline", textDecorationThickness: "auto", textUnderlineOffset: "auto", textDecorationSkipInk: "auto" }}>Use a different email</div>
         <div style={{ marginTop: 12, fontSize: 12, lineHeight: "16px", color: C.grey, textAlign: "center", whiteSpace: "pre-line" }}>{"Didn't get it? Check spam, or make sure\nit's the email from your purchase."}</div>
       </Abs>
     </Abs>
