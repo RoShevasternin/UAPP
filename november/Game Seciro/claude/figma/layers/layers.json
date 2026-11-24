@@ -1,0 +1,790 @@
+{
+ "5:2620": [
+  {
+   "file": "layers/5-2620/00_Shape_Set.png",
+   "name": "Shape Set",
+   "type": "INSTANCE",
+   "x": 0.5,
+   "y": 85,
+   "w": 374.67,
+   "h": 375
+  },
+  {
+   "file": "layers/5-2620/01_phone.png",
+   "name": "phone",
+   "type": "FRAME",
+   "x": 116,
+   "y": 150,
+   "w": 146,
+   "h": 258
+  },
+  {
+   "file": "layers/5-2620/02_Frame.png",
+   "name": "Frame",
+   "type": "FRAME",
+   "x": 197.12,
+   "y": 255.12,
+   "w": 151.67,
+   "h": 151.67
+  },
+  {
+   "file": "layers/5-2620/03_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 16,
+   "y": 406,
+   "w": 344,
+   "h": 2
+  },
+  {
+   "file": "layers/5-2620/04_Vector_26.png",
+   "name": "Vector 26",
+   "type": "VECTOR",
+   "x": 256,
+   "y": 138,
+   "w": 18,
+   "h": 18
+  },
+  {
+   "file": "layers/5-2620/05_Group_10.png",
+   "name": "Group 10",
+   "type": "GROUP",
+   "x": 37,
+   "y": 231,
+   "w": 64,
+   "h": 92
+  },
+  {
+   "file": "layers/5-2620/06_Frame.png",
+   "name": "Frame",
+   "type": "FRAME",
+   "x": 277,
+   "y": 203,
+   "w": 64,
+   "h": 64
+  },
+  {
+   "file": "layers/5-2620/07_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 279,
+   "y": 165,
+   "w": 24,
+   "h": 24
+  },
+  {
+   "file": "layers/5-2620/08_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 313,
+   "y": 275,
+   "w": 32,
+   "h": 32
+  },
+  {
+   "file": "layers/5-2620/09_Rectangle_1753.png",
+   "name": "Rectangle 1753",
+   "type": "RECTANGLE",
+   "x": 25,
+   "y": 349,
+   "w": 16,
+   "h": 16
+  },
+  {
+   "file": "layers/5-2620/10_Vector_22.png",
+   "name": "Vector 22",
+   "type": "VECTOR",
+   "x": 48,
+   "y": 352,
+   "w": 50,
+   "h": 2
+  },
+  {
+   "file": "layers/5-2620/11_Vector_23.png",
+   "name": "Vector 23",
+   "type": "VECTOR",
+   "x": 48,
+   "y": 360,
+   "w": 26,
+   "h": 2
+  },
+  {
+   "file": "layers/5-2620/12_material_symbols_image.png",
+   "name": "material-symbols:image",
+   "type": "INSTANCE",
+   "x": 43,
+   "y": 137,
+   "w": 64,
+   "h": 64
+  },
+  {
+   "file": "layers/5-2620/13_material_symbols_smart_display.png",
+   "name": "material-symbols:smart-display",
+   "type": "INSTANCE",
+   "x": 83,
+   "y": 193,
+   "w": 48,
+   "h": 48
+  }
+ ],
+ "5:2557": [
+  {
+   "file": "layers/5-2557/00_phone.png",
+   "name": "phone",
+   "type": "FRAME",
+   "x": 116,
+   "y": 195,
+   "w": 146,
+   "h": 258
+  },
+  {
+   "file": "layers/5-2557/01_Frame.png",
+   "name": "Frame",
+   "type": "FRAME",
+   "x": 197.12,
+   "y": 300.12,
+   "w": 151.67,
+   "h": 151.67
+  },
+  {
+   "file": "layers/5-2557/02_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 16,
+   "y": 451,
+   "w": 344,
+   "h": 2
+  },
+  {
+   "file": "layers/5-2557/03_Vector_26.png",
+   "name": "Vector 26",
+   "type": "VECTOR",
+   "x": 256,
+   "y": 183,
+   "w": 18,
+   "h": 18
+  },
+  {
+   "file": "layers/5-2557/04_Group_10.png",
+   "name": "Group 10",
+   "type": "GROUP",
+   "x": 37,
+   "y": 276,
+   "w": 64,
+   "h": 92
+  },
+  {
+   "file": "layers/5-2557/05_Frame.png",
+   "name": "Frame",
+   "type": "FRAME",
+   "x": 277,
+   "y": 248,
+   "w": 64,
+   "h": 64
+  },
+  {
+   "file": "layers/5-2557/06_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 279,
+   "y": 210,
+   "w": 24,
+   "h": 24
+  },
+  {
+   "file": "layers/5-2557/07_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 83,
+   "y": 248,
+   "w": 24,
+   "h": 24
+  },
+  {
+   "file": "layers/5-2557/08_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 313,
+   "y": 320,
+   "w": 32,
+   "h": 32
+  },
+  {
+   "file": "layers/5-2557/09_Rectangle_1753.png",
+   "name": "Rectangle 1753",
+   "type": "RECTANGLE",
+   "x": 25,
+   "y": 394,
+   "w": 16,
+   "h": 16
+  },
+  {
+   "file": "layers/5-2557/10_Vector_22.png",
+   "name": "Vector 22",
+   "type": "VECTOR",
+   "x": 48,
+   "y": 397,
+   "w": 50,
+   "h": 2
+  },
+  {
+   "file": "layers/5-2557/11_Vector_23.png",
+   "name": "Vector 23",
+   "type": "VECTOR",
+   "x": 48,
+   "y": 405,
+   "w": 26,
+   "h": 2
+  }
+ ],
+ "5:2683": [
+  {
+   "file": "layers/5-2683/00_Group_1.png",
+   "name": "Group 1",
+   "type": "GROUP",
+   "x": 37,
+   "y": 256,
+   "w": 96,
+   "h": 96
+  },
+  {
+   "file": "layers/5-2683/01_Frame.png",
+   "name": "Frame",
+   "type": "FRAME",
+   "x": 229,
+   "y": 250,
+   "w": 128,
+   "h": 128
+  },
+  {
+   "file": "layers/5-2683/02_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 115,
+   "y": 272,
+   "w": 148,
+   "h": 180
+  },
+  {
+   "file": "layers/5-2683/03_Frame.png",
+   "name": "Frame",
+   "type": "FRAME",
+   "x": 237,
+   "y": 386,
+   "w": 48,
+   "h": 48
+  },
+  {
+   "file": "layers/5-2683/04_Union.png",
+   "name": "Union",
+   "type": "VECTOR",
+   "x": 143,
+   "y": 316,
+   "w": 92,
+   "h": 34
+  },
+  {
+   "file": "layers/5-2683/05_material_symbols_vpn_lock.png",
+   "name": "material-symbols:vpn-lock",
+   "type": "INSTANCE",
+   "x": 157,
+   "y": 360,
+   "w": 64,
+   "h": 64
+  },
+  {
+   "file": "layers/5-2683/06_Ellipse_8.png",
+   "name": "Ellipse 8",
+   "type": "VECTOR",
+   "x": 112,
+   "y": 221,
+   "w": 154,
+   "h": 34
+  },
+  {
+   "file": "layers/5-2683/07_Frame.png",
+   "name": "Frame",
+   "type": "FRAME",
+   "x": 157,
+   "y": 190,
+   "w": 64,
+   "h": 64
+  },
+  {
+   "file": "layers/5-2683/08_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 47,
+   "y": 372,
+   "w": 80,
+   "h": 80
+  },
+  {
+   "file": "layers/5-2683/09_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 16,
+   "y": 451,
+   "w": 344,
+   "h": 2
+  },
+  {
+   "file": "layers/5-2683/10_Vector_26.png",
+   "name": "Vector 26",
+   "type": "VECTOR",
+   "x": 212,
+   "y": 181,
+   "w": 18,
+   "h": 18
+  }
+ ],
+ "5:2747": [
+  {
+   "file": "layers/5-2747/00_Union.png",
+   "name": "Union",
+   "type": "BOOLEAN_OPERATION",
+   "x": 17,
+   "y": 182,
+   "w": 104,
+   "h": 68
+  },
+  {
+   "file": "layers/5-2747/01_material_symbols_skull.png",
+   "name": "material-symbols:skull",
+   "type": "INSTANCE",
+   "x": 49,
+   "y": 200,
+   "w": 40,
+   "h": 40
+  },
+  {
+   "file": "layers/5-2747/02_Frame.png",
+   "name": "Frame",
+   "type": "FRAME",
+   "x": 229,
+   "y": 250,
+   "w": 128,
+   "h": 128
+  },
+  {
+   "file": "layers/5-2747/03_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 115,
+   "y": 272,
+   "w": 148,
+   "h": 180
+  },
+  {
+   "file": "layers/5-2747/04_Group_2.png",
+   "name": "Group 2",
+   "type": "GROUP",
+   "x": 141,
+   "y": 310,
+   "w": 96,
+   "h": 96
+  },
+  {
+   "file": "layers/5-2747/05_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 47,
+   "y": 372,
+   "w": 80,
+   "h": 80
+  },
+  {
+   "file": "layers/5-2747/06_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 16,
+   "y": 451,
+   "w": 344,
+   "h": 2
+  },
+  {
+   "file": "layers/5-2747/07_Vector_26.png",
+   "name": "Vector 26",
+   "type": "VECTOR",
+   "x": 212,
+   "y": 199,
+   "w": 18,
+   "h": 18
+  },
+  {
+   "file": "layers/5-2747/08_Frame.png",
+   "name": "Frame",
+   "type": "FRAME",
+   "x": 229,
+   "y": 378,
+   "w": 64,
+   "h": 64
+  },
+  {
+   "file": "layers/5-2747/09_Vector_27.png",
+   "name": "Vector 27",
+   "type": "VECTOR",
+   "x": 68,
+   "y": 255,
+   "w": 42,
+   "h": 96
+  },
+  {
+   "file": "layers/5-2747/10_Frame.png",
+   "name": "Frame",
+   "type": "FRAME",
+   "x": 49,
+   "y": 278,
+   "w": 40,
+   "h": 40
+  },
+  {
+   "file": "layers/5-2747/11_Union.png",
+   "name": "Union",
+   "type": "VECTOR",
+   "x": 155,
+   "y": 198,
+   "w": 68,
+   "h": 60
+  },
+  {
+   "file": "layers/5-2747/12_material_symbols_priority_high.png",
+   "name": "material-symbols:priority-high",
+   "type": "INSTANCE",
+   "x": 169,
+   "y": 212,
+   "w": 40,
+   "h": 40
+  }
+ ],
+ "5:2815": [
+  {
+   "file": "layers/5-2815/00_Group_1.png",
+   "name": "Group 1",
+   "type": "GROUP",
+   "x": 255,
+   "y": 190,
+   "w": 96,
+   "h": 96
+  },
+  {
+   "file": "layers/5-2815/01_phone.png",
+   "name": "phone",
+   "type": "FRAME",
+   "x": 116,
+   "y": 195,
+   "w": 146,
+   "h": 258
+  },
+  {
+   "file": "layers/5-2815/02_Frame_1171276188.png",
+   "name": "Frame 1171276188",
+   "type": "FRAME",
+   "x": 17,
+   "y": 182,
+   "w": 68,
+   "h": 68
+  },
+  {
+   "file": "layers/5-2815/03_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 31,
+   "y": 340,
+   "w": 112,
+   "h": 112
+  },
+  {
+   "file": "layers/5-2815/04_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 16,
+   "y": 451,
+   "w": 344,
+   "h": 2
+  },
+  {
+   "file": "layers/5-2815/05_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 246,
+   "y": 314.92,
+   "w": 114,
+   "h": 138.33
+  },
+  {
+   "file": "layers/5-2815/06_material_symbols_check_circle.png",
+   "name": "material-symbols:check-circle",
+   "type": "INSTANCE",
+   "x": 267,
+   "y": 344,
+   "w": 72,
+   "h": 72
+  },
+  {
+   "file": "layers/5-2815/07_Frame.png",
+   "name": "Frame",
+   "type": "FRAME",
+   "x": 61,
+   "y": 226,
+   "w": 48,
+   "h": 48
+  },
+  {
+   "file": "layers/5-2815/08_Vector_27.png",
+   "name": "Vector 27",
+   "type": "VECTOR",
+   "x": 50,
+   "y": 255,
+   "w": 62,
+   "h": 58
+  },
+  {
+   "file": "layers/5-2815/09_Vector_26.png",
+   "name": "Vector 26",
+   "type": "VECTOR",
+   "x": 338,
+   "y": 185,
+   "w": 18,
+   "h": 18
+  }
+ ],
+ "5:2874": [
+  {
+   "file": "layers/5-2874/00_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 31,
+   "y": 328,
+   "w": 24,
+   "h": 24
+  },
+  {
+   "file": "layers/5-2874/01_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 309,
+   "y": 274,
+   "w": 24,
+   "h": 24
+  },
+  {
+   "file": "layers/5-2874/02_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 271,
+   "y": 226,
+   "w": 48,
+   "h": 48
+  },
+  {
+   "file": "layers/5-2874/03_phone.png",
+   "name": "phone",
+   "type": "FRAME",
+   "x": 116,
+   "y": 195,
+   "w": 146,
+   "h": 258
+  },
+  {
+   "file": "layers/5-2874/04_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 31,
+   "y": 340,
+   "w": 112,
+   "h": 112
+  },
+  {
+   "file": "layers/5-2874/05_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 16,
+   "y": 451,
+   "w": 344,
+   "h": 2
+  },
+  {
+   "file": "layers/5-2874/06_Vector_26.png",
+   "name": "Vector 26",
+   "type": "VECTOR",
+   "x": 298,
+   "y": 333,
+   "w": 18,
+   "h": 18
+  },
+  {
+   "file": "layers/5-2874/07_Group_4.png",
+   "name": "Group 4",
+   "type": "GROUP",
+   "x": 269.77,
+   "y": 296,
+   "w": 80,
+   "h": 40.33
+  },
+  {
+   "file": "layers/5-2874/08_Frame.png",
+   "name": "Frame",
+   "type": "FRAME",
+   "x": 249.61,
+   "y": 334.61,
+   "w": 59,
+   "h": 59
+  },
+  {
+   "file": "layers/5-2874/09_Group_5.png",
+   "name": "Group 5",
+   "type": "GROUP",
+   "x": 240,
+   "y": 375,
+   "w": 78,
+   "h": 78
+  },
+  {
+   "file": "layers/5-2874/10_material_symbols_image.png",
+   "name": "material-symbols:image",
+   "type": "INSTANCE",
+   "x": 43,
+   "y": 210,
+   "w": 64,
+   "h": 64
+  },
+  {
+   "file": "layers/5-2874/11_material_symbols_smart_display.png",
+   "name": "material-symbols:smart-display",
+   "type": "INSTANCE",
+   "x": 83,
+   "y": 266,
+   "w": 48,
+   "h": 48
+  }
+ ],
+ "5:2948": [
+  {
+   "file": "layers/5-2948/00_Shape_Set.png",
+   "name": "Shape Set",
+   "type": "INSTANCE",
+   "x": 93.75,
+   "y": 49.75,
+   "w": 187.67,
+   "h": 187.67
+  },
+  {
+   "file": "layers/5-2948/01_phone.png",
+   "name": "phone",
+   "type": "FRAME",
+   "x": 151.5,
+   "y": 82.5,
+   "w": 73,
+   "h": 129
+  },
+  {
+   "file": "layers/5-2948/02_Frame.png",
+   "name": "Frame",
+   "type": "FRAME",
+   "x": 192.06,
+   "y": 135.06,
+   "w": 76,
+   "h": 76
+  },
+  {
+   "file": "layers/5-2948/03_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 101.5,
+   "y": 210.5,
+   "w": 172,
+   "h": 1
+  },
+  {
+   "file": "layers/5-2948/04_Vector_26.png",
+   "name": "Vector 26",
+   "type": "VECTOR",
+   "x": 221.5,
+   "y": 76.5,
+   "w": 9,
+   "h": 9
+  },
+  {
+   "file": "layers/5-2948/05_Group_10.png",
+   "name": "Group 10",
+   "type": "GROUP",
+   "x": 112,
+   "y": 123,
+   "w": 32,
+   "h": 46
+  },
+  {
+   "file": "layers/5-2948/06_Frame.png",
+   "name": "Frame",
+   "type": "FRAME",
+   "x": 232,
+   "y": 109,
+   "w": 32,
+   "h": 32
+  },
+  {
+   "file": "layers/5-2948/07_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 233,
+   "y": 90,
+   "w": 12,
+   "h": 12
+  },
+  {
+   "file": "layers/5-2948/08_Vector.png",
+   "name": "Vector",
+   "type": "VECTOR",
+   "x": 250,
+   "y": 145,
+   "w": 16,
+   "h": 16
+  },
+  {
+   "file": "layers/5-2948/09_Rectangle_1753.png",
+   "name": "Rectangle 1753",
+   "type": "RECTANGLE",
+   "x": 106,
+   "y": 182,
+   "w": 8,
+   "h": 8
+  },
+  {
+   "file": "layers/5-2948/10_Vector_22.png",
+   "name": "Vector 22",
+   "type": "VECTOR",
+   "x": 117.5,
+   "y": 183.5,
+   "w": 25,
+   "h": 1
+  },
+  {
+   "file": "layers/5-2948/11_Vector_23.png",
+   "name": "Vector 23",
+   "type": "VECTOR",
+   "x": 117.5,
+   "y": 187.5,
+   "w": 13,
+   "h": 1
+  },
+  {
+   "file": "layers/5-2948/12_material_symbols_image.png",
+   "name": "material-symbols:image",
+   "type": "INSTANCE",
+   "x": 115,
+   "y": 76,
+   "w": 32,
+   "h": 32
+  },
+  {
+   "file": "layers/5-2948/13_material_symbols_smart_display.png",
+   "name": "material-symbols:smart-display",
+   "type": "INSTANCE",
+   "x": 135,
+   "y": 104,
+   "w": 24,
+   "h": 24
+  }
+ ]
+}

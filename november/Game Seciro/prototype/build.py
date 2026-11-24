@@ -59,6 +59,27 @@ def fetch(name, version):
         os.chmod(ESBUILD, 0o755)
 
 
+def gen_layers():
+    """Ілюстрації онбордингу пошарово (claude/figma/layers) → .tools/layers.gen.js: {кадр: [{src, name, x, y, w, h}]}."""
+    import json
+    base = os.path.join(HERE, "..", "claude", "figma")
+    data = json.load(open(os.path.join(base, "layers", "layers.json")))
+    lines, out = [], {}
+    n = 0
+    for fid, layers in data.items():
+        out[fid] = []
+        for l in layers:
+            var = f"L{n}"; n += 1
+            lines.append(f"import {var} from {json.dumps(os.path.abspath(os.path.join(base, l['file'])))};")
+            out[fid].append((var, l))
+    body = ",\n".join(
+        json.dumps(fid) + ": [" + ", ".join(
+            "{src: %s, name: %s, x: %s, y: %s, w: %s, h: %s}" % (v, json.dumps(l["name"]), l["x"], l["y"], l["w"], l["h"]) for v, l in ls) + "]"
+        for fid, ls in out.items())
+    with open(os.path.join(TOOLS, "layers.gen.js"), "w") as f:
+        f.write("\n".join(lines) + "\nexport default {\n" + body + "\n};\n")
+
+
 def bundle():
     entry = os.path.join(TOOLS, "entry.jsx")
     with open(entry, "w") as f:
@@ -85,6 +106,7 @@ def main():
     os.makedirs(NM, exist_ok=True)
     for name, ver in PACKAGES.items():
         fetch(name, ver)
+    gen_layers()
     js = bundle()
     if "--check" in sys.argv:
         print("ok, bundle", len(js) // 1024, "KB")
