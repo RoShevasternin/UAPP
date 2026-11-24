@@ -67,8 +67,15 @@ body { background: var(--page); color: var(--ink); font-family: var(--ui); }
 .pbtn:focus-visible, .scr-list button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .note { font-size: 12px; color: var(--muted); line-height: 1.45; margin: 0; }
 .note b { color: var(--ink); font-weight: 600; }
+.pbtn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.pbtn:disabled { opacity: .45; cursor: default; }
+.cap { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding: 0 12px 10px; font-size: 12px; color: var(--muted); }
+.cap b { color: var(--ink); font-size: 13px; font-weight: 700; letter-spacing: .02em; }
+.noframe { height: 100%; display: flex; align-items: center; justify-content: center; text-align: center; padding: 32px;
+  font: 500 14px/1.45 var(--ui); color: #737373; }
+input[type="range"] { accent-color: var(--accent); }
 
-@media (max-width: 720px) {
+@media (max-width: 1000px) {
   .stage { flex-direction: column; align-items: center; padding-block: 12px; gap: 16px; }
   .panel { width: 100%; max-width: 420px; box-sizing: border-box; }
   .phone-shell { border-radius: 0; padding: 0; background: transparent; box-shadow: none; }

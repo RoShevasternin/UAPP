@@ -70,7 +70,7 @@ def bundle():
     out = os.path.join(TOOLS, "bundle.js")
     env = dict(os.environ, NODE_PATH=NM)
     r = subprocess.run([ESBUILD, entry, "--bundle", "--minify", "--format=iife", "--charset=utf8",
-                        "--jsx=automatic", "--target=es2020", "--loader:.svg=dataurl",
+                        "--jsx=automatic", "--target=es2020", "--loader:.svg=dataurl", "--loader:.png=dataurl",
                         "--define:process.env.NODE_ENV=\"production\"",
                         f"--outfile={out}", "--log-level=warning"],
                        env=env, capture_output=True, encoding="utf-8", errors="replace")

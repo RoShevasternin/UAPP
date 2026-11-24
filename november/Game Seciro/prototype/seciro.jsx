@@ -30,8 +30,19 @@ import icSparkles from "../claude/figma/icons/sparkles.svg";
 import icEmail from "../claude/figma/icons/alternate-email.svg";
 import icKey from "../claude/figma/icons/vpn-key.svg";
 import icShield from "../claude/figma/icons/shield.svg";
+// Кадри Figma @2x — для звірки поруч із телефоном (і накладанням поверх)
+import fr01 from "../claude/figma/frames/r1_01_5-2530.png";
+import fr02 from "../claude/figma/frames/r1_02_5-2620.png";
+import fr03 from "../claude/figma/frames/r1_03_5-2557.png";
+import fr04 from "../claude/figma/frames/r1_04_5-2683.png";
+import fr05 from "../claude/figma/frames/r1_05_5-2747.png";
+import fr06 from "../claude/figma/frames/r1_06_5-2815.png";
+import fr07 from "../claude/figma/frames/r1_07_5-2874.png";
+import fr08 from "../claude/figma/frames/r1_08_5-2948.png";
+import fr09 from "../claude/figma/frames/r1_09_5-3055.png";
+import fr10 from "../claude/figma/frames/r1_10_5-3162.png";
 
-export const BUILD = 2;   // піднімати на кожну публікацію
+export const BUILD = 3;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
@@ -273,11 +284,14 @@ function Next({ title, note, back }) {
 }
 
 // ── Карта екранів (порядок = рядами Figma) ──
+const ONB_FRAMES = [fr03, fr04, fr05, fr06, fr07];
+// Кадр paywall у Figma — свій на кожен обраний тариф
+const PW_FRAMES = { weekly: [fr08, "5:2948"], monthly: [fr09, "5:3055"], yearly: [fr10, "5:3162"] };
 const SCREENS = [
-  { id: "splash", name: "Splash", node: "5:2530" },
-  { id: "onb1", name: "Onboarding · intro", node: "5:2620" },
-  ...ONB.map((p, i) => ({ id: p.id, name: `Onboarding · ${i + 1}/5`, node: p.node })),
-  { id: "paywall", name: "Paywall", node: "5:2948" },
+  { id: "splash", name: "Splash", node: "5:2530", frame: fr01 },
+  { id: "onb1", name: "Onboarding · intro", node: "5:2620", frame: fr02 },
+  ...ONB.map((p, i) => ({ id: p.id, name: `Onboarding · ${i + 1}/5`, node: p.node, frame: ONB_FRAMES[i] })),
+  { id: "paywall", name: "Paywall", node: "5:2948", frame: fr08 },
   { id: "signin", name: "Sign in (next row)", node: "5:4374", stub: true },
   { id: "dashboard", name: "Dashboard (later)", node: "5:1686", stub: true },
 ];
@@ -288,10 +302,11 @@ const store = {
 };
 
 function useScale() {
+  // Два телефони (прототип + Figma) і панель: на широкому — в ряд, на вузькому — один під одним
   const calc = () => {
-    const narrow = window.innerWidth <= 720;
-    const w = narrow ? Math.min(window.innerWidth - 32, 420) : 375 * 1.15;
-    const h = narrow ? Infinity : window.innerHeight - 48 - 20;
+    const narrow = window.innerWidth <= 1000;
+    const w = narrow ? Math.min(window.innerWidth - 32, 420) : Math.min(375 * 1.15, (window.innerWidth - 260 - 2 * 28 - 40 - 2 * 20) / 2);
+    const h = narrow ? Infinity : window.innerHeight - 48 - 20 - 30;
     return Math.min(w / 375, h / 812);
   };
   const [s, setS] = useState(calc);
@@ -331,10 +346,14 @@ export default function Seciro() {
   const cur = SCREENS.find((s) => s.id === screen);
   const onb = ONB.find((p) => p.id === screen);
   const nextOf = (id) => ORDER[ORDER.indexOf(id) + 1];
+  const [frame, frameNode] = screen === "paywall" ? PW_FRAMES[plan] : [cur.frame, cur.node];
+  const [overlay, setOverlay] = useState(0);   // 0 — вимкнено, інакше прозорість кадру Figma поверх телефона
+  const slotW = 375 * scale + (window.innerWidth > 1000 ? 20 : 0);
 
   return (
     <div className="stage">
-      <div className="phone-slot" style={{ width: 375 * scale + (window.innerWidth > 720 ? 20 : 0) }}>
+      <div className="phone-slot" style={{ width: slotW }}>
+        <div className="cap"><b>Prototype</b><span>click like in the app</span></div>
         <div className="phone-shell">
           <div className="phone-clip" style={{ width: 375 * scale, height: 812 * scale }}>
             <div className="app" style={{ width: 375, height: 812, position: "absolute", left: 0, top: 0, transform: `scale(${scale})`, transformOrigin: "0 0", background: C.bg }}>
@@ -353,6 +372,20 @@ export default function Seciro() {
                   fontSize: 13, lineHeight: "18px" }} className="enter-fade">{msg}</Abs>
               )}
             </div>
+            {overlay > 0 && frame && (
+              <img src={frame} alt="" draggable={false} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: overlay, pointerEvents: "none", zIndex: 40 }} />
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="phone-slot" style={{ width: slotW }}>
+        <div className="cap"><b>Figma</b><span>{frame ? `frame ${frameNode}` : "no frame yet"}</span></div>
+        <div className="phone-shell">
+          <div className="phone-clip" style={{ width: 375 * scale, height: 812 * scale, background: C.bg }}>
+            {frame
+              ? <img src={frame} alt={`Figma frame ${frameNode}`} draggable={false} style={{ display: "block", width: "100%", height: "100%" }} />
+              : <div className="noframe">This screen comes from a later row of the Figma.</div>}
           </div>
         </div>
       </div>
@@ -376,8 +409,19 @@ export default function Seciro() {
           <button className="pbtn" onClick={back} disabled={!hist.length}>← Back</button>
           <button className="pbtn" onClick={() => { setHist([]); setPlan("weekly"); go("splash", "fade"); }}>Restart</button>
         </div>
-        <p className="note"><b>Now:</b> {cur.name} · Figma {cur.node}{screen === "paywall" ? ` · plan ${plan}` : ""}</p>
-        <p className="note">← → keys step through screens. Status bar here is Android-style; the app itself draws none. Build {BUILD}.</p>
+        <div className="label">Compare</div>
+        <div className="row" role="radiogroup" aria-label="Figma overlay on the prototype">
+          {[[0, "Off"], [0.5, "Overlay 50%"], [1, "Figma only"]].map(([v, t]) => (
+            <button key={t} className="pbtn" aria-pressed={overlay === v} onClick={() => setOverlay(v)}>{t}</button>
+          ))}
+        </div>
+        <label className="note" htmlFor="ovl" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span>Overlay</span>
+          <input id="ovl" type="range" min="0" max="1" step="0.05" value={overlay} onChange={(e) => setOverlay(+e.target.value)} style={{ flex: 1, minWidth: 0 }} />
+          <span style={{ fontVariantNumeric: "tabular-nums", width: 34, textAlign: "right" }}>{Math.round(overlay * 100)}%</span>
+        </label>
+        <p className="note"><b>Now:</b> {cur.name} · Figma {frameNode}{screen === "paywall" ? ` · plan ${plan}` : ""}</p>
+        <p className="note">Overlay puts the Figma frame on top of the prototype: any shift shows as a double edge. The status bar differs on purpose (Figma has iOS, Android draws its own). ← → keys step through screens. Build {BUILD}.</p>
       </aside>
     </div>
   );

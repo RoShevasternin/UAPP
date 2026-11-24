@@ -25,6 +25,8 @@ Breach Check, генератор паролів. Kotlin + LibGDX. Початок
 - Живий: https://claude.ai/artifact/9z6HEgMhdhdYMEeTSKiwwZ (акаунт overchenkolila). Оновлювати — публікація
   того самого файлу `prototype/seciro.html`; `BUILD` у `seciro.jsx` +1 на кожну публікацію.
 - Збірка: `python3 prototype/build.py` (esbuild і React качає сам у `prototype/.tools/`, не в git).
+- Поруч із телефоном — кадр Figma того самого екрана (paywall — під обраний тариф), «Compare» накладає
+  Figma поверх прототипу з прозорістю. Новий екран → кадр у `figma/frames` і `frame` у `SCREENS` обов'язково.
 - Окремий екран за посиланням: `…/artifact/…#paywall` (id — `SCREENS` у `seciro.jsx`).
 - Знімок без claude.ai: `sh claude/tools/proto-shot.sh paywall /tmp/pw.png 900 1000` (headless Chrome).
 - Зроблено: ряд 1 — splash → онбординг (intro + 5) → paywall (3 тарифи, карусель можливостей, мок вікна Google Play).
