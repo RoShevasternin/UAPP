@@ -1,0 +1,2379 @@
+{
+ "id": "5:4846",
+ "name": "code",
+ "type": "FRAME",
+ "x": 0,
+ "y": 0,
+ "w": 375,
+ "h": 812,
+ "fills": [
+  {
+   "solid": "#f1f4f9",
+   "a": 1
+  }
+ ],
+ "children": [
+  {
+   "id": "5:4847",
+   "name": "textblock",
+   "type": "FRAME",
+   "x": 0,
+   "y": 116,
+   "w": 375,
+   "h": 282,
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 16,
+    "p": [
+     16,
+     16,
+     24,
+     16
+    ],
+    "main": "MAX",
+    "cross": "CENTER"
+   },
+   "children": [
+    {
+     "id": "5:4848",
+     "name": "img",
+     "type": "FRAME",
+     "x": 102,
+     "y": -177,
+     "w": 171,
+     "h": 135,
+     "art": true
+    },
+    {
+     "id": "5:4871",
+     "name": "text",
+     "type": "FRAME",
+     "x": 16,
+     "y": -26,
+     "w": 343,
+     "h": 76,
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 12,
+      "p": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "main": "MIN",
+      "cross": "MIN"
+     },
+     "children": [
+      {
+       "id": "5:4872",
+       "name": "Check your email",
+       "type": "TEXT",
+       "x": 0,
+       "y": 0,
+       "w": 343,
+       "h": 24,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Check your email",
+        "font": "Inter Tight Medium",
+        "size": 20,
+        "lh": "24",
+        "ls": "0%",
+        "align": "CENTER"
+       }
+      },
+      {
+       "id": "5:4873",
+       "name": "If this email has a subscription, we’ve sent a code to name@example.com. It expires in 60 minutes.",
+       "type": "TEXT",
+       "x": 0,
+       "y": 36,
+       "w": 343,
+       "h": 40,
+       "fills": "mixed",
+       "text": {
+        "chars": "If this email has a subscription, we’ve sent a code to name@example.com. It expires in 60 minutes.",
+        "font": "Inter Medium",
+        "size": 14,
+        "lh": "20",
+        "ls": "0%",
+        "align": "CENTER",
+        "runs": [
+         {
+          "t": "If this email has a subscription, we’ve sent a code to ",
+          "font": "Inter Medium",
+          "size": 14,
+          "fills": [
+           {
+            "solid": "#737373",
+            "a": 1
+           }
+          ]
+         },
+         {
+          "t": "name@example.com.",
+          "font": "Inter Medium",
+          "size": 14,
+          "fills": [
+           {
+            "solid": "#0b62da",
+            "a": 1
+           }
+          ]
+         },
+         {
+          "t": " It expires in 60 minutes.",
+          "font": "Inter Medium",
+          "size": 14,
+          "fills": [
+           {
+            "solid": "#737373",
+            "a": 1
+           }
+          ]
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "5:4874",
+     "name": "Frame 1171276191",
+     "type": "FRAME",
+     "x": 16,
+     "y": 66,
+     "w": 343,
+     "h": 192,
+     "fills": [
+      {
+       "solid": "#ffffff",
+       "a": 1
+      }
+     ],
+     "r": 16,
+     "fx": [
+      {
+       "type": "DROP_SHADOW",
+       "r": 16,
+       "c": [
+        "#084191",
+        0.1
+       ],
+       "o": {
+        "x": 0,
+        "y": 4
+       },
+       "s": 0
+      }
+     ],
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 16,
+      "p": [
+       16,
+       16,
+       16,
+       16
+      ],
+      "main": "MIN",
+      "cross": "MIN"
+     },
+     "children": [
+      {
+       "id": "5:4875",
+       "name": "Favorites",
+       "type": "FRAME",
+       "x": 16,
+       "y": 16,
+       "w": 311,
+       "h": 64,
+       "al": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "MIN"
+       },
+       "children": [
+        {
+         "id": "5:4876",
+         "name": "text",
+         "type": "FRAME",
+         "x": 0,
+         "y": 0,
+         "w": 79,
+         "h": 24,
+         "al": {
+          "mode": "HORIZONTAL",
+          "gap": 10,
+          "p": [
+           0,
+           8,
+           8,
+           8
+          ],
+          "main": "CENTER",
+          "cross": "CENTER"
+         },
+         "children": [
+          {
+           "id": "5:4877",
+           "name": "Enter code",
+           "type": "TEXT",
+           "x": 8,
+           "y": 0,
+           "w": 63,
+           "h": 16,
+           "fills": [
+            {
+             "solid": "#737373",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "Enter code",
+            "font": "Inter Medium",
+            "size": 12,
+            "lh": "16",
+            "ls": "0%",
+            "align": "LEFT"
+           }
+          }
+         ]
+        },
+        {
+         "id": "5:4878",
+         "name": "Frame 1171276218",
+         "type": "FRAME",
+         "x": 0,
+         "y": 24,
+         "w": 311,
+         "h": 40,
+         "al": {
+          "mode": "HORIZONTAL",
+          "gap": 4,
+          "p": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "main": "MIN",
+          "cross": "MIN"
+         },
+         "children": [
+          {
+           "id": "5:4879",
+           "name": "label",
+           "type": "FRAME",
+           "x": 0,
+           "y": 0,
+           "w": 48.5,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": [
+            {
+             "id": "5:4880",
+             "name": "1",
+             "type": "TEXT",
+             "x": 20.25,
+             "y": 8,
+             "w": 8,
+             "h": 24,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "1",
+              "font": "Inter Tight Medium",
+              "size": 20,
+              "lh": "24",
+              "ls": "0%",
+              "align": "LEFT"
+             }
+            }
+           ]
+          },
+          {
+           "id": "5:4881",
+           "name": "label",
+           "type": "FRAME",
+           "x": 52.5,
+           "y": 0,
+           "w": 48.5,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": [
+            {
+             "id": "5:4882",
+             "name": "2",
+             "type": "TEXT",
+             "x": 18.25,
+             "y": 8,
+             "w": 12,
+             "h": 24,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "2",
+              "font": "Inter Tight Medium",
+              "size": 20,
+              "lh": "24",
+              "ls": "0%",
+              "align": "LEFT"
+             }
+            }
+           ]
+          },
+          {
+           "id": "5:4883",
+           "name": "label",
+           "type": "FRAME",
+           "x": 105,
+           "y": 0,
+           "w": 48.5,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": [
+            {
+             "id": "5:4884",
+             "name": "3",
+             "type": "TEXT",
+             "x": 17.75,
+             "y": 8,
+             "w": 13,
+             "h": 24,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "3",
+              "font": "Inter Tight Medium",
+              "size": 20,
+              "lh": "24",
+              "ls": "0%",
+              "align": "LEFT"
+             }
+            }
+           ]
+          },
+          {
+           "id": "5:4885",
+           "name": "label",
+           "type": "FRAME",
+           "x": 157.5,
+           "y": 0,
+           "w": 48.5,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": [
+            {
+             "id": "5:4886",
+             "name": "4",
+             "type": "TEXT",
+             "x": 17.75,
+             "y": 8,
+             "w": 13,
+             "h": 24,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "4",
+              "font": "Inter Tight Medium",
+              "size": 20,
+              "lh": "24",
+              "ls": "0%",
+              "align": "LEFT"
+             }
+            }
+           ]
+          },
+          {
+           "id": "5:4887",
+           "name": "label",
+           "type": "FRAME",
+           "x": 210,
+           "y": 0,
+           "w": 48.5,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": [
+            {
+             "id": "5:4888",
+             "name": "5",
+             "type": "TEXT",
+             "x": 18.25,
+             "y": 8,
+             "w": 12,
+             "h": 24,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "5",
+              "font": "Inter Tight Medium",
+              "size": 20,
+              "lh": "24",
+              "ls": "0%",
+              "align": "LEFT"
+             }
+            }
+           ]
+          },
+          {
+           "id": "5:4889",
+           "name": "label",
+           "type": "FRAME",
+           "x": 262.5,
+           "y": 0,
+           "w": 48.5,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#0b62da",
+             "a": 1
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": [
+            {
+             "id": "5:4890",
+             "name": "7",
+             "type": "TEXT",
+             "x": 18.25,
+             "y": 8,
+             "w": 11,
+             "h": 24,
+             "fills": [
+              {
+               "solid": "#0b62da",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "7",
+              "font": "Inter Tight Medium",
+              "size": 20,
+              "lh": "24",
+              "ls": "0%",
+              "align": "LEFT"
+             }
+            },
+            {
+             "id": "5:4891",
+             "name": "cursor",
+             "type": "VECTOR",
+             "x": 30.25,
+             "y": 10,
+             "w": 0,
+             "h": 20,
+             "strokes": [
+              {
+               "solid": "#0b62da",
+               "a": 1
+              }
+             ],
+             "sw": 1,
+             "sa": "CENTER"
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "5:4892",
+       "name": "line",
+       "type": "VECTOR",
+       "x": 16,
+       "y": 96,
+       "w": 311,
+       "h": 0,
+       "strokes": [
+        {
+         "solid": "#737373",
+         "a": 0.15
+        }
+       ],
+       "sw": 1,
+       "sa": "CENTER"
+      },
+      {
+       "id": "5:4893",
+       "name": "Frame 1171276217",
+       "type": "FRAME",
+       "x": 16,
+       "y": 112,
+       "w": 311,
+       "h": 64,
+       "al": {
+        "mode": "VERTICAL",
+        "gap": 12,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "CENTER"
+       },
+       "children": [
+        {
+         "id": "5:4894",
+         "name": "Use a different email",
+         "type": "TEXT",
+         "x": 86,
+         "y": 0,
+         "w": 139,
+         "h": 20,
+         "fills": [
+          {
+           "solid": "#0b62da",
+           "a": 1
+          }
+         ],
+         "text": {
+          "chars": "Use a different email",
+          "font": "Inter Medium",
+          "size": 14,
+          "lh": "20",
+          "ls": "0%",
+          "align": "CENTER"
+         }
+        },
+        {
+         "id": "5:4895",
+         "name": "Didn't get it? Check spam, or make sure it's the email from your purchase.",
+         "type": "TEXT",
+         "x": 41.5,
+         "y": 32,
+         "w": 228,
+         "h": 32,
+         "fills": [
+          {
+           "solid": "#737373",
+           "a": 1
+          }
+         ],
+         "text": {
+          "chars": "Didn't get it? Check spam, or make sure\nit's the email from your purchase.",
+          "font": "Inter Medium",
+          "size": 12,
+          "lh": "16",
+          "ls": "0%",
+          "align": "CENTER"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "5:4896",
+   "name": "system bar",
+   "type": "GROUP",
+   "x": 0,
+   "y": 0,
+   "w": 375,
+   "h": 52,
+   "skip": "ios"
+  },
+  {
+   "id": "5:4913",
+   "name": "logo",
+   "type": "FRAME",
+   "x": 0,
+   "y": 52,
+   "w": 375,
+   "h": 64,
+   "al": {
+    "mode": "HORIZONTAL",
+    "gap": 16,
+    "p": [
+     12,
+     16,
+     12,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "art": true
+  },
+  {
+   "id": "5:4918",
+   "name": "home",
+   "type": "FRAME",
+   "x": 0,
+   "y": 791,
+   "w": 375,
+   "h": 21,
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 24,
+    "p": [
+     8,
+     16,
+     8,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "children": [
+    {
+     "id": "5:4919",
+     "name": "Home",
+     "type": "RECTANGLE",
+     "x": 120.5,
+     "y": 8,
+     "w": 134,
+     "h": 5,
+     "fills": [
+      {
+       "solid": "#000000",
+       "a": 1
+      }
+     ],
+     "r": 100,
+     "skip": "ios"
+    }
+   ]
+  },
+  {
+   "id": "5:4920",
+   "name": "btn",
+   "type": "FRAME",
+   "x": 0,
+   "y": 398,
+   "w": 375,
+   "h": 88,
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 24,
+    "p": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "children": [
+    {
+     "id": "5:4921",
+     "name": "Btn",
+     "type": "INSTANCE",
+     "x": 16,
+     "y": 16,
+     "w": 343,
+     "h": 56,
+     "fills": [
+      {
+       "solid": "#f1f4f9",
+       "a": 1
+      }
+     ],
+     "strokes": [
+      {
+       "solid": "#0b62da",
+       "a": 0.15
+      }
+     ],
+     "sw": 1,
+     "sa": "INSIDE",
+     "r": 100,
+     "al": {
+      "mode": "HORIZONTAL",
+      "gap": 8,
+      "p": [
+       16,
+       24,
+       16,
+       24
+      ],
+      "main": "CENTER",
+      "cross": "CENTER"
+     },
+     "comp": "Btn / Btn=Third, Size=56, Tap=off",
+     "children": [
+      {
+       "id": "I5:4921;46:20949",
+       "name": "material-symbols:search",
+       "type": "INSTANCE",
+       "x": 24,
+       "y": 16,
+       "w": 24,
+       "h": 24,
+       "hidden": true,
+       "comp": "material-symbols:search",
+       "children": [
+        {
+         "id": "I5:4921;46:20949;46:20787",
+         "name": "Vector",
+         "type": "VECTOR",
+         "x": 3,
+         "y": 3,
+         "w": 18,
+         "h": 18,
+         "fills": [
+          {
+           "solid": "#0b62da",
+           "a": 1
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "I5:4921;46:20950",
+       "name": "Label",
+       "type": "TEXT",
+       "x": 117.5,
+       "y": 18,
+       "w": 108,
+       "h": 20,
+       "opacity": 0.5,
+       "fills": [
+        {
+         "solid": "#0b62da",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Resend in 29s",
+        "font": "Inter Medium",
+        "size": 16,
+        "lh": "20",
+        "ls": "0%",
+        "align": "LEFT"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "5:4922",
+   "name": "Keyboards",
+   "type": "INSTANCE",
+   "x": 0,
+   "y": 486,
+   "w": 375,
+   "h": 326,
+   "fills": [
+    {
+     "solid": "#c5c9d0",
+     "a": 0.9
+    }
+   ],
+   "fx": [
+    {
+     "type": "BACKGROUND_BLUR",
+     "r": 51.92307662963867
+    }
+   ],
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 0,
+    "p": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "main": "MIN",
+    "cross": "MIN"
+   },
+   "comp": "Keyboards / Property 1=6",
+   "children": [
+    {
+     "id": "I5:4922;9:5039",
+     "name": "Suggestions",
+     "type": "FRAME",
+     "x": 0,
+     "y": 0,
+     "w": 375,
+     "h": 46,
+     "al": {
+      "mode": "HORIZONTAL",
+      "gap": 0,
+      "p": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "main": "CENTER",
+      "cross": "CENTER"
+     },
+     "children": [
+      {
+       "id": "I5:4922;9:5040",
+       "name": "Suggestion",
+       "type": "TEXT",
+       "x": 0,
+       "y": 0,
+       "w": 124.33,
+       "h": 46,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "I",
+        "font": "SF Pro Text Regular",
+        "size": 16,
+        "lh": "auto",
+        "ls": "0%",
+        "align": "CENTER"
+       }
+      },
+      {
+       "id": "I5:4922;9:5041",
+       "name": "Divider",
+       "type": "RECTANGLE",
+       "x": 124.33,
+       "y": 11,
+       "w": 1,
+       "h": 24,
+       "opacity": 0.1,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ]
+      },
+      {
+       "id": "I5:4922;9:5042",
+       "name": "Suggestion",
+       "type": "TEXT",
+       "x": 125.33,
+       "y": 0,
+       "w": 124.33,
+       "h": 46,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "The",
+        "font": "SF Pro Text Regular",
+        "size": 16,
+        "lh": "auto",
+        "ls": "0%",
+        "align": "CENTER"
+       }
+      },
+      {
+       "id": "I5:4922;9:5043",
+       "name": "Divider",
+       "type": "RECTANGLE",
+       "x": 249.67,
+       "y": 11,
+       "w": 1,
+       "h": 24,
+       "opacity": 0.1,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ]
+      },
+      {
+       "id": "I5:4922;9:5044",
+       "name": "Suggestion",
+       "type": "TEXT",
+       "x": 250.67,
+       "y": 0,
+       "w": 124.33,
+       "h": 46,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Go",
+        "font": "SF Pro Text Regular",
+        "size": 16,
+        "lh": "auto",
+        "ls": "0%",
+        "align": "CENTER"
+       }
+      }
+     ]
+    },
+    {
+     "id": "I5:4922;9:4696",
+     "name": "_/Numeric Keyboard Layout",
+     "type": "FRAME",
+     "x": 0,
+     "y": 46,
+     "w": 375,
+     "h": 212.77,
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 8,
+      "p": [
+       4,
+       6,
+       4,
+       6
+      ],
+      "main": "MIN",
+      "cross": "MIN"
+     },
+     "children": [
+      {
+       "id": "I5:4922;9:4697",
+       "name": "Row 1",
+       "type": "FRAME",
+       "x": 6,
+       "y": 4,
+       "w": 363,
+       "h": 45.19,
+       "al": {
+        "mode": "HORIZONTAL",
+        "gap": 5.769230842590332,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "MIN"
+       },
+       "children": [
+        {
+         "id": "I5:4922;9:4698",
+         "name": "Keys",
+         "type": "INSTANCE",
+         "x": 0,
+         "y": 0,
+         "w": 117.31,
+         "h": 45.19,
+         "fills": [
+          {
+           "solid": "#ffffff",
+           "a": 1
+          }
+         ],
+         "r": 4.807692050933838,
+         "fx": [
+          {
+           "type": "DROP_SHADOW",
+           "r": 0,
+           "c": [
+            "#000000",
+            0.3
+           ],
+           "o": {
+            "x": 0,
+            "y": 0.9615384340286255
+           },
+           "s": 0
+          }
+         ],
+         "comp": "Keys / Key Type=Number 1-9",
+         "children": [
+          {
+           "id": "I5:4922;9:4698;4:194",
+           "name": "Number",
+           "type": "TEXT",
+           "x": 0,
+           "y": 0.92,
+           "w": 117,
+           "h": 28,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "1",
+            "font": "mixed",
+            "size": 23.076923370361328,
+            "lh": "auto",
+            "ls": "0%",
+            "align": "CENTER",
+            "runs": [
+             {
+              "t": "1",
+              "font": "SF Pro Text Regular",
+              "size": 23.076923370361328,
+              "fills": [
+               {
+                "solid": "#000000",
+                "a": 1
+               }
+              ]
+             }
+            ]
+           }
+          },
+          {
+           "id": "I5:4922;9:4698;4:195",
+           "name": "Letters",
+           "type": "TEXT",
+           "x": 0,
+           "y": 28.62,
+           "w": 117,
+           "h": 12,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "",
+            "font": "SF Pro Text Heavy",
+            "size": 9.615384101867676,
+            "lh": "auto",
+            "ls": "0%",
+            "align": "CENTER"
+           }
+          }
+         ]
+        },
+        {
+         "id": "I5:4922;9:4699",
+         "name": "Keys",
+         "type": "INSTANCE",
+         "x": 123.08,
+         "y": 0,
+         "w": 117.31,
+         "h": 45.19,
+         "fills": [
+          {
+           "solid": "#ffffff",
+           "a": 1
+          }
+         ],
+         "r": 4.807692050933838,
+         "fx": [
+          {
+           "type": "DROP_SHADOW",
+           "r": 0,
+           "c": [
+            "#000000",
+            0.3
+           ],
+           "o": {
+            "x": 0,
+            "y": 0.9615384340286255
+           },
+           "s": 0
+          }
+         ],
+         "comp": "Keys / Key Type=Number 1-9",
+         "children": [
+          {
+           "id": "I5:4922;9:4699;4:194",
+           "name": "Number",
+           "type": "TEXT",
+           "x": 0,
+           "y": 0.92,
+           "w": 117,
+           "h": 28,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "2",
+            "font": "mixed",
+            "size": 23.076923370361328,
+            "lh": "auto",
+            "ls": "0%",
+            "align": "CENTER",
+            "runs": [
+             {
+              "t": "2",
+              "font": "SF Pro Text Regular",
+              "size": 23.076923370361328,
+              "fills": [
+               {
+                "solid": "#000000",
+                "a": 1
+               }
+              ]
+             }
+            ]
+           }
+          },
+          {
+           "id": "I5:4922;9:4699;4:195",
+           "name": "Letters",
+           "type": "TEXT",
+           "x": 0,
+           "y": 28.62,
+           "w": 117,
+           "h": 12,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "A b c",
+            "font": "mixed",
+            "size": 9.615384101867676,
+            "lh": "auto",
+            "ls": "0%",
+            "align": "CENTER",
+            "runs": [
+             {
+              "t": "A b c",
+              "font": "SF Pro Text Heavy",
+              "size": 9.615384101867676,
+              "fills": [
+               {
+                "solid": "#000000",
+                "a": 1
+               }
+              ]
+             }
+            ]
+           }
+          }
+         ]
+        },
+        {
+         "id": "I5:4922;9:4700",
+         "name": "Keys",
+         "type": "INSTANCE",
+         "x": 246.15,
+         "y": 0,
+         "w": 117.31,
+         "h": 45.19,
+         "fills": [
+          {
+           "solid": "#ffffff",
+           "a": 1
+          }
+         ],
+         "r": 4.807692050933838,
+         "fx": [
+          {
+           "type": "DROP_SHADOW",
+           "r": 0,
+           "c": [
+            "#000000",
+            0.3
+           ],
+           "o": {
+            "x": 0,
+            "y": 0.9615384340286255
+           },
+           "s": 0
+          }
+         ],
+         "comp": "Keys / Key Type=Number 1-9",
+         "children": [
+          {
+           "id": "I5:4922;9:4700;4:194",
+           "name": "Number",
+           "type": "TEXT",
+           "x": 0,
+           "y": 0.92,
+           "w": 117,
+           "h": 28,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "3",
+            "font": "mixed",
+            "size": 23.076923370361328,
+            "lh": "auto",
+            "ls": "0%",
+            "align": "CENTER",
+            "runs": [
+             {
+              "t": "3",
+              "font": "SF Pro Text Regular",
+              "size": 23.076923370361328,
+              "fills": [
+               {
+                "solid": "#000000",
+                "a": 1
+               }
+              ]
+             }
+            ]
+           }
+          },
+          {
+           "id": "I5:4922;9:4700;4:195",
+           "name": "Letters",
+           "type": "TEXT",
+           "x": 0,
+           "y": 28.62,
+           "w": 117,
+           "h": 12,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "D E F",
+            "font": "mixed",
+            "size": 9.615384101867676,
+            "lh": "auto",
+            "ls": "0%",
+            "align": "CENTER",
+            "runs": [
+             {
+              "t": "D E F",
+              "font": "SF Pro Text Heavy",
+              "size": 9.615384101867676,
+              "fills": [
+               {
+                "solid": "#000000",
+                "a": 1
+               }
+              ]
+             }
+            ]
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "I5:4922;9:4701",
+       "name": "Row 2",
+       "type": "FRAME",
+       "x": 6,
+       "y": 57.19,
+       "w": 363,
+       "h": 45.19,
+       "al": {
+        "mode": "HORIZONTAL",
+        "gap": 5.769230842590332,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "MIN"
+       },
+       "children": [
+        {
+         "id": "I5:4922;9:4702",
+         "name": "Keys",
+         "type": "INSTANCE",
+         "x": 0,
+         "y": 0,
+         "w": 117.31,
+         "h": 45.19,
+         "fills": [
+          {
+           "solid": "#ffffff",
+           "a": 1
+          }
+         ],
+         "r": 4.807692050933838,
+         "fx": [
+          {
+           "type": "DROP_SHADOW",
+           "r": 0,
+           "c": [
+            "#000000",
+            0.3
+           ],
+           "o": {
+            "x": 0,
+            "y": 0.9615384340286255
+           },
+           "s": 0
+          }
+         ],
+         "comp": "Keys / Key Type=Number 1-9",
+         "children": [
+          {
+           "id": "I5:4922;9:4702;4:194",
+           "name": "Number",
+           "type": "TEXT",
+           "x": 0,
+           "y": 0.92,
+           "w": 117,
+           "h": 28,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "4",
+            "font": "mixed",
+            "size": 23.076923370361328,
+            "lh": "auto",
+            "ls": "0%",
+            "align": "CENTER",
+            "runs": [
+             {
+              "t": "4",
+              "font": "SF Pro Text Regular",
+              "size": 23.076923370361328,
+              "fills": [
+               {
+                "solid": "#000000",
+                "a": 1
+               }
+              ]
+             }
+            ]
+           }
+          },
+          {
+           "id": "I5:4922;9:4702;4:195",
+           "name": "Letters",
+           "type": "TEXT",
+           "x": 0,
+           "y": 28.62,
+           "w": 117,
+           "h": 12,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "G H I",
+            "font": "mixed",
+            "size": 9.615384101867676,
+            "lh": "auto",
+            "ls": "0%",
+            "align": "CENTER",
+            "runs": [
+             {
+              "t": "G H I",
+              "font": "SF Pro Text Heavy",
+              "size": 9.615384101867676,
+              "fills": [
+               {
+                "solid": "#000000",
+                "a": 1
+               }
+              ]
+             }
+            ]
+           }
+          }
+         ]
+        },
+        {
+         "id": "I5:4922;9:4703",
+         "name": "Keys",
+         "type": "INSTANCE",
+         "x": 123.08,
+         "y": 0,
+         "w": 117.31,
+         "h": 45.19,
+         "fills": [
+          {
+           "solid": "#ffffff",
+           "a": 1
+          }
+         ],
+         "r": 4.807692050933838,
+         "fx": [
+          {
+           "type": "DROP_SHADOW",
+           "r": 0,
+           "c": [
+            "#000000",
+            0.3
+           ],
+           "o": {
+            "x": 0,
+            "y": 0.9615384340286255
+           },
+           "s": 0
+          }
+         ],
+         "comp": "Keys / Key Type=Number 1-9",
+         "children": [
+          {
+           "id": "I5:4922;9:4703;4:194",
+           "name": "Number",
+           "type": "TEXT",
+           "x": 0,
+           "y": 0.92,
+           "w": 117,
+           "h": 28,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "5",
+            "font": "mixed",
+            "size": 23.076923370361328,
+            "lh": "auto",
+            "ls": "0%",
+            "align": "CENTER",
+            "runs": [
+             {
+              "t": "5",
+              "font": "SF Pro Text Regular",
+              "size": 23.076923370361328,
+              "fills": [
+               {
+                "solid": "#000000",
+                "a": 1
+               }
+              ]
+             }
+            ]
+           }
+          },
+          {
+           "id": "I5:4922;9:4703;4:195",
+           "name": "Letters",
+           "type": "TEXT",
+           "x": 0,
+           "y": 28.62,
+           "w": 117,
+           "h": 12,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "J K L",
+            "font": "mixed",
+            "size": 9.615384101867676,
+            "lh": "auto",
+            "ls": "0%",
+            "align": "CENTER",
+            "runs": [
+             {
+              "t": "J K L",
+              "font": "SF Pro Text Heavy",
+              "size": 9.615384101867676,
+              "fills": [
+               {
+                "solid": "#000000",
+                "a": 1
+               }
+              ]
+             }
+            ]
+           }
+          }
+         ]
+        },
+        {
+         "id": "I5:4922;9:4704",
+         "name": "Keys",
+         "type": "INSTANCE",
+         "x": 246.15,
+         "y": 0,
+         "w": 117.31,
+         "h": 45.19,
+         "fills": [
+          {
+           "solid": "#ffffff",
+           "a": 1
+          }
+         ],
+         "r": 4.807692050933838,
+         "fx": [
+          {
+           "type": "DROP_SHADOW",
+           "r": 0,
+           "c": [
+            "#000000",
+            0.3
+           ],
+           "o": {
+            "x": 0,
+            "y": 0.9615384340286255
+           },
+           "s": 0
+          }
+         ],
+         "comp": "Keys / Key Type=Number 1-9",
+         "children": [
+          {
+           "id": "I5:4922;9:4704;4:194",
+           "name": "Number",
+           "type": "TEXT",
+           "x": 0,
+           "y": 0.92,
+           "w": 117,
+           "h": 28,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "6",
+            "font": "mixed",
+            "size": 23.076923370361328,
+            "lh": "auto",
+            "ls": "0%",
+            "align": "CENTER",
+            "runs": [
+             {
+              "t": "6",
+              "font": "SF Pro Text Regular",
+              "size": 23.076923370361328,
+              "fills": [
+               {
+                "solid": "#000000",
+                "a": 1
+               }
+              ]
+             }
+            ]
+           }
+          },
+          {
+           "id": "I5:4922;9:4704;4:195",
+           "name": "Letters",
+           "type": "TEXT",
+           "x": 0,
+           "y": 28.62,
+           "w": 117,
+           "h": 12,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "M N O",
+            "font": "mixed",
+            "size": 9.615384101867676,
+            "lh": "auto",
+            "ls": "0%",
+            "align": "CENTER",
+            "runs": [
+             {
+              "t": "M N O",
+              "font": "SF Pro Text Heavy",
+              "size": 9.615384101867676,
+              "fills": [
+               {
+                "solid": "#000000",
+                "a": 1
+               }
+              ]
+             }
+            ]
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "I5:4922;9:4705",
+       "name": "Row 3",
+       "type": "FRAME",
+       "x": 6,
+       "y": 110.38,
+       "w": 363,
+       "h": 45.19,
+       "al": {
+        "mode": "HORIZONTAL",
+        "gap": 5.769230842590332,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "MIN"
+       },
+       "children": [
+        {
+         "id": "I5:4922;9:4706",
+         "name": "Keys",
+         "type": "INSTANCE",
+         "x": 0,
+         "y": 0,
+         "w": 117.31,
+         "h": 45.19,
+         "fills": [
+          {
+           "solid": "#ffffff",
+           "a": 1
+          }
+         ],
+         "r": 4.807692050933838,
+         "fx": [
+          {
+           "type": "DROP_SHADOW",
+           "r": 0,
+           "c": [
+            "#000000",
+            0.3
+           ],
+           "o": {
+            "x": 0,
+            "y": 0.9615384340286255
+           },
+           "s": 0
+          }
+         ],
+         "comp": "Keys / Key Type=Number 1-9",
+         "children": [
+          {
+           "id": "I5:4922;9:4706;4:194",
+           "name": "Number",
+           "type": "TEXT",
+           "x": 0,
+           "y": 0.92,
+           "w": 117,
+           "h": 28,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "7",
+            "font": "mixed",
+            "size": 23.076923370361328,
+            "lh": "auto",
+            "ls": "0%",
+            "align": "CENTER",
+            "runs": [
+             {
+              "t": "7",
+              "font": "SF Pro Text Regular",
+              "size": 23.076923370361328,
+              "fills": [
+               {
+                "solid": "#000000",
+                "a": 1
+               }
+              ]
+             }
+            ]
+           }
+          },
+          {
+           "id": "I5:4922;9:4706;4:195",
+           "name": "Letters",
+           "type": "TEXT",
+           "x": 0,
+           "y": 28.62,
+           "w": 117,
+           "h": 12,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "P Q R S",
+            "font": "mixed",
+            "size": 9.615384101867676,
+            "lh": "auto",
+            "ls": "0%",
+            "align": "CENTER",
+            "runs": [
+             {
+              "t": "P Q R S",
+              "font": "SF Pro Text Heavy",
+              "size": 9.615384101867676,
+              "fills": [
+               {
+                "solid": "#000000",
+                "a": 1
+               }
+              ]
+             }
+            ]
+           }
+          }
+         ]
+        },
+        {
+         "id": "I5:4922;9:4707",
+         "name": "Keys",
+         "type": "INSTANCE",
+         "x": 123.08,
+         "y": 0,
+         "w": 117.31,
+         "h": 45.19,
+         "fills": [
+          {
+           "solid": "#ffffff",
+           "a": 1
+          }
+         ],
+         "r": 4.807692050933838,
+         "fx": [
+          {
+           "type": "DROP_SHADOW",
+           "r": 0,
+           "c": [
+            "#000000",
+            0.3
+           ],
+           "o": {
+            "x": 0,
+            "y": 0.9615384340286255
+           },
+           "s": 0
+          }
+         ],
+         "comp": "Keys / Key Type=Number 1-9",
+         "children": [
+          {
+           "id": "I5:4922;9:4707;4:194",
+           "name": "Number",
+           "type": "TEXT",
+           "x": 0,
+           "y": 0.92,
+           "w": 117,
+           "h": 28,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "8",
+            "font": "mixed",
+            "size": 23.076923370361328,
+            "lh": "auto",
+            "ls": "0%",
+            "align": "CENTER",
+            "runs": [
+             {
+              "t": "8",
+              "font": "SF Pro Text Regular",
+              "size": 23.076923370361328,
+              "fills": [
+               {
+                "solid": "#000000",
+                "a": 1
+               }
+              ]
+             }
+            ]
+           }
+          },
+          {
+           "id": "I5:4922;9:4707;4:195",
+           "name": "Letters",
+           "type": "TEXT",
+           "x": 0,
+           "y": 28.62,
+           "w": 117,
+           "h": 12,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "T U V",
+            "font": "mixed",
+            "size": 9.615384101867676,
+            "lh": "auto",
+            "ls": "0%",
+            "align": "CENTER",
+            "runs": [
+             {
+              "t": "T U V",
+              "font": "SF Pro Text Heavy",
+              "size": 9.615384101867676,
+              "fills": [
+               {
+                "solid": "#000000",
+                "a": 1
+               }
+              ]
+             }
+            ]
+           }
+          }
+         ]
+        },
+        {
+         "id": "I5:4922;9:4708",
+         "name": "Keys",
+         "type": "INSTANCE",
+         "x": 246.15,
+         "y": 0,
+         "w": 117.31,
+         "h": 45.19,
+         "fills": [
+          {
+           "solid": "#ffffff",
+           "a": 1
+          }
+         ],
+         "r": 4.807692050933838,
+         "fx": [
+          {
+           "type": "DROP_SHADOW",
+           "r": 0,
+           "c": [
+            "#000000",
+            0.3
+           ],
+           "o": {
+            "x": 0,
+            "y": 0.9615384340286255
+           },
+           "s": 0
+          }
+         ],
+         "comp": "Keys / Key Type=Number 1-9",
+         "children": [
+          {
+           "id": "I5:4922;9:4708;4:194",
+           "name": "Number",
+           "type": "TEXT",
+           "x": 0,
+           "y": 0.92,
+           "w": 117,
+           "h": 28,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "9",
+            "font": "mixed",
+            "size": 23.076923370361328,
+            "lh": "auto",
+            "ls": "0%",
+            "align": "CENTER",
+            "runs": [
+             {
+              "t": "9",
+              "font": "SF Pro Text Regular",
+              "size": 23.076923370361328,
+              "fills": [
+               {
+                "solid": "#000000",
+                "a": 1
+               }
+              ]
+             }
+            ]
+           }
+          },
+          {
+           "id": "I5:4922;9:4708;4:195",
+           "name": "Letters",
+           "type": "TEXT",
+           "x": 0,
+           "y": 28.62,
+           "w": 117,
+           "h": 12,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "W X Y Z",
+            "font": "mixed",
+            "size": 9.615384101867676,
+            "lh": "auto",
+            "ls": "0%",
+            "align": "CENTER",
+            "runs": [
+             {
+              "t": "W X Y Z",
+              "font": "SF Pro Text Heavy",
+              "size": 9.615384101867676,
+              "fills": [
+               {
+                "solid": "#000000",
+                "a": 1
+               }
+              ]
+             }
+            ]
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "I5:4922;9:4709",
+       "name": "Row 4",
+       "type": "FRAME",
+       "x": 6,
+       "y": 163.58,
+       "w": 363,
+       "h": 45.19,
+       "al": {
+        "mode": "HORIZONTAL",
+        "gap": 5.769230842590332,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "MIN"
+       },
+       "children": [
+        {
+         "id": "I5:4922;9:4710",
+         "name": "Keys",
+         "type": "INSTANCE",
+         "x": 0,
+         "y": 0,
+         "w": 117.31,
+         "h": 45.19,
+         "r": 4.807692050933838,
+         "comp": "Keys / Key Type=Number Decimal",
+         "children": [
+          {
+           "id": "I5:4922;9:4710;4:498",
+           "name": "Number",
+           "type": "VECTOR",
+           "x": 57.54,
+           "y": 28.84,
+           "w": 2.93,
+           "h": 2.93,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "id": "I5:4922;9:4711",
+         "name": "Keys",
+         "type": "INSTANCE",
+         "x": 123.08,
+         "y": 0,
+         "w": 117.31,
+         "h": 45.19,
+         "fills": [
+          {
+           "solid": "#ffffff",
+           "a": 1
+          }
+         ],
+         "r": 4.807692050933838,
+         "fx": [
+          {
+           "type": "DROP_SHADOW",
+           "r": 0,
+           "c": [
+            "#000000",
+            0.3
+           ],
+           "o": {
+            "x": 0,
+            "y": 0.9615384340286255
+           },
+           "s": 0
+          }
+         ],
+         "comp": "Keys / Key Type=Number 0",
+         "children": [
+          {
+           "id": "I5:4922;9:4711;4:295",
+           "name": "Number",
+           "type": "TEXT",
+           "x": 0,
+           "y": 0,
+           "w": 117,
+           "h": 42.31,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "0",
+            "font": "mixed",
+            "size": 23.076923370361328,
+            "lh": "auto",
+            "ls": "0%",
+            "align": "CENTER",
+            "runs": [
+             {
+              "t": "0",
+              "font": "SF Pro Text Regular",
+              "size": 23.076923370361328,
+              "fills": [
+               {
+                "solid": "#000000",
+                "a": 1
+               }
+              ]
+             }
+            ]
+           }
+          }
+         ]
+        },
+        {
+         "id": "I5:4922;9:4712",
+         "name": "Keys",
+         "type": "INSTANCE",
+         "x": 246.15,
+         "y": 0,
+         "w": 117.31,
+         "h": 45.19,
+         "r": 4.807692050933838,
+         "comp": "Keys / Key Type=Number Delete",
+         "children": [
+          {
+           "id": "I5:4922;9:4712;4:286",
+           "name": "Icons",
+           "type": "INSTANCE",
+           "x": 43.62,
+           "y": 7.62,
+           "w": 30.77,
+           "h": 30.77,
+           "comp": "Icons / Function=Delete",
+           "children": [
+            {
+             "id": "I5:4922;9:4712;4:286;3:15",
+             "name": "Union",
+             "type": "VECTOR",
+             "x": 4.33,
+             "y": 7.21,
+             "w": 22.12,
+             "h": 16.35,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "I5:4922;9:4957",
+     "name": "Home Indicator",
+     "type": "FRAME",
+     "x": 0,
+     "y": 258.77,
+     "w": 375,
+     "h": 67.23,
+     "children": [
+      {
+       "id": "I5:4922;9:4993",
+       "name": "Home",
+       "type": "RECTANGLE",
+       "x": 120.5,
+       "y": 54.31,
+       "w": 134,
+       "h": 5,
+       "fills": [
+        {
+         "solid": "#0c0c0d",
+         "a": 1
+        }
+       ],
+       "r": 100,
+       "skip": "ios"
+      },
+      {
+       "id": "I5:4922;9:4959",
+       "name": "Icons",
+       "type": "INSTANCE",
+       "x": 309.62,
+       "y": 5.46,
+       "w": 46.15,
+       "h": 46.15,
+       "hidden": true,
+       "comp": "Icons / Function=Dictation",
+       "children": [
+        {
+         "id": "I5:4922;9:4959;3:13",
+         "name": "Union",
+         "type": "VECTOR",
+         "x": 14.78,
+         "y": 8.65,
+         "w": 16.59,
+         "h": 27.4,
+         "fills": [
+          {
+           "solid": "#50545b",
+           "a": 1
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "I5:4922;9:4960",
+       "name": "Icons",
+       "type": "INSTANCE",
+       "x": 19.23,
+       "y": 5.46,
+       "w": 46.15,
+       "h": 46.15,
+       "hidden": true,
+       "comp": "Icons / Function=Emoji",
+       "children": [
+        {
+         "id": "I5:4922;9:4960;3:11",
+         "name": "Icon",
+         "type": "VECTOR",
+         "x": 8.65,
+         "y": 8.65,
+         "w": 28.85,
+         "h": 28.85,
+         "fills": [
+          {
+           "solid": "#50545b",
+           "a": 1
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

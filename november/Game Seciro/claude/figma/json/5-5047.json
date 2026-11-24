@@ -1,0 +1,830 @@
+{
+ "id": "5:5047",
+ "name": "Sign in",
+ "type": "FRAME",
+ "x": 0,
+ "y": 0,
+ "w": 375,
+ "h": 812,
+ "fills": [
+  {
+   "solid": "#f1f4f9",
+   "a": 1
+  }
+ ],
+ "children": [
+  {
+   "id": "5:5048",
+   "name": "textblock",
+   "type": "FRAME",
+   "x": 0,
+   "y": 116,
+   "w": 375,
+   "h": 411,
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 16,
+    "p": [
+     16,
+     16,
+     24,
+     16
+    ],
+    "main": "MAX",
+    "cross": "CENTER"
+   },
+   "children": [
+    {
+     "id": "5:5049",
+     "name": "img",
+     "type": "FRAME",
+     "x": 102,
+     "y": 16,
+     "w": 171,
+     "h": 135,
+     "art": true
+    },
+    {
+     "id": "5:5066",
+     "name": "text",
+     "type": "FRAME",
+     "x": 16,
+     "y": 167,
+     "w": 343,
+     "h": 76,
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 12,
+      "p": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "main": "MIN",
+      "cross": "MIN"
+     },
+     "children": [
+      {
+       "id": "5:5067",
+       "name": "Sign in to Seciro",
+       "type": "TEXT",
+       "x": 0,
+       "y": 0,
+       "w": 343,
+       "h": 24,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Sign in to Seciro",
+        "font": "Inter Tight Medium",
+        "size": 20,
+        "lh": "24",
+        "ls": "0%",
+        "align": "CENTER"
+       }
+      },
+      {
+       "id": "5:5068",
+       "name": "Enter the email you used when you purchased your subscription.",
+       "type": "TEXT",
+       "x": 0,
+       "y": 36,
+       "w": 343,
+       "h": 40,
+       "fills": [
+        {
+         "solid": "#737373",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Enter the email you used when\nyou purchased your subscription.",
+        "font": "Inter Medium",
+        "size": 14,
+        "lh": "20",
+        "ls": "0%",
+        "align": "CENTER"
+       }
+      }
+     ]
+    },
+    {
+     "id": "5:5069",
+     "name": "Frame 1171276191",
+     "type": "FRAME",
+     "x": 16,
+     "y": 259,
+     "w": 343,
+     "h": 128,
+     "fills": [
+      {
+       "solid": "#ffffff",
+       "a": 1
+      }
+     ],
+     "r": 16,
+     "fx": [
+      {
+       "type": "DROP_SHADOW",
+       "r": 16,
+       "c": [
+        "#084191",
+        0.1
+       ],
+       "o": {
+        "x": 0,
+        "y": 4
+       },
+       "s": 0
+      }
+     ],
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 16,
+      "p": [
+       16,
+       16,
+       16,
+       16
+      ],
+      "main": "MIN",
+      "cross": "MIN"
+     },
+     "children": [
+      {
+       "id": "5:5070",
+       "name": "Favorites",
+       "type": "FRAME",
+       "x": 16,
+       "y": 16,
+       "w": 311,
+       "h": 96,
+       "al": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "MIN"
+       },
+       "children": [
+        {
+         "id": "5:5071",
+         "name": "text",
+         "type": "FRAME",
+         "x": 0,
+         "y": 0,
+         "w": 81,
+         "h": 24,
+         "al": {
+          "mode": "HORIZONTAL",
+          "gap": 10,
+          "p": [
+           0,
+           8,
+           8,
+           8
+          ],
+          "main": "CENTER",
+          "cross": "CENTER"
+         },
+         "children": [
+          {
+           "id": "5:5072",
+           "name": "Enter email",
+           "type": "TEXT",
+           "x": 8,
+           "y": 0,
+           "w": 65,
+           "h": 16,
+           "fills": [
+            {
+             "solid": "#0b62da",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "Enter email",
+            "font": "Inter Medium",
+            "size": 12,
+            "lh": "16",
+            "ls": "0%",
+            "align": "LEFT"
+           }
+          }
+         ]
+        },
+        {
+         "id": "5:5073",
+         "name": "label",
+         "type": "FRAME",
+         "x": 0,
+         "y": 24,
+         "w": 311,
+         "h": 40,
+         "fills": [
+          {
+           "solid": "#ffffff",
+           "a": 1
+          }
+         ],
+         "strokes": [
+          {
+           "solid": "#737373",
+           "a": 0.15
+          }
+         ],
+         "sw": 1,
+         "sa": "INSIDE",
+         "r": 12,
+         "al": {
+          "mode": "HORIZONTAL",
+          "gap": 8,
+          "p": [
+           0,
+           12,
+           0,
+           12
+          ],
+          "main": "MIN",
+          "cross": "CENTER"
+         },
+         "children": [
+          {
+           "id": "5:5074",
+           "name": "material-symbols:mail",
+           "type": "INSTANCE",
+           "x": 12,
+           "y": 10,
+           "w": 20,
+           "h": 20,
+           "opacity": 0.5,
+           "comp": "material-symbols:mail",
+           "children": [
+            {
+             "id": "I5:5074;46:20775",
+             "name": "Vector",
+             "type": "VECTOR",
+             "x": 1.67,
+             "y": 3.33,
+             "w": 16.67,
+             "h": 13.33,
+             "fills": [
+              {
+               "solid": "#737373",
+               "a": 1
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "id": "5:5075",
+           "name": "name@example.com",
+           "type": "TEXT",
+           "x": 40,
+           "y": 10,
+           "w": 140,
+           "h": 20,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "name@example.com",
+            "font": "Inter Medium",
+            "size": 14,
+            "lh": "20",
+            "ls": "0%",
+            "align": "LEFT"
+           }
+          }
+         ]
+        },
+        {
+         "id": "5:5076",
+         "name": "text",
+         "type": "FRAME",
+         "x": 0,
+         "y": 64,
+         "w": 193,
+         "h": 32,
+         "opacity": 0.75,
+         "al": {
+          "mode": "HORIZONTAL",
+          "gap": 10,
+          "p": [
+           16,
+           8,
+           0,
+           8
+          ],
+          "main": "CENTER",
+          "cross": "CENTER"
+         },
+         "children": [
+          {
+           "id": "5:5077",
+           "name": "tip",
+           "type": "FRAME",
+           "x": 8,
+           "y": 16,
+           "w": 177,
+           "h": 16,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 4,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "MIN",
+            "cross": "CENTER"
+           },
+           "children": [
+            {
+             "id": "5:5078",
+             "name": "material-symbols:info",
+             "type": "INSTANCE",
+             "x": 0,
+             "y": 0,
+             "w": 16,
+             "h": 16,
+             "comp": "material-symbols:info",
+             "children": [
+              {
+               "id": "I5:5078;46:20881",
+               "name": "Vector",
+               "type": "VECTOR",
+               "x": 1.33,
+               "y": 1.33,
+               "w": 13.33,
+               "h": 13.33,
+               "fills": [
+                {
+                 "solid": "#737373",
+                 "a": 1
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "id": "5:5079",
+             "name": "Enter a valid email address.",
+             "type": "TEXT",
+             "x": 20,
+             "y": 0,
+             "w": 157,
+             "h": 16,
+             "fills": [
+              {
+               "solid": "#737373",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "Enter a valid email address.",
+              "font": "Inter Medium",
+              "size": 12,
+              "lh": "16",
+              "ls": "0%",
+              "align": "LEFT"
+             }
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "5:5080",
+   "name": "logo",
+   "type": "FRAME",
+   "x": 0,
+   "y": 52,
+   "w": 375,
+   "h": 64,
+   "al": {
+    "mode": "HORIZONTAL",
+    "gap": 16,
+    "p": [
+     12,
+     16,
+     12,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "art": true
+  },
+  {
+   "id": "5:5085",
+   "name": "home",
+   "type": "FRAME",
+   "x": 0,
+   "y": 791,
+   "w": 375,
+   "h": 21,
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 24,
+    "p": [
+     8,
+     16,
+     8,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "children": [
+    {
+     "id": "5:5086",
+     "name": "Home",
+     "type": "RECTANGLE",
+     "x": 120.5,
+     "y": 8,
+     "w": 134,
+     "h": 5,
+     "fills": [
+      {
+       "solid": "#000000",
+       "a": 1
+      }
+     ],
+     "r": 100,
+     "skip": "ios"
+    }
+   ]
+  },
+  {
+   "id": "5:5087",
+   "name": "btn",
+   "type": "FRAME",
+   "x": 0,
+   "y": 719,
+   "w": 375,
+   "h": 72,
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 24,
+    "p": [
+     8,
+     16,
+     8,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "children": [
+    {
+     "id": "5:5088",
+     "name": "Btn",
+     "type": "INSTANCE",
+     "x": 16,
+     "y": 8,
+     "w": 343,
+     "h": 56,
+     "fills": [
+      {
+       "solid": "#0b62da",
+       "a": 1
+      }
+     ],
+     "r": 100,
+     "al": {
+      "mode": "HORIZONTAL",
+      "gap": 8,
+      "p": [
+       16,
+       24,
+       16,
+       24
+      ],
+      "main": "CENTER",
+      "cross": "CENTER"
+     },
+     "comp": "Btn / Btn=Prime, Size=56, Tap=off",
+     "children": [
+      {
+       "id": "I5:5088;46:20946",
+       "name": "material-symbols:search",
+       "type": "INSTANCE",
+       "x": 24,
+       "y": 16,
+       "w": 24,
+       "h": 24,
+       "hidden": true,
+       "comp": "material-symbols:search",
+       "children": [
+        {
+         "id": "I5:5088;46:20946;46:20787",
+         "name": "Vector",
+         "type": "VECTOR",
+         "x": 3,
+         "y": 3,
+         "w": 18,
+         "h": 18,
+         "fills": [
+          {
+           "solid": "#ffffff",
+           "a": 1
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "I5:5088;46:20947",
+       "name": "Label",
+       "type": "TEXT",
+       "x": 136.5,
+       "y": 18,
+       "w": 70,
+       "h": 20,
+       "fills": [
+        {
+         "solid": "#ffffff",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Continue",
+        "font": "Inter Medium",
+        "size": 16,
+        "lh": "20",
+        "ls": "0%",
+        "align": "LEFT"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "5:5089",
+   "name": "blackout",
+   "type": "RECTANGLE",
+   "x": 0,
+   "y": 0,
+   "w": 375,
+   "h": 812,
+   "fills": [
+    {
+     "solid": "#000000",
+     "a": 0.25
+    }
+   ],
+   "fx": [
+    {
+     "type": "BACKGROUND_BLUR",
+     "r": 16
+    }
+   ]
+  },
+  {
+   "id": "5:5090",
+   "name": "system bar",
+   "type": "GROUP",
+   "x": 0,
+   "y": 0,
+   "w": 375,
+   "h": 52,
+   "skip": "ios"
+  },
+  {
+   "id": "5:5107",
+   "name": "popup",
+   "type": "FRAME",
+   "x": 0,
+   "y": 392,
+   "w": 375,
+   "h": 420,
+   "fills": [
+    {
+     "solid": "#ffffff",
+     "a": 1
+    }
+   ],
+   "r": [
+    24,
+    24,
+    0,
+    0
+   ],
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 24,
+    "p": [
+     48,
+     16,
+     8,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "children": [
+    {
+     "id": "5:5108",
+     "name": "img",
+     "type": "FRAME",
+     "x": 102,
+     "y": 48,
+     "w": 171,
+     "h": 135,
+     "art": true
+    },
+    {
+     "id": "5:5136",
+     "name": "Textblock",
+     "type": "FRAME",
+     "x": 16,
+     "y": 207,
+     "w": 343,
+     "h": 96,
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 16,
+      "p": [
+       0,
+       0,
+       24,
+       0
+      ],
+      "main": "CENTER",
+      "cross": "CENTER"
+     },
+     "children": [
+      {
+       "id": "5:5137",
+       "name": "Can't connect.",
+       "type": "TEXT",
+       "x": 0,
+       "y": 0,
+       "w": 343,
+       "h": 36,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Can't connect.",
+        "font": "Inter Tight Medium",
+        "size": 32,
+        "lh": "36",
+        "ls": "0%",
+        "align": "CENTER"
+       }
+      },
+      {
+       "id": "5:5138",
+       "name": "Check your internet and try again.",
+       "type": "TEXT",
+       "x": 0,
+       "y": 52,
+       "w": 343,
+       "h": 20,
+       "fills": [
+        {
+         "solid": "#737373",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Check your internet and try again.",
+        "font": "Inter Medium",
+        "size": 14,
+        "lh": "20",
+        "ls": "0%",
+        "align": "CENTER"
+       }
+      }
+     ]
+    },
+    {
+     "id": "5:5139",
+     "name": "Btn",
+     "type": "INSTANCE",
+     "x": 16,
+     "y": 327,
+     "w": 343,
+     "h": 56,
+     "fills": [
+      {
+       "solid": "#0b62da",
+       "a": 1
+      }
+     ],
+     "r": 100,
+     "al": {
+      "mode": "HORIZONTAL",
+      "gap": 8,
+      "p": [
+       16,
+       24,
+       16,
+       24
+      ],
+      "main": "CENTER",
+      "cross": "CENTER"
+     },
+     "comp": "Btn / Btn=Prime, Size=56, Tap=off",
+     "children": [
+      {
+       "id": "I5:5139;46:20946",
+       "name": "material-symbols:check-circle",
+       "type": "INSTANCE",
+       "x": 24,
+       "y": 16,
+       "w": 24,
+       "h": 24,
+       "hidden": true,
+       "comp": "material-symbols:check-circle",
+       "children": [
+        {
+         "id": "I5:5139;46:20946;46:20739",
+         "name": "Vector",
+         "type": "VECTOR",
+         "x": 2,
+         "y": 2,
+         "w": 20,
+         "h": 20,
+         "fills": [
+          {
+           "solid": "#ffffff",
+           "a": 1
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "I5:5139;46:20947",
+       "name": "Label",
+       "type": "TEXT",
+       "x": 150.5,
+       "y": 18,
+       "w": 42,
+       "h": 20,
+       "fills": [
+        {
+         "solid": "#ffffff",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Retry",
+        "font": "Inter Medium",
+        "size": 16,
+        "lh": "20",
+        "ls": "0%",
+        "align": "LEFT"
+       }
+      }
+     ]
+    },
+    {
+     "id": "5:5140",
+     "name": "Home",
+     "type": "RECTANGLE",
+     "x": 120.5,
+     "y": 407,
+     "w": 134,
+     "h": 5,
+     "fills": [
+      {
+       "solid": "#000000",
+       "a": 1
+      }
+     ],
+     "r": 100,
+     "skip": "ios"
+    }
+   ]
+  }
+ ]
+}

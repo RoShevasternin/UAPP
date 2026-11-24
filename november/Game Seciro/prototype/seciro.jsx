@@ -37,7 +37,30 @@ import fr08 from "../claude/figma/frames/r1_08_5-2948.png";
 import fr09 from "../claude/figma/frames/r1_09_5-3055.png";
 import fr10 from "../claude/figma/frames/r1_10_5-3162.png";
 
-export const BUILD = 8;   // піднімати на кожну публікацію
+// Ряд 2 — вхід
+import hdrBack from "../claude/figma/art3x/5-4374_logo_5-4424.png";
+import imgSignin from "../claude/figma/art3x/5-4374_img_5-4376.png";
+import imgOffline from "../claude/figma/art3x/5-5047_img_5-5108.png";
+import imgCode from "../claude/figma/art3x/5-4433_img_5-4435.png";
+import imgEnded from "../claude/figma/art3x/5-4668_img_5-4670.png";
+import imgNone from "../claude/figma/art3x/5-4722_img_5-4724.png";
+import kbAlpha from "../claude/figma/keyboard/kb-alpha.png";
+import kbNum from "../claude/figma/keyboard/kb-numeric.png";
+import icMail from "../claude/figma/icons/mail.svg";
+import icInfo from "../claude/figma/icons/info.svg";
+import r2f01 from "../claude/figma/frames/r2_01_5-4374.png";
+import r2f02 from "../claude/figma/frames/r2_02_5-4923.png";
+import r2f03 from "../claude/figma/frames/r2_03_5-4985.png";
+import r2f04 from "../claude/figma/frames/r2_04_5-5047.png";
+import r2f05 from "../claude/figma/frames/r2_05_5-4433.png";
+import r2f06 from "../claude/figma/frames/r2_06_5-4775.png";
+import r2f07 from "../claude/figma/frames/r2_07_5-4846.png";
+import r2f08 from "../claude/figma/frames/r2_08_5-4502.png";
+import r2f09 from "../claude/figma/frames/r2_09_5-4589.png";
+import r2f10 from "../claude/figma/frames/r2_10_5-4668.png";
+import r2f11 from "../claude/figma/frames/r2_11_5-4722.png";
+
+export const BUILD = 9;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
@@ -426,6 +449,270 @@ function Next({ title, note, back }) {
   );
 }
 
+// ── Ряд 2: вхід за поштою, код, стани підписки ──
+// Кадри Figma: Sign in 5:4374 / 5:4923 / 5:4985, Can't connect 5:5047, код 5:4433 / 5:4775 / 5:4846, Verifying 5:4502,
+// помилка коду 5:4589, підписка скінчилась 5:4668, немає підписки 5:4722. Числа — claude/figma/json/<кадр>.json.
+// Клавіатура — картинка з Figma (у макеті iOS; на Android буде системна) з клікабельними клавішами за їхніми координатами.
+const AUTH_IDS = ["signin", "signin-typing", "signin-filled", "offline", "code", "code-typing", "code-filled", "verifying", "code-error", "sub-ended", "no-sub"];
+const AUTH_PRESET = {
+  "signin": { step: "email", email: "", focus: false },
+  "signin-typing": { step: "email", email: "", focus: true },
+  "signin-filled": { step: "email", email: "name@example.com", focus: true },
+  "offline": { step: "email", email: "name@example.com", focus: false, sheet: "offline" },
+  "code": { step: "code", email: "name@example.com", code: "", focus: false, timer: 0 },
+  "code-typing": { step: "code", email: "name@example.com", code: "", focus: true, timer: 29 },
+  "code-filled": { step: "code", email: "name@example.com", code: "123457", focus: true, timer: 29 },
+  "verifying": { step: "code", email: "name@example.com", code: "123456", focus: false, timer: 29, sheet: "verifying" },
+  "code-error": { step: "code", email: "name@example.com", code: "123456", focus: false, timer: 0, error: true },
+  "sub-ended": { step: "ended", email: "name@example.com" },
+  "no-sub": { step: "none", email: "name@example.com" },
+};
+const authId = (s) => s.step === "ended" ? "sub-ended" : s.step === "none" ? "no-sub"
+  : s.step === "email" ? (s.sheet === "offline" ? "offline" : !s.focus ? "signin" : s.email ? "signin-filled" : "signin-typing")
+  : s.sheet === "verifying" ? "verifying" : s.error ? "code-error" : !s.focus ? "code" : s.code ? "code-filled" : "code-typing";
+const EMAIL_OK = /^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i;
+
+// Клавіші літерної клавіатури (кадр 5:4923, Keyboards → рядки): x — від лівого краю, y — верх рядка в кадрі
+const KB_ROWS = [
+  { y: 536, keys: "qwertyuiop".split("").map((c, i) => [c, [0, 37.5, 74.04, 112.5, 149.04, 186.54, 224.04, 260.58, 299.04, 334.58][i], 32]) },
+  { y: 590.3, keys: "asdfghjkl".split("").map((c, i) => [c, [18.27, 55.77, 93.27, 129.77, 168.27, 204.81, 242.31, 279.81, 317.31][i], 32]) },
+  { y: 644.6, keys: [["shift", 0, 42.3], ..."zxcvbnm".split("").map((c, i) => [c, [55.77, 93.27, 129.77, 168.27, 204.81, 242.31, 279.81][i], 32]), ["del", 325, 42.3]] },
+  { y: 698.9, keys: [["123", 0, 87.5], ["space", 93.27, 180.8], ["return", 279.81, 87.5]] },
+];
+// Цифрова (кадр 5:4775): три стовпці по 117, рядки по ~53
+const NUM_ROWS = [532.5, 585.7, 638.9, 692.4].map((y, r) => ({ y, keys: (r < 3 ? [1, 2, 3].map((n) => String(r * 3 + n)) : ["", "0", "del"]).map((c, i) => [c, [6, 129.1, 252.2][i] - 4, 117]) }));
+
+function Keyboard({ kind, show, onKey }) {
+  const [hit, setHit] = useState(null);
+  const rows = kind === "num" ? NUM_ROWS : KB_ROWS;
+  return (
+    <Abs x={0} y={486} w={375} h={326} style={{ transform: show ? "none" : "translateY(330px)", transition: "transform .42s cubic-bezier(.2,.8,.2,1)",
+      backdropFilter: "blur(26px)", WebkitBackdropFilter: "blur(26px)", zIndex: 5 }}>
+      <img src={kind === "num" ? kbNum : kbAlpha} alt="" draggable={false} style={{ width: 375, display: "block" }} />
+      {rows.map((row) => row.keys.map(([c, x, w]) => c && (
+        <div key={c} onPointerDown={(e) => { e.preventDefault(); setHit(c); onKey(c); }} onPointerUp={() => setHit(null)} onPointerLeave={() => setHit(null)}
+          style={{ position: "absolute", left: 4 + x, top: row.y - 486, width: w, height: kind === "num" ? 46 : 42.3, borderRadius: 5, cursor: "pointer",
+            background: hit === c ? "rgba(0,0,0,.14)" : "transparent", transition: "background .12s" }} />
+      )))}
+    </Abs>
+  );
+}
+
+const Caret = ({ h = 20, color = C.blue }) => <span className="caret" style={{ display: "inline-block", width: 1, height: h, background: color, flex: "none" }} />;
+
+// Поле пошти (картка «Favorites» кадру 5:4374): мітка, поле 311×40 r12, підказка
+function EmailCard({ email, focus, onFocus }) {
+  return (
+    <Abs x={16} y={259} w={343} h={128} style={{ background: C.white, borderRadius: 16, boxShadow: `0 4px 16px ${a("#084191", .1)}` }}>
+      <Abs x={24} y={16} w={200} h={16} style={{ fontSize: 12, lineHeight: "16px", color: focus ? C.blue : C.grey, transition: "color .2s" }}>Enter email</Abs>
+      <Abs x={16} y={40} w={311} h={40} onPointerDown={(e) => { e.stopPropagation(); onFocus(); }}
+        style={{ borderRadius: 12, background: C.white, boxShadow: `inset 0 0 0 1px ${focus ? C.blue : a(C.grey, .15)}`, transition: "box-shadow .2s", cursor: "text",
+          display: "flex", alignItems: "center", gap: 8, padding: "0 12px" }}>
+        <span style={{ opacity: focus ? 1 : .5, transition: "opacity .2s" }}><Icon src={icMail} color={focus ? C.blue : C.grey} size={20} /></span>
+        <span style={{ display: "flex", alignItems: "center", fontSize: 14, lineHeight: "20px", whiteSpace: "nowrap", overflow: "hidden" }}>
+          {email ? <span style={{ color: C.black }}>{email}</span> : null}
+          {focus && <Caret />}
+          {!email && <span style={{ color: C.grey, opacity: .5 }}>name@example.com</span>}
+        </span>
+      </Abs>
+      <Abs x={24} y={96} w={300} h={16} style={{ display: "flex", gap: 4, alignItems: "center", opacity: .75, fontSize: 12, lineHeight: "16px", color: C.grey }}>
+        <Icon src={icInfo} color={C.grey} size={16} />Enter a valid email address.
+      </Abs>
+    </Abs>
+  );
+}
+
+// Шість клітинок коду (кадр 5:4433): 48.5×40, крок 52.5; помилка — червоні (5:4589)
+function CodeCard({ code, focus, error, onFocus, shake }) {
+  const cur = Math.min(code.length, 5);
+  const H = error ? 240 : 192, lineY = error ? 144 : 96;
+  return (
+    <Abs x={16} y={259} w={343} h={H} style={{ background: C.white, borderRadius: 16, boxShadow: `0 4px 16px ${a("#084191", .1)}`, transition: "height .3s cubic-bezier(.2,.8,.2,1)" }}>
+      <Abs x={24} y={16} w={200} h={16} style={{ fontSize: 12, lineHeight: "16px", color: C.grey }}>Enter code</Abs>
+      <Abs x={16} y={40} w={311} h={40} className={shake ? "shake" : ""} onPointerDown={(e) => { e.stopPropagation(); onFocus(); }} style={{ display: "flex", gap: 4, cursor: "text" }}>
+        {[0, 1, 2, 3, 4, 5].map((i) => {
+          const on = focus && !error && i === cur;
+          const d = code[i];
+          return (
+            <div key={i} style={{ width: 48.5, height: 40, borderRadius: 12, flex: "none", display: "flex", alignItems: "center", justifyContent: "center",
+              background: error ? a(C.red, .15) : C.white, boxShadow: `inset 0 0 0 1px ${error ? a(C.red, .15) : on ? C.blue : a(C.grey, .15)}`,
+              transition: "background .25s, box-shadow .2s", fontFamily: FONT_TITLE, fontSize: 20, lineHeight: "24px", color: error ? C.red : C.black }}>
+              {d && <span key={d + i} className="digit">{d}</span>}
+              {on && <Caret h={24} />}
+            </div>
+          );
+        })}
+      </Abs>
+      {error && (
+        <Abs x={24} y={96} w={300} h={32} className="enter-fade" style={{ display: "flex", gap: 4, opacity: .75, fontSize: 12, lineHeight: "16px", color: C.red }}>
+          <Icon src={icInfo} color={C.red} size={16} /><span style={{ width: 275 }}>{"Invalid or expired code. Try again or request a\nnew one."}</span>
+        </Abs>
+      )}
+      <Abs x={16} y={lineY} w={311} h={1} style={{ background: a(C.grey, .15), transition: "top .3s cubic-bezier(.2,.8,.2,1)" }} />
+      <Abs x={16} y={lineY + 16} w={311} h={64} style={{ transition: "top .3s cubic-bezier(.2,.8,.2,1)" }}>
+        <div className="tap" data-act="other" style={{ margin: "0 auto", width: 139, fontSize: 14, lineHeight: "20px", color: C.blue, textAlign: "center" }}>Use a different email</div>
+        <div style={{ marginTop: 12, fontSize: 12, lineHeight: "16px", color: C.grey, textAlign: "center", whiteSpace: "pre-line" }}>{"Didn't get it? Check spam, or make sure\nit's the email from your purchase."}</div>
+      </Abs>
+    </Abs>
+  );
+}
+
+// Аркуш знизу поверх розмитого екрана (blackout: чорний 25 % + розмиття фону)
+function Sheet({ y, children, open }) {
+  return (
+    <>
+      <Abs x={0} y={0} w={375} h={812} style={{ background: "rgba(0,0,0,.25)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", zIndex: 10,
+        opacity: open ? 1 : 0, transition: "opacity .3s ease", pointerEvents: open ? "auto" : "none" }} />
+      <Abs x={0} y={y} w={375} h={812 - y} style={{ background: C.white, borderRadius: "24px 24px 0 0", zIndex: 11,
+        transform: open ? "none" : `translateY(${812 - y + 10}px)`, transition: "transform .45s cubic-bezier(.2,.9,.25,1)" }}>{children}</Abs>
+    </>
+  );
+}
+
+function Auth({ preset, onState, go, back, scen, toast, raw }) {
+  const [s, setS] = useState(() => ({ step: "email", email: "", code: "", focus: false, timer: 0, ...AUTH_PRESET[preset] }));
+  const [shake, setShake] = useState(false);
+  const [busy, setBusy] = useState(false);
+  // обробник клавіатури живе довше за один рендер — тому стан і відповіді «сервера» читаємо з ref, не з замикання
+  const sRef = useRef(s); sRef.current = s;
+  const scenRef = useRef(scen); scenRef.current = scen;
+  const busyRef = useRef(false);
+  const upd = (p) => setS((o) => ({ ...o, ...(typeof p === "function" ? p(o) : p) }));
+  // вибір кадру в панелі → стан
+  useEffect(() => { if (authId(sRef.current) !== preset) setS((o) => ({ ...o, error: false, sheet: null, ...AUTH_PRESET[preset] })); }, [preset]);
+  // стан → панель і кадр Figma
+  useEffect(() => { const id = authId(s); if (id !== preset) onState(id); }, [s]);
+  // «Resend in Ns»
+  useEffect(() => { if (raw || !(s.timer > 0)) return; const t = setTimeout(() => upd((o) => ({ timer: o.timer - 1 })), 1000); return () => clearTimeout(t); }, [s.timer]);
+
+  const submitEmail = () => {
+    if (!EMAIL_OK.test(sRef.current.email) || busyRef.current) return;
+    busyRef.current = true; setBusy(true); upd({ focus: false });
+    setTimeout(() => {
+      busyRef.current = false; setBusy(false);
+      const ans = scenRef.current.email;
+      if (ans === "offline") upd({ sheet: "offline" });
+      else if (ans === "none") upd({ step: "none", sheet: null });
+      else { upd({ step: "code", code: "", error: false, sheet: null, timer: 30 }); setTimeout(() => upd({ focus: true }), 450); }
+    }, 650);
+  };
+  const verify = (code) => {
+    upd({ code, focus: false, sheet: "verifying" });
+    setTimeout(() => {
+      const ans = scenRef.current.code;
+      if (ans === "wrong") { upd({ sheet: null, error: true }); setShake(true); setTimeout(() => setShake(false), 500); }
+      else if (ans === "ended") upd({ sheet: null, step: "ended" });
+      else { upd({ sheet: null }); go("dashboard", "up"); }
+    }, 1600);
+  };
+  const key = (c) => {
+    const o = sRef.current;
+    if (o.step === "email") {
+      if (c === "del") upd({ email: o.email.slice(0, -1) });
+      else if (c === "return") submitEmail();
+      else if (c === "123") upd({ email: o.email + (o.email.includes("@") ? "." : "@") });
+      else if (c.length === 1 && /[a-z0-9@._+-]/i.test(c)) upd({ email: o.email + c.toLowerCase() });
+    } else if (o.step === "code") {
+      if (c === "del") upd({ code: o.code.slice(0, -1), error: false });
+      else if (/^\d$/.test(c)) {
+        const base = o.error ? "" : o.code;
+        if (base.length >= 6) return;
+        const code = base + c;
+        upd({ code, error: false });
+        if (code.length === 6) setTimeout(() => verify(code), 250);
+      }
+    }
+  };
+  // фізична клавіатура (на Маці)
+  useEffect(() => {
+    if (raw) return;
+    const k = (e) => {
+      const o = sRef.current; if (!o.focus || o.sheet) return;
+      if (e.key === "Backspace") key("del"); else if (e.key === "Enter") key("return"); else if (e.key.length === 1) key(e.key); else return;
+      e.preventDefault();
+    };
+    window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k);
+  }, []);
+
+  const shift = s.focus ? (s.step === "code" ? 193 : 129) : 0;
+  const okEmail = EMAIL_OK.test(s.email);
+  const onBack = () => { if (s.sheet) return; if (s.step === "email") back(); else upd({ step: "email", focus: true, error: false, code: "" }); };
+  const result = s.step === "ended" || s.step === "none";
+
+  return (
+    <div style={{ position: "absolute", inset: 0 }} className={raw ? "raw" : ""}>
+      {/* вміст під шапкою: при клавіатурі плавно їде вгору (5:4923 — на 129, 5:4775 — на 193) */}
+      <Abs x={0} y={116} w={375} h={696} style={{ overflow: "hidden" }} onPointerDown={() => s.focus && upd({ focus: false })}>
+        <div key={s.step} className={raw ? "" : "enter-fwd"} style={{ position: "absolute", inset: 0, transform: `translateY(${-shift}px)`, transition: "transform .42s cubic-bezier(.2,.8,.2,1)" }}
+          onClick={(e) => { if (e.target.closest("[data-act=other]")) upd({ step: "email", focus: true, error: false, code: "" }); }}>
+          {s.step === "email" && (<>
+            <Art src={imgSignin} w={172} x={101.5} y={16} />
+            <T x={16} y={167} w={343} size={20} lh={24} title>Sign in to Seciro</T>
+            <T x={16} y={203} w={343} size={14} lh={20} color={C.grey}>{"Enter the email you used when\nyou purchased your subscription."}</T>
+            <EmailCard email={s.email} focus={s.focus} onFocus={() => upd({ focus: true })} />
+          </>)}
+          {s.step === "code" && (<>
+            <Art src={imgCode} w={171} x={102} y={16} />
+            <T x={16} y={167} w={343} size={20} lh={24} title>Check your email</T>
+            <T x={16} y={203} w={343} size={14} lh={20} color={C.grey}>
+              {"If this email has a subscription, we’ve sent a code to "}<span style={{ color: C.blue }}>{s.email}.</span>{" It expires in 60 minutes."}
+            </T>
+            <CodeCard code={s.code} focus={s.focus} error={s.error} shake={shake} onFocus={() => upd({ focus: true, ...(s.error ? { error: false, code: "" } : {}) })} />
+          </>)}
+          {result && (<>
+            <div className={raw ? "" : "pop-in"}><Art src={s.step === "ended" ? imgEnded : imgNone} w={171} x={102} y={16} /></div>
+            <T x={16} y={167} w={343} size={20} lh={24} title>{s.step === "ended" ? "Your subscription has ended" : "No subscription on this email"}</T>
+            <T x={16} y={203} w={343} size={14} lh={20} color="#737b8c">{s.step === "ended"
+              ? "Your subscription ended on July 18, 2026.\nRenew to keep your iPhone protected."
+              : "We couldn’t find a subscription linked to this email. Try the email you used to subscribe."}</T>
+            <Btn y={271} onClick={() => go("paywall", "up")}>See plans</Btn>
+            <Btn kind="third" y={343} onClick={() => upd({ step: "email", focus: true, code: "", error: false })}>Try another email</Btn>
+          </>)}
+        </div>
+      </Abs>
+      <Art src={hdrBack} w={375} x={0} y={52} />
+      <Abs x={8} y={60} w={52} h={52} className="tap" role="button" aria-label="Back" onClick={onBack} style={{ borderRadius: 26 }} />
+
+      {!result && (
+        <Abs x={16} y={s.focus ? 414 : 727} w={343} h={56} style={{ transition: "top .42s cubic-bezier(.2,.8,.2,1)", zIndex: 6 }}>
+          {s.step === "email" ? (
+            <div className="tap" role="button" onClick={submitEmail} style={{ position: "absolute", inset: 0, borderRadius: 100, background: C.blue, opacity: okEmail ? 1 : .25,
+              transition: "opacity .25s", display: "flex", alignItems: "center", justifyContent: "center", color: C.white, fontSize: 16, lineHeight: "20px",
+              cursor: okEmail ? "pointer" : "default" }}>
+              {busy ? <svg width="22" height="22" viewBox="0 0 40 40" style={{ animation: "spin 1s linear infinite" }}><circle cx="20" cy="20" r="17" fill="none" stroke="#fff" strokeWidth="4" strokeDasharray="80 27" /></svg> : "Continue"}
+            </div>
+          ) : s.timer > 0 ? (
+            <div style={{ position: "absolute", inset: 0, borderRadius: 100, background: C.bg, boxShadow: `inset 0 0 0 1px ${a(C.blue, .15)}`, display: "flex",
+              alignItems: "center", justifyContent: "center", fontSize: 16, lineHeight: "20px", color: C.blue }}>
+              <span style={{ opacity: .5, fontVariantNumeric: "tabular-nums" }}>Resend in {s.timer}s</span>
+            </div>
+          ) : (
+            <div className="tap" role="button" onClick={() => { upd({ timer: 30, code: "", error: false }); toast("New code sent to " + s.email); }}
+              style={{ position: "absolute", inset: 0, borderRadius: 100, background: C.blue, display: "flex", alignItems: "center", justifyContent: "center",
+                color: C.white, fontSize: 16, lineHeight: "20px" }}>Resend code</div>
+          )}
+        </Abs>
+      )}
+
+      <Keyboard kind={s.step === "code" ? "num" : "alpha"} show={s.focus && !s.sheet && !result} onKey={key} />
+
+      <Sheet y={392} open={s.sheet === "offline"}>
+        <Art src={imgOffline} w={172} x={101.5} y={48} />
+        <T x={16} y={207} w={343} size={32} lh={36} title>Can't connect.</T>
+        <T x={16} y={259} w={343} size={14} lh={20} color={C.grey}>Check your internet and try again.</T>
+        <Btn y={327} onClick={() => { upd({ sheet: null }); setTimeout(submitEmail, 350); }}>Retry</Btn>
+      </Sheet>
+      <Sheet y={559} open={s.sheet === "verifying"}>
+        <Abs x={167.5} y={48} w={40} h={40} style={{ animation: raw ? "none" : "spin 1s linear infinite" }}>
+          <svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="none" stroke={C.blue} strokeWidth="4" strokeDasharray="84.8 28.3" /></svg>
+        </Abs>
+        <T x={16} y={136} w={343} size={20} lh={24} title>Verifying...</T>
+        <T x={16} y={172} w={343} size={14} lh={20} color={C.grey}>Checking your subscription…</T>
+      </Sheet>
+    </div>
+  );
+}
+
 // ── Карта екранів (порядок = рядами Figma) ──
 const ONB_FRAMES = [fr02, fr03, fr04, fr05, fr06, fr07];
 // Кадр paywall у Figma — свій на кожен обраний тариф
@@ -434,7 +721,17 @@ const SCREENS = [
   { id: "splash", name: "Splash", node: "5:2530", frame: fr01 },
   ...PAGES.map((p, i) => ({ id: p.id, name: i ? `Onboarding · ${i}/5` : "Onboarding · intro", node: p.node, frame: ONB_FRAMES[i] })),
   { id: "paywall", name: "Paywall", node: "5:2948", frame: fr08 },
-  { id: "signin", name: "Sign in (next row)", node: "5:4374", stub: true },
+  { id: "signin", name: "Sign in", node: "5:4374", frame: r2f01 },
+  { id: "signin-typing", name: "Sign in · typing", node: "5:4923", frame: r2f02 },
+  { id: "signin-filled", name: "Sign in · email ready", node: "5:4985", frame: r2f03 },
+  { id: "offline", name: "Can't connect", node: "5:5047", frame: r2f04 },
+  { id: "code", name: "Check your email", node: "5:4433", frame: r2f05 },
+  { id: "code-typing", name: "Code · typing", node: "5:4775", frame: r2f06 },
+  { id: "code-filled", name: "Code · 6 digits", node: "5:4846", frame: r2f07 },
+  { id: "verifying", name: "Verifying", node: "5:4502", frame: r2f08 },
+  { id: "code-error", name: "Code · invalid", node: "5:4589", frame: r2f09 },
+  { id: "sub-ended", name: "Subscription ended", node: "5:4668", frame: r2f10 },
+  { id: "no-sub", name: "No subscription", node: "5:4722", frame: r2f11 },
   { id: "dashboard", name: "Dashboard (later)", node: "5:1686", stub: true },
 ];
 const ORDER = SCREENS.map((s) => s.id);
@@ -465,6 +762,8 @@ export default function Seciro() {
   const [screen, setScreen] = useState(fromHash() || (ORDER.includes(saved) ? saved : "splash"));
   useEffect(() => { const f = () => { const h = fromHash(); if (h) { setDir("fade"); setScreen(h); } }; window.addEventListener("hashchange", f); return () => window.removeEventListener("hashchange", f); }, []);
   const [dir, setDir] = useState("fade");
+  // відповіді «сервера» для потоку входу (панель → Server answers)
+  const [scen, setScen] = useState({ email: "code", code: "active" });
   const [plan, setPlan] = useState(((location.hash.match(/~(\w+)/) || [])[1]) || "weekly");
   const [msg, setMsg] = useState(null);
   const [hist, setHist] = useState([]);
@@ -490,16 +789,19 @@ export default function Seciro() {
   const cur = SCREENS.find((s) => s.id === screen);
   const onbIndex = ONB_IDS.indexOf(screen);
   // пейджер сам каже, на якій сторінці зупинився — панель і кадр Figma йдуть за ним
+  const isAuth = AUTH_IDS.includes(screen);
+  const onAuth = (id) => { setScreen(id); store.set("seciro.screen", id); };
   const onIndex = (i) => { if (ONB_IDS[i] !== screen) { setScreen(ONB_IDS[i]); store.set("seciro.screen", ONB_IDS[i]); } };
   const [frame, frameNode] = screen === "paywall" ? PW_FRAMES[plan] : [cur.frame, cur.node];
   const [overlay, setOverlay] = useState(0);   // 0 — вимкнено, інакше прозорість кадру Figma поверх телефона
   const slotW = 375 * scale + (window.innerWidth > 1000 ? 20 : 0);
 
   if (RAW) return (
-    <div className="app" style={{ width: 375, height: 812, position: "relative", overflow: "hidden", background: C.bg }}>
+    <div className="app raw" style={{ width: 375, height: 812, position: "relative", overflow: "hidden", background: C.bg }}>
       {screen === "splash" && <Splash go={() => {}} raw />}
       {onbIndex >= 0 && <Onboarding index={onbIndex} onIndex={() => {}} go={() => {}} raw at={+((location.hash.match(/@([\d.]+)/) || [])[1] ?? onbIndex)} />}
       {screen === "paywall" && <Paywall go={() => {}} toast={() => {}} plan={plan} setPlan={() => {}} />}
+      {isAuth && <Auth preset={screen} onState={() => {}} go={() => {}} back={() => {}} scen={scen} toast={() => {}} raw />}
       <GestureBar />
     </div>
   );
@@ -511,11 +813,11 @@ export default function Seciro() {
         <div className="phone-shell">
           <div className="phone-clip" style={{ width: 375 * scale, height: 812 * scale }}>
             <div className="app" style={{ width: 375, height: 812, position: "absolute", left: 0, top: 0, transform: `scale(${scale})`, transformOrigin: "0 0", background: C.bg }}>
-              <div key={onbIndex >= 0 ? "onboarding" : screen} className={`enter-${dir}`} style={{ position: "absolute", inset: 0 }}>
+              <div key={onbIndex >= 0 ? "onboarding" : isAuth ? "auth" : screen} className={`enter-${dir}`} style={{ position: "absolute", inset: 0 }}>
                 {screen === "splash" && <Splash go={go} />}
                 {onbIndex >= 0 && <Onboarding index={onbIndex} onIndex={onIndex} go={go} />}
                 {screen === "paywall" && <Paywall go={go} toast={toast} plan={plan} setPlan={setPlan} />}
-                {screen === "signin" && <Next title="Sign in" note="Next row of the Figma: email sign-in, 6-digit code, subscription ended, no subscription on this email." back={back} />}
+                {isAuth && <Auth preset={screen} onState={onAuth} go={go} back={back} scen={scen} toast={toast} />}
                 {screen === "dashboard" && <Next title="Dashboard" note="Comes after the sign-in row: home screen with the security scan and every tool." back={back} />}
               </div>
               <StatusBar />
@@ -563,6 +865,18 @@ export default function Seciro() {
           <button className="pbtn" onClick={back} disabled={!hist.length}>← Back</button>
           <button className="pbtn" onClick={() => { setHist([]); setPlan("weekly"); go("splash", "fade"); }}>Restart</button>
         </div>
+        {isAuth && (<>
+          <div className="label">Server answers</div>
+          <div className="note" style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            <span>After email</span>
+            <div className="row">{[["code", "Code sent"], ["none", "No subscription"], ["offline", "No internet"]].map(([v, t]) => (
+              <button key={v} className="pbtn" aria-pressed={scen.email === v} onClick={() => setScen((o) => ({ ...o, email: v }))}>{t}</button>))}</div>
+            <span>After code</span>
+            <div className="row">{[["active", "Active"], ["ended", "Ended"], ["wrong", "Wrong code"]].map(([v, t]) => (
+              <button key={v} className="pbtn" aria-pressed={scen.code === v} onClick={() => setScen((o) => ({ ...o, code: v }))}>{t}</button>))}</div>
+            <span>Type with the on-screen keys or your keyboard. On the letter keyboard “123” adds @, then dots.</span>
+          </div>
+        </>)}
         <div className="label">Compare</div>
         <div className="row" role="radiogroup" aria-label="Figma overlay on the prototype">
           {[[0, "Off"], [0.5, "Overlay 50%"], [1, "Figma only"]].map(([v, t]) => (

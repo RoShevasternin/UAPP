@@ -1,0 +1,771 @@
+{
+ "id": "5:4433",
+ "name": "code",
+ "type": "FRAME",
+ "x": 0,
+ "y": 0,
+ "w": 375,
+ "h": 812,
+ "fills": [
+  {
+   "solid": "#f1f4f9",
+   "a": 1
+  }
+ ],
+ "children": [
+  {
+   "id": "5:4434",
+   "name": "textblock",
+   "type": "FRAME",
+   "x": 0,
+   "y": 116,
+   "w": 375,
+   "h": 475,
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 16,
+    "p": [
+     16,
+     16,
+     24,
+     16
+    ],
+    "main": "MAX",
+    "cross": "CENTER"
+   },
+   "children": [
+    {
+     "id": "5:4435",
+     "name": "img",
+     "type": "FRAME",
+     "x": 102,
+     "y": 16,
+     "w": 171,
+     "h": 135,
+     "art": true
+    },
+    {
+     "id": "5:4458",
+     "name": "text",
+     "type": "FRAME",
+     "x": 16,
+     "y": 167,
+     "w": 343,
+     "h": 76,
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 12,
+      "p": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "main": "MIN",
+      "cross": "MIN"
+     },
+     "children": [
+      {
+       "id": "5:4459",
+       "name": "Check your email",
+       "type": "TEXT",
+       "x": 0,
+       "y": 0,
+       "w": 343,
+       "h": 24,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Check your email",
+        "font": "Inter Tight Medium",
+        "size": 20,
+        "lh": "24",
+        "ls": "0%",
+        "align": "CENTER"
+       }
+      },
+      {
+       "id": "5:4460",
+       "name": "If this email has a subscription, we’ve sent a code to name@example.com. It expires in 60 minutes.",
+       "type": "TEXT",
+       "x": 0,
+       "y": 36,
+       "w": 343,
+       "h": 40,
+       "fills": "mixed",
+       "text": {
+        "chars": "If this email has a subscription, we’ve sent a code to name@example.com. It expires in 60 minutes.",
+        "font": "Inter Medium",
+        "size": 14,
+        "lh": "20",
+        "ls": "0%",
+        "align": "CENTER",
+        "runs": [
+         {
+          "t": "If this email has a subscription, we’ve sent a code to ",
+          "font": "Inter Medium",
+          "size": 14,
+          "fills": [
+           {
+            "solid": "#737373",
+            "a": 1
+           }
+          ]
+         },
+         {
+          "t": "name@example.com.",
+          "font": "Inter Medium",
+          "size": 14,
+          "fills": [
+           {
+            "solid": "#0b62da",
+            "a": 1
+           }
+          ]
+         },
+         {
+          "t": " It expires in 60 minutes.",
+          "font": "Inter Medium",
+          "size": 14,
+          "fills": [
+           {
+            "solid": "#737373",
+            "a": 1
+           }
+          ]
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "5:4461",
+     "name": "Frame 1171276190",
+     "type": "FRAME",
+     "x": 16,
+     "y": 259,
+     "w": 343,
+     "h": 192,
+     "fills": [
+      {
+       "solid": "#ffffff",
+       "a": 1
+      }
+     ],
+     "r": 16,
+     "fx": [
+      {
+       "type": "DROP_SHADOW",
+       "r": 16,
+       "c": [
+        "#084191",
+        0.1
+       ],
+       "o": {
+        "x": 0,
+        "y": 4
+       },
+       "s": 0
+      }
+     ],
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 16,
+      "p": [
+       16,
+       16,
+       16,
+       16
+      ],
+      "main": "MIN",
+      "cross": "MIN"
+     },
+     "children": [
+      {
+       "id": "5:4462",
+       "name": "Favorites",
+       "type": "FRAME",
+       "x": 16,
+       "y": 16,
+       "w": 311,
+       "h": 64,
+       "al": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "MIN"
+       },
+       "children": [
+        {
+         "id": "5:4463",
+         "name": "text",
+         "type": "FRAME",
+         "x": 0,
+         "y": 0,
+         "w": 79,
+         "h": 24,
+         "al": {
+          "mode": "HORIZONTAL",
+          "gap": 10,
+          "p": [
+           0,
+           8,
+           8,
+           8
+          ],
+          "main": "CENTER",
+          "cross": "CENTER"
+         },
+         "children": [
+          {
+           "id": "5:4464",
+           "name": "Enter code",
+           "type": "TEXT",
+           "x": 8,
+           "y": 0,
+           "w": 63,
+           "h": 16,
+           "fills": [
+            {
+             "solid": "#737373",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "Enter code",
+            "font": "Inter Medium",
+            "size": 12,
+            "lh": "16",
+            "ls": "0%",
+            "align": "LEFT"
+           }
+          }
+         ]
+        },
+        {
+         "id": "5:4465",
+         "name": "Frame 1171276218",
+         "type": "FRAME",
+         "x": 0,
+         "y": 24,
+         "w": 311,
+         "h": 40,
+         "al": {
+          "mode": "HORIZONTAL",
+          "gap": 4,
+          "p": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "main": "MIN",
+          "cross": "MIN"
+         },
+         "children": [
+          {
+           "id": "5:4466",
+           "name": "label",
+           "type": "FRAME",
+           "x": 0,
+           "y": 0,
+           "w": 48.5,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": []
+          },
+          {
+           "id": "5:4467",
+           "name": "label",
+           "type": "FRAME",
+           "x": 52.5,
+           "y": 0,
+           "w": 48.5,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": []
+          },
+          {
+           "id": "5:4468",
+           "name": "label",
+           "type": "FRAME",
+           "x": 105,
+           "y": 0,
+           "w": 48.5,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": []
+          },
+          {
+           "id": "5:4469",
+           "name": "label",
+           "type": "FRAME",
+           "x": 157.5,
+           "y": 0,
+           "w": 48.5,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": []
+          },
+          {
+           "id": "5:4470",
+           "name": "label",
+           "type": "FRAME",
+           "x": 210,
+           "y": 0,
+           "w": 48.5,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": []
+          },
+          {
+           "id": "5:4471",
+           "name": "label",
+           "type": "FRAME",
+           "x": 262.5,
+           "y": 0,
+           "w": 48.5,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": []
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "5:4472",
+       "name": "line",
+       "type": "VECTOR",
+       "x": 16,
+       "y": 96,
+       "w": 311,
+       "h": 0,
+       "strokes": [
+        {
+         "solid": "#737373",
+         "a": 0.15
+        }
+       ],
+       "sw": 1,
+       "sa": "CENTER"
+      },
+      {
+       "id": "5:4473",
+       "name": "Frame 1171276217",
+       "type": "FRAME",
+       "x": 16,
+       "y": 112,
+       "w": 311,
+       "h": 64,
+       "al": {
+        "mode": "VERTICAL",
+        "gap": 12,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "CENTER"
+       },
+       "children": [
+        {
+         "id": "5:4474",
+         "name": "Use a different email",
+         "type": "TEXT",
+         "x": 86,
+         "y": 0,
+         "w": 139,
+         "h": 20,
+         "fills": [
+          {
+           "solid": "#0b62da",
+           "a": 1
+          }
+         ],
+         "text": {
+          "chars": "Use a different email",
+          "font": "Inter Medium",
+          "size": 14,
+          "lh": "20",
+          "ls": "0%",
+          "align": "CENTER"
+         }
+        },
+        {
+         "id": "5:4475",
+         "name": "Didn't get it? Check spam, or make sure it's the email from your purchase.",
+         "type": "TEXT",
+         "x": 41.5,
+         "y": 32,
+         "w": 228,
+         "h": 32,
+         "fills": [
+          {
+           "solid": "#737373",
+           "a": 1
+          }
+         ],
+         "text": {
+          "chars": "Didn't get it? Check spam, or make sure\nit's the email from your purchase.",
+          "font": "Inter Medium",
+          "size": 12,
+          "lh": "16",
+          "ls": "0%",
+          "align": "CENTER"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "5:4476",
+   "name": "system bar",
+   "type": "GROUP",
+   "x": 0,
+   "y": 0,
+   "w": 375,
+   "h": 52,
+   "skip": "ios"
+  },
+  {
+   "id": "5:4493",
+   "name": "logo",
+   "type": "FRAME",
+   "x": 0,
+   "y": 52,
+   "w": 375,
+   "h": 64,
+   "al": {
+    "mode": "HORIZONTAL",
+    "gap": 16,
+    "p": [
+     12,
+     16,
+     12,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "art": true
+  },
+  {
+   "id": "5:4498",
+   "name": "home",
+   "type": "FRAME",
+   "x": 0,
+   "y": 791,
+   "w": 375,
+   "h": 21,
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 24,
+    "p": [
+     8,
+     16,
+     8,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "children": [
+    {
+     "id": "5:4499",
+     "name": "Home",
+     "type": "RECTANGLE",
+     "x": 120.5,
+     "y": 8,
+     "w": 134,
+     "h": 5,
+     "fills": [
+      {
+       "solid": "#000000",
+       "a": 1
+      }
+     ],
+     "r": 100,
+     "skip": "ios"
+    }
+   ]
+  },
+  {
+   "id": "5:4500",
+   "name": "btn",
+   "type": "FRAME",
+   "x": 0,
+   "y": 719,
+   "w": 375,
+   "h": 72,
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 24,
+    "p": [
+     8,
+     16,
+     8,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "children": [
+    {
+     "id": "5:4501",
+     "name": "Btn",
+     "type": "INSTANCE",
+     "x": 16,
+     "y": 8,
+     "w": 343,
+     "h": 56,
+     "fills": [
+      {
+       "solid": "#0b62da",
+       "a": 1
+      }
+     ],
+     "r": 100,
+     "al": {
+      "mode": "HORIZONTAL",
+      "gap": 8,
+      "p": [
+       16,
+       24,
+       16,
+       24
+      ],
+      "main": "CENTER",
+      "cross": "CENTER"
+     },
+     "comp": "Btn / Btn=Prime, Size=56, Tap=off",
+     "children": [
+      {
+       "id": "I5:4501;46:20946",
+       "name": "material-symbols:search",
+       "type": "INSTANCE",
+       "x": 24,
+       "y": 16,
+       "w": 24,
+       "h": 24,
+       "hidden": true,
+       "comp": "material-symbols:search",
+       "children": [
+        {
+         "id": "I5:4501;46:20946;46:20787",
+         "name": "Vector",
+         "type": "VECTOR",
+         "x": 3,
+         "y": 3,
+         "w": 18,
+         "h": 18,
+         "fills": [
+          {
+           "solid": "#ffffff",
+           "a": 1
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "I5:4501;46:20947",
+       "name": "Label",
+       "type": "TEXT",
+       "x": 121.5,
+       "y": 18,
+       "w": 100,
+       "h": 20,
+       "fills": [
+        {
+         "solid": "#ffffff",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Resend code",
+        "font": "Inter Medium",
+        "size": 16,
+        "lh": "20",
+        "ls": "0%",
+        "align": "LEFT"
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

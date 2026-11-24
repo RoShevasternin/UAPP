@@ -1,0 +1,363 @@
+{
+ "id": "5:4722",
+ "name": "No subscription on this email",
+ "type": "FRAME",
+ "x": 0,
+ "y": 0,
+ "w": 375,
+ "h": 812,
+ "fills": [
+  {
+   "solid": "#f1f4f9",
+   "a": 1
+  }
+ ],
+ "children": [
+  {
+   "id": "5:4723",
+   "name": "textblock",
+   "type": "FRAME",
+   "x": 0,
+   "y": 116,
+   "w": 375,
+   "h": 423,
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 16,
+    "p": [
+     16,
+     16,
+     24,
+     16
+    ],
+    "main": "MAX",
+    "cross": "CENTER"
+   },
+   "children": [
+    {
+     "id": "5:4724",
+     "name": "img",
+     "type": "FRAME",
+     "x": 102,
+     "y": 16,
+     "w": 171,
+     "h": 135,
+     "art": true
+    },
+    {
+     "id": "5:4746",
+     "name": "text",
+     "type": "FRAME",
+     "x": 16,
+     "y": 167,
+     "w": 343,
+     "h": 88,
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 12,
+      "p": [
+       0,
+       0,
+       12,
+       0
+      ],
+      "main": "MIN",
+      "cross": "MIN"
+     },
+     "children": [
+      {
+       "id": "5:4747",
+       "name": "No subscription on this email",
+       "type": "TEXT",
+       "x": 0,
+       "y": 0,
+       "w": 343,
+       "h": 24,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "No subscription on this email",
+        "font": "Inter Tight Medium",
+        "size": 20,
+        "lh": "24",
+        "ls": "0%",
+        "align": "CENTER"
+       }
+      },
+      {
+       "id": "5:4748",
+       "name": "We couldn’t find a subscription linked to this email. Try the email you used to subscribe.",
+       "type": "TEXT",
+       "x": 0,
+       "y": 36,
+       "w": 343,
+       "h": 40,
+       "fills": [
+        {
+         "solid": "#737b8c",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "We couldn’t find a subscription linked to this email. Try the email you used to subscribe.",
+        "font": "Inter Medium",
+        "size": 14,
+        "lh": "20",
+        "ls": "0%",
+        "align": "CENTER"
+       }
+      }
+     ]
+    },
+    {
+     "id": "5:4749",
+     "name": "Btn",
+     "type": "INSTANCE",
+     "x": 16,
+     "y": 271,
+     "w": 343,
+     "h": 56,
+     "fills": [
+      {
+       "solid": "#0b62da",
+       "a": 1
+      }
+     ],
+     "r": 100,
+     "al": {
+      "mode": "HORIZONTAL",
+      "gap": 8,
+      "p": [
+       16,
+       24,
+       16,
+       24
+      ],
+      "main": "CENTER",
+      "cross": "CENTER"
+     },
+     "comp": "Btn / Btn=Prime, Size=56, Tap=off",
+     "children": [
+      {
+       "id": "I5:4749;46:20946",
+       "name": "material-symbols:search",
+       "type": "INSTANCE",
+       "x": 24,
+       "y": 16,
+       "w": 24,
+       "h": 24,
+       "hidden": true,
+       "comp": "material-symbols:search",
+       "children": [
+        {
+         "id": "I5:4749;46:20946;46:20787",
+         "name": "Vector",
+         "type": "VECTOR",
+         "x": 3,
+         "y": 3,
+         "w": 18,
+         "h": 18,
+         "fills": [
+          {
+           "solid": "#ffffff",
+           "a": 1
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "I5:4749;46:20947",
+       "name": "Label",
+       "type": "TEXT",
+       "x": 134,
+       "y": 18,
+       "w": 75,
+       "h": 20,
+       "fills": [
+        {
+         "solid": "#ffffff",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "See plans",
+        "font": "Inter Medium",
+        "size": 16,
+        "lh": "20",
+        "ls": "0%",
+        "align": "LEFT"
+       }
+      }
+     ]
+    },
+    {
+     "id": "5:4750",
+     "name": "Btn",
+     "type": "INSTANCE",
+     "x": 16,
+     "y": 343,
+     "w": 343,
+     "h": 56,
+     "fills": [
+      {
+       "solid": "#f1f4f9",
+       "a": 1
+      }
+     ],
+     "strokes": [
+      {
+       "solid": "#0b62da",
+       "a": 0.15
+      }
+     ],
+     "sw": 1,
+     "sa": "INSIDE",
+     "r": 100,
+     "al": {
+      "mode": "HORIZONTAL",
+      "gap": 8,
+      "p": [
+       16,
+       24,
+       16,
+       24
+      ],
+      "main": "CENTER",
+      "cross": "CENTER"
+     },
+     "comp": "Btn / Btn=Third, Size=56, Tap=off",
+     "children": [
+      {
+       "id": "I5:4750;46:20949",
+       "name": "material-symbols:check-circle",
+       "type": "INSTANCE",
+       "x": 24,
+       "y": 16,
+       "w": 24,
+       "h": 24,
+       "hidden": true,
+       "comp": "material-symbols:check-circle",
+       "children": [
+        {
+         "id": "I5:4750;46:20949;46:20739",
+         "name": "Vector",
+         "type": "VECTOR",
+         "x": 2,
+         "y": 2,
+         "w": 20,
+         "h": 20,
+         "fills": [
+          {
+           "solid": "#0b62da",
+           "a": 1
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "I5:4750;46:20950",
+       "name": "Label",
+       "type": "TEXT",
+       "x": 104.5,
+       "y": 18,
+       "w": 134,
+       "h": 20,
+       "fills": [
+        {
+         "solid": "#0b62da",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Try another email",
+        "font": "Inter Medium",
+        "size": 16,
+        "lh": "20",
+        "ls": "0%",
+        "align": "LEFT"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "5:4751",
+   "name": "logo",
+   "type": "FRAME",
+   "x": 0,
+   "y": 52,
+   "w": 375,
+   "h": 64,
+   "al": {
+    "mode": "HORIZONTAL",
+    "gap": 16,
+    "p": [
+     12,
+     16,
+     12,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "art": true
+  },
+  {
+   "id": "5:4756",
+   "name": "home",
+   "type": "FRAME",
+   "x": 0,
+   "y": 791,
+   "w": 375,
+   "h": 21,
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 24,
+    "p": [
+     8,
+     16,
+     8,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "children": [
+    {
+     "id": "5:4757",
+     "name": "Home",
+     "type": "RECTANGLE",
+     "x": 120.5,
+     "y": 8,
+     "w": 134,
+     "h": 5,
+     "fills": [
+      {
+       "solid": "#000000",
+       "a": 1
+      }
+     ],
+     "r": 100,
+     "skip": "ios"
+    }
+   ]
+  },
+  {
+   "id": "5:4758",
+   "name": "system bar",
+   "type": "GROUP",
+   "x": 0,
+   "y": 0,
+   "w": 375,
+   "h": 52,
+   "skip": "ios"
+  }
+ ]
+}

@@ -14,3 +14,10 @@
 У консолі вкладки Figma (через `javascript_tool`) визначити `window.__tar(files)` (простий ustar) і
 `window.__save(blob, name)`, зібрати `[{name, data: await node.exportAsync(...)}]`, зберегти один `.tar`
 → він падає в `~/Downloads` → `tar -xf … -C claude/figma`. Кілька окремих завантажень підряд браузер губить.
+
+## Пастки вбудованого браузера (24.11)
+
+- Глобальний `figma` у вкладці час від часу «закривається» («plugin has already been closed») — перезавантажити вкладку.
+- Коли панель браузера схована, завантаження не довершується: файл лишається в `~/Downloads/.Q6L2SF6YDW.com.anthropic.claudefordesktop.*`
+  (повний, лише не перейменований) — брати найновіший такий файл і `tar -xf` з нього.
+- `absoluteRenderBounds` буває `null` (прихований / порожній шар) — пропускати.

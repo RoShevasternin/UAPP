@@ -1,0 +1,1240 @@
+{
+ "id": "5:4502",
+ "name": "code",
+ "type": "FRAME",
+ "x": 0,
+ "y": 0,
+ "w": 375,
+ "h": 812,
+ "fills": [
+  {
+   "solid": "#f1f4f9",
+   "a": 1
+  }
+ ],
+ "children": [
+  {
+   "id": "5:4503",
+   "name": "textblock",
+   "type": "FRAME",
+   "x": 0,
+   "y": 116,
+   "w": 375,
+   "h": 475,
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 16,
+    "p": [
+     16,
+     16,
+     24,
+     16
+    ],
+    "main": "MAX",
+    "cross": "CENTER"
+   },
+   "children": [
+    {
+     "id": "5:4504",
+     "name": "img",
+     "type": "FRAME",
+     "x": 102,
+     "y": 16,
+     "w": 171,
+     "h": 135,
+     "art": true
+    },
+    {
+     "id": "5:4527",
+     "name": "text",
+     "type": "FRAME",
+     "x": 16,
+     "y": 167,
+     "w": 343,
+     "h": 76,
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 12,
+      "p": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "main": "MIN",
+      "cross": "MIN"
+     },
+     "children": [
+      {
+       "id": "5:4528",
+       "name": "Check your email",
+       "type": "TEXT",
+       "x": 0,
+       "y": 0,
+       "w": 343,
+       "h": 24,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Check your email",
+        "font": "Inter Tight Medium",
+        "size": 20,
+        "lh": "24",
+        "ls": "0%",
+        "align": "CENTER"
+       }
+      },
+      {
+       "id": "5:4529",
+       "name": "If this email has a subscription, we’ve sent a code to name@example.com. It expires in 60 minutes.",
+       "type": "TEXT",
+       "x": 0,
+       "y": 36,
+       "w": 343,
+       "h": 40,
+       "fills": "mixed",
+       "text": {
+        "chars": "If this email has a subscription, we’ve sent a code to name@example.com. It expires in 60 minutes.",
+        "font": "Inter Medium",
+        "size": 14,
+        "lh": "20",
+        "ls": "0%",
+        "align": "CENTER",
+        "runs": [
+         {
+          "t": "If this email has a subscription, we’ve sent a code to ",
+          "font": "Inter Medium",
+          "size": 14,
+          "fills": [
+           {
+            "solid": "#737373",
+            "a": 1
+           }
+          ]
+         },
+         {
+          "t": "name@example.com.",
+          "font": "Inter Medium",
+          "size": 14,
+          "fills": [
+           {
+            "solid": "#0b62da",
+            "a": 1
+           }
+          ]
+         },
+         {
+          "t": " It expires in 60 minutes.",
+          "font": "Inter Medium",
+          "size": 14,
+          "fills": [
+           {
+            "solid": "#737373",
+            "a": 1
+           }
+          ]
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "id": "5:4530",
+     "name": "Frame 1171276191",
+     "type": "FRAME",
+     "x": 16,
+     "y": 259,
+     "w": 343,
+     "h": 192,
+     "fills": [
+      {
+       "solid": "#ffffff",
+       "a": 1
+      }
+     ],
+     "r": 16,
+     "fx": [
+      {
+       "type": "DROP_SHADOW",
+       "r": 16,
+       "c": [
+        "#084191",
+        0.1
+       ],
+       "o": {
+        "x": 0,
+        "y": 4
+       },
+       "s": 0
+      }
+     ],
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 16,
+      "p": [
+       16,
+       16,
+       16,
+       16
+      ],
+      "main": "MIN",
+      "cross": "MIN"
+     },
+     "children": [
+      {
+       "id": "5:4531",
+       "name": "Favorites",
+       "type": "FRAME",
+       "x": 16,
+       "y": 16,
+       "w": 311,
+       "h": 64,
+       "al": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "MIN"
+       },
+       "children": [
+        {
+         "id": "5:4532",
+         "name": "text",
+         "type": "FRAME",
+         "x": 0,
+         "y": 0,
+         "w": 79,
+         "h": 24,
+         "al": {
+          "mode": "HORIZONTAL",
+          "gap": 10,
+          "p": [
+           0,
+           8,
+           8,
+           8
+          ],
+          "main": "CENTER",
+          "cross": "CENTER"
+         },
+         "children": [
+          {
+           "id": "5:4533",
+           "name": "Enter code",
+           "type": "TEXT",
+           "x": 8,
+           "y": 0,
+           "w": 63,
+           "h": 16,
+           "fills": [
+            {
+             "solid": "#737373",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "Enter code",
+            "font": "Inter Medium",
+            "size": 12,
+            "lh": "16",
+            "ls": "0%",
+            "align": "LEFT"
+           }
+          }
+         ]
+        },
+        {
+         "id": "5:4534",
+         "name": "Frame 1171276218",
+         "type": "FRAME",
+         "x": 0,
+         "y": 24,
+         "w": 311,
+         "h": 40,
+         "al": {
+          "mode": "HORIZONTAL",
+          "gap": 4,
+          "p": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "main": "MIN",
+          "cross": "MIN"
+         },
+         "children": [
+          {
+           "id": "5:4535",
+           "name": "label",
+           "type": "FRAME",
+           "x": 0,
+           "y": 0,
+           "w": 35.38,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": [
+            {
+             "id": "5:4536",
+             "name": "1",
+             "type": "TEXT",
+             "x": 13.69,
+             "y": 8,
+             "w": 8,
+             "h": 24,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "1",
+              "font": "Inter Tight Medium",
+              "size": 20,
+              "lh": "24",
+              "ls": "0%",
+              "align": "LEFT"
+             }
+            }
+           ]
+          },
+          {
+           "id": "5:4537",
+           "name": "label",
+           "type": "FRAME",
+           "x": 39.38,
+           "y": 0,
+           "w": 35.38,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": [
+            {
+             "id": "5:4538",
+             "name": "2",
+             "type": "TEXT",
+             "x": 11.69,
+             "y": 8,
+             "w": 12,
+             "h": 24,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "2",
+              "font": "Inter Tight Medium",
+              "size": 20,
+              "lh": "24",
+              "ls": "0%",
+              "align": "LEFT"
+             }
+            }
+           ]
+          },
+          {
+           "id": "5:4539",
+           "name": "label",
+           "type": "FRAME",
+           "x": 78.75,
+           "y": 0,
+           "w": 35.38,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": [
+            {
+             "id": "5:4540",
+             "name": "3",
+             "type": "TEXT",
+             "x": 11.19,
+             "y": 8,
+             "w": 13,
+             "h": 24,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "3",
+              "font": "Inter Tight Medium",
+              "size": 20,
+              "lh": "24",
+              "ls": "0%",
+              "align": "LEFT"
+             }
+            }
+           ]
+          },
+          {
+           "id": "5:4541",
+           "name": "label",
+           "type": "FRAME",
+           "x": 118.13,
+           "y": 0,
+           "w": 35.38,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": [
+            {
+             "id": "5:4542",
+             "name": "4",
+             "type": "TEXT",
+             "x": 11.19,
+             "y": 8,
+             "w": 13,
+             "h": 24,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "4",
+              "font": "Inter Tight Medium",
+              "size": 20,
+              "lh": "24",
+              "ls": "0%",
+              "align": "LEFT"
+             }
+            }
+           ]
+          },
+          {
+           "id": "5:4543",
+           "name": "label",
+           "type": "FRAME",
+           "x": 157.5,
+           "y": 0,
+           "w": 35.38,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": [
+            {
+             "id": "5:4544",
+             "name": "5",
+             "type": "TEXT",
+             "x": 11.69,
+             "y": 8,
+             "w": 12,
+             "h": 24,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "5",
+              "font": "Inter Tight Medium",
+              "size": 20,
+              "lh": "24",
+              "ls": "0%",
+              "align": "LEFT"
+             }
+            }
+           ]
+          },
+          {
+           "id": "5:4545",
+           "name": "label",
+           "type": "FRAME",
+           "x": 196.88,
+           "y": 0,
+           "w": 35.38,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": [
+            {
+             "id": "5:4546",
+             "name": "6",
+             "type": "TEXT",
+             "x": 11.69,
+             "y": 8,
+             "w": 12,
+             "h": 24,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "6",
+              "font": "Inter Tight Medium",
+              "size": 20,
+              "lh": "24",
+              "ls": "0%",
+              "align": "LEFT"
+             }
+            }
+           ]
+          },
+          {
+           "id": "5:4547",
+           "name": "label",
+           "type": "FRAME",
+           "x": 236.25,
+           "y": 0,
+           "w": 35.38,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": [
+            {
+             "id": "5:4548",
+             "name": "8",
+             "type": "TEXT",
+             "x": 11.69,
+             "y": 8,
+             "w": 12,
+             "h": 24,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "8",
+              "font": "Inter Tight Medium",
+              "size": 20,
+              "lh": "24",
+              "ls": "0%",
+              "align": "LEFT"
+             }
+            }
+           ]
+          },
+          {
+           "id": "5:4549",
+           "name": "label",
+           "type": "FRAME",
+           "x": 275.63,
+           "y": 0,
+           "w": 35.38,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "INSIDE",
+           "r": 12,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 1,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "children": [
+            {
+             "id": "5:4550",
+             "name": "7",
+             "type": "TEXT",
+             "x": 12.19,
+             "y": 8,
+             "w": 11,
+             "h": 24,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "7",
+              "font": "Inter Tight Medium",
+              "size": 20,
+              "lh": "24",
+              "ls": "0%",
+              "align": "LEFT"
+             }
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "5:4551",
+       "name": "line",
+       "type": "VECTOR",
+       "x": 16,
+       "y": 96,
+       "w": 311,
+       "h": 0,
+       "strokes": [
+        {
+         "solid": "#737373",
+         "a": 0.15
+        }
+       ],
+       "sw": 1,
+       "sa": "CENTER"
+      },
+      {
+       "id": "5:4552",
+       "name": "Frame 1171276217",
+       "type": "FRAME",
+       "x": 16,
+       "y": 112,
+       "w": 311,
+       "h": 64,
+       "al": {
+        "mode": "VERTICAL",
+        "gap": 12,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "CENTER"
+       },
+       "children": [
+        {
+         "id": "5:4553",
+         "name": "Use a different email",
+         "type": "TEXT",
+         "x": 86,
+         "y": 0,
+         "w": 139,
+         "h": 20,
+         "fills": [
+          {
+           "solid": "#0b62da",
+           "a": 1
+          }
+         ],
+         "text": {
+          "chars": "Use a different email",
+          "font": "Inter Medium",
+          "size": 14,
+          "lh": "20",
+          "ls": "0%",
+          "align": "CENTER"
+         }
+        },
+        {
+         "id": "5:4554",
+         "name": "Didn't get it? Check spam, or make sure it's the email from your purchase.",
+         "type": "TEXT",
+         "x": 41.5,
+         "y": 32,
+         "w": 228,
+         "h": 32,
+         "fills": [
+          {
+           "solid": "#737373",
+           "a": 1
+          }
+         ],
+         "text": {
+          "chars": "Didn't get it? Check spam, or make sure\nit's the email from your purchase.",
+          "font": "Inter Medium",
+          "size": 12,
+          "lh": "16",
+          "ls": "0%",
+          "align": "CENTER"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "5:4555",
+   "name": "logo",
+   "type": "FRAME",
+   "x": 0,
+   "y": 52,
+   "w": 375,
+   "h": 64,
+   "al": {
+    "mode": "HORIZONTAL",
+    "gap": 16,
+    "p": [
+     12,
+     16,
+     12,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "art": true
+  },
+  {
+   "id": "5:4560",
+   "name": "home",
+   "type": "FRAME",
+   "x": 0,
+   "y": 791,
+   "w": 375,
+   "h": 21,
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 24,
+    "p": [
+     8,
+     16,
+     8,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "children": [
+    {
+     "id": "5:4561",
+     "name": "Home",
+     "type": "RECTANGLE",
+     "x": 120.5,
+     "y": 8,
+     "w": 134,
+     "h": 5,
+     "fills": [
+      {
+       "solid": "#000000",
+       "a": 1
+      }
+     ],
+     "r": 100,
+     "skip": "ios"
+    }
+   ]
+  },
+  {
+   "id": "5:4562",
+   "name": "btn",
+   "type": "FRAME",
+   "x": 0,
+   "y": 719,
+   "w": 375,
+   "h": 72,
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 24,
+    "p": [
+     8,
+     16,
+     8,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "children": [
+    {
+     "id": "5:4563",
+     "name": "Btn",
+     "type": "INSTANCE",
+     "x": 16,
+     "y": 8,
+     "w": 343,
+     "h": 56,
+     "fills": [
+      {
+       "solid": "#f1f4f9",
+       "a": 1
+      }
+     ],
+     "strokes": [
+      {
+       "solid": "#0b62da",
+       "a": 0.15
+      }
+     ],
+     "sw": 1,
+     "sa": "INSIDE",
+     "r": 100,
+     "al": {
+      "mode": "HORIZONTAL",
+      "gap": 8,
+      "p": [
+       16,
+       24,
+       16,
+       24
+      ],
+      "main": "CENTER",
+      "cross": "CENTER"
+     },
+     "comp": "Btn / Btn=Third, Size=56, Tap=off",
+     "children": [
+      {
+       "id": "I5:4563;46:20949",
+       "name": "material-symbols:search",
+       "type": "INSTANCE",
+       "x": 24,
+       "y": 16,
+       "w": 24,
+       "h": 24,
+       "hidden": true,
+       "comp": "material-symbols:search",
+       "children": [
+        {
+         "id": "I5:4563;46:20949;46:20787",
+         "name": "Vector",
+         "type": "VECTOR",
+         "x": 3,
+         "y": 3,
+         "w": 18,
+         "h": 18,
+         "fills": [
+          {
+           "solid": "#0b62da",
+           "a": 1
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "I5:4563;46:20950",
+       "name": "Label",
+       "type": "TEXT",
+       "x": 117.5,
+       "y": 18,
+       "w": 108,
+       "h": 20,
+       "opacity": 0.5,
+       "fills": [
+        {
+         "solid": "#0b62da",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Resend in 29s",
+        "font": "Inter Medium",
+        "size": 16,
+        "lh": "20",
+        "ls": "0%",
+        "align": "LEFT"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "5:4564",
+   "name": "blackout",
+   "type": "RECTANGLE",
+   "x": 0,
+   "y": 0,
+   "w": 375,
+   "h": 812,
+   "fills": [
+    {
+     "solid": "#000000",
+     "a": 0.25
+    }
+   ],
+   "fx": [
+    {
+     "type": "BACKGROUND_BLUR",
+     "r": 16
+    }
+   ]
+  },
+  {
+   "id": "5:4565",
+   "name": "system bar",
+   "type": "GROUP",
+   "x": 0,
+   "y": 0,
+   "w": 375,
+   "h": 52,
+   "skip": "ios"
+  },
+  {
+   "id": "5:4582",
+   "name": "Access blocked",
+   "type": "FRAME",
+   "x": 0,
+   "y": 559,
+   "w": 375,
+   "h": 253,
+   "fills": [
+    {
+     "solid": "#ffffff",
+     "a": 1
+    }
+   ],
+   "r": [
+    24,
+    24,
+    0,
+    0
+   ],
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 24,
+    "p": [
+     48,
+     16,
+     8,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "children": [
+    {
+     "id": "5:4583",
+     "name": "Frame 1171276192",
+     "type": "FRAME",
+     "x": 16,
+     "y": 48,
+     "w": 343,
+     "h": 168,
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 48,
+      "p": [
+       0,
+       0,
+       24,
+       0
+      ],
+      "main": "MIN",
+      "cross": "CENTER"
+     },
+     "children": [
+      {
+       "id": "5:4584",
+       "name": "loader",
+       "type": "INSTANCE",
+       "x": 151.5,
+       "y": 0,
+       "w": 40,
+       "h": 40,
+       "comp": "loader / Property 1=1, Property 2=1",
+       "children": [
+        {
+         "id": "I5:4584;46:21061",
+         "name": "Ellipse",
+         "type": "ELLIPSE",
+         "x": 0,
+         "y": 0,
+         "w": 40,
+         "h": 40,
+         "strokes": [
+          {
+           "solid": "#0b62da",
+           "a": 1
+          }
+         ],
+         "sw": 4,
+         "sa": "INSIDE"
+        }
+       ]
+      },
+      {
+       "id": "5:4585",
+       "name": "textblock",
+       "type": "FRAME",
+       "x": 0,
+       "y": 88,
+       "w": 343,
+       "h": 56,
+       "al": {
+        "mode": "VERTICAL",
+        "gap": 12,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "MIN"
+       },
+       "children": [
+        {
+         "id": "5:4586",
+         "name": "Verifying...",
+         "type": "TEXT",
+         "x": 0,
+         "y": 0,
+         "w": 343,
+         "h": 24,
+         "fills": [
+          {
+           "solid": "#000000",
+           "a": 1
+          }
+         ],
+         "text": {
+          "chars": "Verifying...",
+          "font": "Inter Tight Medium",
+          "size": 20,
+          "lh": "24",
+          "ls": "0%",
+          "align": "CENTER"
+         }
+        },
+        {
+         "id": "5:4587",
+         "name": "Checking your subscription…",
+         "type": "TEXT",
+         "x": 0,
+         "y": 36,
+         "w": 343,
+         "h": 20,
+         "fills": [
+          {
+           "solid": "#737373",
+           "a": 1
+          }
+         ],
+         "text": {
+          "chars": "Checking your subscription…",
+          "font": "Inter Medium",
+          "size": 14,
+          "lh": "20",
+          "ls": "0%",
+          "align": "CENTER"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "5:4588",
+     "name": "Home",
+     "type": "RECTANGLE",
+     "x": 120.5,
+     "y": 240,
+     "w": 134,
+     "h": 5,
+     "fills": [
+      {
+       "solid": "#000000",
+       "a": 1
+      }
+     ],
+     "r": 100,
+     "skip": "ios"
+    }
+   ]
+  }
+ ]
+}

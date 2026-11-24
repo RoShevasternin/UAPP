@@ -42,7 +42,10 @@ Breach Check, генератор паролів. Kotlin + LibGDX. Початок
   (`proto-diff.py`), рух — `proto-swipe-test.py` (headless «палець»). Кадр посеред свайпу: `#onb1@1.5!raw`.
 - Знімок без claude.ai: `sh claude/tools/proto-shot.sh paywall /tmp/pw.png 900 1000` (headless Chrome).
 - Зроблено: ряд 1 — splash → онбординг (intro + 5) → paywall (3 тарифи, карусель можливостей, мок вікна Google Play).
-  Далі: ряд 2 — Sign in, код, «підписка скінчилась», «немає підписки на цю пошту».
+  Ряд 2 (build 9) — вхід за поштою: Sign in → код з 6 цифр → Verifying → активна / скінчилась / немає підписки,
+  «Can't connect» аркушем. Клавіатура — картинка з Figma (iOS) з клікабельними клавішами + фізична клавіатура Мака.
+  Відповіді «сервера» — у панелі (Server answers). Автотест потоку — `claude/tools/proto-auth-test.py`.
+  Далі: ряд 3 — Dashboard, scan, Result.
 
 ## Figma
 
@@ -64,6 +67,10 @@ Breach Check, генератор паролів. Kotlin + LibGDX. Початок
   (`/Users/admin/Apps/Game Orbit Dash PRIVATE/Orbit Dash/docs/vfx.md`, `msdf-shapes.md`).
 
 ## Відкриті питання до VELDAN
+
+- Кадр «Verifying…» (5:4502) — поле коду з 8 клітинок, решта кадрів — 6. Зроблено 6 (схоже на описку в макеті).
+- «No subscription on this email» — після пошти чи після коду? Текст «If this email has a subscription, we’ve sent a code»
+  означає, що без підписки код не надсилається → у прототипі показуємо одразу після пошти.
 
 - Тексти макета кажуть «iPhone» («Your iPhone, Protected», «…space on your iPhone») — для Android замінити.
 - `applicationId` поки `com.seciro.app` — остаточний треба до першого завантаження в Play.
