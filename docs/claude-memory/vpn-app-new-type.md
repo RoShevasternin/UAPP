@@ -20,3 +20,17 @@ metadata:
 
 **Why:** преміум-продукт за підпискою — стабільність VPN важливіша за все.
 **How to apply:** нову апку не будувати з Redwave/еталона; тека — у `november/`.
+
+## Дизайн і асети (24.11.2026)
+
+- **Еталон якості — `/Users/admin/Apps/Game Orbit Dash PRIVATE`** (окремий репо): шрифти MSDF
+  (`assets/font/gen-*.command`, `msdf-atlas-gen`), фігури SVG → `msdfgen` → атлас
+  (`Orbit Dash/docs/msdf-shapes.md`, `msdf-usage.md`), «група = фрейм Figma» (`SizeScaler`),
+  Layer Blur з Figma 1:1 (`docs/vfx.md`). Брати звідти підходи, не код Redwave.
+- **Figma MCP НЕ використовувати** — VELDAN не хоче платних трат; Starter ≈ 8–20 викликів/міс
+  (досвід Orbit Dash, `docs/figma-workflow.md`). `whoami` — безкоштовний.
+- Шлях без MCP: (1) SVG компонента = джерело чисел (Copy as SVG / експорт), скріншот — лише
+  композиція, числа з нього не міряти; (2) самому відкривати файл у вбудованому браузері;
+  ◌ перевірити на першому файлі: глобальний `figma` у консолі сторінки (`exportAsync` SVG/PNG) —
+  тоді експорт без рук; якщо ні — Export / Copy as SVG руками або Chrome-розширенням.
+- Число, якого немає в макеті, не вигадувати — читати з SVG або питати.
