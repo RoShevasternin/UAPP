@@ -80,6 +80,29 @@ def gen_layers():
         f.write("\n".join(lines) + "\nexport default {\n" + body + "\n};\n")
 
 
+def gen_fig():
+    """Кадри для рендерера (claude/figma/r3 …: <кадр>.json + PNG векторних шарів) → .tools/fig.gen.js:
+    FRAMES {id: дерево}, PNG {"r3/<hash>.png": src}."""
+    import json, glob
+    base = os.path.join(HERE, "..", "claude", "figma")
+    lines, frames, pngs = [], [], {}
+    for d in sorted(glob.glob(os.path.join(base, "r[0-9]*"))):
+        for jf in sorted(glob.glob(os.path.join(d, "*.json"))):
+            var = "F" + os.path.basename(jf)[:-5].replace("-", "_")
+            lines.append(f"import {var} from {json.dumps(os.path.abspath(jf))};")
+            frames.append((os.path.basename(jf)[:-5].replace("-", ":"), var))
+            def walk(n):
+                if n.get("png"): pngs[n["png"]] = os.path.abspath(os.path.join(base, n["png"]))
+                for c in n.get("children", []): walk(c)
+            walk(json.load(open(jf)))
+    for i, (k, path) in enumerate(sorted(pngs.items())):
+        lines.append(f"import P{i} from {json.dumps(path)};")
+    body = "export const FRAMES = {" + ", ".join(f"{json.dumps(k)}: {v}" for k, v in frames) + "};\n"
+    body += "export const PNG = {" + ", ".join(f"{json.dumps(k)}: P{i}" for i, (k, _) in enumerate(sorted(pngs.items()))) + "};\n"
+    with open(os.path.join(TOOLS, "fig.gen.js"), "w") as f:
+        f.write("\n".join(lines) + "\n" + body)
+
+
 def bundle():
     entry = os.path.join(TOOLS, "entry.jsx")
     with open(entry, "w") as f:
@@ -107,6 +130,7 @@ def main():
     for name, ver in PACKAGES.items():
         fetch(name, ver)
     gen_layers()
+    gen_fig()
     js = bundle()
     if "--check" in sys.argv:
         print("ok, bundle", len(js) // 1024, "KB")

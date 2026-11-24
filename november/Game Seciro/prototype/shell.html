@@ -129,6 +129,17 @@ input[type="range"] { accent-color: var(--accent); }
 .shake { animation: shake .45s cubic-bezier(.36,.07,.19,.97); }
 @keyframes popIn { from { transform: scale(.7); opacity: 0; } 60% { transform: scale(1.04); opacity: 1; } to { transform: none; } }
 .pop-in > * { animation: popIn .6s cubic-bezier(.2,.8,.2,1) both; transform-origin: 50% 60%; }
+/* ряд 3 */
+@keyframes riseIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.rise { animation: riseIn .5s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes floatSlow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+.float-slow { animation: floatSlow 4.5s ease-in-out infinite; }
+@keyframes breatheSoft { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.025); } }
+.breathe-soft { animation: breatheSoft 2.4s ease-in-out infinite; }
+.spin-arc { animation: spin .9s linear infinite; -webkit-mask-image: conic-gradient(#000 0deg 250deg, transparent 250deg); mask-image: conic-gradient(#000 0deg 250deg, transparent 250deg); }
+@keyframes popIcon { from { transform: scale(.3); opacity: 0; } 60% { transform: scale(1.15); opacity: 1; } to { transform: none; } }
+.pop-icon { animation: popIcon .4s cubic-bezier(.2,.8,.2,1) both; }
+.fig-scroll { scrollbar-width: none; } .fig-scroll::-webkit-scrollbar { display: none; }
 .raw, .raw * { animation: none !important; transition: none !important; }
 .enter-fwd { animation: inFwd .32s cubic-bezier(.2,.8,.2,1); }
 .enter-back { animation: inBack .32s cubic-bezier(.2,.8,.2,1); }

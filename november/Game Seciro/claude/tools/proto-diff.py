@@ -19,6 +19,8 @@ SHOTS = {  # екран → кадр Figma
     "signin": "r2_01_5-4374.png", "signin-typing": "r2_02_5-4923.png", "signin-filled": "r2_03_5-4985.png", "offline": "r2_04_5-5047.png",
     "code": "r2_05_5-4433.png", "code-typing": "r2_06_5-4775.png", "code-filled": "r2_07_5-4846.png", "verifying": "r2_08_5-4502.png",
     "code-error": "r2_09_5-4589.png", "sub-ended": "r2_10_5-4668.png", "no-sub": "r2_11_5-4722.png",
+    "dashboard": "r3_01_5-1686.png", "scan": "r3_02_5-8170.png", "result-ok": "r3_03_5-2114.png", "result-issues": "r3_04_5-1784.png",
+    "sheet-safari": "r3_05_5-1868.png", "sheet-update": "r3_06_5-1995.png", "dash-issues": "r3_07_5-3269.png",
 }
 
 def shot(screen, tmp):

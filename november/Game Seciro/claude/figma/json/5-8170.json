@@ -1,0 +1,1453 @@
+{
+ "id": "5:8170",
+ "name": "scan",
+ "type": "FRAME",
+ "x": 0,
+ "y": 0,
+ "w": 375,
+ "h": 812,
+ "fills": [
+  {
+   "solid": "#f1f4f9",
+   "a": 1
+  }
+ ],
+ "clip": true,
+ "children": [
+  {
+   "id": "5:8171",
+   "name": "home",
+   "type": "FRAME",
+   "x": 0,
+   "y": 787,
+   "w": 375,
+   "h": 25,
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 24,
+    "p": [
+     12,
+     16,
+     8,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "clip": true,
+   "children": [
+    {
+     "id": "5:8172",
+     "name": "Home",
+     "type": "RECTANGLE",
+     "x": 120.5,
+     "y": 12,
+     "w": 134,
+     "h": 5,
+     "fills": [
+      {
+       "solid": "#000000",
+       "a": 1
+      }
+     ],
+     "r": 100,
+     "skip": "ios"
+    }
+   ]
+  },
+  {
+   "id": "5:8173",
+   "name": "home",
+   "type": "FRAME",
+   "x": 0,
+   "y": 116,
+   "w": 375,
+   "h": 649,
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 24,
+    "p": [
+     8,
+     16,
+     8,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "clip": true,
+   "children": [
+    {
+     "id": "5:8174",
+     "name": "loading",
+     "type": "INSTANCE",
+     "x": 91.5,
+     "y": 8,
+     "w": 192,
+     "h": 192,
+     "comp": "loading / Property 1=1",
+     "children": [
+      {
+       "id": "I5:8174;46:21070",
+       "name": "shape",
+       "type": "VECTOR",
+       "x": 4,
+       "y": 4,
+       "w": 184,
+       "h": 184,
+       "strokes": [
+        {
+         "solid": "#0857d0",
+         "a": 0.1
+        }
+       ],
+       "sw": 8,
+       "sa": "CENTER"
+      },
+      {
+       "id": "I5:8174;46:21071",
+       "name": "Mask group",
+       "type": "GROUP",
+       "x": 4,
+       "y": 4,
+       "w": 184,
+       "h": 184,
+       "children": [
+        {
+         "id": "I5:8174;46:21072",
+         "name": "shape",
+         "type": "VECTOR",
+         "x": 4,
+         "y": 4,
+         "w": 184,
+         "h": 184,
+         "strokes": [
+          {
+           "solid": "#0b62da",
+           "a": 1
+          }
+         ],
+         "sw": 8,
+         "sa": "CENTER",
+         "mask": true
+        },
+        {
+         "id": "I5:8174;46:21073",
+         "name": "sectors",
+         "type": "GROUP",
+         "x": 0,
+         "y": 0,
+         "w": 192,
+         "h": 192,
+         "children": [
+          {
+           "id": "I5:8174;46:21074",
+           "name": "sector 1",
+           "type": "GROUP",
+           "x": 0,
+           "y": 0,
+           "w": 192,
+           "h": 192,
+           "children": [
+            {
+             "id": "I5:8174;46:21075",
+             "name": "mask",
+             "type": "ELLIPSE",
+             "x": 0,
+             "y": 0,
+             "w": 192,
+             "h": 192,
+             "fills": [
+              {
+               "solid": "#0b62da",
+               "a": 1
+              }
+             ],
+             "arc": {
+              "startingAngle": 0,
+              "endingAngle": -1.5707963705062866,
+              "innerRadius": 0
+             },
+             "mask": true
+            },
+            {
+             "id": "I5:8174;46:21076",
+             "name": "Ellipse",
+             "type": "ELLIPSE",
+             "x": 0,
+             "y": 192,
+             "w": 192,
+             "h": 192,
+             "fills": [
+              {
+               "solid": "#0b62da",
+               "a": 1
+              }
+             ],
+             "arc": {
+              "startingAngle": 0,
+              "endingAngle": -1.5707963705062866,
+              "innerRadius": 0
+             }
+            }
+           ]
+          },
+          {
+           "id": "I5:8174;46:21077",
+           "name": "sector 2",
+           "type": "GROUP",
+           "x": 192,
+           "y": 0,
+           "w": 192,
+           "h": 192,
+           "children": [
+            {
+             "id": "I5:8174;46:21078",
+             "name": "mask",
+             "type": "ELLIPSE",
+             "x": 192,
+             "y": 0,
+             "w": 192,
+             "h": 192,
+             "fills": [
+              {
+               "solid": "#0b62da",
+               "a": 1
+              }
+             ],
+             "arc": {
+              "startingAngle": 0,
+              "endingAngle": -1.5707963705062866,
+              "innerRadius": 0
+             },
+             "mask": true
+            },
+            {
+             "id": "I5:8174;46:21079",
+             "name": "Ellipse",
+             "type": "ELLIPSE",
+             "x": 0,
+             "y": 0,
+             "w": 192,
+             "h": 192,
+             "fills": [
+              {
+               "solid": "#0b62da",
+               "a": 1
+              }
+             ],
+             "arc": {
+              "startingAngle": 0,
+              "endingAngle": -1.5707963705062866,
+              "innerRadius": 0
+             }
+            }
+           ]
+          },
+          {
+           "id": "I5:8174;46:21080",
+           "name": "sector 3",
+           "type": "GROUP",
+           "x": 192,
+           "y": 192,
+           "w": 192,
+           "h": 192,
+           "children": [
+            {
+             "id": "I5:8174;46:21081",
+             "name": "mask",
+             "type": "ELLIPSE",
+             "x": 192,
+             "y": 192,
+             "w": 192,
+             "h": 192,
+             "fills": [
+              {
+               "solid": "#0b62da",
+               "a": 1
+              }
+             ],
+             "arc": {
+              "startingAngle": 0,
+              "endingAngle": -1.5707963705062866,
+              "innerRadius": 0
+             },
+             "mask": true
+            },
+            {
+             "id": "I5:8174;46:21082",
+             "name": "Ellipse",
+             "type": "ELLIPSE",
+             "x": 192,
+             "y": 0,
+             "w": 192,
+             "h": 192,
+             "fills": [
+              {
+               "solid": "#0b62da",
+               "a": 1
+              }
+             ],
+             "arc": {
+              "startingAngle": 0,
+              "endingAngle": -1.5707963705062866,
+              "innerRadius": 0
+             }
+            }
+           ]
+          },
+          {
+           "id": "I5:8174;46:21083",
+           "name": "sector 4",
+           "type": "GROUP",
+           "x": 0,
+           "y": 192,
+           "w": 192,
+           "h": 192,
+           "children": [
+            {
+             "id": "I5:8174;46:21084",
+             "name": "mask",
+             "type": "ELLIPSE",
+             "x": 0,
+             "y": 192,
+             "w": 192,
+             "h": 192,
+             "fills": [
+              {
+               "solid": "#0b62da",
+               "a": 1
+              }
+             ],
+             "arc": {
+              "startingAngle": 0,
+              "endingAngle": -1.5707963705062866,
+              "innerRadius": 0
+             },
+             "mask": true
+            },
+            {
+             "id": "I5:8174;46:21085",
+             "name": "Ellipse",
+             "type": "ELLIPSE",
+             "x": 192,
+             "y": 192,
+             "w": 192,
+             "h": 192,
+             "fills": [
+              {
+               "solid": "#0b62da",
+               "a": 1
+              }
+             ],
+             "arc": {
+              "startingAngle": 0,
+              "endingAngle": -1.5707963705062866,
+              "innerRadius": 0
+             }
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "I5:8174;46:21086",
+       "name": "num",
+       "type": "FRAME",
+       "x": 48,
+       "y": 78,
+       "w": 96,
+       "h": 36,
+       "clip": true,
+       "children": [
+        {
+         "id": "I5:8174;46:21087",
+         "name": "Frame",
+         "type": "FRAME",
+         "x": 0,
+         "y": 0,
+         "w": 96,
+         "h": 180,
+         "al": {
+          "mode": "VERTICAL",
+          "gap": 0,
+          "p": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "main": "MIN",
+          "cross": "CENTER"
+         },
+         "children": [
+          {
+           "id": "I5:8174;46:21088",
+           "name": "0%",
+           "type": "TEXT",
+           "x": 0,
+           "y": 0,
+           "w": 96,
+           "h": 36,
+           "fills": [
+            {
+             "solid": "#0857d0",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "0%",
+            "font": "Inter Tight Medium",
+            "size": 32,
+            "lh": "36",
+            "ls": "0%",
+            "align": "CENTER",
+            "deco": "NONE",
+            "case": "ORIGINAL"
+           }
+          },
+          {
+           "id": "I5:8174;46:21089",
+           "name": "25%",
+           "type": "TEXT",
+           "x": 0,
+           "y": 36,
+           "w": 96,
+           "h": 36,
+           "fills": [
+            {
+             "solid": "#0857d0",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "25%",
+            "font": "Inter Tight Medium",
+            "size": 32,
+            "lh": "36",
+            "ls": "0%",
+            "align": "CENTER",
+            "deco": "NONE",
+            "case": "ORIGINAL"
+           }
+          },
+          {
+           "id": "I5:8174;46:21090",
+           "name": "50%",
+           "type": "TEXT",
+           "x": 0,
+           "y": 72,
+           "w": 96,
+           "h": 36,
+           "fills": [
+            {
+             "solid": "#0857d0",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "50%",
+            "font": "Inter Tight Medium",
+            "size": 32,
+            "lh": "36",
+            "ls": "0%",
+            "align": "CENTER",
+            "deco": "NONE",
+            "case": "ORIGINAL"
+           }
+          },
+          {
+           "id": "I5:8174;46:21091",
+           "name": "75%",
+           "type": "TEXT",
+           "x": 0,
+           "y": 108,
+           "w": 96,
+           "h": 36,
+           "fills": [
+            {
+             "solid": "#0857d0",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "75%",
+            "font": "Inter Tight Medium",
+            "size": 32,
+            "lh": "36",
+            "ls": "0%",
+            "align": "CENTER",
+            "deco": "NONE",
+            "case": "ORIGINAL"
+           }
+          },
+          {
+           "id": "I5:8174;46:21092",
+           "name": "100%",
+           "type": "TEXT",
+           "x": 0,
+           "y": 144,
+           "w": 96,
+           "h": 36,
+           "fills": [
+            {
+             "solid": "#0857d0",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "100%",
+            "font": "Inter Tight Medium",
+            "size": 32,
+            "lh": "36",
+            "ls": "0%",
+            "align": "CENTER",
+            "deco": "NONE",
+            "case": "ORIGINAL"
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "5:8175",
+     "name": "StatusCol",
+     "type": "FRAME",
+     "x": 88,
+     "y": 224,
+     "w": 199,
+     "h": 52,
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 8,
+      "p": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "main": "MIN",
+      "cross": "CENTER"
+     },
+     "clip": true,
+     "children": [
+      {
+       "id": "5:8176",
+       "name": "Scanning in progress",
+       "type": "TEXT",
+       "x": 7,
+       "y": 0,
+       "w": 185,
+       "h": 24,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Scanning in progress",
+        "font": "Inter Tight Medium",
+        "size": 20,
+        "lh": "24",
+        "ls": "0%",
+        "align": "CENTER",
+        "deco": "NONE",
+        "case": "ORIGINAL"
+       }
+      },
+      {
+       "id": "5:8177",
+       "name": "This may take a few moments",
+       "type": "TEXT",
+       "x": 0,
+       "y": 32,
+       "w": 199,
+       "h": 20,
+       "fills": [
+        {
+         "solid": "#737373",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "This may take a few moments",
+        "font": "Inter Medium",
+        "size": 14,
+        "lh": "20",
+        "ls": "0%",
+        "align": "CENTER",
+        "deco": "NONE",
+        "case": "ORIGINAL"
+       }
+      }
+     ]
+    },
+    {
+     "id": "5:8178",
+     "name": "checklist",
+     "type": "INSTANCE",
+     "x": 16,
+     "y": 300,
+     "w": 343,
+     "h": 341,
+     "fills": [
+      {
+       "solid": "#ffffff",
+       "a": 1
+      }
+     ],
+     "r": 16,
+     "fx": [
+      {
+       "type": "DROP_SHADOW",
+       "r": 16,
+       "c": [
+        "#084191",
+        0.1
+       ],
+       "o": {
+        "x": 0,
+        "y": 4
+       },
+       "s": 0
+      }
+     ],
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 16,
+      "p": [
+       16,
+       16,
+       16,
+       16
+      ],
+      "main": "MIN",
+      "cross": "MAX"
+     },
+     "clip": true,
+     "comp": "checklist / Property 1=1",
+     "children": [
+      {
+       "id": "I5:8178;46:21191",
+       "name": "Frame 1171276157",
+       "type": "FRAME",
+       "x": 16,
+       "y": 16,
+       "w": 311,
+       "h": 24,
+       "al": {
+        "mode": "HORIZONTAL",
+        "gap": 12,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "CENTER"
+       },
+       "children": [
+        {
+         "id": "I5:8178;46:21192",
+         "name": "loader",
+         "type": "INSTANCE",
+         "x": 0,
+         "y": 0,
+         "w": 24,
+         "h": 24,
+         "comp": "loader / Property 1=2, Property 2=1",
+         "children": [
+          {
+           "id": "I5:8178;46:21192;46:21028",
+           "name": "Ellipse",
+           "type": "ELLIPSE",
+           "x": 2,
+           "y": 2,
+           "w": 20,
+           "h": 20,
+           "strokes": [
+            {
+             "solid": "#0b62da",
+             "a": 1
+            }
+           ],
+           "sw": 2,
+           "sa": "INSIDE",
+           "arc": {
+            "startingAngle": 0,
+            "endingAngle": 6.283185958862305,
+            "innerRadius": 1
+           }
+          }
+         ]
+        },
+        {
+         "id": "I5:8178;46:21193",
+         "name": "VPN",
+         "type": "TEXT",
+         "x": 36,
+         "y": 2,
+         "w": 131.5,
+         "h": 20,
+         "fills": [
+          {
+           "solid": "#000000",
+           "a": 1
+          }
+         ],
+         "text": {
+          "chars": "VPN",
+          "font": "Inter Medium",
+          "size": 14,
+          "lh": "20",
+          "ls": "0%",
+          "align": "LEFT",
+          "deco": "NONE",
+          "case": "ORIGINAL"
+         }
+        },
+        {
+         "id": "I5:8178;46:21194",
+         "name": "Scanning...",
+         "type": "TEXT",
+         "x": 179.5,
+         "y": 2,
+         "w": 131.5,
+         "h": 20,
+         "fills": [
+          {
+           "solid": "#0b62da",
+           "a": 1
+          }
+         ],
+         "text": {
+          "chars": "Scanning...",
+          "font": "Inter Medium",
+          "size": 14,
+          "lh": "20",
+          "ls": "0%",
+          "align": "RIGHT",
+          "deco": "NONE",
+          "case": "ORIGINAL"
+         }
+        }
+       ]
+      },
+      {
+       "id": "I5:8178;46:21195",
+       "name": "Vector 10",
+       "type": "VECTOR",
+       "x": 16,
+       "y": 56.5,
+       "w": 311,
+       "h": 0,
+       "strokes": [
+        {
+         "solid": "#eeeeee",
+         "a": 1
+        }
+       ],
+       "sw": 1,
+       "sa": "CENTER"
+      },
+      {
+       "id": "I5:8178;46:21196",
+       "name": "Frame 1171276158",
+       "type": "FRAME",
+       "x": 16,
+       "y": 73,
+       "w": 311,
+       "h": 24,
+       "al": {
+        "mode": "HORIZONTAL",
+        "gap": 12,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "CENTER"
+       },
+       "children": [
+        {
+         "id": "I5:8178;46:21197",
+         "name": "schedule",
+         "type": "INSTANCE",
+         "x": 0,
+         "y": 0,
+         "w": 24,
+         "h": 24,
+         "clip": true,
+         "comp": "schedule",
+         "children": [
+          {
+           "id": "I5:8178;46:21197;46:20747",
+           "name": "icon",
+           "type": "VECTOR",
+           "x": 2,
+           "y": 2,
+           "w": 20,
+           "h": 20,
+           "fills": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "id": "I5:8178;46:21198",
+         "name": "Web Protection",
+         "type": "TEXT",
+         "x": 36,
+         "y": 2,
+         "w": 103,
+         "h": 20,
+         "fills": [
+          {
+           "solid": "#737373",
+           "a": 1
+          }
+         ],
+         "text": {
+          "chars": "Web Protection",
+          "font": "Inter Medium",
+          "size": 14,
+          "lh": "20",
+          "ls": "0%",
+          "align": "LEFT",
+          "deco": "NONE",
+          "case": "ORIGINAL"
+         }
+        },
+        {
+         "id": "I5:8178;46:21199",
+         "name": "Waiting",
+         "type": "TEXT",
+         "x": 151,
+         "y": 2,
+         "w": 160,
+         "h": 20,
+         "fills": [
+          {
+           "solid": "#737373",
+           "a": 0.15
+          }
+         ],
+         "text": {
+          "chars": "Waiting",
+          "font": "Inter Medium",
+          "size": 14,
+          "lh": "20",
+          "ls": "0%",
+          "align": "RIGHT",
+          "deco": "NONE",
+          "case": "ORIGINAL"
+         }
+        }
+       ]
+      },
+      {
+       "id": "I5:8178;46:21200",
+       "name": "Vector 11",
+       "type": "VECTOR",
+       "x": 16,
+       "y": 113.5,
+       "w": 311,
+       "h": 0,
+       "strokes": [
+        {
+         "solid": "#eeeeee",
+         "a": 1
+        }
+       ],
+       "sw": 1,
+       "sa": "CENTER"
+      },
+      {
+       "id": "I5:8178;46:21201",
+       "name": "Frame 1171276159",
+       "type": "FRAME",
+       "x": 16,
+       "y": 130,
+       "w": 311,
+       "h": 24,
+       "al": {
+        "mode": "HORIZONTAL",
+        "gap": 12,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "CENTER"
+       },
+       "children": [
+        {
+         "id": "I5:8178;46:21202",
+         "name": "schedule",
+         "type": "INSTANCE",
+         "x": 0,
+         "y": 0,
+         "w": 24,
+         "h": 24,
+         "clip": true,
+         "comp": "schedule",
+         "children": [
+          {
+           "id": "I5:8178;46:21202;46:20747",
+           "name": "icon",
+           "type": "VECTOR",
+           "x": 2,
+           "y": 2,
+           "w": 20,
+           "h": 20,
+           "fills": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "id": "I5:8178;46:21203",
+         "name": "Safe QR Scanner",
+         "type": "TEXT",
+         "x": 36,
+         "y": 2,
+         "w": 113,
+         "h": 20,
+         "fills": [
+          {
+           "solid": "#737373",
+           "a": 1
+          }
+         ],
+         "text": {
+          "chars": "Safe QR Scanner",
+          "font": "Inter Medium",
+          "size": 14,
+          "lh": "20",
+          "ls": "0%",
+          "align": "LEFT",
+          "deco": "NONE",
+          "case": "ORIGINAL"
+         }
+        },
+        {
+         "id": "I5:8178;46:21204",
+         "name": "Waiting",
+         "type": "TEXT",
+         "x": 161,
+         "y": 2,
+         "w": 150,
+         "h": 20,
+         "fills": [
+          {
+           "solid": "#737373",
+           "a": 0.15
+          }
+         ],
+         "text": {
+          "chars": "Waiting",
+          "font": "Inter Medium",
+          "size": 14,
+          "lh": "20",
+          "ls": "0%",
+          "align": "RIGHT",
+          "deco": "NONE",
+          "case": "ORIGINAL"
+         }
+        }
+       ]
+      },
+      {
+       "id": "I5:8178;46:21205",
+       "name": "Vector 12",
+       "type": "VECTOR",
+       "x": 16,
+       "y": 170.5,
+       "w": 311,
+       "h": 0,
+       "strokes": [
+        {
+         "solid": "#eeeeee",
+         "a": 1
+        }
+       ],
+       "sw": 1,
+       "sa": "CENTER"
+      },
+      {
+       "id": "I5:8178;46:21206",
+       "name": "Frame 1171276160",
+       "type": "FRAME",
+       "x": 16,
+       "y": 187,
+       "w": 311,
+       "h": 24,
+       "al": {
+        "mode": "HORIZONTAL",
+        "gap": 12,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "CENTER"
+       },
+       "children": [
+        {
+         "id": "I5:8178;46:21207",
+         "name": "schedule",
+         "type": "INSTANCE",
+         "x": 0,
+         "y": 0,
+         "w": 24,
+         "h": 24,
+         "clip": true,
+         "comp": "schedule",
+         "children": [
+          {
+           "id": "I5:8178;46:21207;46:20747",
+           "name": "icon",
+           "type": "VECTOR",
+           "x": 2,
+           "y": 2,
+           "w": 20,
+           "h": 20,
+           "fills": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "id": "I5:8178;46:21208",
+         "name": "Storage Cleaner",
+         "type": "TEXT",
+         "x": 36,
+         "y": 2,
+         "w": 109,
+         "h": 20,
+         "fills": [
+          {
+           "solid": "#737373",
+           "a": 1
+          }
+         ],
+         "text": {
+          "chars": "Storage Cleaner",
+          "font": "Inter Medium",
+          "size": 14,
+          "lh": "20",
+          "ls": "0%",
+          "align": "LEFT",
+          "deco": "NONE",
+          "case": "ORIGINAL"
+         }
+        },
+        {
+         "id": "I5:8178;46:21209",
+         "name": "Waiting",
+         "type": "TEXT",
+         "x": 157,
+         "y": 2,
+         "w": 154,
+         "h": 20,
+         "fills": [
+          {
+           "solid": "#737373",
+           "a": 0.15
+          }
+         ],
+         "text": {
+          "chars": "Waiting",
+          "font": "Inter Medium",
+          "size": 14,
+          "lh": "20",
+          "ls": "0%",
+          "align": "RIGHT",
+          "deco": "NONE",
+          "case": "ORIGINAL"
+         }
+        }
+       ]
+      },
+      {
+       "id": "I5:8178;46:21210",
+       "name": "Vector 13",
+       "type": "VECTOR",
+       "x": 16,
+       "y": 227.5,
+       "w": 311,
+       "h": 0,
+       "strokes": [
+        {
+         "solid": "#eeeeee",
+         "a": 1
+        }
+       ],
+       "sw": 1,
+       "sa": "CENTER"
+      },
+      {
+       "id": "I5:8178;46:21211",
+       "name": "Frame 1171276161",
+       "type": "FRAME",
+       "x": 16,
+       "y": 244,
+       "w": 311,
+       "h": 24,
+       "al": {
+        "mode": "HORIZONTAL",
+        "gap": 12,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "CENTER"
+       },
+       "children": [
+        {
+         "id": "I5:8178;46:21212",
+         "name": "schedule",
+         "type": "INSTANCE",
+         "x": 0,
+         "y": 0,
+         "w": 24,
+         "h": 24,
+         "clip": true,
+         "comp": "schedule",
+         "children": [
+          {
+           "id": "I5:8178;46:21212;46:20747",
+           "name": "icon",
+           "type": "VECTOR",
+           "x": 2,
+           "y": 2,
+           "w": 20,
+           "h": 20,
+           "fills": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "id": "I5:8178;46:21213",
+         "name": "Breach Check",
+         "type": "TEXT",
+         "x": 36,
+         "y": 2,
+         "w": 94,
+         "h": 20,
+         "fills": [
+          {
+           "solid": "#737373",
+           "a": 1
+          }
+         ],
+         "text": {
+          "chars": "Breach Check",
+          "font": "Inter Medium",
+          "size": 14,
+          "lh": "20",
+          "ls": "0%",
+          "align": "LEFT",
+          "deco": "NONE",
+          "case": "ORIGINAL"
+         }
+        },
+        {
+         "id": "I5:8178;46:21214",
+         "name": "Waiting",
+         "type": "TEXT",
+         "x": 142,
+         "y": 2,
+         "w": 169,
+         "h": 20,
+         "fills": [
+          {
+           "solid": "#737373",
+           "a": 0.15
+          }
+         ],
+         "text": {
+          "chars": "Waiting",
+          "font": "Inter Medium",
+          "size": 14,
+          "lh": "20",
+          "ls": "0%",
+          "align": "RIGHT",
+          "deco": "NONE",
+          "case": "ORIGINAL"
+         }
+        }
+       ]
+      },
+      {
+       "id": "I5:8178;46:21215",
+       "name": "Vector 14",
+       "type": "VECTOR",
+       "x": 16,
+       "y": 284.5,
+       "w": 311,
+       "h": 0,
+       "strokes": [
+        {
+         "solid": "#eeeeee",
+         "a": 1
+        }
+       ],
+       "sw": 1,
+       "sa": "CENTER"
+      },
+      {
+       "id": "I5:8178;46:21216",
+       "name": "Frame 1171276162",
+       "type": "FRAME",
+       "x": 16,
+       "y": 301,
+       "w": 311,
+       "h": 24,
+       "al": {
+        "mode": "HORIZONTAL",
+        "gap": 12,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "CENTER"
+       },
+       "children": [
+        {
+         "id": "I5:8178;46:21217",
+         "name": "schedule",
+         "type": "INSTANCE",
+         "x": 0,
+         "y": 0,
+         "w": 24,
+         "h": 24,
+         "clip": true,
+         "comp": "schedule",
+         "children": [
+          {
+           "id": "I5:8178;46:21217;46:20747",
+           "name": "icon",
+           "type": "VECTOR",
+           "x": 2,
+           "y": 2,
+           "w": 20,
+           "h": 20,
+           "fills": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "id": "I5:8178;46:21218",
+         "name": "Password Generator",
+         "type": "TEXT",
+         "x": 36,
+         "y": 2,
+         "w": 137,
+         "h": 20,
+         "fills": [
+          {
+           "solid": "#737373",
+           "a": 1
+          }
+         ],
+         "text": {
+          "chars": "Password Generator",
+          "font": "Inter Medium",
+          "size": 14,
+          "lh": "20",
+          "ls": "0%",
+          "align": "LEFT",
+          "deco": "NONE",
+          "case": "ORIGINAL"
+         }
+        },
+        {
+         "id": "I5:8178;46:21219",
+         "name": "Waiting",
+         "type": "TEXT",
+         "x": 185,
+         "y": 2,
+         "w": 126,
+         "h": 20,
+         "fills": [
+          {
+           "solid": "#737373",
+           "a": 0.15
+          }
+         ],
+         "text": {
+          "chars": "Waiting",
+          "font": "Inter Medium",
+          "size": 14,
+          "lh": "20",
+          "ls": "0%",
+          "align": "RIGHT",
+          "deco": "NONE",
+          "case": "ORIGINAL"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "5:8179",
+   "name": "system bar",
+   "type": "GROUP",
+   "x": 0,
+   "y": 0,
+   "w": 375,
+   "h": 52,
+   "skip": "ios"
+  },
+  {
+   "id": "5:8196",
+   "name": "logo",
+   "type": "FRAME",
+   "x": 0,
+   "y": 52,
+   "w": 375,
+   "h": 64,
+   "al": {
+    "mode": "HORIZONTAL",
+    "gap": 0,
+    "p": [
+     12,
+     16,
+     12,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "children": [
+    {
+     "id": "5:8197",
+     "name": "Icon Btn",
+     "type": "INSTANCE",
+     "x": 16,
+     "y": 12,
+     "w": 40,
+     "h": 40,
+     "fills": [
+      {
+       "solid": "#ffffff",
+       "a": 1
+      }
+     ],
+     "r": 20,
+     "fx": [
+      {
+       "type": "DROP_SHADOW",
+       "r": 16,
+       "c": [
+        "#084191",
+        0.1
+       ],
+       "o": {
+        "x": 0,
+        "y": 4
+       },
+       "s": 0
+      }
+     ],
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 0,
+      "p": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "main": "CENTER",
+      "cross": "CENTER"
+     },
+     "clip": true,
+     "comp": "Icon Btn / Tap=off",
+     "children": [
+      {
+       "id": "I5:8197;46:20962",
+       "name": "material-symbols:chevron-left",
+       "type": "INSTANCE",
+       "x": 8,
+       "y": 8,
+       "w": 24,
+       "h": 24,
+       "comp": "material-symbols:chevron-left"
+      }
+     ]
+    },
+    {
+     "id": "5:8198",
+     "name": "Scanning...",
+     "type": "TEXT",
+     "x": 145,
+     "y": 22,
+     "w": 85,
+     "h": 20,
+     "fills": [
+      {
+       "solid": "#000000",
+       "a": 1
+      }
+     ],
+     "text": {
+      "chars": "Scanning...",
+      "font": "Inter Medium",
+      "size": 16,
+      "lh": "20",
+      "ls": "0%",
+      "align": "CENTER",
+      "deco": "NONE",
+      "case": "ORIGINAL"
+     }
+    }
+   ]
+  }
+ ]
+}

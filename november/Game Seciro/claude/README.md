@@ -47,7 +47,17 @@ Breach Check, генератор паролів. Kotlin + LibGDX. Початок
   Ряд 2 (build 9) — вхід за поштою: Sign in → код з 6 цифр → Verifying → активна / скінчилась / немає підписки,
   «Can't connect» аркушем. Клавіатура — картинка з Figma (iOS) з клікабельними клавішами + фізична клавіатура Мака.
   Відповіді «сервера» — у панелі (Server answers). Автотест потоку — `claude/tools/proto-auth-test.py`.
-  Далі: ряд 3 — Dashboard, scan, Result.
+  Ряд 3 (build 13) — Dashboard (гаразд / 2 проблеми), сканування (кільце + чекліст за 7 варіантами компонента
+  checklist), Result (пройдено / 2 проблеми) з аркушами-інструкціями Safari і Software Update. Панель: «Scan finds».
+  Автотест — `claude/tools/proto-r3-test.py`. Далі: ряд 4 — VPN (10 кадрів).
+
+### Рендерер кадрів Figma (з ряду 3) — `prototype/fig.jsx`
+
+Екран малюється прямо з дерева шарів: збирач v2 у вкладці Figma (див. `figma/README.md`) кладе
+`figma/r<N>/<кадр>.json` (ax/ay від кадру, заливки, рамки, тіні, тексти з runs) і PNG @3x усього векторного
+(дедуплікація за хешем). `build.py` → `.tools/fig.gen.js`. Поведінку додає екран через overrides
+(`{[id|ім'я]: false | {onClick, className, style} | (node, el, pos) => el}`). Leading trim Figma → `text-box: trim-both cap alphabetic`.
+Ряди 1–2 зроблено вручну (лишаються як є); з ряду 3 — лише рендерер + поведінка.
 
 ## Figma
 
@@ -69,6 +79,10 @@ Breach Check, генератор паролів. Kotlin + LibGDX. Початок
   (`/Users/admin/Apps/Game Orbit Dash PRIVATE/Orbit Dash/docs/vfx.md`, `msdf-shapes.md`).
 
 ## Відкриті питання до VELDAN
+
+- Ряд 3 увесь про iPhone: Safari, Software Update iOS, Face ID, «Your iOS is up to date». Для Android перевірки
+  й інструкції треба переписати (Chrome / Play Protect / оновлення Android / розблокування) — питання до дизайну.
+- Описки в кадрі 5:1868: «Rewiew your settings», «Need attantion» (у 5:1784 правильно — у прототипі беремо правильно).
 
 - Кадр «Verifying…» (5:4502) — поле коду з 8 клітинок, решта кадрів — 6. Зроблено 6 (схоже на описку в макеті).
 - «No subscription on this email» — після пошти чи після коду? Текст «If this email has a subscription, we’ve sent a code»

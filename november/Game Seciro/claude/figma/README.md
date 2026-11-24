@@ -21,3 +21,10 @@
 - Коли панель браузера схована, завантаження не довершується: файл лишається в `~/Downloads/.Q6L2SF6YDW.com.anthropic.claudefordesktop.*`
   (повний, лише не перейменований) — брати найновіший такий файл і `tar -xf` з нього.
 - `absoluteRenderBounds` буває `null` (прихований / порожній шар) — пропускати.
+
+## Збирач v2 (рендерер, з ряду 3)
+
+Код — у історії сесії 24.11 (функція `ser` у вкладці): для кожного шару ax/ay від кадру, fills / strokes / sw / sa / r / fx / clip / op,
+тексти `t.runs` (шрифт, кегль, колір, letterSpacing px, lineHeight px, textDecoration, textCase; U+2028 → \n). Шар без тексту,
+але з вектором / картинкою → `png` (PNG @3x, ім'я = хеш вмісту) + rx/ry/rw/rh (absoluteRenderBounds). Інстанси → `comp`.
+Шари з іменем «Home» (текст) не плутати з home-індикатором — пропускаємо лише RECTANGLE «Home» і «system bar».

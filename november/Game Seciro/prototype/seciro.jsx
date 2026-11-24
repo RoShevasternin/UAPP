@@ -60,7 +60,21 @@ import r2f09 from "../claude/figma/frames/r2_09_5-4589.png";
 import r2f10 from "../claude/figma/frames/r2_10_5-4668.png";
 import r2f11 from "../claude/figma/frames/r2_11_5-4722.png";
 
-export const BUILD = 11;   // піднімати на кожну публікацію
+// Ряд 3 — рендерер з даних Figma
+import { FigFrame, FigNode, frameOf, findNode } from "./fig.jsx";
+import r3f01 from "../claude/figma/frames/r3_01_5-1686.png";
+import r3f02 from "../claude/figma/frames/r3_02_5-8170.png";
+import r3f03 from "../claude/figma/frames/r3_03_5-2114.png";
+import r3f04 from "../claude/figma/frames/r3_04_5-1784.png";
+import r3f05 from "../claude/figma/frames/r3_05_5-1868.png";
+import r3f06 from "../claude/figma/frames/r3_06_5-1995.png";
+import r3f07 from "../claude/figma/frames/r3_07_5-3269.png";
+import scanTrack from "../claude/figma/scan/track.png";
+import scanFull from "../claude/figma/scan/progress-full.png";
+import scanRowScan from "../claude/figma/scan/row-scanning.png";
+import scanRowOk from "../claude/figma/scan/row-ok.png";
+
+export const BUILD = 13;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
@@ -716,6 +730,134 @@ function Auth({ preset, onState, go, back, scen, toast, raw }) {
   );
 }
 
+// ── Ряд 3: Dashboard, сканування, результат (рендерер fig.jsx + поведінка) ──
+const R3 = { "dashboard": "5:1686", "scan": "5:8170", "result-ok": "5:2114", "result-issues": "5:1784", "sheet-safari": "5:1868", "sheet-update": "5:1995", "dash-issues": "5:3269" };
+const R3_IDS = Object.keys(R3);
+const textOf = (n) => n.t ? n.t.runs.map((r) => r.t).join("") : (n.children || []).map(textOf).filter(Boolean).join(" / ");
+const firstText = (n) => { const t = findNode(n, (x) => !!x.t); return t ? textOf(t) : ""; };
+const btnWith = (frame, label) => findNode(frame, (x) => (x.comp || "").startsWith("Btn") && textOf(x) === label);
+const labelsIn = (frame, menuName = "menu") => {
+  const out = []; const walk = (n, inMenu) => { if (n.name === "Label" && inMenu) out.push(n); (n.children || []).forEach((c) => walk(c, inMenu || n.name === menuName)); };
+  walk(frame, false); return out;
+};
+
+// Аркуш-інструкція: розмите тло + аркуш знизу з іншого кадру Figma (5:1868 — Safari, 5:1995 — Software Update)
+const SHEETS = {
+  safari: { frame: "5:1868", sheet: (f) => findNode(f, (x) => x.id === "5:1936") },
+  update: { frame: "5:1995", sheet: (f) => findNode(f, (x) => x.name.startsWith("How to") && x.type === "FRAME") },
+};
+function FigSheet({ kind, open, onClose, raw }) {
+  const f = frameOf(SHEETS[kind].frame), sheet = SHEETS[kind].sheet(f), black = findNode(f, (x) => x.name === "blackout");
+  const ok = btnWith(sheet, "Got it");
+  return (
+    <div style={{ position: "absolute", inset: 0, zIndex: 20, pointerEvents: open ? "auto" : "none" }}>
+      <div onClick={onClose} style={{ position: "absolute", inset: 0, opacity: open ? 1 : 0, transition: raw ? "none" : "opacity .3s ease" }}>
+        <FigNode n={black} ov={{}} />
+      </div>
+      <div style={{ position: "absolute", inset: 0, transform: open ? "none" : `translateY(${812 - sheet.ay + 12}px)`, transition: raw ? "none" : "transform .5s cubic-bezier(.2,.9,.25,1)", pointerEvents: "none" }}>
+        <div style={{ pointerEvents: open ? "auto" : "none" }}><FigNode n={sheet} ov={{ [ok.id]: { onClick: onClose, className: "tap" } }} /></div>
+      </div>
+    </div>
+  );
+}
+
+// Dashboard (5:1686 — усе гаразд, 5:3269 — є проблеми)
+function Dashboard({ issues, go, toast, raw }) {
+  const id = issues ? "5:3269" : "5:1686", f = frameOf(id);
+  const [sheet, setSheet] = useState(null);
+  const ov = {};
+  const run = btnWith(f, "Run Protection Check"); ov[run.id] = { onClick: () => go("scan"), className: "tap" };
+  labelsIn(f).forEach((l, i) => { ov[l.id] = { onClick: () => toast(`${firstText(l)} — its own row of the Figma comes later`), className: raw ? "" : "tap rise", style: { animationDelay: `${0.12 + i * 0.05}s` } }; });
+  const help = btnWith(f, "Get help"); ov[help.id] = { onClick: () => toast("Opens support chat"), className: "tap" };
+  const icon = findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")); ov[icon.id] = { onClick: () => toast("My Account — last row of the Figma"), className: "tap" };
+  findNode(f, (x) => x.name === "Menubar").children.forEach((b) => {
+    const t = textOf(b); if (t !== "Home") ov[b.id] = { onClick: () => toast(`${t} — later in the Figma`), className: "tap" };
+  });
+  if (issues) {
+    ov["5:3385"] = false;   // аркуш, що в кадрі лежить під екраном, — показуємо свій, з анімацією
+    ov["5:3289"] = { onClick: () => setSheet("safari"), className: "tap" };
+    ov["5:3297"] = { onClick: () => toast("Breach Check — its own row of the Figma comes later"), className: "tap" };
+  }
+  const hero = findNode(f, (x) => x.name === "shield");
+  if (hero && !raw) ov[hero.id] = (n, el) => <div className="float-slow">{el}</div>;
+  return (
+    <>
+      <FigFrame id={id} ov={ov} raw={raw} />
+      {issues && <FigSheet kind="safari" open={sheet === "safari"} onClose={() => setSheet(null)} raw={raw} />}
+    </>
+  );
+}
+
+// Сканування (5:8170 + 7 варіантів компонента checklist): кільце наповнюється плавно, пункти — Waiting → Scanning… → OK
+function Scan({ go, back, result, raw }) {
+  const f = frameOf("5:8170");
+  const rows = findNode(f, (x) => x.name === "checklist").children.filter((c) => c.type === "FRAME");
+  const [p, setP] = useState(0);
+  useEffect(() => {
+    if (raw) return;
+    const T = 1050 * rows.length, t0 = performance.now(); let raf;
+    const step = (now) => { const v = Math.min(1, (now - t0) / T); setP(v); if (v < 1) raf = requestAnimationFrame(step); else setTimeout(() => go(result === "issues" ? "result-issues" : "result-ok"), 650); };
+    raf = requestAnimationFrame(step); return () => cancelAnimationFrame(raf);
+  }, []);
+  const cur = Math.min(rows.length - 1, Math.floor(p * rows.length)), allDone = p >= 1;
+  const ov = {};
+  const ld = findNode(f, (x) => x.name === "loading");
+  ov[ld.id] = (n, el, pos) => (
+    <div style={{ ...pos }} className={raw ? "" : "breathe-soft"}>
+      <img src={scanTrack} alt="" style={{ position: "absolute", inset: 0, width: 192, height: 192 }} />
+      {/* заповнення: повна синя «пляма» (варіант 5 компонента) під конічною маскою — від 9 год. за годинниковою, як сектори в Figma */}
+      <img src={scanFull} alt="" style={{ position: "absolute", inset: 0, width: 192, height: 192,
+        WebkitMaskImage: `conic-gradient(from 270deg, #000 ${p * 360}deg, transparent ${p * 360}deg)`, maskImage: `conic-gradient(from 270deg, #000 ${p * 360}deg, transparent ${p * 360}deg)` }} />
+      <div style={{ position: "absolute", left: 48, top: 78, width: 96, height: 36, textAlign: "center", fontFamily: FONT_TITLE, fontWeight: 500, fontSize: 32,
+        lineHeight: "36px", color: "#0857d0", fontVariantNumeric: "tabular-nums" }}>{Math.round(p * 100)}%</div>
+    </div>
+  );
+  rows.forEach((r, k) => {
+    const st = allDone || k < cur ? "ok" : k === cur ? "scan" : "wait";
+    if (raw && st === "scan" && k === 0) return;   // кадр Figma = варіант 1 як є
+    const name = textOf(r.children[1]), wait = r.children[0];
+    ov[r.id] = (n, el, pos) => (
+      <div style={{ ...pos }}>
+        {st === "wait" ? <FigNode n={wait} px={r.ax} py={r.ay} /> : st === "scan"
+          ? <img src={scanRowScan} alt="" className="spin-arc" style={{ position: "absolute", left: 0, top: 0, width: 24, height: 24 }} />
+          : <img src={scanRowOk} alt="" className="pop-icon" style={{ position: "absolute", left: 0, top: 0, width: 24, height: 24 }} />}
+        <div style={{ position: "absolute", left: 36, top: 2, fontSize: 14, lineHeight: "20px", color: st === "wait" ? C.grey : C.black, transition: "color .3s" }}>{name}</div>
+        <div key={st} className={st === "wait" ? "" : "enter-fade"} style={{ position: "absolute", right: 0, top: 2, fontSize: 14, lineHeight: "20px",
+          color: st === "wait" ? a(C.grey, .15) : st === "scan" ? C.blue : C.green }}>{st === "wait" ? "Waiting" : st === "scan" ? "Scanning..." : "OK"}</div>
+      </div>
+    );
+  });
+  const bk = findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")); ov[bk.id] = { onClick: back, className: "tap" };
+  return <FigFrame id="5:8170" ov={ov} raw={raw} />;
+}
+
+// Результат (5:2114 — усе пройдено, 5:1784 — 2 проблеми; аркуші — 5:1868 / 5:1995)
+function Result({ preset, onState, go, toast, raw }) {
+  const issues = preset !== "result-ok";
+  const id = issues ? "5:1784" : "5:2114", f = frameOf(id);
+  const [sheet, setSheet] = useState(preset === "sheet-safari" ? "safari" : preset === "sheet-update" ? "update" : null);
+  useEffect(() => { setSheet(preset === "sheet-safari" ? "safari" : preset === "sheet-update" ? "update" : null); }, [preset]);
+  useEffect(() => { if (!issues) return; const want = sheet === "safari" ? "sheet-safari" : sheet === "update" ? "sheet-update" : "result-issues"; if (want !== preset) onState(want); }, [sheet]);
+  const home = () => go(issues ? "dash-issues" : "dashboard", "fade");
+  const ov = {};
+  const done = btnWith(f, "Done"); ov[done.id] = { onClick: home, className: "tap" };
+  const bk = findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")); ov[bk.id] = { onClick: home, className: "tap" };
+  labelsIn(f).forEach((l, i) => {
+    const t = firstText(l);
+    const act = issues && t === "Web Protection" ? () => setSheet("safari") : issues && t === "Software Update" ? () => setSheet("update") : () => toast(`${t}: passed`);
+    ov[l.id] = { onClick: act, className: raw ? "" : "tap rise", style: { animationDelay: `${0.15 + i * 0.06}s` } };
+  });
+  const hero = findNode(f, (x) => x.name === "shield" || (x.png && x.ay < 250 && x.w > 80));
+  if (hero && !raw) ov[hero.id] = (n, el) => <div className="pop-in">{el}</div>;
+  return (
+    <>
+      <FigFrame id={id} ov={ov} raw={raw} />
+      {issues && <FigSheet kind="safari" open={sheet === "safari"} onClose={() => setSheet(null)} raw={raw} />}
+      {issues && <FigSheet kind="update" open={sheet === "update"} onClose={() => setSheet(null)} raw={raw} />}
+    </>
+  );
+}
+
 // ── Карта екранів (порядок = рядами Figma) ──
 const ONB_FRAMES = [fr02, fr03, fr04, fr05, fr06, fr07];
 // Кадр paywall у Figma — свій на кожен обраний тариф
@@ -735,7 +877,13 @@ const SCREENS = [
   { id: "code-error", name: "Code · invalid", node: "5:4589", frame: r2f09 },
   { id: "sub-ended", name: "Subscription ended", node: "5:4668", frame: r2f10 },
   { id: "no-sub", name: "No subscription", node: "5:4722", frame: r2f11 },
-  { id: "dashboard", name: "Dashboard (later)", node: "5:1686", stub: true },
+  { id: "dashboard", name: "Dashboard", node: "5:1686", frame: r3f01 },
+  { id: "scan", name: "Scanning", node: "5:8170", frame: r3f02 },
+  { id: "result-ok", name: "Result · all passed", node: "5:2114", frame: r3f03 },
+  { id: "result-issues", name: "Result · 2 issues", node: "5:1784", frame: r3f04 },
+  { id: "sheet-safari", name: "Sheet · Safari setup", node: "5:1868", frame: r3f05 },
+  { id: "sheet-update", name: "Sheet · Software Update", node: "5:1995", frame: r3f06 },
+  { id: "dash-issues", name: "Dashboard · 2 issues", node: "5:3269", frame: r3f07 },
 ];
 const ORDER = SCREENS.map((s) => s.id);
 const store = {
@@ -766,7 +914,7 @@ export default function Seciro() {
   useEffect(() => { const f = () => { const h = fromHash(); if (h) { setDir("fade"); setScreen(h); } }; window.addEventListener("hashchange", f); return () => window.removeEventListener("hashchange", f); }, []);
   const [dir, setDir] = useState("fade");
   // відповіді «сервера» для потоку входу (панель → Server answers)
-  const [scen, setScen] = useState({ email: "code", code: "active" });
+  const [scen, setScen] = useState({ email: "code", code: "active", scan: "ok" });
   const [plan, setPlan] = useState(((location.hash.match(/~(\w+)/) || [])[1]) || "weekly");
   const [msg, setMsg] = useState(null);
   const [hist, setHist] = useState([]);
@@ -805,6 +953,9 @@ export default function Seciro() {
       {onbIndex >= 0 && <Onboarding index={onbIndex} onIndex={() => {}} go={() => {}} raw at={+((location.hash.match(/@([\d.]+)/) || [])[1] ?? onbIndex)} />}
       {screen === "paywall" && <Paywall go={() => {}} toast={() => {}} plan={plan} setPlan={() => {}} />}
       {isAuth && <Auth preset={screen} onState={() => {}} go={() => {}} back={() => {}} scen={scen} toast={() => {}} raw />}
+      {(screen === "dashboard" || screen === "dash-issues") && <Dashboard issues={screen === "dash-issues"} go={() => {}} toast={() => {}} raw />}
+      {screen === "scan" && <Scan go={() => {}} back={() => {}} result="ok" raw />}
+      {/^(result|sheet)/.test(screen) && <Result preset={screen} onState={() => {}} go={() => {}} toast={() => {}} raw />}
       <GestureBar />
     </div>
   );
@@ -816,12 +967,14 @@ export default function Seciro() {
         <div className="phone-shell">
           <div className="phone-clip" style={{ width: 375 * scale, height: 812 * scale }}>
             <div className="app" style={{ width: 375, height: 812, position: "absolute", left: 0, top: 0, transform: `scale(${scale})`, transformOrigin: "0 0", background: C.bg }}>
-              <div key={onbIndex >= 0 ? "onboarding" : isAuth ? "auth" : screen} className={`enter-${dir}`} style={{ position: "absolute", inset: 0 }}>
+              <div key={onbIndex >= 0 ? "onboarding" : isAuth ? "auth" : /^(result-issues|sheet)/.test(screen) ? "result-issues" : screen} className={`enter-${dir}`} style={{ position: "absolute", inset: 0 }}>
                 {screen === "splash" && <Splash go={go} />}
                 {onbIndex >= 0 && <Onboarding index={onbIndex} onIndex={onIndex} go={go} />}
                 {screen === "paywall" && <Paywall go={go} toast={toast} plan={plan} setPlan={setPlan} />}
                 {isAuth && <Auth preset={screen} onState={onAuth} go={go} back={back} scen={scen} toast={toast} />}
-                {screen === "dashboard" && <Next title="Dashboard" note="Comes after the sign-in row: home screen with the security scan and every tool." back={back} />}
+                {(screen === "dashboard" || screen === "dash-issues") && <Dashboard issues={screen === "dash-issues"} go={go} toast={toast} />}
+                {screen === "scan" && <Scan go={go} back={back} result={scen.scan} />}
+                {/^(result|sheet)/.test(screen) && <Result preset={screen} onState={onAuth} go={go} toast={toast} />}
               </div>
               <StatusBar />
               <GestureBar />
@@ -879,6 +1032,11 @@ export default function Seciro() {
               <button key={v} className="pbtn" aria-pressed={scen.code === v} onClick={() => setScen((o) => ({ ...o, code: v }))}>{t}</button>))}</div>
             <span>Type with the on-screen keys or your keyboard. On the letter keyboard “123” adds @, then dots.</span>
           </div>
+        </>)}
+        {(screen === "dashboard" || screen === "dash-issues" || screen === "scan") && (<>
+          <div className="label">Scan finds</div>
+          <div className="row">{[["ok", "Nothing"], ["issues", "2 issues"]].map(([v, t]) => (
+            <button key={v} className="pbtn" aria-pressed={scen.scan === v} onClick={() => setScen((o) => ({ ...o, scan: v }))}>{t}</button>))}</div>
         </>)}
         <div className="label">Compare</div>
         <div className="row" role="radiogroup" aria-label="Figma overlay on the prototype">

@@ -1,0 +1,3841 @@
+{
+ "id": "5:3269",
+ "name": "Dashboard",
+ "type": "FRAME",
+ "x": 0,
+ "y": 0,
+ "w": 375,
+ "h": 812,
+ "fills": [
+  {
+   "solid": "#f1f4f9",
+   "a": 1
+  }
+ ],
+ "clip": true,
+ "children": [
+  {
+   "id": "5:3270",
+   "name": "scroll",
+   "type": "FRAME",
+   "x": 0,
+   "y": 116,
+   "w": 375,
+   "h": 696,
+   "clip": true,
+   "children": [
+    {
+     "id": "5:3271",
+     "name": "Frame",
+     "type": "FRAME",
+     "x": 0,
+     "y": 0,
+     "w": 375,
+     "h": 1024,
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 16,
+      "p": [
+       0,
+       16,
+       112,
+       16
+      ],
+      "main": "MIN",
+      "cross": "MIN"
+     },
+     "children": [
+      {
+       "id": "5:3272",
+       "name": "Protection Hero",
+       "type": "FRAME",
+       "x": 16,
+       "y": 0,
+       "w": 343,
+       "h": 371,
+       "fills": [
+        {
+         "solid": "#d92635",
+         "a": 0.15
+        }
+       ],
+       "strokes": [
+        {
+         "solid": "#d92635",
+         "a": 0.15
+        }
+       ],
+       "sw": 1,
+       "sa": "INSIDE",
+       "r": 16,
+       "al": {
+        "mode": "VERTICAL",
+        "gap": 16,
+        "p": [
+         16,
+         16,
+         16,
+         16
+        ],
+        "main": "CENTER",
+        "cross": "MIN"
+       },
+       "clip": true,
+       "children": [
+        {
+         "id": "5:3273",
+         "name": "Frame 1171276164",
+         "type": "FRAME",
+         "x": 16,
+         "y": 16,
+         "w": 311,
+         "h": 106,
+         "al": {
+          "mode": "HORIZONTAL",
+          "gap": 16,
+          "p": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "main": "MIN",
+          "cross": "CENTER"
+         },
+         "children": [
+          {
+           "id": "5:3274",
+           "name": "shield",
+           "type": "FRAME",
+           "x": 0,
+           "y": 5,
+           "w": 96,
+           "h": 96,
+           "children": [
+            {
+             "id": "5:3275",
+             "name": "Vector 19",
+             "type": "VECTOR",
+             "x": 63,
+             "y": 32,
+             "w": 66,
+             "h": 33,
+             "fills": [
+              {
+               "grad": "GRADIENT_LINEAR",
+               "stops": [
+                [
+                 "#ffffff",
+                 1,
+                 0
+                ],
+                [
+                 "#ffffff",
+                 0,
+                 1
+                ]
+               ],
+               "t": [
+                [
+                 0,
+                 1,
+                 0
+                ],
+                [
+                 -1,
+                 0,
+                 1
+                ]
+               ],
+               "a": 1
+              }
+             ]
+            },
+            {
+             "id": "5:3276",
+             "name": "Vector 18",
+             "type": "VECTOR",
+             "x": -22,
+             "y": 5,
+             "w": 31,
+             "h": 13,
+             "fills": [
+              {
+               "grad": "GRADIENT_LINEAR",
+               "stops": [
+                [
+                 "#ffffff",
+                 1,
+                 0
+                ],
+                [
+                 "#ffffff",
+                 0,
+                 1
+                ]
+               ],
+               "t": [
+                [
+                 0,
+                 1,
+                 0
+                ],
+                [
+                 -1,
+                 0,
+                 1
+                ]
+               ],
+               "a": 1
+              }
+             ]
+            },
+            {
+             "id": "5:3277",
+             "name": "Vector 21",
+             "type": "VECTOR",
+             "x": -25,
+             "y": 14,
+             "w": 69,
+             "h": 29,
+             "fills": [
+              {
+               "grad": "GRADIENT_LINEAR",
+               "stops": [
+                [
+                 "#ffffff",
+                 1,
+                 0
+                ],
+                [
+                 "#ffffff",
+                 0,
+                 1
+                ]
+               ],
+               "t": [
+                [
+                 0,
+                 1,
+                 0
+                ],
+                [
+                 -1,
+                 0,
+                 1
+                ]
+               ],
+               "a": 1
+              }
+             ]
+            },
+            {
+             "id": "5:3278",
+             "name": "Vector",
+             "type": "VECTOR",
+             "x": 12,
+             "y": 5,
+             "w": 72,
+             "h": 88,
+             "fills": [
+              {
+               "solid": "#d92635",
+               "a": 1
+              }
+             ],
+             "strokes": [
+              {
+               "solid": "#ffffff",
+               "a": 1
+              }
+             ],
+             "sw": 2,
+             "sa": "OUTSIDE",
+             "fx": [
+              {
+               "type": "DROP_SHADOW",
+               "r": 0,
+               "c": [
+                "#c32230",
+                0.4
+               ],
+               "o": {
+                "x": 2,
+                "y": 3
+               },
+               "s": 0
+              }
+             ]
+            },
+            {
+             "id": "5:3279",
+             "name": "Subtract",
+             "type": "VECTOR",
+             "x": 43,
+             "y": 28,
+             "w": 10,
+             "h": 43,
+             "fills": [
+              {
+               "solid": "#ffffff",
+               "a": 1
+              }
+             ]
+            },
+            {
+             "id": "5:3280",
+             "name": "Vector 20",
+             "type": "VECTOR",
+             "x": -39,
+             "y": 67,
+             "w": 125,
+             "h": 52,
+             "fills": [
+              {
+               "grad": "GRADIENT_LINEAR",
+               "stops": [
+                [
+                 "#ffffff",
+                 1,
+                 0
+                ],
+                [
+                 "#ffffff",
+                 0,
+                 1
+                ]
+               ],
+               "t": [
+                [
+                 0,
+                 1,
+                 0
+                ],
+                [
+                 -1,
+                 0,
+                 1
+                ]
+               ],
+               "a": 1
+              }
+             ],
+             "r": [
+              null,
+              null,
+              null,
+              null
+             ]
+            },
+            {
+             "id": "5:3281",
+             "name": "Frame",
+             "type": "FRAME",
+             "x": 64,
+             "y": 64,
+             "w": 24,
+             "h": 24,
+             "fills": [
+              {
+               "solid": "#d92635",
+               "a": 1
+              }
+             ],
+             "strokes": [
+              {
+               "solid": "#ffffff",
+               "a": 1
+              }
+             ],
+             "sw": 2,
+             "sa": "INSIDE",
+             "r": 12,
+             "al": {
+              "mode": "VERTICAL",
+              "gap": 0,
+              "p": [
+               0,
+               0,
+               0,
+               0
+              ],
+              "main": "CENTER",
+              "cross": "CENTER"
+             },
+             "clip": true,
+             "children": [
+              {
+               "id": "5:3282",
+               "name": "2",
+               "type": "TEXT",
+               "x": 7.5,
+               "y": 2,
+               "w": 9,
+               "h": 20,
+               "fills": [
+                {
+                 "solid": "#ffffff",
+                 "a": 1
+                }
+               ],
+               "text": {
+                "chars": "2",
+                "font": "Inter Medium",
+                "size": 14,
+                "lh": "20",
+                "ls": "0%",
+                "align": "CENTER",
+                "deco": "NONE",
+                "case": "ORIGINAL"
+               }
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "id": "5:3283",
+           "name": "StatusCol",
+           "type": "FRAME",
+           "x": 112,
+           "y": 0,
+           "w": 199,
+           "h": 106,
+           "al": {
+            "mode": "VERTICAL",
+            "gap": 12,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "MIN",
+            "cross": "MIN"
+           },
+           "clip": true,
+           "children": [
+            {
+             "id": "5:3284",
+             "name": "2 Issues Found",
+             "type": "TEXT",
+             "x": 0,
+             "y": 0,
+             "w": 165,
+             "h": 32,
+             "fills": [
+              {
+               "solid": "#d92635",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "2 Issues Found",
+              "font": "Inter Tight Bold",
+              "size": 24,
+              "lh": "32",
+              "ls": "0%",
+              "align": "LEFT",
+              "deco": "NONE",
+              "case": "ORIGINAL"
+             }
+            },
+            {
+             "id": "5:3285",
+             "name": "Frame 1171276186",
+             "type": "FRAME",
+             "x": 0,
+             "y": 44,
+             "w": 199,
+             "h": 62,
+             "al": {
+              "mode": "VERTICAL",
+              "gap": 6,
+              "p": [
+               0,
+               0,
+               0,
+               0
+              ],
+              "main": "MIN",
+              "cross": "MIN"
+             },
+             "children": [
+              {
+               "id": "5:3286",
+               "name": "Fix these issues to stay protected",
+               "type": "TEXT",
+               "x": 0,
+               "y": 0,
+               "w": 199,
+               "h": 40,
+               "fills": [
+                {
+                 "solid": "#000000",
+                 "a": 1
+                }
+               ],
+               "text": {
+                "chars": "Fix these issues to stay protected",
+                "font": "Inter Medium",
+                "size": 14,
+                "lh": "20",
+                "ls": "0%",
+                "align": "LEFT",
+                "deco": "NONE",
+                "case": "ORIGINAL"
+               }
+              },
+              {
+               "id": "5:3287",
+               "name": "Checks run on your device only",
+               "type": "TEXT",
+               "x": 0,
+               "y": 46,
+               "w": 180,
+               "h": 16,
+               "fills": [
+                {
+                 "solid": "#737373",
+                 "a": 1
+                }
+               ],
+               "text": {
+                "chars": "Checks run on your device only",
+                "font": "Inter Medium",
+                "size": 12,
+                "lh": "16",
+                "ls": "0%",
+                "align": "LEFT",
+                "deco": "NONE",
+                "case": "ORIGINAL"
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "id": "5:3288",
+         "name": "Web Protection",
+         "type": "FRAME",
+         "x": 16,
+         "y": 138,
+         "w": 311,
+         "h": 145,
+         "fills": [
+          {
+           "solid": "#ffffff",
+           "a": 1
+          }
+         ],
+         "r": 16,
+         "fx": [
+          {
+           "type": "DROP_SHADOW",
+           "r": 16,
+           "c": [
+            "#c32230",
+            0.1
+           ],
+           "o": {
+            "x": 0,
+            "y": 4
+           },
+           "s": 0
+          }
+         ],
+         "al": {
+          "mode": "VERTICAL",
+          "gap": 16,
+          "p": [
+           16,
+           16,
+           16,
+           16
+          ],
+          "main": "MIN",
+          "cross": "MAX"
+         },
+         "clip": true,
+         "children": [
+          {
+           "id": "5:3289",
+           "name": "Frame 1171276158",
+           "type": "FRAME",
+           "x": 16,
+           "y": 16,
+           "w": 279,
+           "h": 40,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 12,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "MIN",
+            "cross": "CENTER"
+           },
+           "children": [
+            {
+             "id": "5:3290",
+             "name": "Icon",
+             "type": "FRAME",
+             "x": 0,
+             "y": 0,
+             "w": 40,
+             "h": 40,
+             "fills": [
+              {
+               "solid": "#d92635",
+               "a": 0.15
+              }
+             ],
+             "r": 12,
+             "al": {
+              "mode": "VERTICAL",
+              "gap": 10,
+              "p": [
+               8,
+               8,
+               8,
+               8
+              ],
+              "main": "CENTER",
+              "cross": "CENTER"
+             },
+             "clip": true,
+             "children": [
+              {
+               "id": "5:3291",
+               "name": "material-symbols:security",
+               "type": "INSTANCE",
+               "x": 8,
+               "y": 8,
+               "w": 24,
+               "h": 24,
+               "comp": "material-symbols:security"
+              }
+             ]
+            },
+            {
+             "id": "5:3292",
+             "name": "Frame 1171276158",
+             "type": "FRAME",
+             "x": 52,
+             "y": 0,
+             "w": 191,
+             "h": 40,
+             "al": {
+              "mode": "VERTICAL",
+              "gap": 4,
+              "p": [
+               0,
+               0,
+               0,
+               0
+              ],
+              "main": "CENTER",
+              "cross": "MIN"
+             },
+             "children": [
+              {
+               "id": "5:3293",
+               "name": "Web Protection",
+               "type": "TEXT",
+               "x": 0,
+               "y": 0,
+               "w": 191,
+               "h": 20,
+               "fills": [
+                {
+                 "solid": "#000000",
+                 "a": 1
+                }
+               ],
+               "text": {
+                "chars": "Web Protection",
+                "font": "Inter Medium",
+                "size": 14,
+                "lh": "20",
+                "ls": "0%",
+                "align": "LEFT",
+                "deco": "NONE",
+                "case": "ORIGINAL"
+               }
+              },
+              {
+               "id": "5:3294",
+               "name": "Website blocking is off",
+               "type": "TEXT",
+               "x": 0,
+               "y": 24,
+               "w": 191,
+               "h": 16,
+               "fills": [
+                {
+                 "solid": "#737373",
+                 "a": 1
+                }
+               ],
+               "text": {
+                "chars": "Website blocking is off",
+                "font": "Inter Medium",
+                "size": 12,
+                "lh": "16",
+                "ls": "0%",
+                "align": "LEFT",
+                "deco": "NONE",
+                "case": "ORIGINAL"
+               }
+              }
+             ]
+            },
+            {
+             "id": "5:3295",
+             "name": "material-symbols:error",
+             "type": "INSTANCE",
+             "x": 255,
+             "y": 8,
+             "w": 24,
+             "h": 24,
+             "comp": "material-symbols:error"
+            }
+           ]
+          },
+          {
+           "id": "5:3296",
+           "name": "Vector 11",
+           "type": "VECTOR",
+           "x": 54,
+           "y": 72.5,
+           "w": 241,
+           "h": 0,
+           "strokes": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "sw": 1,
+           "sa": "CENTER"
+          },
+          {
+           "id": "5:3297",
+           "name": "Frame 1171276161",
+           "type": "FRAME",
+           "x": 16,
+           "y": 89,
+           "w": 279,
+           "h": 40,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 12,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "MIN",
+            "cross": "CENTER"
+           },
+           "children": [
+            {
+             "id": "5:3298",
+             "name": "Icon",
+             "type": "FRAME",
+             "x": 0,
+             "y": 0,
+             "w": 40,
+             "h": 40,
+             "fills": [
+              {
+               "solid": "#d92635",
+               "a": 0.15
+              }
+             ],
+             "r": 12,
+             "al": {
+              "mode": "VERTICAL",
+              "gap": 10,
+              "p": [
+               8,
+               8,
+               8,
+               8
+              ],
+              "main": "CENTER",
+              "cross": "CENTER"
+             },
+             "clip": true,
+             "children": [
+              {
+               "id": "5:3299",
+               "name": "material-symbols:alternate-email",
+               "type": "INSTANCE",
+               "x": 8,
+               "y": 8,
+               "w": 24,
+               "h": 24,
+               "comp": "material-symbols:alternate-email"
+              }
+             ]
+            },
+            {
+             "id": "5:3300",
+             "name": "Frame 1171276158",
+             "type": "FRAME",
+             "x": 52,
+             "y": 0,
+             "w": 191,
+             "h": 40,
+             "al": {
+              "mode": "VERTICAL",
+              "gap": 4,
+              "p": [
+               0,
+               0,
+               0,
+               0
+              ],
+              "main": "CENTER",
+              "cross": "MIN"
+             },
+             "children": [
+              {
+               "id": "5:3301",
+               "name": "Breach Check",
+               "type": "TEXT",
+               "x": 0,
+               "y": 0,
+               "w": 191,
+               "h": 20,
+               "fills": [
+                {
+                 "solid": "#000000",
+                 "a": 1
+                }
+               ],
+               "text": {
+                "chars": "Breach Check",
+                "font": "Inter Medium",
+                "size": 14,
+                "lh": "20",
+                "ls": "0%",
+                "align": "LEFT",
+                "deco": "NONE",
+                "case": "ORIGINAL"
+               }
+              },
+              {
+               "id": "5:3302",
+               "name": "Email found in 1 leak",
+               "type": "TEXT",
+               "x": 0,
+               "y": 24,
+               "w": 191,
+               "h": 16,
+               "fills": [
+                {
+                 "solid": "#737373",
+                 "a": 1
+                }
+               ],
+               "text": {
+                "chars": "Email found in 1 leak",
+                "font": "Inter Medium",
+                "size": 12,
+                "lh": "16",
+                "ls": "0%",
+                "align": "LEFT",
+                "deco": "NONE",
+                "case": "ORIGINAL"
+               }
+              }
+             ]
+            },
+            {
+             "id": "5:3303",
+             "name": "material-symbols:error",
+             "type": "INSTANCE",
+             "x": 255,
+             "y": 8,
+             "w": 24,
+             "h": 24,
+             "comp": "material-symbols:error"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "id": "5:3304",
+         "name": "Btn",
+         "type": "INSTANCE",
+         "x": 16,
+         "y": 299,
+         "w": 311,
+         "h": 56,
+         "fills": [
+          {
+           "solid": "#d92635",
+           "a": 1
+          }
+         ],
+         "r": 100,
+         "al": {
+          "mode": "HORIZONTAL",
+          "gap": 8,
+          "p": [
+           16,
+           24,
+           16,
+           24
+          ],
+          "main": "CENTER",
+          "cross": "CENTER"
+         },
+         "clip": true,
+         "comp": "Btn / Btn=Second, Size=56, Tap=off",
+         "children": [
+          {
+           "id": "I5:3304;46:20943",
+           "name": "material-symbols:check-circle",
+           "type": "INSTANCE",
+           "x": 24,
+           "y": 16,
+           "w": 24,
+           "h": 24,
+           "hidden": true
+          },
+          {
+           "id": "I5:3304;46:20944",
+           "name": "Label",
+           "type": "TEXT",
+           "x": 72.5,
+           "y": 18,
+           "w": 166,
+           "h": 20,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "Run Protection Check",
+            "font": "Inter Medium",
+            "size": 16,
+            "lh": "20",
+            "ls": "0%",
+            "align": "LEFT",
+            "deco": "NONE",
+            "case": "ORIGINAL"
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "5:3305",
+       "name": "menu",
+       "type": "FRAME",
+       "x": 16,
+       "y": 387,
+       "w": 343,
+       "h": 437,
+       "fills": [
+        {
+         "solid": "#ffffff",
+         "a": 1
+        }
+       ],
+       "r": 16,
+       "fx": [
+        {
+         "type": "DROP_SHADOW",
+         "r": 16,
+         "c": [
+          "#084191",
+          0.1
+         ],
+         "o": {
+          "x": 0,
+          "y": 4
+         },
+         "s": 0
+        }
+       ],
+       "al": {
+        "mode": "VERTICAL",
+        "gap": 16,
+        "p": [
+         16,
+         16,
+         16,
+         16
+        ],
+        "main": "MIN",
+        "cross": "MAX"
+       },
+       "clip": true,
+       "children": [
+        {
+         "id": "5:3306",
+         "name": "Label",
+         "type": "FRAME",
+         "x": 16,
+         "y": 16,
+         "w": 311,
+         "h": 40,
+         "al": {
+          "mode": "HORIZONTAL",
+          "gap": 12,
+          "p": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "main": "MIN",
+          "cross": "CENTER"
+         },
+         "children": [
+          {
+           "id": "5:3307",
+           "name": "Icon",
+           "type": "FRAME",
+           "x": 0,
+           "y": 0,
+           "w": 40,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#0b62da",
+             "a": 0.15
+            }
+           ],
+           "r": 12,
+           "al": {
+            "mode": "VERTICAL",
+            "gap": 10,
+            "p": [
+             8,
+             8,
+             8,
+             8
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "clip": true,
+           "children": [
+            {
+             "id": "5:3308",
+             "name": "material-symbols:vpn-lock",
+             "type": "INSTANCE",
+             "x": 8,
+             "y": 8,
+             "w": 24,
+             "h": 24,
+             "comp": "material-symbols:vpn-lock"
+            }
+           ]
+          },
+          {
+           "id": "5:3309",
+           "name": "Textblock",
+           "type": "FRAME",
+           "x": 52,
+           "y": 0,
+           "w": 223,
+           "h": 40,
+           "al": {
+            "mode": "VERTICAL",
+            "gap": 4,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "MIN"
+           },
+           "children": [
+            {
+             "id": "5:3310",
+             "name": "VPN",
+             "type": "TEXT",
+             "x": 0,
+             "y": 0,
+             "w": 223,
+             "h": 20,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "VPN",
+              "font": "Inter Medium",
+              "size": 14,
+              "lh": "20",
+              "ls": "0%",
+              "align": "LEFT",
+              "deco": "NONE",
+              "case": "ORIGINAL"
+             }
+            },
+            {
+             "id": "5:3311",
+             "name": "Stay private on public Wi-Fi",
+             "type": "TEXT",
+             "x": 0,
+             "y": 24,
+             "w": 223,
+             "h": 16,
+             "fills": [
+              {
+               "solid": "#737373",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "Stay private on public Wi-Fi",
+              "font": "Inter Medium",
+              "size": 12,
+              "lh": "16",
+              "ls": "0%",
+              "align": "LEFT",
+              "deco": "NONE",
+              "case": "ORIGINAL"
+             }
+            }
+           ]
+          },
+          {
+           "id": "5:3312",
+           "name": "material-symbols:chevron-right",
+           "type": "INSTANCE",
+           "x": 287,
+           "y": 8,
+           "w": 24,
+           "h": 24,
+           "comp": "material-symbols:chevron-right"
+          }
+         ]
+        },
+        {
+         "id": "5:3313",
+         "name": "line",
+         "type": "VECTOR",
+         "x": 68,
+         "y": 72.5,
+         "w": 259,
+         "h": 0,
+         "strokes": [
+          {
+           "solid": "#737373",
+           "a": 0.15
+          }
+         ],
+         "sw": 1,
+         "sa": "CENTER"
+        },
+        {
+         "id": "5:3314",
+         "name": "Label",
+         "type": "FRAME",
+         "x": 16,
+         "y": 89,
+         "w": 311,
+         "h": 40,
+         "al": {
+          "mode": "HORIZONTAL",
+          "gap": 12,
+          "p": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "main": "MIN",
+          "cross": "CENTER"
+         },
+         "children": [
+          {
+           "id": "5:3315",
+           "name": "Icon",
+           "type": "FRAME",
+           "x": 0,
+           "y": 0,
+           "w": 40,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#2eb85c",
+             "a": 0.15
+            }
+           ],
+           "r": 12,
+           "al": {
+            "mode": "VERTICAL",
+            "gap": 10,
+            "p": [
+             8,
+             8,
+             8,
+             8
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "clip": true,
+           "children": [
+            {
+             "id": "5:3316",
+             "name": "material-symbols:security",
+             "type": "INSTANCE",
+             "x": 8,
+             "y": 8,
+             "w": 24,
+             "h": 24,
+             "comp": "material-symbols:security"
+            }
+           ]
+          },
+          {
+           "id": "5:3317",
+           "name": "Textblock",
+           "type": "FRAME",
+           "x": 52,
+           "y": 0,
+           "w": 223,
+           "h": 40,
+           "al": {
+            "mode": "VERTICAL",
+            "gap": 4,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "MIN"
+           },
+           "children": [
+            {
+             "id": "5:3318",
+             "name": "Web Protection",
+             "type": "TEXT",
+             "x": 0,
+             "y": 0,
+             "w": 223,
+             "h": 20,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "Web Protection",
+              "font": "Inter Medium",
+              "size": 14,
+              "lh": "20",
+              "ls": "0%",
+              "align": "LEFT",
+              "deco": "NONE",
+              "case": "ORIGINAL"
+             }
+            },
+            {
+             "id": "5:3319",
+             "name": "Enjoy safer browsing in Safari",
+             "type": "TEXT",
+             "x": 0,
+             "y": 24,
+             "w": 223,
+             "h": 16,
+             "fills": [
+              {
+               "solid": "#737373",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "Enjoy safer browsing in Safari",
+              "font": "Inter Medium",
+              "size": 12,
+              "lh": "16",
+              "ls": "0%",
+              "align": "LEFT",
+              "deco": "NONE",
+              "case": "ORIGINAL"
+             }
+            }
+           ]
+          },
+          {
+           "id": "5:3320",
+           "name": "material-symbols:chevron-right",
+           "type": "INSTANCE",
+           "x": 287,
+           "y": 8,
+           "w": 24,
+           "h": 24,
+           "comp": "material-symbols:chevron-right"
+          }
+         ]
+        },
+        {
+         "id": "5:3321",
+         "name": "line",
+         "type": "VECTOR",
+         "x": 68,
+         "y": 145.5,
+         "w": 259,
+         "h": 0,
+         "strokes": [
+          {
+           "solid": "#737373",
+           "a": 0.15
+          }
+         ],
+         "sw": 1,
+         "sa": "CENTER"
+        },
+        {
+         "id": "5:3322",
+         "name": "Label",
+         "type": "FRAME",
+         "x": 16,
+         "y": 162,
+         "w": 311,
+         "h": 40,
+         "al": {
+          "mode": "HORIZONTAL",
+          "gap": 12,
+          "p": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "main": "MIN",
+          "cross": "CENTER"
+         },
+         "children": [
+          {
+           "id": "5:3323",
+           "name": "Icon",
+           "type": "FRAME",
+           "x": 0,
+           "y": 0,
+           "w": 40,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#f2a60d",
+             "a": 0.15
+            }
+           ],
+           "r": 12,
+           "al": {
+            "mode": "VERTICAL",
+            "gap": 10,
+            "p": [
+             8,
+             8,
+             8,
+             8
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "clip": true,
+           "children": [
+            {
+             "id": "5:3324",
+             "name": "material-symbols:qr-code",
+             "type": "INSTANCE",
+             "x": 8,
+             "y": 8,
+             "w": 24,
+             "h": 24,
+             "comp": "material-symbols:qr-code"
+            }
+           ]
+          },
+          {
+           "id": "5:3325",
+           "name": "Textblock",
+           "type": "FRAME",
+           "x": 52,
+           "y": 0,
+           "w": 223,
+           "h": 40,
+           "al": {
+            "mode": "VERTICAL",
+            "gap": 4,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "MIN"
+           },
+           "children": [
+            {
+             "id": "5:3326",
+             "name": "Safe QR Scanner",
+             "type": "TEXT",
+             "x": 0,
+             "y": 0,
+             "w": 223,
+             "h": 20,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "Safe QR Scanner",
+              "font": "Inter Medium",
+              "size": 14,
+              "lh": "20",
+              "ls": "0%",
+              "align": "LEFT",
+              "deco": "NONE",
+              "case": "ORIGINAL"
+             }
+            },
+            {
+             "id": "5:3327",
+             "name": "Always check links before opening",
+             "type": "TEXT",
+             "x": 0,
+             "y": 24,
+             "w": 223,
+             "h": 16,
+             "fills": [
+              {
+               "solid": "#737373",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "Always check links before opening",
+              "font": "Inter Medium",
+              "size": 12,
+              "lh": "16",
+              "ls": "0%",
+              "align": "LEFT",
+              "deco": "NONE",
+              "case": "ORIGINAL"
+             }
+            }
+           ]
+          },
+          {
+           "id": "5:3328",
+           "name": "material-symbols:chevron-right",
+           "type": "INSTANCE",
+           "x": 287,
+           "y": 8,
+           "w": 24,
+           "h": 24,
+           "comp": "material-symbols:chevron-right"
+          }
+         ]
+        },
+        {
+         "id": "5:3329",
+         "name": "line",
+         "type": "VECTOR",
+         "x": 68,
+         "y": 218.5,
+         "w": 259,
+         "h": 0,
+         "strokes": [
+          {
+           "solid": "#737373",
+           "a": 0.15
+          }
+         ],
+         "sw": 1,
+         "sa": "CENTER"
+        },
+        {
+         "id": "5:3330",
+         "name": "Label",
+         "type": "FRAME",
+         "x": 16,
+         "y": 235,
+         "w": 311,
+         "h": 40,
+         "al": {
+          "mode": "HORIZONTAL",
+          "gap": 12,
+          "p": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "main": "MIN",
+          "cross": "CENTER"
+         },
+         "children": [
+          {
+           "id": "5:3331",
+           "name": "Icon",
+           "type": "FRAME",
+           "x": 0,
+           "y": 0,
+           "w": 40,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#7c39ac",
+             "a": 0.15
+            }
+           ],
+           "r": 12,
+           "al": {
+            "mode": "VERTICAL",
+            "gap": 10,
+            "p": [
+             8,
+             8,
+             8,
+             8
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "clip": true,
+           "children": [
+            {
+             "id": "5:3332",
+             "name": "material-symbols:sparkles",
+             "type": "INSTANCE",
+             "x": 8,
+             "y": 8,
+             "w": 24,
+             "h": 24,
+             "comp": "material-symbols:sparkles"
+            }
+           ]
+          },
+          {
+           "id": "5:3333",
+           "name": "Textblock",
+           "type": "FRAME",
+           "x": 52,
+           "y": 0,
+           "w": 223,
+           "h": 40,
+           "al": {
+            "mode": "VERTICAL",
+            "gap": 4,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "MIN"
+           },
+           "children": [
+            {
+             "id": "5:3334",
+             "name": "Storage Cleaner",
+             "type": "TEXT",
+             "x": 0,
+             "y": 0,
+             "w": 223,
+             "h": 20,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "Storage Cleaner",
+              "font": "Inter Medium",
+              "size": 14,
+              "lh": "20",
+              "ls": "0%",
+              "align": "LEFT",
+              "deco": "NONE",
+              "case": "ORIGINAL"
+             }
+            },
+            {
+             "id": "5:3335",
+             "name": "Free up your photos and space",
+             "type": "TEXT",
+             "x": 0,
+             "y": 24,
+             "w": 223,
+             "h": 16,
+             "fills": [
+              {
+               "solid": "#737373",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "Free up your photos and space",
+              "font": "Inter Medium",
+              "size": 12,
+              "lh": "16",
+              "ls": "0%",
+              "align": "LEFT",
+              "deco": "NONE",
+              "case": "ORIGINAL"
+             }
+            }
+           ]
+          },
+          {
+           "id": "5:3336",
+           "name": "material-symbols:chevron-right",
+           "type": "INSTANCE",
+           "x": 287,
+           "y": 8,
+           "w": 24,
+           "h": 24,
+           "comp": "material-symbols:chevron-right"
+          }
+         ]
+        },
+        {
+         "id": "5:3337",
+         "name": "line",
+         "type": "VECTOR",
+         "x": 68,
+         "y": 291.5,
+         "w": 259,
+         "h": 0,
+         "strokes": [
+          {
+           "solid": "#737373",
+           "a": 0.15
+          }
+         ],
+         "sw": 1,
+         "sa": "CENTER"
+        },
+        {
+         "id": "5:3338",
+         "name": "Label",
+         "type": "FRAME",
+         "x": 16,
+         "y": 308,
+         "w": 311,
+         "h": 40,
+         "al": {
+          "mode": "HORIZONTAL",
+          "gap": 12,
+          "p": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "main": "MIN",
+          "cross": "CENTER"
+         },
+         "children": [
+          {
+           "id": "5:3339",
+           "name": "Icon",
+           "type": "FRAME",
+           "x": 0,
+           "y": 0,
+           "w": 40,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#d92635",
+             "a": 0.15
+            }
+           ],
+           "r": 12,
+           "al": {
+            "mode": "VERTICAL",
+            "gap": 10,
+            "p": [
+             8,
+             8,
+             8,
+             8
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "clip": true,
+           "children": [
+            {
+             "id": "5:3340",
+             "name": "material-symbols:alternate-email",
+             "type": "INSTANCE",
+             "x": 8,
+             "y": 8,
+             "w": 24,
+             "h": 24,
+             "comp": "material-symbols:alternate-email"
+            }
+           ]
+          },
+          {
+           "id": "5:3341",
+           "name": "Textblock",
+           "type": "FRAME",
+           "x": 52,
+           "y": 0,
+           "w": 223,
+           "h": 40,
+           "al": {
+            "mode": "VERTICAL",
+            "gap": 4,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "MIN"
+           },
+           "children": [
+            {
+             "id": "5:3342",
+             "name": "Breach Check",
+             "type": "TEXT",
+             "x": 0,
+             "y": 0,
+             "w": 223,
+             "h": 20,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "Breach Check",
+              "font": "Inter Medium",
+              "size": 14,
+              "lh": "20",
+              "ls": "0%",
+              "align": "LEFT",
+              "deco": "NONE",
+              "case": "ORIGINAL"
+             }
+            },
+            {
+             "id": "5:3343",
+             "name": "Your email in known leaks?",
+             "type": "TEXT",
+             "x": 0,
+             "y": 24,
+             "w": 223,
+             "h": 16,
+             "fills": [
+              {
+               "solid": "#737373",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "Your email in known leaks?",
+              "font": "Inter Medium",
+              "size": 12,
+              "lh": "16",
+              "ls": "0%",
+              "align": "LEFT",
+              "deco": "NONE",
+              "case": "ORIGINAL"
+             }
+            }
+           ]
+          },
+          {
+           "id": "5:3344",
+           "name": "material-symbols:chevron-right",
+           "type": "INSTANCE",
+           "x": 287,
+           "y": 8,
+           "w": 24,
+           "h": 24,
+           "comp": "material-symbols:chevron-right"
+          }
+         ]
+        },
+        {
+         "id": "5:3345",
+         "name": "line",
+         "type": "VECTOR",
+         "x": 68,
+         "y": 364.5,
+         "w": 259,
+         "h": 0,
+         "strokes": [
+          {
+           "solid": "#737373",
+           "a": 0.15
+          }
+         ],
+         "sw": 1,
+         "sa": "CENTER"
+        },
+        {
+         "id": "5:3346",
+         "name": "Label",
+         "type": "FRAME",
+         "x": 16,
+         "y": 381,
+         "w": 311,
+         "h": 40,
+         "al": {
+          "mode": "HORIZONTAL",
+          "gap": 12,
+          "p": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "main": "MIN",
+          "cross": "CENTER"
+         },
+         "children": [
+          {
+           "id": "5:3347",
+           "name": "Icon",
+           "type": "FRAME",
+           "x": 0,
+           "y": 0,
+           "w": 40,
+           "h": 40,
+           "fills": [
+            {
+             "solid": "#737373",
+             "a": 0.15
+            }
+           ],
+           "r": 12,
+           "al": {
+            "mode": "VERTICAL",
+            "gap": 10,
+            "p": [
+             8,
+             8,
+             8,
+             8
+            ],
+            "main": "CENTER",
+            "cross": "CENTER"
+           },
+           "clip": true,
+           "children": [
+            {
+             "id": "5:3348",
+             "name": "material-symbols:vpn-key",
+             "type": "INSTANCE",
+             "x": 8,
+             "y": 8,
+             "w": 24,
+             "h": 24,
+             "comp": "material-symbols:vpn-key"
+            }
+           ]
+          },
+          {
+           "id": "5:3349",
+           "name": "Textblock",
+           "type": "FRAME",
+           "x": 52,
+           "y": 0,
+           "w": 223,
+           "h": 40,
+           "al": {
+            "mode": "VERTICAL",
+            "gap": 4,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "CENTER",
+            "cross": "MIN"
+           },
+           "children": [
+            {
+             "id": "5:3350",
+             "name": "Password Generator",
+             "type": "TEXT",
+             "x": 0,
+             "y": 0,
+             "w": 223,
+             "h": 20,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "Password Generator",
+              "font": "Inter Medium",
+              "size": 14,
+              "lh": "20",
+              "ls": "0%",
+              "align": "LEFT",
+              "deco": "NONE",
+              "case": "ORIGINAL"
+             }
+            },
+            {
+             "id": "5:3351",
+             "name": "Use strong, unique passwords",
+             "type": "TEXT",
+             "x": 0,
+             "y": 24,
+             "w": 223,
+             "h": 16,
+             "fills": [
+              {
+               "solid": "#737373",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "Use strong, unique passwords",
+              "font": "Inter Medium",
+              "size": 12,
+              "lh": "16",
+              "ls": "0%",
+              "align": "LEFT",
+              "deco": "NONE",
+              "case": "ORIGINAL"
+             }
+            }
+           ]
+          },
+          {
+           "id": "5:3352",
+           "name": "material-symbols:chevron-right",
+           "type": "INSTANCE",
+           "x": 287,
+           "y": 8,
+           "w": 24,
+           "h": 24,
+           "comp": "material-symbols:chevron-right"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "5:3353",
+       "name": "Need help card",
+       "type": "FRAME",
+       "x": 16,
+       "y": 840,
+       "w": 343,
+       "h": 72,
+       "fills": [
+        {
+         "solid": "#0b62da",
+         "a": 0.15
+        }
+       ],
+       "strokes": [
+        {
+         "solid": "#0b62da",
+         "a": 0.15
+        }
+       ],
+       "sw": 1,
+       "sa": "INSIDE",
+       "r": 16,
+       "al": {
+        "mode": "HORIZONTAL",
+        "gap": 12,
+        "p": [
+         16,
+         16,
+         16,
+         16
+        ],
+        "main": "MIN",
+        "cross": "CENTER"
+       },
+       "clip": true,
+       "children": [
+        {
+         "id": "5:3354",
+         "name": "iconbtn",
+         "type": "FRAME",
+         "x": 16,
+         "y": 16,
+         "w": 40,
+         "h": 40,
+         "fills": [
+          {
+           "solid": "#0b62da",
+           "a": 0.15
+          }
+         ],
+         "r": 12,
+         "al": {
+          "mode": "VERTICAL",
+          "gap": 10,
+          "p": [
+           8,
+           8,
+           8,
+           8
+          ],
+          "main": "CENTER",
+          "cross": "CENTER"
+         },
+         "clip": true,
+         "children": [
+          {
+           "id": "5:3355",
+           "name": "material-symbols:question-mark",
+           "type": "INSTANCE",
+           "x": 8,
+           "y": 8,
+           "w": 24,
+           "h": 24,
+           "comp": "material-symbols:question-mark"
+          }
+         ]
+        },
+        {
+         "id": "5:3356",
+         "name": "Frame 1171276158",
+         "type": "FRAME",
+         "x": 68,
+         "y": 16,
+         "w": 158,
+         "h": 40,
+         "al": {
+          "mode": "VERTICAL",
+          "gap": 4,
+          "p": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "main": "CENTER",
+          "cross": "MIN"
+         },
+         "children": [
+          {
+           "id": "5:3357",
+           "name": "Need help?",
+           "type": "TEXT",
+           "x": 0,
+           "y": 0,
+           "w": 158,
+           "h": 20,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "Need help?",
+            "font": "Inter Medium",
+            "size": 14,
+            "lh": "20",
+            "ls": "0%",
+            "align": "LEFT",
+            "deco": "NONE",
+            "case": "ORIGINAL"
+           }
+          },
+          {
+           "id": "5:3358",
+           "name": "Replies in minutes",
+           "type": "TEXT",
+           "x": 0,
+           "y": 24,
+           "w": 158,
+           "h": 16,
+           "fills": [
+            {
+             "solid": "#737373",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "Replies in minutes",
+            "font": "Inter Medium",
+            "size": 12,
+            "lh": "16",
+            "ls": "0%",
+            "align": "LEFT",
+            "deco": "NONE",
+            "case": "ORIGINAL"
+           }
+          }
+         ]
+        },
+        {
+         "id": "5:3359",
+         "name": "Btn",
+         "type": "INSTANCE",
+         "x": 238,
+         "y": 16,
+         "w": 89,
+         "h": 40,
+         "fills": [
+          {
+           "solid": "#0b62da",
+           "a": 1
+          }
+         ],
+         "r": 100,
+         "al": {
+          "mode": "HORIZONTAL",
+          "gap": 8,
+          "p": [
+           10,
+           16,
+           10,
+           16
+          ],
+          "main": "CENTER",
+          "cross": "CENTER"
+         },
+         "clip": true,
+         "comp": "Btn / Btn=Prime, Size=40, Tap=off",
+         "children": [
+          {
+           "id": "I5:3359;46:20928",
+           "name": "material-symbols:check-circle",
+           "type": "INSTANCE",
+           "x": 16,
+           "y": 10,
+           "w": 20,
+           "h": 20,
+           "hidden": true
+          },
+          {
+           "id": "I5:3359;46:20929",
+           "name": "Label",
+           "type": "TEXT",
+           "x": 16,
+           "y": 10,
+           "w": 57,
+           "h": 20,
+           "fills": [
+            {
+             "solid": "#ffffff",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "Get help",
+            "font": "Inter Medium",
+            "size": 14,
+            "lh": "20",
+            "ls": "0%",
+            "align": "LEFT",
+            "deco": "NONE",
+            "case": "ORIGINAL"
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "5:3360",
+   "name": "home",
+   "type": "FRAME",
+   "x": 0,
+   "y": 709,
+   "w": 375,
+   "h": 103,
+   "fills": [
+    {
+     "grad": "GRADIENT_LINEAR",
+     "stops": [
+      [
+       "#f1f4f9",
+       0,
+       0
+      ],
+      [
+       "#f1f4f9",
+       1,
+       1
+      ]
+     ],
+     "t": [
+      [
+       0,
+       1,
+       0
+      ],
+      [
+       -14.9458,
+       0,
+       7.9729
+      ]
+     ],
+     "a": 1
+    }
+   ],
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 16,
+    "p": [
+     12,
+     16,
+     8,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "clip": true,
+   "children": [
+    {
+     "id": "5:3361",
+     "name": "Menubar",
+     "type": "INSTANCE",
+     "x": 38.5,
+     "y": 12,
+     "w": 298,
+     "h": 62,
+     "fills": [
+      {
+       "solid": "#ffffff",
+       "a": 0.5
+      }
+     ],
+     "strokes": [
+      {
+       "solid": "#0b62da",
+       "a": 0.15
+      }
+     ],
+     "sw": 1,
+     "sa": "INSIDE",
+     "r": 32,
+     "fx": [
+      {
+       "type": "DROP_SHADOW",
+       "r": 16,
+       "c": [
+        "#084191",
+        0.1
+       ],
+       "o": {
+        "x": 0,
+        "y": 4
+       },
+       "s": 0
+      },
+      {
+       "type": "GLASS",
+       "r": 8
+      }
+     ],
+     "al": {
+      "mode": "HORIZONTAL",
+      "gap": 0,
+      "p": [
+       4,
+       4,
+       4,
+       4
+      ],
+      "main": "MIN",
+      "cross": "CENTER"
+     },
+     "clip": true,
+     "comp": "Menubar / State=Home",
+     "children": [
+      {
+       "id": "I5:3361;46:20894",
+       "name": "Menu btns",
+       "type": "FRAME",
+       "x": 5,
+       "y": 5,
+       "w": 96,
+       "h": 52,
+       "fills": [
+        {
+         "solid": "#0b62da",
+         "a": 0.15
+        }
+       ],
+       "r": 26,
+       "al": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "p": [
+         6,
+         16,
+         6,
+         16
+        ],
+        "main": "CENTER",
+        "cross": "CENTER"
+       },
+       "children": [
+        {
+         "id": "I5:3361;46:20895",
+         "name": "material-symbols:other-houses",
+         "type": "INSTANCE",
+         "x": 36,
+         "y": 6,
+         "w": 24,
+         "h": 24,
+         "comp": "material-symbols:other-houses"
+        },
+        {
+         "id": "I5:3361;46:20896",
+         "name": "Home",
+         "type": "TEXT",
+         "x": 16,
+         "y": 30,
+         "w": 64,
+         "h": 16,
+         "fills": [
+          {
+           "solid": "#0b62da",
+           "a": 1
+          }
+         ],
+         "text": {
+          "chars": "Home",
+          "font": "Inter Medium",
+          "size": 12,
+          "lh": "16",
+          "ls": "0%",
+          "align": "CENTER",
+          "deco": "NONE",
+          "case": "ORIGINAL"
+         },
+         "skip": "ios"
+        }
+       ]
+      },
+      {
+       "id": "I5:3361;46:20897",
+       "name": "Menu btns",
+       "type": "FRAME",
+       "x": 101,
+       "y": 5,
+       "w": 96,
+       "h": 52,
+       "opacity": 0.4,
+       "r": 26,
+       "al": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "p": [
+         6,
+         16,
+         6,
+         16
+        ],
+        "main": "CENTER",
+        "cross": "CENTER"
+       },
+       "children": [
+        {
+         "id": "I5:3361;46:20898",
+         "name": "material-symbols:notifications",
+         "type": "INSTANCE",
+         "x": 36,
+         "y": 6,
+         "w": 24,
+         "h": 24,
+         "comp": "material-symbols:notifications"
+        },
+        {
+         "id": "I5:3361;46:20899",
+         "name": "Alerts",
+         "type": "TEXT",
+         "x": 16,
+         "y": 30,
+         "w": 64,
+         "h": 16,
+         "fills": [
+          {
+           "solid": "#000000",
+           "a": 1
+          }
+         ],
+         "text": {
+          "chars": "Alerts",
+          "font": "Inter Medium",
+          "size": 12,
+          "lh": "16",
+          "ls": "0%",
+          "align": "CENTER",
+          "deco": "NONE",
+          "case": "ORIGINAL"
+         }
+        }
+       ]
+      },
+      {
+       "id": "I5:3361;46:20900",
+       "name": "Menu btns",
+       "type": "FRAME",
+       "x": 197,
+       "y": 5,
+       "w": 96,
+       "h": 52,
+       "opacity": 0.4,
+       "r": 26,
+       "al": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "p": [
+         6,
+         16,
+         6,
+         16
+        ],
+        "main": "CENTER",
+        "cross": "CENTER"
+       },
+       "children": [
+        {
+         "id": "I5:3361;46:20901",
+         "name": "material-symbols:settings",
+         "type": "INSTANCE",
+         "x": 36,
+         "y": 6,
+         "w": 24,
+         "h": 24,
+         "comp": "material-symbols:settings"
+        },
+        {
+         "id": "I5:3361;46:20902",
+         "name": "Settings",
+         "type": "TEXT",
+         "x": 16,
+         "y": 30,
+         "w": 64,
+         "h": 16,
+         "fills": [
+          {
+           "solid": "#000000",
+           "a": 1
+          }
+         ],
+         "text": {
+          "chars": "Settings",
+          "font": "Inter Medium",
+          "size": 12,
+          "lh": "16",
+          "ls": "0%",
+          "align": "CENTER",
+          "deco": "NONE",
+          "case": "ORIGINAL"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "5:3362",
+     "name": "Home",
+     "type": "RECTANGLE",
+     "x": 120.5,
+     "y": 90,
+     "w": 134,
+     "h": 5,
+     "fills": [
+      {
+       "solid": "#000000",
+       "a": 1
+      }
+     ],
+     "r": 100,
+     "skip": "ios"
+    }
+   ]
+  },
+  {
+   "id": "5:3363",
+   "name": "system bar",
+   "type": "GROUP",
+   "x": 0,
+   "y": 0,
+   "w": 375,
+   "h": 52,
+   "skip": "ios"
+  },
+  {
+   "id": "5:3380",
+   "name": "logo",
+   "type": "FRAME",
+   "x": 0,
+   "y": 52,
+   "w": 375,
+   "h": 64,
+   "al": {
+    "mode": "HORIZONTAL",
+    "gap": 0,
+    "p": [
+     12,
+     16,
+     12,
+     16
+    ],
+    "main": "SPACE_BETWEEN",
+    "cross": "CENTER"
+   },
+   "children": [
+    {
+     "id": "5:3381",
+     "name": "logo",
+     "type": "FRAME",
+     "x": 16,
+     "y": 20,
+     "w": 83,
+     "h": 24,
+     "al": {
+      "mode": "HORIZONTAL",
+      "gap": 4,
+      "p": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "main": "MIN",
+      "cross": "CENTER"
+     },
+     "children": [
+      {
+       "id": "5:3382",
+       "name": "Vector",
+       "type": "VECTOR",
+       "x": 0,
+       "y": 0,
+       "w": 20,
+       "h": 24,
+       "fills": [
+        {
+         "solid": "#0b62da",
+         "a": 1
+        }
+       ]
+      },
+      {
+       "id": "5:3383",
+       "name": "Seciro",
+       "type": "TEXT",
+       "x": 24,
+       "y": 4.5,
+       "w": 59,
+       "h": 15,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Seciro",
+        "font": "Inter Tight Bold",
+        "size": 20,
+        "lh": "24",
+        "ls": "0%",
+        "align": "LEFT",
+        "deco": "NONE",
+        "case": "ORIGINAL"
+       }
+      }
+     ]
+    },
+    {
+     "id": "5:3384",
+     "name": "Icon Btn",
+     "type": "INSTANCE",
+     "x": 319,
+     "y": 12,
+     "w": 40,
+     "h": 40,
+     "fills": [
+      {
+       "solid": "#ffffff",
+       "a": 1
+      }
+     ],
+     "r": 20,
+     "fx": [
+      {
+       "type": "DROP_SHADOW",
+       "r": 16,
+       "c": [
+        "#084191",
+        0.1
+       ],
+       "o": {
+        "x": 0,
+        "y": 4
+       },
+       "s": 0
+      }
+     ],
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 0,
+      "p": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "main": "CENTER",
+      "cross": "CENTER"
+     },
+     "clip": true,
+     "comp": "Icon Btn / Tap=off",
+     "children": [
+      {
+       "id": "I5:3384;46:20962",
+       "name": "material-symbols:person",
+       "type": "INSTANCE",
+       "x": 8,
+       "y": 8,
+       "w": 24,
+       "h": 24,
+       "comp": "material-symbols:person"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "5:3385",
+   "name": "How to activate Seciro protection in Safari",
+   "type": "FRAME",
+   "x": 0,
+   "y": 812,
+   "w": 375,
+   "h": 649,
+   "fills": [
+    {
+     "solid": "#ffffff",
+     "a": 1
+    }
+   ],
+   "r": [
+    24,
+    24,
+    0,
+    0
+   ],
+   "al": {
+    "mode": "VERTICAL",
+    "gap": 24,
+    "p": [
+     24,
+     16,
+     8,
+     16
+    ],
+    "main": "MIN",
+    "cross": "CENTER"
+   },
+   "clip": true,
+   "children": [
+    {
+     "id": "5:3386",
+     "name": "logo",
+     "type": "FRAME",
+     "x": 146,
+     "y": 24,
+     "w": 83,
+     "h": 24,
+     "al": {
+      "mode": "HORIZONTAL",
+      "gap": 4,
+      "p": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "main": "MIN",
+      "cross": "CENTER"
+     },
+     "children": [
+      {
+       "id": "5:3387",
+       "name": "Vector",
+       "type": "VECTOR",
+       "x": 0,
+       "y": 0,
+       "w": 20,
+       "h": 24,
+       "fills": [
+        {
+         "solid": "#0b62da",
+         "a": 1
+        }
+       ]
+      },
+      {
+       "id": "5:3388",
+       "name": "Seciro",
+       "type": "TEXT",
+       "x": 24,
+       "y": 4.5,
+       "w": 59,
+       "h": 15,
+       "fills": [
+        {
+         "solid": "#000000",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Seciro",
+        "font": "Inter Tight Bold",
+        "size": 20,
+        "lh": "24",
+        "ls": "0%",
+        "align": "LEFT",
+        "deco": "NONE",
+        "case": "ORIGINAL"
+       }
+      }
+     ]
+    },
+    {
+     "id": "5:3389",
+     "name": "How to activate Seciro protection in Safari",
+     "type": "TEXT",
+     "x": 16,
+     "y": 72,
+     "w": 343,
+     "h": 72,
+     "fills": [
+      {
+       "solid": "#000000",
+       "a": 1
+      }
+     ],
+     "text": {
+      "chars": "How to activate Seciro protection in Safari",
+      "font": "Inter Tight Medium",
+      "size": 32,
+      "lh": "36",
+      "ls": "0%",
+      "align": "CENTER",
+      "deco": "NONE",
+      "case": "ORIGINAL"
+     }
+    },
+    {
+     "id": "5:3390",
+     "name": "menu",
+     "type": "FRAME",
+     "x": 16,
+     "y": 168,
+     "w": 343,
+     "h": 364,
+     "fills": [
+      {
+       "solid": "#f1f4f9",
+       "a": 1
+      }
+     ],
+     "r": 16,
+     "fx": [],
+     "al": {
+      "mode": "VERTICAL",
+      "gap": 16,
+      "p": [
+       16,
+       16,
+       16,
+       16
+      ],
+      "main": "MIN",
+      "cross": "MAX"
+     },
+     "clip": true,
+     "children": [
+      {
+       "id": "5:3391",
+       "name": "Label",
+       "type": "FRAME",
+       "x": 16,
+       "y": 16,
+       "w": 311,
+       "h": 40,
+       "al": {
+        "mode": "HORIZONTAL",
+        "gap": 12,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "CENTER"
+       },
+       "children": [
+        {
+         "id": "5:3392",
+         "name": "Safari-Icon-Default",
+         "type": "RECTANGLE",
+         "x": 0,
+         "y": 0,
+         "w": 40,
+         "h": 40,
+         "fills": [
+          {
+           "image": "8ec54b3ed906684eed4eac5b036c6dd09bd4e4e1",
+           "mode": "CROP"
+          }
+         ],
+         "strokes": [
+          {
+           "solid": "#ffffff",
+           "a": 1
+          }
+         ],
+         "sw": 2,
+         "sa": "INSIDE",
+         "r": 12,
+         "fx": [
+          {
+           "type": "DROP_SHADOW",
+           "r": 8,
+           "c": [
+            "#084191",
+            0.1
+           ],
+           "o": {
+            "x": 0,
+            "y": 4
+           },
+           "s": 0
+          }
+         ]
+        },
+        {
+         "id": "5:3393",
+         "name": "Open Safari and navigate to any website.",
+         "type": "TEXT",
+         "x": 52,
+         "y": 0,
+         "w": 259,
+         "h": 40,
+         "fills": "mixed",
+         "text": {
+          "chars": "Open Safari and navigate\nto any website.",
+          "font": "Inter Medium",
+          "size": 14,
+          "lh": "20",
+          "ls": "0%",
+          "align": "LEFT",
+          "deco": "NONE",
+          "case": "ORIGINAL",
+          "runs": [
+           {
+            "t": "Open ",
+            "font": "Inter Medium",
+            "size": 14,
+            "fills": [
+             {
+              "solid": "#737373",
+              "a": 1
+             }
+            ],
+            "deco": "NONE"
+           },
+           {
+            "t": "Safari",
+            "font": "Inter Medium",
+            "size": 14,
+            "fills": [
+             {
+              "solid": "#000000",
+              "a": 1
+             }
+            ],
+            "deco": "NONE"
+           },
+           {
+            "t": " and navigate\nto any website.",
+            "font": "Inter Medium",
+            "size": 14,
+            "fills": [
+             {
+              "solid": "#737373",
+              "a": 1
+             }
+            ],
+            "deco": "NONE"
+           }
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "id": "5:3394",
+       "name": "line",
+       "type": "VECTOR",
+       "x": 68,
+       "y": 72.5,
+       "w": 259,
+       "h": 0,
+       "strokes": [
+        {
+         "solid": "#0b62da",
+         "a": 0.15
+        }
+       ],
+       "sw": 1,
+       "sa": "CENTER"
+      },
+      {
+       "id": "5:3395",
+       "name": "Label",
+       "type": "FRAME",
+       "x": 16,
+       "y": 89,
+       "w": 311,
+       "h": 40,
+       "al": {
+        "mode": "HORIZONTAL",
+        "gap": 12,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "CENTER"
+       },
+       "children": [
+        {
+         "id": "5:3396",
+         "name": "Icon",
+         "type": "FRAME",
+         "x": 0,
+         "y": 0,
+         "w": 40,
+         "h": 40,
+         "fills": [
+          {
+           "solid": "#737373",
+           "a": 0.15
+          }
+         ],
+         "r": 12,
+         "al": {
+          "mode": "VERTICAL",
+          "gap": 10,
+          "p": [
+           8,
+           8,
+           8,
+           8
+          ],
+          "main": "CENTER",
+          "cross": "CENTER"
+         },
+         "clip": true,
+         "children": [
+          {
+           "id": "5:3397",
+           "name": "Vector",
+           "type": "VECTOR",
+           "x": 10,
+           "y": 10,
+           "w": 20,
+           "h": 20,
+           "fills": [
+            {
+             "solid": "#737373",
+             "a": 1
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "id": "5:3398",
+         "name": "Frame",
+         "type": "FRAME",
+         "x": 52,
+         "y": 0,
+         "w": 231,
+         "h": 40,
+         "al": {
+          "mode": "VERTICAL",
+          "gap": -2,
+          "p": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "main": "MIN",
+          "cross": "MIN"
+         },
+         "children": [
+          {
+           "id": "5:3399",
+           "name": "text",
+           "type": "FRAME",
+           "x": 0,
+           "y": 0,
+           "w": 231,
+           "h": 22,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 4,
+            "p": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "main": "MIN",
+            "cross": "CENTER"
+           },
+           "children": [
+            {
+             "id": "5:3400",
+             "name": "Tap",
+             "type": "TEXT",
+             "x": 0,
+             "y": 1,
+             "w": 25,
+             "h": 20,
+             "fills": [
+              {
+               "solid": "#737373",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "Tap",
+              "font": "Inter Medium",
+              "size": 14,
+              "lh": "20",
+              "ls": "0%",
+              "align": "LEFT",
+              "deco": "NONE",
+              "case": "ORIGINAL"
+             }
+            },
+            {
+             "id": "5:3401",
+             "name": "Frame",
+             "type": "FRAME",
+             "x": 29,
+             "y": 4,
+             "w": 14,
+             "h": 14,
+             "clip": true,
+             "children": [
+              {
+               "id": "5:3402",
+               "name": "Vector",
+               "type": "VECTOR",
+               "x": 1.17,
+               "y": 1.17,
+               "w": 11.67,
+               "h": 11.67,
+               "fills": [
+                {
+                 "solid": "#000000",
+                 "a": 1
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "id": "5:3403",
+             "name": "in the address bar, then tap",
+             "type": "TEXT",
+             "x": 47,
+             "y": 1,
+             "w": 184,
+             "h": 20,
+             "fills": [
+              {
+               "solid": "#737373",
+               "a": 1
+              }
+             ],
+             "text": {
+              "chars": "in the address bar, then tap",
+              "font": "Inter Medium",
+              "size": 14,
+              "lh": "20",
+              "ls": "0%",
+              "align": "LEFT",
+              "deco": "NONE",
+              "case": "ORIGINAL"
+             }
+            }
+           ]
+          },
+          {
+           "id": "5:3404",
+           "name": "Manage Extensions.",
+           "type": "TEXT",
+           "x": 0,
+           "y": 20,
+           "w": 231,
+           "h": 20,
+           "fills": [
+            {
+             "solid": "#000000",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "Manage Extensions.",
+            "font": "Inter Medium",
+            "size": 14,
+            "lh": "20",
+            "ls": "0%",
+            "align": "LEFT",
+            "deco": "NONE",
+            "case": "ORIGINAL"
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "5:3405",
+       "name": "line",
+       "type": "VECTOR",
+       "x": 68,
+       "y": 145.5,
+       "w": 259,
+       "h": 0,
+       "strokes": [
+        {
+         "solid": "#0b62da",
+         "a": 0.15
+        }
+       ],
+       "sw": 1,
+       "sa": "CENTER"
+      },
+      {
+       "id": "5:3406",
+       "name": "Label",
+       "type": "FRAME",
+       "x": 16,
+       "y": 162,
+       "w": 311,
+       "h": 40,
+       "al": {
+        "mode": "HORIZONTAL",
+        "gap": 12,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "CENTER"
+       },
+       "children": [
+        {
+         "id": "5:3407",
+         "name": "Icon",
+         "type": "FRAME",
+         "x": 0,
+         "y": 0,
+         "w": 40,
+         "h": 40,
+         "fills": [
+          {
+           "solid": "#2eb85c",
+           "a": 0.15
+          }
+         ],
+         "r": 12,
+         "al": {
+          "mode": "VERTICAL",
+          "gap": 10,
+          "p": [
+           8,
+           8,
+           8,
+           8
+          ],
+          "main": "CENTER",
+          "cross": "CENTER"
+         },
+         "clip": true,
+         "children": [
+          {
+           "id": "5:3408",
+           "name": "switch",
+           "type": "FRAME",
+           "x": 8,
+           "y": 12,
+           "w": 24,
+           "h": 16,
+           "fills": [
+            {
+             "solid": "#39ac60",
+             "a": 1
+            }
+           ],
+           "r": 10.800000190734863,
+           "al": {
+            "mode": "HORIZONTAL",
+            "gap": 9,
+            "p": [
+             1.8000000715255737,
+             1.8000000715255737,
+             1.8000000715255737,
+             1.8000000715255737
+            ],
+            "main": "MAX",
+            "cross": "CENTER"
+           },
+           "clip": true,
+           "children": [
+            {
+             "id": "5:3409",
+             "name": "Ellipse",
+             "type": "ELLIPSE",
+             "x": 10.2,
+             "y": 2,
+             "w": 12,
+             "h": 12,
+             "fills": [
+              {
+               "solid": "#ffffff",
+               "a": 1
+              }
+             ],
+             "fx": [
+              {
+               "type": "DROP_SHADOW",
+               "r": 3.6000001430511475,
+               "c": [
+                "#18181b",
+                0.1
+               ],
+               "o": {
+                "x": 0,
+                "y": 1.8000000715255737
+               },
+               "s": 0
+              }
+             ],
+             "arc": {
+              "startingAngle": 0,
+              "endingAngle": 6.2831854820251465,
+              "innerRadius": 0
+             }
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "id": "5:3410",
+         "name": "Turn on Seciro, then tap Done.",
+         "type": "TEXT",
+         "x": 52,
+         "y": 10,
+         "w": 259,
+         "h": 20,
+         "fills": "mixed",
+         "text": {
+          "chars": "Turn on Seciro, then tap Done.",
+          "font": "Inter Medium",
+          "size": 14,
+          "lh": "20",
+          "ls": "0%",
+          "align": "LEFT",
+          "deco": "NONE",
+          "case": "ORIGINAL",
+          "runs": [
+           {
+            "t": "Turn on ",
+            "font": "Inter Medium",
+            "size": 14,
+            "fills": [
+             {
+              "solid": "#737373",
+              "a": 1
+             }
+            ],
+            "deco": "NONE"
+           },
+           {
+            "t": "Seciro",
+            "font": "Inter Medium",
+            "size": 14,
+            "fills": [
+             {
+              "solid": "#000000",
+              "a": 1
+             }
+            ],
+            "deco": "NONE"
+           },
+           {
+            "t": ", then tap ",
+            "font": "Inter Medium",
+            "size": 14,
+            "fills": [
+             {
+              "solid": "#737373",
+              "a": 1
+             }
+            ],
+            "deco": "NONE"
+           },
+           {
+            "t": "Done",
+            "font": "Inter Medium",
+            "size": 14,
+            "fills": [
+             {
+              "solid": "#000000",
+              "a": 1
+             }
+            ],
+            "deco": "NONE"
+           },
+           {
+            "t": ".",
+            "font": "Inter Medium",
+            "size": 14,
+            "fills": [
+             {
+              "solid": "#737373",
+              "a": 1
+             }
+            ],
+            "deco": "NONE"
+           }
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "id": "5:3411",
+       "name": "line",
+       "type": "VECTOR",
+       "x": 68,
+       "y": 218.5,
+       "w": 259,
+       "h": 0,
+       "strokes": [
+        {
+         "solid": "#0b62da",
+         "a": 0.15
+        }
+       ],
+       "sw": 1,
+       "sa": "CENTER"
+      },
+      {
+       "id": "5:3412",
+       "name": "Label",
+       "type": "FRAME",
+       "x": 16,
+       "y": 235,
+       "w": 311,
+       "h": 40,
+       "al": {
+        "mode": "HORIZONTAL",
+        "gap": 12,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "CENTER"
+       },
+       "children": [
+        {
+         "id": "5:3413",
+         "name": "Icon",
+         "type": "FRAME",
+         "x": 0,
+         "y": 0,
+         "w": 40,
+         "h": 40,
+         "fills": [
+          {
+           "solid": "#737373",
+           "a": 0.15
+          }
+         ],
+         "r": 12,
+         "al": {
+          "mode": "VERTICAL",
+          "gap": 10,
+          "p": [
+           8,
+           8,
+           8,
+           8
+          ],
+          "main": "CENTER",
+          "cross": "CENTER"
+         },
+         "clip": true,
+         "children": [
+          {
+           "id": "5:3414",
+           "name": "Vector",
+           "type": "VECTOR",
+           "x": 10,
+           "y": 10,
+           "w": 20,
+           "h": 20,
+           "fills": [
+            {
+             "solid": "#737373",
+             "a": 1
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "id": "5:3415",
+         "name": "text",
+         "type": "FRAME",
+         "x": 52,
+         "y": 10,
+         "w": 197,
+         "h": 20,
+         "al": {
+          "mode": "HORIZONTAL",
+          "gap": 4,
+          "p": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "main": "MIN",
+          "cross": "CENTER"
+         },
+         "children": [
+          {
+           "id": "5:3416",
+           "name": "Tap",
+           "type": "TEXT",
+           "x": 0,
+           "y": 0,
+           "w": 25,
+           "h": 20,
+           "fills": [
+            {
+             "solid": "#737373",
+             "a": 1
+            }
+           ],
+           "text": {
+            "chars": "Tap",
+            "font": "Inter Medium",
+            "size": 14,
+            "lh": "20",
+            "ls": "0%",
+            "align": "LEFT",
+            "deco": "NONE",
+            "case": "ORIGINAL"
+           }
+          },
+          {
+           "id": "5:3417",
+           "name": "Frame",
+           "type": "FRAME",
+           "x": 29,
+           "y": 3,
+           "w": 14,
+           "h": 14,
+           "clip": true,
+           "children": [
+            {
+             "id": "5:3418",
+             "name": "Vector",
+             "type": "VECTOR",
+             "x": 1.17,
+             "y": 1.17,
+             "w": 11.67,
+             "h": 11.67,
+             "fills": [
+              {
+               "solid": "#000000",
+               "a": 1
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "id": "5:3419",
+           "name": "again, then tap Seciro.",
+           "type": "TEXT",
+           "x": 47,
+           "y": 0,
+           "w": 150,
+           "h": 20,
+           "fills": "mixed",
+           "text": {
+            "chars": "again, then tap Seciro.",
+            "font": "Inter Medium",
+            "size": 14,
+            "lh": "20",
+            "ls": "0%",
+            "align": "LEFT",
+            "deco": "NONE",
+            "case": "ORIGINAL",
+            "runs": [
+             {
+              "t": "again, then tap ",
+              "font": "Inter Medium",
+              "size": 14,
+              "fills": [
+               {
+                "solid": "#737373",
+                "a": 1
+               }
+              ],
+              "deco": "NONE"
+             },
+             {
+              "t": "Seciro",
+              "font": "Inter Medium",
+              "size": 14,
+              "fills": [
+               {
+                "solid": "#000000",
+                "a": 1
+               }
+              ],
+              "deco": "NONE"
+             },
+             {
+              "t": ".",
+              "font": "Inter Medium",
+              "size": 14,
+              "fills": [
+               {
+                "solid": "#737373",
+                "a": 1
+               }
+              ],
+              "deco": "NONE"
+             }
+            ]
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "5:3420",
+       "name": "line",
+       "type": "VECTOR",
+       "x": 68,
+       "y": 291.5,
+       "w": 259,
+       "h": 0,
+       "strokes": [
+        {
+         "solid": "#0b62da",
+         "a": 0.15
+        }
+       ],
+       "sw": 1,
+       "sa": "CENTER"
+      },
+      {
+       "id": "5:3421",
+       "name": "Label",
+       "type": "FRAME",
+       "x": 16,
+       "y": 308,
+       "w": 311,
+       "h": 40,
+       "al": {
+        "mode": "HORIZONTAL",
+        "gap": 12,
+        "p": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "main": "MIN",
+        "cross": "CENTER"
+       },
+       "children": [
+        {
+         "id": "5:3422",
+         "name": "Icon",
+         "type": "FRAME",
+         "x": 0,
+         "y": 0,
+         "w": 40,
+         "h": 40,
+         "fills": [
+          {
+           "solid": "#0b62da",
+           "a": 0.15
+          }
+         ],
+         "r": 12,
+         "al": {
+          "mode": "VERTICAL",
+          "gap": 10,
+          "p": [
+           8,
+           8,
+           8,
+           8
+          ],
+          "main": "CENTER",
+          "cross": "CENTER"
+         },
+         "clip": true,
+         "children": [
+          {
+           "id": "5:3423",
+           "name": "Vector",
+           "type": "VECTOR",
+           "x": 10,
+           "y": 8,
+           "w": 20,
+           "h": 24,
+           "fills": [
+            {
+             "solid": "#0b62da",
+             "a": 1
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "id": "5:3424",
+         "name": "Tap Always Allow, then tap Always Allow on Every Website.",
+         "type": "TEXT",
+         "x": 52,
+         "y": 0,
+         "w": 259,
+         "h": 40,
+         "fills": "mixed",
+         "text": {
+          "chars": "Tap Always Allow, then tap Always Allow on Every Website.",
+          "font": "Inter Medium",
+          "size": 14,
+          "lh": "20",
+          "ls": "0%",
+          "align": "LEFT",
+          "deco": "NONE",
+          "case": "ORIGINAL",
+          "runs": [
+           {
+            "t": "Tap",
+            "font": "Inter Medium",
+            "size": 14,
+            "fills": [
+             {
+              "solid": "#737373",
+              "a": 1
+             }
+            ],
+            "deco": "NONE"
+           },
+           {
+            "t": " Always Allow, ",
+            "font": "Inter Medium",
+            "size": 14,
+            "fills": [
+             {
+              "solid": "#000000",
+              "a": 1
+             }
+            ],
+            "deco": "NONE"
+           },
+           {
+            "t": "then tap",
+            "font": "Inter Medium",
+            "size": 14,
+            "fills": [
+             {
+              "solid": "#737373",
+              "a": 1
+             }
+            ],
+            "deco": "NONE"
+           },
+           {
+            "t": " Always Allow on Every Website.",
+            "font": "Inter Medium",
+            "size": 14,
+            "fills": [
+             {
+              "solid": "#000000",
+              "a": 1
+             }
+            ],
+            "deco": "NONE"
+           }
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "5:3425",
+     "name": "Btn",
+     "type": "INSTANCE",
+     "x": 16,
+     "y": 556,
+     "w": 343,
+     "h": 56,
+     "fills": [
+      {
+       "solid": "#0b62da",
+       "a": 1
+      }
+     ],
+     "r": 100,
+     "al": {
+      "mode": "HORIZONTAL",
+      "gap": 8,
+      "p": [
+       16,
+       24,
+       16,
+       24
+      ],
+      "main": "CENTER",
+      "cross": "CENTER"
+     },
+     "clip": true,
+     "comp": "Btn / Btn=Prime, Size=56, Tap=off",
+     "children": [
+      {
+       "id": "I5:3425;46:20946",
+       "name": "material-symbols:check-circle",
+       "type": "INSTANCE",
+       "x": 24,
+       "y": 16,
+       "w": 24,
+       "h": 24,
+       "hidden": true
+      },
+      {
+       "id": "I5:3425;46:20947",
+       "name": "Label",
+       "type": "TEXT",
+       "x": 150.5,
+       "y": 18,
+       "w": 42,
+       "h": 20,
+       "fills": [
+        {
+         "solid": "#ffffff",
+         "a": 1
+        }
+       ],
+       "text": {
+        "chars": "Got it",
+        "font": "Inter Medium",
+        "size": 16,
+        "lh": "20",
+        "ls": "0%",
+        "align": "LEFT",
+        "deco": "NONE",
+        "case": "ORIGINAL"
+       }
+      }
+     ]
+    },
+    {
+     "id": "5:3426",
+     "name": "Home",
+     "type": "RECTANGLE",
+     "x": 120.5,
+     "y": 636,
+     "w": 134,
+     "h": 5,
+     "fills": [
+      {
+       "solid": "#000000",
+       "a": 1
+      }
+     ],
+     "r": 100,
+     "skip": "ios"
+    }
+   ]
+  }
+ ]
+}
