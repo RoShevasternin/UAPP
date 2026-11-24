@@ -21,6 +21,9 @@ SHOTS = {  # екран → кадр Figma
     "code-error": "r2_09_5-4589.png", "sub-ended": "r2_10_5-4668.png", "no-sub": "r2_11_5-4722.png",
     "dashboard": "r3_01_5-1686.png", "scan": "r3_02_5-8170.png", "result-ok": "r3_03_5-2114.png", "result-issues": "r3_04_5-1784.png",
     "sheet-safari": "r3_05_5-1868.png", "sheet-update": "r3_06_5-1995.png", "dash-issues": "r3_07_5-3269.png",
+    "vpn-first": "r4_01_5-3826.png", "vpn-intro": "r4_02_5-3427.png", "vpn-off": "r4_03_5-3521.png", "vpn-loc": "r4_04_5-3695.png",
+    "vpn-connecting": "r4_05_5-7547.png", "vpn-connected": "r4_06_5-7646.png", "vpn-loc-ny": "r4_07_5-7916.png",
+    "vpn-loc-paris": "r4_08_5-8043.png", "vpn-connecting-paris": "r4_09_5-7597.png", "vpn-connected-paris": "r4_10_5-7781.png",
 }
 
 def shot(screen, tmp):

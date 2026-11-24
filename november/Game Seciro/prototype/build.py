@@ -80,6 +80,18 @@ def gen_layers():
         f.write("\n".join(lines) + "\nexport default {\n" + body + "\n};\n")
 
 
+def gen_frames():
+    """Кадри Figma для колонки порівняння: PNG @2x → JPEG у .tools/frames (сторінка легша в рази; proto-diff бере PNG)."""
+    from PIL import Image
+    src = os.path.join(HERE, "..", "claude", "figma", "frames")
+    dst = os.path.join(TOOLS, "frames"); os.makedirs(dst, exist_ok=True)
+    for name in os.listdir(src):
+        if not name.endswith(".png"): continue
+        a, b = os.path.join(src, name), os.path.join(dst, name[:-4] + ".jpg")
+        if os.path.exists(b) and os.path.getmtime(b) >= os.path.getmtime(a): continue
+        Image.open(a).convert("RGB").save(b, quality=84, optimize=True, progressive=True)
+
+
 def gen_fig():
     """Кадри для рендерера (claude/figma/r3 …: <кадр>.json + PNG векторних шарів) → .tools/fig.gen.js:
     FRAMES {id: дерево}, PNG {"r3/<hash>.png": src}."""
@@ -114,7 +126,7 @@ def bundle():
     out = os.path.join(TOOLS, "bundle.js")
     env = dict(os.environ, NODE_PATH=NM)
     r = subprocess.run([ESBUILD, entry, "--bundle", "--minify", "--format=iife", "--charset=utf8",
-                        "--jsx=automatic", "--target=es2020", "--loader:.svg=dataurl", "--loader:.png=dataurl",
+                        "--jsx=automatic", "--target=es2020", "--loader:.svg=dataurl", "--loader:.png=dataurl", "--loader:.jpg=dataurl",
                         "--define:process.env.NODE_ENV=\"production\"",
                         f"--outfile={out}", "--log-level=warning"],
                        env=env, capture_output=True, encoding="utf-8", errors="replace")
@@ -130,6 +142,7 @@ def main():
     for name, ver in PACKAGES.items():
         fetch(name, ver)
     gen_layers()
+    gen_frames()
     gen_fig()
     js = bundle()
     if "--check" in sys.argv:

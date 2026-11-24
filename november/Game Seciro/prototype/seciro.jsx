@@ -26,16 +26,16 @@ import icEmail from "../claude/figma/icons/alternate-email.svg";
 import icKey from "../claude/figma/icons/vpn-key.svg";
 import icShield from "../claude/figma/icons/shield.svg";
 // Кадри Figma @2x — для звірки поруч із телефоном (і накладанням поверх)
-import fr01 from "../claude/figma/frames/r1_01_5-2530.png";
-import fr02 from "../claude/figma/frames/r1_02_5-2620.png";
-import fr03 from "../claude/figma/frames/r1_03_5-2557.png";
-import fr04 from "../claude/figma/frames/r1_04_5-2683.png";
-import fr05 from "../claude/figma/frames/r1_05_5-2747.png";
-import fr06 from "../claude/figma/frames/r1_06_5-2815.png";
-import fr07 from "../claude/figma/frames/r1_07_5-2874.png";
-import fr08 from "../claude/figma/frames/r1_08_5-2948.png";
-import fr09 from "../claude/figma/frames/r1_09_5-3055.png";
-import fr10 from "../claude/figma/frames/r1_10_5-3162.png";
+import fr01 from "./.tools/frames/r1_01_5-2530.jpg";
+import fr02 from "./.tools/frames/r1_02_5-2620.jpg";
+import fr03 from "./.tools/frames/r1_03_5-2557.jpg";
+import fr04 from "./.tools/frames/r1_04_5-2683.jpg";
+import fr05 from "./.tools/frames/r1_05_5-2747.jpg";
+import fr06 from "./.tools/frames/r1_06_5-2815.jpg";
+import fr07 from "./.tools/frames/r1_07_5-2874.jpg";
+import fr08 from "./.tools/frames/r1_08_5-2948.jpg";
+import fr09 from "./.tools/frames/r1_09_5-3055.jpg";
+import fr10 from "./.tools/frames/r1_10_5-3162.jpg";
 
 // Ряд 2 — вхід
 import hdrBack from "../claude/figma/art3x/5-4374_logo_5-4424.png";
@@ -48,33 +48,43 @@ import kbAlpha from "../claude/figma/keyboard/kb-alpha.png";
 import kbNum from "../claude/figma/keyboard/kb-numeric.png";
 import icMail from "../claude/figma/icons/mail.svg";
 import icInfo from "../claude/figma/icons/info.svg";
-import r2f01 from "../claude/figma/frames/r2_01_5-4374.png";
-import r2f02 from "../claude/figma/frames/r2_02_5-4923.png";
-import r2f03 from "../claude/figma/frames/r2_03_5-4985.png";
-import r2f04 from "../claude/figma/frames/r2_04_5-5047.png";
-import r2f05 from "../claude/figma/frames/r2_05_5-4433.png";
-import r2f06 from "../claude/figma/frames/r2_06_5-4775.png";
-import r2f07 from "../claude/figma/frames/r2_07_5-4846.png";
-import r2f08 from "../claude/figma/frames/r2_08_5-4502.png";
-import r2f09 from "../claude/figma/frames/r2_09_5-4589.png";
-import r2f10 from "../claude/figma/frames/r2_10_5-4668.png";
-import r2f11 from "../claude/figma/frames/r2_11_5-4722.png";
+import r2f01 from "./.tools/frames/r2_01_5-4374.jpg";
+import r2f02 from "./.tools/frames/r2_02_5-4923.jpg";
+import r2f03 from "./.tools/frames/r2_03_5-4985.jpg";
+import r2f04 from "./.tools/frames/r2_04_5-5047.jpg";
+import r2f05 from "./.tools/frames/r2_05_5-4433.jpg";
+import r2f06 from "./.tools/frames/r2_06_5-4775.jpg";
+import r2f07 from "./.tools/frames/r2_07_5-4846.jpg";
+import r2f08 from "./.tools/frames/r2_08_5-4502.jpg";
+import r2f09 from "./.tools/frames/r2_09_5-4589.jpg";
+import r2f10 from "./.tools/frames/r2_10_5-4668.jpg";
+import r2f11 from "./.tools/frames/r2_11_5-4722.jpg";
 
 // Ряд 3 — рендерер з даних Figma
-import { FigFrame, FigNode, frameOf, findNode } from "./fig.jsx";
-import r3f01 from "../claude/figma/frames/r3_01_5-1686.png";
-import r3f02 from "../claude/figma/frames/r3_02_5-8170.png";
-import r3f03 from "../claude/figma/frames/r3_03_5-2114.png";
-import r3f04 from "../claude/figma/frames/r3_04_5-1784.png";
-import r3f05 from "../claude/figma/frames/r3_05_5-1868.png";
-import r3f06 from "../claude/figma/frames/r3_06_5-1995.png";
-import r3f07 from "../claude/figma/frames/r3_07_5-3269.png";
+import { FigFrame, FigNode, frameOf, findNode, PNG } from "./fig.jsx";
+import r3f01 from "./.tools/frames/r3_01_5-1686.jpg";
+import r3f02 from "./.tools/frames/r3_02_5-8170.jpg";
+import r3f03 from "./.tools/frames/r3_03_5-2114.jpg";
+import r3f04 from "./.tools/frames/r3_04_5-1784.jpg";
+import r3f05 from "./.tools/frames/r3_05_5-1868.jpg";
+import r3f06 from "./.tools/frames/r3_06_5-1995.jpg";
+import r3f07 from "./.tools/frames/r3_07_5-3269.jpg";
+import r4f01 from "./.tools/frames/r4_01_5-3826.jpg";
+import r4f02 from "./.tools/frames/r4_02_5-3427.jpg";
+import r4f03 from "./.tools/frames/r4_03_5-3521.jpg";
+import r4f04 from "./.tools/frames/r4_04_5-3695.jpg";
+import r4f05 from "./.tools/frames/r4_05_5-7547.jpg";
+import r4f06 from "./.tools/frames/r4_06_5-7646.jpg";
+import r4f07 from "./.tools/frames/r4_07_5-7916.jpg";
+import r4f08 from "./.tools/frames/r4_08_5-8043.jpg";
+import r4f09 from "./.tools/frames/r4_09_5-7597.jpg";
+import r4f10 from "./.tools/frames/r4_10_5-7781.jpg";
 import scanTrack from "../claude/figma/scan/track.png";
 import scanFull from "../claude/figma/scan/progress-full.png";
 import scanRowScan from "../claude/figma/scan/row-scanning.png";
 import scanRowOk from "../claude/figma/scan/row-ok.png";
 
-export const BUILD = 14;   // піднімати на кожну публікацію
+export const BUILD = 15;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
@@ -767,7 +777,7 @@ function Dashboard({ issues, go, toast, raw }) {
   const [sheet, setSheet] = useState(null);
   const ov = {};
   const run = btnWith(f, "Run Protection Check"); ov[run.id] = { onClick: () => go("scan"), className: "tap" };
-  labelsIn(f).forEach((l, i) => { ov[l.id] = { onClick: () => toast(`${firstText(l)} — its own row of the Figma comes later`), className: raw ? "" : "tap rise", style: { animationDelay: `${0.12 + i * 0.05}s` } }; });
+  labelsIn(f).forEach((l, i) => { const t = firstText(l); ov[l.id] = { onClick: () => t === "VPN" ? go("vpn-first") : toast(`${t} — its own row of the Figma comes later`), className: raw ? "" : "tap rise", style: { animationDelay: `${0.12 + i * 0.05}s` } }; });
   const help = btnWith(f, "Get help"); ov[help.id] = { onClick: () => toast("Opens support chat"), className: "tap" };
   const icon = findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")); ov[icon.id] = { onClick: () => toast("My Account — last row of the Figma"), className: "tap" };
   findNode(f, (x) => x.name === "Menubar").children.forEach((b) => {
@@ -858,6 +868,142 @@ function Result({ preset, onState, go, toast, raw }) {
   );
 }
 
+// ── Ряд 4: VPN (10 кадрів) — машина станів на рендерері ──
+// Кадри: 5:3826 перший вхід · 5:3427 знайомство · 5:3521 вимкнено · 5:3695 локації · 5:7547 підключення · 5:7646 підключено (NY)
+//        5:7916 / 5:8043 локації з вибором NY / Paris · 5:7597 / 5:7781 підключення / підключено Paris
+const VPN_IDS = ["vpn-first", "vpn-intro", "vpn-off", "vpn-loc", "vpn-connecting", "vpn-connected", "vpn-loc-ny", "vpn-loc-paris", "vpn-connecting-paris", "vpn-connected-paris"];
+const VPN_PRESET = {
+  "vpn-first": { conn: "off", first: true }, "vpn-intro": { conn: "off", first: true, intro: true }, "vpn-off": { conn: "off" },
+  "vpn-loc": { conn: "off", sheet: true, pick: "Fastest Connection" }, "vpn-connecting": { conn: "connecting", loc: "Fastest Connection" },
+  "vpn-connected": { conn: "connected", loc: "New York, US" }, "vpn-loc-ny": { conn: "connected", loc: "New York, US", sheet: true, pick: "New York, US" },
+  "vpn-loc-paris": { conn: "connected", loc: "New York, US", sheet: true, pick: "Paris, FR" }, "vpn-connecting-paris": { conn: "connecting", loc: "Paris, FR" },
+  "vpn-connected-paris": { conn: "connected", loc: "Paris, FR" },
+};
+const vpnId = (s) => s.android ? "vpn-intro" : s.intro ? "vpn-intro" : s.sheet ? (s.pick === "Paris, FR" ? "vpn-loc-paris" : s.pick === "New York, US" ? "vpn-loc-ny" : "vpn-loc")
+  : s.conn === "connecting" ? (s.loc === "Paris, FR" ? "vpn-connecting-paris" : "vpn-connecting")
+  : s.conn === "connected" ? (s.loc === "Paris, FR" ? "vpn-connected-paris" : "vpn-connected") : s.first ? "vpn-first" : "vpn-off";
+const ELIPSE = { off: "r4/1ynu23q36wxe.jpg", on: "r4/1qnnk6w39cba.jpg" };
+const STAR = { on: "r4/1rr91rm110.png", off: "r4/8vv4lg12y.png" };
+const hhmmss = (s) => [s / 3600, (s / 60) % 60, s % 60].map((v) => String(Math.floor(v)).padStart(2, "0")).join(":");
+
+function Vpn({ preset, onState, back, toast, raw }) {
+  const [s, setS] = useState(() => ({ conn: "off", loc: "Fastest Connection", first: true, intro: false, sheet: false, pick: null, android: false, favs: ["New York, US"], ...VPN_PRESET[preset] }));
+  const upd = (p) => setS((o) => ({ ...o, ...(typeof p === "function" ? p(o) : p) }));
+  const sRef = useRef(s); sRef.current = s;
+  useEffect(() => { if (vpnId(sRef.current) !== preset) setS((o) => ({ ...o, intro: false, sheet: false, android: false, ...VPN_PRESET[preset] })); }, [preset]);
+  useEffect(() => { const id = vpnId(s); if (id !== preset) onState(id); }, [s]);
+  // таймер і живі швидкості
+  const [now, setNow] = useState(0), [since, setSince] = useState(0), [spd, setSpd] = useState([124.1, 236.4]);
+  useEffect(() => { if (raw || s.conn !== "connected") return; setSince(Date.now()); const t = setInterval(() => {
+    setNow(Date.now()); setSpd(([d, u]) => [Math.max(40, d + (Math.random() - 0.5) * 18), Math.max(60, u + (Math.random() - 0.5) * 26)]); }, 1000); return () => clearInterval(t); }, [s.conn, s.loc]);
+  const connect = (loc) => { upd({ conn: "connecting", loc, sheet: false, intro: false, android: false, first: false }); setTimeout(() => upd((o) => o.conn === "connecting" ? { conn: "connected" } : {}), 1900); };
+  const power = () => {
+    const o = sRef.current;
+    if (o.conn === "off") { if (o.first) upd({ intro: true }); else connect(o.loc); }
+    else upd({ conn: "off" });
+  };
+
+  // базовий кадр під стан (Paris — свої кадри; решта міст — кадри NY з підміненою карткою)
+  const paris = s.loc === "Paris, FR";
+  const baseId = s.conn === "connected" ? (paris ? "5:7781" : "5:7646") : s.conn === "connecting" ? (paris ? "5:7597" : "5:7547") : s.first ? "5:3826" : "5:3521";
+  const f = frameOf(baseId);
+  const sheetFrame = frameOf("5:3695"), sheetNode = findNode(sheetFrame, (x) => x.id === "5:3750"), sheetBlack = findNode(sheetFrame, (x) => x.name === "blackout");
+  const rows = []; (function walk(n) { if (n.name === "label" && findNode(n, (x) => x.name === "flags")) rows.push(n); (n.children || []).forEach(walk); })(sheetNode);
+  const rowOf = (name) => rows.find((r) => firstText(r) === name);
+  const ov = {};
+  // фонові кола: синє ↔ зелене перетікання + «дихання»
+  const el = findNode(f, (x) => x.name === "elipse anim");
+  ov[el.id] = (n, e) => (
+    <div className={raw ? "" : s.conn === "connecting" ? "vpn-pulse-fast" : "vpn-pulse"} style={{ position: "absolute", left: 0, top: 0, width: 375, height: 776, pointerEvents: "none" }}>
+      <img src={PNG[ELIPSE.off]} alt="" style={{ position: "absolute", inset: 0, width: 375, height: 776, opacity: s.conn === "connected" ? 0 : 1, transition: "opacity .8s ease" }} />
+      <img src={PNG[ELIPSE.on]} alt="" style={{ position: "absolute", inset: 0, width: 375, height: 776, opacity: s.conn === "connected" ? 1 : 0, transition: "opacity .8s ease" }} />
+    </div>
+  );
+  const vb = findNode(f, (x) => x.name === "vpn btn");
+  ov[vb.id] = { onClick: power, className: raw ? "" : "tap " + (s.conn === "connecting" ? "vpn-btn-connecting" : "vpn-btn-pop"), style: { borderRadius: "50%" } };
+  const bk = findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")); ov[bk.id] = { onClick: back, className: "tap" };
+  const btn = findNode(f, (x) => (x.comp || "").startsWith("Btn") && /Location/.test(textOf(x)) && x.ay > 700);
+  if (btn) ov[btn.id] = s.conn === "connecting" ? { style: { opacity: 1 } } : { onClick: () => upd({ sheet: true, pick: sRef.current.loc }), className: "tap" };
+  if (!raw && s.conn === "connected") {
+    const tm = findNode(f, (x) => x.t && /^\d\d:\d\d:\d\d$/.test(textOf(x)));
+    if (tm) ov[tm.id] = (n, e, pos) => <div style={{ ...pos, textAlign: "center", fontSize: 14, lineHeight: "20px", color: C.green, fontVariantNumeric: "tabular-nums" }}>{hhmmss(Math.max(0, (now - since) / 1000))}</div>;
+    findNode(f, (x) => x.name === "Frame" && x.w === 343 && x.h === 72).children.forEach((card, i) => {
+      const v = findNode(card, (x) => x.t && /MB\/s/.test(textOf(x)));
+      ov[v.id] = (n, e, pos) => <div style={{ ...pos, textAlign: "center", fontSize: 14, lineHeight: "20px", fontVariantNumeric: "tabular-nums" }}>{spd[i].toFixed(1)} MB/s</div>;
+    });
+  }
+  // картка «Connect to / Connected to»: інше місто — рядок цього міста зі списку локацій, без зірочки
+  const card = findNode(f, (x) => x.name === "label" && x.ay > 590 && x.ay < 620);
+  const wantCard = s.conn === "off" ? null : (s.loc === "Fastest Connection" && s.conn === "connecting") ? null : (s.loc === "Fastest Connection" ? "New York, US" : s.loc);
+  if (card && wantCard && wantCard !== firstText(card)) {
+    const r = rowOf(wantCard);
+    if (r) ov[card.id] = (n, e, pos) => (
+      <div style={{ position: "absolute", left: pos.left - r.ax, top: pos.top - r.ay, width: 0, height: 0 }}>
+        <FigNode n={r} ov={{ [findNode(r, (x) => (x.comp || "").includes("star")).id]: false }} />
+      </div>
+    );
+  }
+  ["5:3885", "5:3575", "5:3609", "5:7695", "5:7830"].forEach((id) => (ov[id] = false));   // сховані під екраном аркуші кадрів — показуємо свої
+
+  // аркуш локацій (5:3695) з вибором і зірочками
+  const sov = {};
+  rows.forEach((r) => {
+    const name = firstText(r), on = s.pick === name;
+    // вибраний рядок — синя рамка 1 px поверх (як у кадрах 5:7916 / 5:8043); клік по рядку — вибір
+    // рамка рядка — за станом вибору (у базовому кадрі 5:3695 синьою позначено «Fastest», її не успадковуємо)
+    sov[r.id] = (n, e, pos) => (
+      <>
+        <FigNode n={{ ...r, strokes: [{ solid: "#0b62da", a: 0.15 }] }} px={r.ax - pos.left} py={r.ay - pos.top} ov={(({ [r.id]: _, ...rest }) => rest)(sov)} />
+        <div onClick={() => upd({ pick: name })} style={{ ...pos, zIndex: 1, borderRadius: 16, cursor: "pointer",
+          boxShadow: `inset 0 0 0 1px ${on ? C.blue : "transparent"}`, transition: "box-shadow .2s" }} />
+      </>
+    );
+    const st = findNode(r, (x) => (x.comp || "").includes("star"));
+    if (st) { const fav = s.favs.includes(name); sov[st.id] = (n, e, pos) => (
+      <img src={PNG[fav ? STAR.on : STAR.off]} alt="" className="tap" onClick={(ev) => { ev.stopPropagation(); upd((o) => ({ favs: o.favs.includes(name) ? o.favs.filter((x) => x !== name) : [...o.favs, name] })); }}
+        style={{ ...pos, zIndex: 2, cursor: "pointer" }} />); }
+  });
+  const done = findNode(sheetNode, (x) => x.t && textOf(x) === "Done");
+  sov[done.id] = { onClick: () => { const o = sRef.current; if (o.pick && (o.pick !== o.loc || o.conn === "off")) connect(o.pick); else upd({ sheet: false }); }, className: "tap" };
+  // знайомство (5:3427)
+  const iFrame = frameOf("5:3427"), intro = findNode(iFrame, (x) => x.id === "5:3487"), iBlack = findNode(iFrame, (x) => x.id === "5:3469");
+  const iov = { [btnWith(intro, "Connect to VPN").id]: { onClick: () => upd({ android: true }), className: "tap" } };
+
+  return (
+    <>
+      <FigFrame id={baseId} ov={ov} raw={raw} />
+      {/* знайомство з VPN */}
+      <div style={{ position: "absolute", inset: 0, zIndex: 20, pointerEvents: s.intro ? "auto" : "none" }}>
+        <div onClick={() => upd({ intro: false, android: false })} style={{ position: "absolute", inset: 0, opacity: s.intro ? 1 : 0, transition: raw ? "none" : "opacity .3s" }}><FigNode n={iBlack} /></div>
+        <div style={{ position: "absolute", inset: 0, transform: s.intro ? "none" : `translateY(${812 - intro.ay + 12}px)`, transition: raw ? "none" : "transform .5s cubic-bezier(.2,.9,.25,1)", pointerEvents: "none" }}>
+          <div style={{ pointerEvents: s.intro ? "auto" : "none" }}><FigNode n={intro} ov={iov} /></div>
+        </div>
+      </div>
+      {/* системне вікно Android «запит на VPN» — у Figma його немає; на телефоні його показує система, не апка */}
+      {s.android && (
+        <div className="enter-fade" style={{ position: "absolute", left: 0, top: 0, width: 375, height: 812, zIndex: 40, background: "rgba(0,0,0,.35)" }}>
+          <div style={{ position: "absolute", left: 28, top: 260, width: 319, background: "#f3f4f8", borderRadius: 28, padding: "24px 24px 16px", fontFamily: "Roboto, Inter, sans-serif" }}>
+            <div style={{ fontSize: 10, letterSpacing: ".08em", textTransform: "uppercase", color: "#8a8f99", marginBottom: 10 }}>Android system dialog · mock</div>
+            <div style={{ fontSize: 22, lineHeight: "28px", color: "#1b1c1f", marginBottom: 14 }}>Connection request</div>
+            <div style={{ fontSize: 14, lineHeight: "20px", color: "#44474e" }}>Seciro wants to set up a VPN connection that allows it to monitor network traffic. Only accept if you trust the source.</div>
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 20 }}>
+              <div className="tap" onClick={() => upd({ android: false, intro: false })} style={{ padding: "10px 14px", color: C.blue, fontSize: 14 }}>Cancel</div>
+              <div className="tap" onClick={() => connect(sRef.current.loc)} style={{ padding: "10px 14px", color: C.blue, fontSize: 14 }}>OK</div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* список локацій */}
+      <div style={{ position: "absolute", inset: 0, zIndex: 20, pointerEvents: s.sheet ? "auto" : "none" }}>
+        <div onClick={() => upd({ sheet: false })} style={{ position: "absolute", inset: 0, opacity: s.sheet ? 1 : 0, transition: raw ? "none" : "opacity .3s" }}><FigNode n={sheetBlack} /></div>
+        <div style={{ position: "absolute", inset: 0, transform: s.sheet ? "none" : `translateY(${812 - sheetNode.ay + 12}px)`, transition: raw ? "none" : "transform .5s cubic-bezier(.2,.9,.25,1)", pointerEvents: "none" }}>
+          <div style={{ pointerEvents: s.sheet ? "auto" : "none" }}><FigNode n={sheetNode} ov={sov} /></div>
+        </div>
+      </div>
+    </>
+  );
+}
+
 // ── Карта екранів (порядок = рядами Figma) ──
 const ONB_FRAMES = [fr02, fr03, fr04, fr05, fr06, fr07];
 // Кадр paywall у Figma — свій на кожен обраний тариф
@@ -884,6 +1030,16 @@ const SCREENS = [
   { id: "sheet-safari", name: "Sheet · Safari setup", node: "5:1868", frame: r3f05 },
   { id: "sheet-update", name: "Sheet · Software Update", node: "5:1995", frame: r3f06 },
   { id: "dash-issues", name: "Dashboard · 2 issues", node: "5:3269", frame: r3f07 },
+  { id: "vpn-first", name: "VPN · first open", node: "5:3826", frame: r4f01 },
+  { id: "vpn-intro", name: "VPN · intro", node: "5:3427", frame: r4f02 },
+  { id: "vpn-off", name: "VPN · off", node: "5:3521", frame: r4f03 },
+  { id: "vpn-loc", name: "VPN · locations", node: "5:3695", frame: r4f04 },
+  { id: "vpn-connecting", name: "VPN · connecting", node: "5:7547", frame: r4f05 },
+  { id: "vpn-connected", name: "VPN · connected", node: "5:7646", frame: r4f06 },
+  { id: "vpn-loc-ny", name: "VPN · locations · NY", node: "5:7916", frame: r4f07 },
+  { id: "vpn-loc-paris", name: "VPN · locations · Paris", node: "5:8043", frame: r4f08 },
+  { id: "vpn-connecting-paris", name: "VPN · connecting Paris", node: "5:7597", frame: r4f09 },
+  { id: "vpn-connected-paris", name: "VPN · connected Paris", node: "5:7781", frame: r4f10 },
 ];
 const ORDER = SCREENS.map((s) => s.id);
 const store = {
@@ -964,6 +1120,7 @@ export default function Seciro() {
       {(screen === "dashboard" || screen === "dash-issues") && <Dashboard issues={screen === "dash-issues"} go={() => {}} toast={() => {}} raw />}
       {screen === "scan" && <Scan go={() => {}} back={() => {}} result="ok" raw />}
       {/^(result|sheet)/.test(screen) && <Result preset={screen} onState={() => {}} go={() => {}} toast={() => {}} raw />}
+      {VPN_IDS.includes(screen) && <Vpn preset={screen} onState={() => {}} back={() => {}} toast={() => {}} raw />}
       <GestureBar />
     </div>
   );
@@ -975,7 +1132,7 @@ export default function Seciro() {
         <div className="phone-shell">
           <div className="phone-clip" style={{ width: 375 * scale, height: 812 * scale }}>
             <div className="app" style={{ width: 375, height: 812, position: "absolute", left: 0, top: 0, transform: `scale(${scale})`, transformOrigin: "0 0", background: C.bg }}>
-              <div key={onbIndex >= 0 ? "onboarding" : isAuth ? "auth" : /^(result-issues|sheet)/.test(screen) ? "result-issues" : screen} className={`enter-${dir}`} style={{ position: "absolute", inset: 0 }}>
+              <div key={onbIndex >= 0 ? "onboarding" : isAuth ? "auth" : /^(result-issues|sheet)/.test(screen) ? "result-issues" : VPN_IDS.includes(screen) ? "vpn" : screen} className={`enter-${dir}`} style={{ position: "absolute", inset: 0 }}>
                 {screen === "splash" && <Splash go={go} />}
                 {onbIndex >= 0 && <Onboarding index={onbIndex} onIndex={onIndex} go={go} />}
                 {screen === "paywall" && <Paywall go={go} toast={toast} plan={plan} setPlan={setPlan} />}
@@ -983,6 +1140,7 @@ export default function Seciro() {
                 {(screen === "dashboard" || screen === "dash-issues") && <Dashboard issues={screen === "dash-issues"} go={go} toast={toast} />}
                 {screen === "scan" && <Scan go={go} back={back} result={scen.scan} />}
                 {/^(result|sheet)/.test(screen) && <Result preset={screen} onState={onAuth} go={go} toast={toast} />}
+                {VPN_IDS.includes(screen) && <Vpn preset={screen} onState={onAuth} back={back} toast={toast} />}
               </div>
               <StatusBar />
               <GestureBar />
@@ -1013,7 +1171,7 @@ export default function Seciro() {
       <aside className="panel" aria-label="Prototype screens">
         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
           <h1>Seciro · prototype</h1>
-          <p className="sub">Rows 1–3 of the Figma. Click inside the phone like in the app.</p>
+          <p className="sub">Rows 1–4 of the Figma. Click inside the phone like in the app.</p>
         </div>
         <div className="label">Screens</div>
         <ul className="scr-list" ref={listRef}>

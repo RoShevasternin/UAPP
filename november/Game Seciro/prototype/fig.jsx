@@ -8,6 +8,7 @@
 import { FRAMES, PNG } from "./.tools/fig.gen.js";
 
 export const frameOf = (id) => FRAMES[id];
+export { PNG };
 
 const rgba = (hex, a = 1) => {
   const n = parseInt(hex.slice(1), 16);
