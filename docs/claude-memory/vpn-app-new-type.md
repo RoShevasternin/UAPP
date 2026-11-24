@@ -76,3 +76,6 @@ metadata:
 - Точність прототипу (24.11, зауваження VELDAN): звіряти `claude/tools/proto-diff.py`, а не на око; уроки
   (PNG @3x замість SVG, U+2028 у текстах Figma, Inter opsz 14 + antialiased, inset-рамки) — у `claude/README.md`.
   Кадр Figma — зліва від прототипу, панель кнопок — справа (VELDAN).
+- QA 24.11 (VELDAN: «немає іконок, прапори квадрати, хвилі не анімуються»): звіряти й живий режим (`proto-diff.py --live`),
+  прокручені низи; збирач v7 у `claude/tools/figma-collector.js`; переходи двошарові; хвилі VPN процедурні.
+  Оцінка реалізовності на Android — у `claude/README.md` (Web Protection = DNS-фільтр у нашому VpnService, не Safari).

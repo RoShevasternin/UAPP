@@ -110,7 +110,12 @@ export function FigNode({ n, px = 0, py = 0, ov = {}, raw }) {
   if (o === false) return null;
   const pos = { position: "absolute", left: n.ax - px, top: n.ay - py, width: n.w, height: n.h };
   let el;
-  if (n.png) {
+  if (n.png && n.tint) {
+    // обрізана іконка Material: форма з компонента, колір — з екземпляра (маска)
+    const u = `url("${PNG[n.png]}")`;
+    el = <div style={{ position: "absolute", left: n.rx - px, top: n.ry - py, width: n.rw, height: n.rh, opacity: (n.op ?? 1) * (n.tintA ?? 1), pointerEvents: "none",
+      background: n.tint, WebkitMaskImage: u, maskImage: u, WebkitMaskSize: "100% 100%", maskSize: "100% 100%" }} />;
+  } else if (n.png) {
     el = <img src={PNG[n.png]} alt="" draggable={false}
       style={{ position: "absolute", left: n.rx - px, top: n.ry - py, width: n.rw, height: n.rh, opacity: n.op, pointerEvents: "none" }} />;
   } else if (n.t) {
@@ -163,4 +168,14 @@ export function findNode(n, pred) {
   if (pred(n)) return n;
   for (const c of n.children || []) { const r = findNode(c, pred); if (r) return r; }
   return null;
+}
+
+// Текст із заміненим вмістом у стилі шару Figma (таймер, швидкості…): той самий шрифт/кегль/колір, без переносу,
+// рамка розширена симетрично до вирівнювання, щоб довший рядок не переносився й не зсувався
+export function FigText({ n, px = 0, py = 0, text, style }) {
+  const r0 = n.t.runs[0], pad = 80, al = n.t.align;
+  const left = n.ax - px - (al === "CENTER" ? pad : al === "RIGHT" ? 2 * pad : 0);
+  const node = { ...n, t: { ...n.t, auto: "WIDTH_AND_HEIGHT", runs: [{ ...r0, t: text }] } };
+  return <Text n={node} style={{ position: "absolute", left, top: n.ay - py, width: n.w + (al === "LEFT" ? 2 * pad : 2 * pad), height: n.h,
+    fontVariantNumeric: "tabular-nums", ...style }} />;
 }

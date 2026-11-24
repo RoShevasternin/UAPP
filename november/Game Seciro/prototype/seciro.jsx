@@ -61,7 +61,7 @@ import r2f10 from "./.tools/frames/r2_10_5-4668.jpg";
 import r2f11 from "./.tools/frames/r2_11_5-4722.jpg";
 
 // Ряд 3 — рендерер з даних Figma
-import { FigFrame, FigNode, frameOf, findNode, PNG } from "./fig.jsx";
+import { FigFrame, FigNode, FigText, frameOf, findNode, PNG } from "./fig.jsx";
 import r3f01 from "./.tools/frames/r3_01_5-1686.jpg";
 import r3f02 from "./.tools/frames/r3_02_5-8170.jpg";
 import r3f03 from "./.tools/frames/r3_03_5-2114.jpg";
@@ -84,7 +84,7 @@ import scanFull from "../claude/figma/scan/progress-full.png";
 import scanRowScan from "../claude/figma/scan/row-scanning.png";
 import scanRowOk from "../claude/figma/scan/row-ok.png";
 
-export const BUILD = 15;   // піднімати на кожну публікацію
+export const BUILD = 16;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
@@ -873,17 +873,40 @@ function Result({ preset, onState, go, toast, raw }) {
 //        5:7916 / 5:8043 локації з вибором NY / Paris · 5:7597 / 5:7781 підключення / підключено Paris
 const VPN_IDS = ["vpn-first", "vpn-intro", "vpn-off", "vpn-loc", "vpn-connecting", "vpn-connected", "vpn-loc-ny", "vpn-loc-paris", "vpn-connecting-paris", "vpn-connected-paris"];
 const VPN_PRESET = {
-  "vpn-first": { conn: "off", first: true }, "vpn-intro": { conn: "off", first: true, intro: true }, "vpn-off": { conn: "off" },
-  "vpn-loc": { conn: "off", sheet: true, pick: "Fastest Connection" }, "vpn-connecting": { conn: "connecting", loc: "Fastest Connection" },
-  "vpn-connected": { conn: "connected", loc: "New York, US" }, "vpn-loc-ny": { conn: "connected", loc: "New York, US", sheet: true, pick: "New York, US" },
-  "vpn-loc-paris": { conn: "connected", loc: "New York, US", sheet: true, pick: "Paris, FR" }, "vpn-connecting-paris": { conn: "connecting", loc: "Paris, FR" },
-  "vpn-connected-paris": { conn: "connected", loc: "Paris, FR" },
+  "vpn-first": { conn: "off", first: true }, "vpn-intro": { conn: "off", first: true, intro: true }, "vpn-off": { conn: "off", first: false },
+  "vpn-loc": { conn: "off", first: false, sheet: true, pick: "Fastest Connection" }, "vpn-connecting": { conn: "connecting", first: false, loc: "Fastest Connection" },
+  "vpn-connected": { conn: "connected", first: false, loc: "New York, US" }, "vpn-loc-ny": { conn: "connected", first: false, loc: "New York, US", sheet: true, pick: "New York, US" },
+  "vpn-loc-paris": { conn: "connected", first: false, loc: "New York, US", sheet: true, pick: "Paris, FR" }, "vpn-connecting-paris": { conn: "connecting", first: false, loc: "Paris, FR" },
+  "vpn-connected-paris": { conn: "connected", first: false, loc: "Paris, FR" },
 };
 const vpnId = (s) => s.android ? "vpn-intro" : s.intro ? "vpn-intro" : s.sheet ? (s.pick === "Paris, FR" ? "vpn-loc-paris" : s.pick === "New York, US" ? "vpn-loc-ny" : "vpn-loc")
   : s.conn === "connecting" ? (s.loc === "Paris, FR" ? "vpn-connecting-paris" : "vpn-connecting")
   : s.conn === "connected" ? (s.loc === "Paris, FR" ? "vpn-connected-paris" : "vpn-connected") : s.first ? "vpn-first" : "vpn-off";
 const ELIPSE = { off: "r4/1ynu23q36wxe.jpg", on: "r4/1qnnk6w39cba.jpg" };
 const STAR = { on: "r4/1rr91rm110.png", off: "r4/8vv4lg12y.png" };
+// Хвилі VPN — компонент «elipse anim» Figma: 5 кіл (112 → 848, крок 184), за 5 с лінійно ростуть на крок (smart animate
+// варіантів 1 → 2), найменше проявляється, найбільше гасне. Кожне коло — радіальний градієнт: прозоре до ½ радіуса, до краю — колір.
+// Загальна прозорість 0.09 — підібрано по пікселях кадру 5:3521. Центр — 187,352.
+function Ripple({ conn }) {
+  const [t, setT] = useState(0);
+  const speed = useRef(1); speed.current = conn === "connecting" ? 2.4 : 1;
+  useEffect(() => { let raf, last = performance.now(), acc = 0;
+    const step = (now) => { acc += (now - last) / 5000 * speed.current; last = now; setT(acc % 1); raf = requestAnimationFrame(step); };
+    raf = requestAnimationFrame(step); return () => cancelAnimationFrame(raf); }, []);
+  const on = conn === "connected";
+  const ring = (rgb, k) => {
+    const d = 112 + 184 * (k + t);
+    const op = k === 0 ? t : k === 4 ? 1 - t : 1;
+    return <div key={k} style={{ position: "absolute", left: 187 - d / 2, top: 352 - d / 2, width: d, height: d, borderRadius: "50%", opacity: op * 0.09,
+      background: `radial-gradient(circle closest-side, rgba(${rgb},.01) 0%, rgba(${rgb},.01) 50%, rgba(${rgb},1) 100%)` }} />;
+  };
+  return (
+    <div style={{ position: "absolute", left: 0, top: 0, width: 375, height: 812, pointerEvents: "none", overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: 0, opacity: on ? 0 : 1, transition: "opacity .9s ease" }}>{[4, 3, 2, 1, 0].map((k) => ring("11,97,218", k))}</div>
+      <div style={{ position: "absolute", inset: 0, opacity: on ? 1 : 0, transition: "opacity .9s ease" }}>{[4, 3, 2, 1, 0].map((k) => ring("57,172,96", k))}</div>
+    </div>
+  );
+}
 const hhmmss = (s) => [s / 3600, (s / 60) % 60, s % 60].map((v) => String(Math.floor(v)).padStart(2, "0")).join(":");
 
 function Vpn({ preset, onState, back, toast, raw }) {
@@ -913,8 +936,8 @@ function Vpn({ preset, onState, back, toast, raw }) {
   const ov = {};
   // фонові кола: синє ↔ зелене перетікання + «дихання»
   const el = findNode(f, (x) => x.name === "elipse anim");
-  ov[el.id] = (n, e) => (
-    <div className={raw ? "" : s.conn === "connecting" ? "vpn-pulse-fast" : "vpn-pulse"} style={{ position: "absolute", left: 0, top: 0, width: 375, height: 776, pointerEvents: "none" }}>
+  ov[el.id] = (n, e) => !raw ? <Ripple conn={s.conn} /> : (
+    <div style={{ position: "absolute", left: 0, top: 0, width: 375, height: 776, pointerEvents: "none" }}>
       <img src={PNG[ELIPSE.off]} alt="" style={{ position: "absolute", inset: 0, width: 375, height: 776, opacity: s.conn === "connected" ? 0 : 1, transition: "opacity .8s ease" }} />
       <img src={PNG[ELIPSE.on]} alt="" style={{ position: "absolute", inset: 0, width: 375, height: 776, opacity: s.conn === "connected" ? 1 : 0, transition: "opacity .8s ease" }} />
     </div>
@@ -926,10 +949,10 @@ function Vpn({ preset, onState, back, toast, raw }) {
   if (btn) ov[btn.id] = s.conn === "connecting" ? { style: { opacity: 1 } } : { onClick: () => upd({ sheet: true, pick: sRef.current.loc }), className: "tap" };
   if (!raw && s.conn === "connected") {
     const tm = findNode(f, (x) => x.t && /^\d\d:\d\d:\d\d$/.test(textOf(x)));
-    if (tm) ov[tm.id] = (n, e, pos) => <div style={{ ...pos, textAlign: "center", fontSize: 14, lineHeight: "20px", color: C.green, fontVariantNumeric: "tabular-nums" }}>{hhmmss(Math.max(0, (now - since) / 1000))}</div>;
+    if (tm) ov[tm.id] = (n, e, pos) => <FigText n={n} px={n.ax - pos.left} py={n.ay - pos.top} text={hhmmss(Math.max(0, (now - since) / 1000))} />;
     findNode(f, (x) => x.name === "Frame" && x.w === 343 && x.h === 72).children.forEach((card, i) => {
       const v = findNode(card, (x) => x.t && /MB\/s/.test(textOf(x)));
-      ov[v.id] = (n, e, pos) => <div style={{ ...pos, textAlign: "center", fontSize: 14, lineHeight: "20px", fontVariantNumeric: "tabular-nums" }}>{spd[i].toFixed(1)} MB/s</div>;
+      ov[v.id] = (n, e, pos) => <FigText n={n} px={n.ax - pos.left} py={n.ay - pos.top} text={`${spd[i].toFixed(1)} MB/s`} />;
     });
   }
   // картка «Connect to / Connected to»: інше місто — рядок цього міста зі списку локацій, без зірочки
@@ -1004,6 +1027,25 @@ function Vpn({ preset, onState, back, toast, raw }) {
   );
 }
 
+// Група екрана: усередині групи компонент живий (пейджер, вхід, VPN…), між групами — перехід
+const groupOf = (id) => ONB_IDS.includes(id) ? "onboarding" : AUTH_IDS.includes(id) ? "auth" : /^(result-issues|sheet)/.test(id) ? "result-issues" : VPN_IDS.includes(id) ? "vpn" : id;
+// Застиглий знімок екрана для шару, що йде (стан — як у пресеті кадру Figma)
+function StaticScreen({ id, plan, scen }) {
+  const nop = () => {};
+  return (
+    <div className="raw" style={{ position: "absolute", inset: 0 }}>
+      {id === "splash" && <Splash go={nop} raw />}
+      {ONB_IDS.includes(id) && <Onboarding index={ONB_IDS.indexOf(id)} onIndex={nop} go={nop} raw />}
+      {id === "paywall" && <Paywall go={nop} toast={nop} plan={plan} setPlan={nop} />}
+      {AUTH_IDS.includes(id) && <Auth preset={id} onState={nop} go={nop} back={nop} scen={scen} toast={nop} raw />}
+      {(id === "dashboard" || id === "dash-issues") && <Dashboard issues={id === "dash-issues"} go={nop} toast={nop} raw />}
+      {id === "scan" && <Scan go={nop} back={nop} result="ok" raw />}
+      {/^(result|sheet)/.test(id) && <Result preset={id} onState={nop} go={nop} toast={nop} raw />}
+      {VPN_IDS.includes(id) && <Vpn preset={id} onState={nop} back={nop} toast={nop} raw />}
+    </div>
+  );
+}
+
 // ── Карта екранів (порядок = рядами Figma) ──
 const ONB_FRAMES = [fr02, fr03, fr04, fr05, fr06, fr07];
 // Кадр paywall у Figma — свій на кожен обраний тариф
@@ -1064,6 +1106,7 @@ export default function Seciro() {
   // Екран з посилання (#paywall) важливіший за збережений
   // Локальна перевірка (claude/tools/proto-diff.py): #paywall~monthly!raw — лише екран 375×812 без обгортки й анімацій
   const RAW = /!raw$/.test(location.hash);
+  const LIVE = /!live$/.test(location.hash);   // звірка живого режиму: живі компоненти без обгортки сторінки
   const fromHash = () => { const h = (location.hash || "").slice(1).split(/[~!@]/)[0]; return ORDER.includes(h) ? h : null; };
   const saved = store.get("seciro.screen");
   const [screen, setScreen] = useState(fromHash() || (ORDER.includes(saved) ? saved : "splash"));
@@ -1076,12 +1119,19 @@ export default function Seciro() {
   const [hist, setHist] = useState([]);
   const scale = useScale() ;
 
+  // Перехід між екранами у два шари: старий екран лишається на 0.45 с і йде своєю анімацією (застиглий знімок стану)
+  const [leaving, setLeaving] = useState(null);
+  const leave = (from, to, how) => {
+    if (groupOf(from) === groupOf(to) || how === "none") return;
+    const k = Date.now(); setLeaving({ id: from, dir: how, k }); setTimeout(() => setLeaving((l) => (l && l.k === k ? null : l)), 460);
+  };
   const go = (id, how) => {
-    setDir(how || (ORDER.indexOf(id) >= ORDER.indexOf(screen) ? "fwd" : "back"));
+    const d = how || (ORDER.indexOf(id) >= ORDER.indexOf(screen) ? "fwd" : "back");
+    leave(screen, id, d); setDir(d);
     setHist((h) => [...h, screen]);
     setScreen(id); store.set("seciro.screen", id);
   };
-  const back = () => { const prev = hist[hist.length - 1]; if (!prev) return; setHist((h) => h.slice(0, -1)); setDir("back"); setScreen(prev); store.set("seciro.screen", prev); };
+  const back = () => { const prev = hist[hist.length - 1]; if (!prev) return; leave(screen, prev, "back"); setHist((h) => h.slice(0, -1)); setDir("back"); setScreen(prev); store.set("seciro.screen", prev); };
   const toast = (t) => { setMsg(t); clearTimeout(toast.t); toast.t = setTimeout(() => setMsg(null), 2600); };
 
   useEffect(() => {
@@ -1111,6 +1161,19 @@ export default function Seciro() {
   const [overlay, setOverlay] = useState(0);   // 0 — вимкнено, інакше прозорість кадру Figma поверх телефона
   const slotW = 375 * scale + (window.innerWidth > 1000 ? 20 : 0);
 
+  if (LIVE) return (
+    <div className="app" style={{ width: 375, height: 812, position: "relative", overflow: "hidden", background: C.bg }}>
+      {screen === "splash" && <Splash go={() => {}} />}
+      {onbIndex >= 0 && <Onboarding index={onbIndex} onIndex={() => {}} go={() => {}} />}
+      {screen === "paywall" && <Paywall go={() => {}} toast={() => {}} plan={plan} setPlan={() => {}} />}
+      {isAuth && <Auth preset={screen} onState={() => {}} go={() => {}} back={() => {}} scen={scen} toast={() => {}} />}
+      {(screen === "dashboard" || screen === "dash-issues") && <Dashboard issues={screen === "dash-issues"} go={() => {}} toast={() => {}} />}
+      {screen === "scan" && <Scan go={() => {}} back={() => {}} result="ok" raw />}
+      {/^(result|sheet)/.test(screen) && <Result preset={screen} onState={() => {}} go={() => {}} toast={() => {}} />}
+      {VPN_IDS.includes(screen) && <Vpn preset={screen} onState={() => {}} back={() => {}} toast={() => {}} />}
+      <GestureBar />
+    </div>
+  );
   if (RAW) return (
     <div className="app raw" style={{ width: 375, height: 812, position: "relative", overflow: "hidden", background: C.bg }}>
       {screen === "splash" && <Splash go={() => {}} raw />}
@@ -1132,7 +1195,12 @@ export default function Seciro() {
         <div className="phone-shell">
           <div className="phone-clip" style={{ width: 375 * scale, height: 812 * scale }}>
             <div className="app" style={{ width: 375, height: 812, position: "absolute", left: 0, top: 0, transform: `scale(${scale})`, transformOrigin: "0 0", background: C.bg }}>
-              <div key={onbIndex >= 0 ? "onboarding" : isAuth ? "auth" : /^(result-issues|sheet)/.test(screen) ? "result-issues" : VPN_IDS.includes(screen) ? "vpn" : screen} className={`enter-${dir}`} style={{ position: "absolute", inset: 0 }}>
+              {leaving && (
+                <div key={"out-" + leaving.k} className={`scr-out-${leaving.dir}`} style={{ position: "absolute", inset: 0, background: C.bg, pointerEvents: "none", overflow: "hidden" }}>
+                  <StaticScreen id={leaving.id} plan={plan} scen={scen} />
+                </div>
+              )}
+              <div key={groupOf(screen)} className={`scr-in-${dir}${dir === "up" ? " enter-up" : ""}`} style={{ position: "absolute", inset: 0, background: C.bg, overflow: "hidden" }}>
                 {screen === "splash" && <Splash go={go} />}
                 {onbIndex >= 0 && <Onboarding index={onbIndex} onIndex={onIndex} go={go} />}
                 {screen === "paywall" && <Paywall go={go} toast={toast} plan={plan} setPlan={setPlan} />}

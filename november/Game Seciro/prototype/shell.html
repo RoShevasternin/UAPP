@@ -94,6 +94,8 @@ input[type="range"] { accent-color: var(--accent); }
 
 /* ── Всередині апки ── */
 .app, .app * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* claude.ai обгортає сторінку з img{max-width:100%}; у рендерері картинки бувають у контейнері нульової ширини → без цього зникають */
+.app img { max-width: none; }
 .app { font-family: "Inter", sans-serif; font-weight: 500; color: #000; user-select: none;
   /* як Figma: opsz 14 на всіх кеглях і тонке (сіре) згладжування — без «потовщення» гліфів, яке Chrome на Маці робить за замовчуванням */
   font-optical-sizing: none; font-variation-settings: "opsz" 14;
@@ -128,6 +130,22 @@ input[type="range"] { accent-color: var(--accent); }
 .enter-up > *:nth-child(10) { animation-delay: .38s; } .enter-up > *:nth-child(11) { animation-delay: .42s; }
 .enter-up > *:nth-child(12) { animation-delay: .46s; }
 .enter-none { }
+/* Переходи між екранами у два шари (як push у нативних апках): новий заїжджає, старий відсувається й тьмяніє */
+@keyframes pushIn { from { transform: translateX(100%); } to { transform: none; } }
+@keyframes pushOut { from { transform: none; filter: none; } to { transform: translateX(-30%); filter: brightness(.9); } }
+@keyframes popBackIn { from { transform: translateX(-30%); filter: brightness(.9); } to { transform: none; filter: none; } }
+@keyframes popBackOut { from { transform: none; } to { transform: translateX(100%); } }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+@keyframes riseUpIn { from { transform: translateY(6%); opacity: 0; } to { transform: none; opacity: 1; } }
+.scr-in-fwd { animation: pushIn .44s cubic-bezier(.2,.85,.25,1) both; z-index: 2; box-shadow: -10px 0 30px rgba(8,30,70,.10); }
+.scr-out-fwd { animation: pushOut .44s cubic-bezier(.2,.85,.25,1) both; z-index: 1; }
+.scr-in-back { animation: popBackIn .44s cubic-bezier(.2,.85,.25,1) both; z-index: 1; }
+.scr-out-back { animation: popBackOut .44s cubic-bezier(.2,.85,.25,1) both; z-index: 2; box-shadow: -10px 0 30px rgba(8,30,70,.10); }
+.scr-in-fade { animation: fade .38s ease both; z-index: 2; }
+.scr-out-fade { animation: fadeOut .38s ease both; z-index: 1; }
+.scr-in-up { animation: riseUpIn .45s cubic-bezier(.2,.85,.25,1) both; z-index: 2; }
+.scr-out-up { animation: fadeOut .4s ease both; z-index: 1; }
+.scr-in-none, .scr-out-none { z-index: 2; }
 /* ряд 2: курсор, поява цифри, струс при неправильному коді, поява ілюстрації */
 @keyframes blink { 0%, 45% { opacity: 1; } 50%, 95% { opacity: 0; } 100% { opacity: 1; } }
 .caret { animation: blink 1.05s step-end infinite; }
@@ -161,7 +179,8 @@ input[type="range"] { accent-color: var(--accent); }
 .enter-back { animation: inBack .32s cubic-bezier(.2,.8,.2,1); }
 .enter-fade { animation: fade .3s ease; }
 @media (prefers-reduced-motion: reduce) {
-  .enter-fwd, .enter-back, .enter-fade, .enter-up > *, .float, .twinkle, .breathe { animation: none !important; }
+  .enter-fwd, .enter-back, .enter-fade, .enter-up > *, .float, .twinkle, .breathe,
+  [class^="scr-in-"], [class^="scr-out-"] { animation: none !important; }
 }
 </style>
 <div id="root"></div>

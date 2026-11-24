@@ -26,10 +26,15 @@ SHOTS = {  # екран → кадр Figma
     "vpn-loc-paris": "r4_08_5-8043.png", "vpn-connecting-paris": "r4_09_5-7597.png", "vpn-connected-paris": "r4_10_5-7781.png",
 }
 
+LIVE = "--live" in sys.argv   # живий режим: справжні компоненти з обгортками; анімації/переходи вимкнені
+
 def shot(screen, tmp):
     page = os.path.join(tmp, "page.html")
     with open(page, "w") as f:
-        f.write('<!doctype html><html><head><meta charset="utf-8"><style>:root{color-scheme:light}body{margin:0}</style></head><body>')
+        f.write('<!doctype html><html><head><meta charset="utf-8"><style>:root{color-scheme:light}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}'
+                + ('*,*::before,*::after{transition:none!important;animation:none!important}' if LIVE else '') + '</style>'
+                + ('<script>window.requestAnimationFrame=cb=>setTimeout(()=>cb(performance.now()),16);window.cancelAnimationFrame=id=>clearTimeout(id);</script>' if LIVE else '')
+                + '</head><body>')
         # шрифти — з локальної копії (claude/tools/.fonts, з того самого URL Google), інакше headless не завжди встигає їх довантажити
         html = open(PAGE, encoding="utf-8").read()
         local = '<link rel="stylesheet" href="file://' + os.path.join(HERE, ".fonts", "fonts.css") + '">'
@@ -38,12 +43,12 @@ def shot(screen, tmp):
     out = os.path.join(tmp, "shot.png")
     subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", f"--user-data-dir={tmp}/prof",
                     "--window-size=375,812", "--force-device-scale-factor=2", "--virtual-time-budget=8000", "--allow-file-access-from-files", "--run-all-compositor-stages-before-draw",
-                    f"--screenshot={out}", f"file://{page}#{screen}!raw"], capture_output=True)
+                    f"--screenshot={out}", f"file://{page}#{screen}!{'live' if LIVE else 'raw'}"], capture_output=True)
     return Image.open(out).convert("RGB")
 
 def main():
     os.makedirs(OUT, exist_ok=True)
-    names = sys.argv[1:] or list(SHOTS)
+    names = [a for a in sys.argv[1:] if not a.startswith("--")] or list(SHOTS)
     print(f"{'екран':18} {'різниця, %':>10} {'пікселів >24':>13}")
     for name in names:
         with tempfile.TemporaryDirectory() as tmp:
@@ -60,7 +65,7 @@ def main():
         sheet = Image.new("RGB", (proto.width * 3 + 40, proto.height - top), "white")
         sheet.paste(fig.crop((0, top, fig.width, fig.height)), (0, 0)); sheet.paste(proto.crop((0, top, proto.width, proto.height)), (proto.width + 20, 0))
         sheet.paste(heat, (proto.width * 2 + 40, 0))
-        sheet.save(os.path.join(OUT, f"diff-{name.replace('~', '-')}.png"))
+        sheet.save(os.path.join(OUT, f"diff{'-live' if LIVE else ''}-{name.replace('~', '-')}.png"))
 
 if __name__ == "__main__":
     main()

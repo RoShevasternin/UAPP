@@ -30,7 +30,7 @@ const pct=()=>[...app().querySelectorAll('div')].map(d=>d.textContent).find(t=>/
 } catch(e) { log.push('EXC '+e.message); } done(); })();
 </script>'''
 with tempfile.TemporaryDirectory() as t:
-    open(t + "/p.html", "w", encoding="utf-8").write('<!doctype html><html><head><meta charset="utf-8">' + pre + '</head><body style="margin:0">' + page + test + '</body></html>')
+    open(t + "/p.html", "w", encoding="utf-8").write('<!doctype html><html><head><meta charset="utf-8"><style>img{max-width:100%}</style>' + pre + '</head><body style="margin:0">' + page + test + '</body></html>')
     out = subprocess.run(["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "--headless=new", "--disable-gpu", f"--user-data-dir={t}/p",
                           "--window-size=1440,1000", "--virtual-time-budget=60000", "--allow-file-access-from-files", "--dump-dom",
                           f"file://{t}/p.html#dashboard"], capture_output=True, text=True).stdout
