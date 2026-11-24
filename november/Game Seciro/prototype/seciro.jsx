@@ -37,7 +37,7 @@ import fr08 from "../claude/figma/frames/r1_08_5-2948.png";
 import fr09 from "../claude/figma/frames/r1_09_5-3055.png";
 import fr10 from "../claude/figma/frames/r1_10_5-3162.png";
 
-export const BUILD = 7;   // піднімати на кожну публікацію
+export const BUILD = 8;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
@@ -383,7 +383,9 @@ function Paywall({ go, toast, plan, setPlan }) {
       <Abs x={16} y={459} w={343} h={114} style={{ display: "flex", gap: 8 }} role="radiogroup">
         {PLANS.map((x) => <PlanCard key={x.id} p={x} on={x.id === plan} onClick={() => setPlan(x.id)} />)}
       </Abs>
-      <T x={0} y={589} w={375} size={14} lh={18}>Auto-Renewable, Cancel Anytime</T>
+      {/* У Figma — SF Pro Display Medium 14 (шрифт Apple, на Android не можна). Найближчий з макета — Inter Tight;
+          інтервал −0.13 px дає ту саму ширину рядка, що й Figma: 203 px (заміряно 24.11) */}
+      <T x={0} y={589} w={375} size={14} lh={18} title style={{ letterSpacing: "-0.13px" }}>Auto-Renewable, Cancel Anytime</T>
       <Btn kind="third" y={623} onClick={() => go("signin")}>I already have an account</Btn>
       <Btn y={695} onClick={() => setSheet(true)}>{p.cta}</Btn>
       <Abs x={0} y={767} w={375} h={16} style={{ display: "flex", gap: 36, justifyContent: "center", opacity: .75, fontSize: 12, lineHeight: "16px", color: C.grey }}>

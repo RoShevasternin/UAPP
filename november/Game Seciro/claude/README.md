@@ -30,7 +30,7 @@ Breach Check, генератор паролів. Kotlin + LibGDX. Початок
 - Окремий екран за посиланням: `…/artifact/…#paywall` (id — `SCREENS` у `seciro.jsx`).
 - **Звірка піксель у піксель:** `python3 claude/tools/proto-diff.py [екран]` → таблиця різниці з Figma і
   `claude/tools/out/diff-<екран>.png` (Figma | прототип | різниця). Норма після build 6: онбординг 0.3–0.6 %,
-  paywall ~1.2 % (рядок «Auto-Renewable…» у Figma — SF Pro, у нас Inter). Новий екран — додати в `SHOTS`.
+  paywall ~1 %. Новий екран — додати в `SHOTS`.
 - **Уроки точності (24.11):** ілюстрації — PNG @3x з Figma (`figma/art3x`, позиції в `map.json`), бо SVG-експорт
   Figma губить обрізання круглих рамок; тексти брати з `chars` Figma дослівно — там бувають ручні переноси U+2028
   (Shift+Enter) → `\n`; Inter — `opsz` 14 + `-webkit-font-smoothing: antialiased` (інакше вужче й жирніше за Figma);
@@ -57,7 +57,8 @@ Breach Check, генератор паролів. Kotlin + LibGDX. Початок
 ## Дизайн → код (як в Orbit Dash)
 
 - Число, якого немає в макеті, не вигадуємо — читаємо з `figma/json` або питаємо.
-- Шрифти: Inter Medium / Bold, Inter Tight Medium / Bold → MSDF. SF Pro з макета (ліцензія Apple) → Inter.
+- Шрифти: Inter Medium / Bold, Inter Tight Medium / Bold → MSDF. SF Pro з макета (ліцензія Apple) → **Inter Tight**
+  з інтервалом під ширину Figma (рядок «Auto-Renewable…»: −0.13 px = 203 px, як у Figma) — так на вигляд один в один.
 - Статус-бар «9:41» і home-індикатор — частина iOS-макета, на Android їх малює система.
 - Тіні (~500) і блюр — запікати або `VfxTexture` + `BlurEffect` за зразком Orbit Dash
   (`/Users/admin/Apps/Game Orbit Dash PRIVATE/Orbit Dash/docs/vfx.md`, `msdf-shapes.md`).
