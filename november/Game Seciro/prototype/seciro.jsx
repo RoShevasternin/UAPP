@@ -25,6 +25,7 @@ import icSparkles from "../claude/figma/icons/sparkles.svg";
 import icEmail from "../claude/figma/icons/alternate-email.svg";
 import icKey from "../claude/figma/icons/vpn-key.svg";
 import icShield from "../claude/figma/icons/shield.svg";
+import icSettings from "../claude/figma/icons/settings.svg";
 // Кадри Figma @2x — для звірки поруч із телефоном (і накладанням поверх)
 import fr01 from "./.tools/frames/r1_01_5-2530.jpg";
 import fr02 from "./.tools/frames/r1_02_5-2620.jpg";
@@ -83,8 +84,12 @@ import scanTrack from "../claude/figma/scan/track.png";
 import scanFull from "../claude/figma/scan/progress-full.png";
 import scanRowScan from "../claude/figma/scan/row-scanning.png";
 import scanRowOk from "../claude/figma/scan/row-ok.png";
+import btnArc from "../claude/figma/vpnbtn/arc.png";
+import logoChrome from "../claude/figma/logos/chrome_5-9492.png";
+import btnX1 from "../claude/figma/vpnbtn/x1.png";
+import btnX2 from "../claude/figma/vpnbtn/x2.png";
 
-export const BUILD = 16;   // піднімати на кожну публікацію
+export const BUILD = 17;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
@@ -756,16 +761,45 @@ const SHEETS = {
   safari: { frame: "5:1868", sheet: (f) => findNode(f, (x) => x.id === "5:1936") },
   update: { frame: "5:1995", sheet: (f) => findNode(f, (x) => x.name.startsWith("How to") && x.type === "FRAME") },
 };
+// Рядки інструкції для Android: Chrome → Settings → Privacy and security → Use secure DNS → адреса Seciro
+const MUTED = C.grey, STRONG = C.black;
+const Runs = ({ x, y, w, parts }) => (
+  <div style={{ position: "absolute", left: x, top: y, width: w, fontSize: 14, lineHeight: "20px", color: MUTED, whiteSpace: "pre-line" }}>
+    {parts.map(([t, b], i) => <span key={i} style={{ color: b ? STRONG : MUTED }}>{t}</span>)}
+  </div>
+);
+const Tile = ({ x, y, children, app }) => (
+  <div style={{ position: "absolute", left: x, top: y, width: 40, height: 40, borderRadius: app ? 10 : 12, display: "flex", alignItems: "center", justifyContent: "center",
+    background: app ? C.white : a(C.grey, .15), boxShadow: app ? `0 4px 16px ${a("#084191", .12)}` : "none" }}>{children}</div>
+);
+function chromeOv() {
+  // позиції — відносно батька шару (pos), як і решта рендерера; двохрядкові тексти ставимо з верху рядка (−10, якщо шар був однорядковим)
+  const runs = (parts, dy = 0, w = 259) => (n, e, pos) => <Runs x={pos.left} y={pos.top + dy} w={w} parts={parts} />;
+  const tile = (src) => (n, e, pos) => <Tile x={pos.left} y={pos.top}><Icon src={src} color={C.grey} /></Tile>;
+  return {
+    // логотип Chrome — з набору «Apps Logo Set» у Figma (5:9492, App=Chrome), той самий стиль плитки, що й Safari (рендер 56×56 зі зсувом −8/−4)
+    "5:1943": (n, e, pos) => <img src={logoChrome} alt="" style={{ position: "absolute", left: pos.left - 8, top: pos.top - 4, width: 56, height: 56 }} />,
+    "5:1944": runs([["Open "], ["Chrome", 1], [" and tap "], ["⋮", 1], [" in the\ntop-right corner."]]),
+    "5:1947": tile(icSettings),
+    "5:1949": runs([["Tap "], ["Settings", 1], [", then\n"], ["Privacy and security", 1], ["."]]),
+    "5:1958": tile(icShield),
+    "5:1961": runs([["Tap "], ["Use secure DNS", 1], [", then choose\n"], ["Custom", 1], ["."]], -10),
+    "5:1964": tile(icVpnLock),
+    "5:1966": runs([["Paste the "], ["Seciro address", 1], [" we copied\nfor you."]], -10),
+    "5:1975": runs([["Done! "], ["Chrome", 1], [" now blocks dangerous\nsites before they load."]]),
+  };
+}
 function FigSheet({ kind, open, onClose, raw }) {
   const f = frameOf(SHEETS[kind].frame), sheet = SHEETS[kind].sheet(f), black = findNode(f, (x) => x.name === "blackout");
   const ok = btnWith(sheet, "Got it");
+  const extra = kind === "safari" ? chromeOv() : {};
   return (
     <div style={{ position: "absolute", inset: 0, zIndex: 20, pointerEvents: open ? "auto" : "none" }}>
       <div onClick={onClose} style={{ position: "absolute", inset: 0, opacity: open ? 1 : 0, transition: raw ? "none" : "opacity .3s ease" }}>
         <FigNode n={black} ov={{}} />
       </div>
       <div style={{ position: "absolute", inset: 0, transform: open ? "none" : `translateY(${812 - sheet.ay + 12}px)`, transition: raw ? "none" : "transform .5s cubic-bezier(.2,.9,.25,1)", pointerEvents: "none" }}>
-        <div style={{ pointerEvents: open ? "auto" : "none" }}><FigNode n={sheet} ov={{ [ok.id]: { onClick: onClose, className: "tap" } }} /></div>
+        <div style={{ pointerEvents: open ? "auto" : "none" }}><FigNode n={sheet} ov={{ ...extra, [ok.id]: { onClick: onClose, className: "tap" } }} /></div>
       </div>
     </div>
   );
@@ -943,7 +977,21 @@ function Vpn({ preset, onState, back, toast, raw }) {
     </div>
   );
   const vb = findNode(f, (x) => x.name === "vpn btn");
-  ov[vb.id] = { onClick: power, className: raw ? "" : "tap " + (s.conn === "connecting" ? "vpn-btn-connecting" : "vpn-btn-pop"), style: { borderRadius: "50%" } };
+  ov[vb.id] = (s.conn === "connecting" && !raw) ? (n, e, pos) => {
+    // «Connecting»: статична дуга з кадру прикрита синім диском, поверх — та сама дуга з Figma, що обертається, і хрестик
+    const px = n.ax - pos.left, py = n.ay - pos.top;
+    return (
+      <div onClick={power} className="tap" role="button" style={{ ...pos, borderRadius: "50%", cursor: "pointer" }}>
+        <div style={{ position: "absolute", left: -(n.ax - px) + 0, top: -(n.ay - py), width: 0, height: 0 }}>
+          {e}
+          <div style={{ position: "absolute", left: 187 - px - 28, top: 352 - py - 28, width: 56, height: 56, borderRadius: "50%", background: "#0b62da" }} />
+          <img src={btnArc} alt="" className="vpn-arc-spin" style={{ position: "absolute", left: 163 - px, top: 328 - py, width: 48, height: 48 }} />
+          <img src={btnX1} alt="" style={{ position: "absolute", left: 178.51 - px, top: 343.51 - py, width: 16.97, height: 16.97 }} />
+          <img src={btnX2} alt="" style={{ position: "absolute", left: 178.51 - px, top: 343.51 - py, width: 16.97, height: 16.97 }} />
+        </div>
+      </div>
+    );
+  } : { onClick: power, className: raw ? "" : "tap vpn-btn-pop", style: { borderRadius: "50%" } };
   const bk = findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")); ov[bk.id] = { onClick: back, className: "tap" };
   const btn = findNode(f, (x) => (x.comp || "").startsWith("Btn") && /Location/.test(textOf(x)) && x.ay > 700);
   if (btn) ov[btn.id] = s.conn === "connecting" ? { style: { opacity: 1 } } : { onClick: () => upd({ sheet: true, pick: sRef.current.loc }), className: "tap" };

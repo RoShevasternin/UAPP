@@ -77,8 +77,12 @@ const WEIGHT = { Thin: 100, Light: 300, Regular: 400, Medium: 500, "Semi Bold": 
 const family = (f) => f.startsWith("SF Pro") ? '"Inter Tight", "Inter", sans-serif' : `"${f}", "Inter", sans-serif`;
 const CASE = { UPPER: "uppercase", LOWER: "lowercase", TITLE: "capitalize" };
 
+// Апка під Android: назви з iOS-макета, що вже мають Android-відповідник (рішення VELDAN 24.11: Safari → Google Chrome)
+const SUBST = [[/Safari/g, "Chrome"]];
+const subst = (t) => SUBST.reduce((s, [a, b]) => s.replace(a, b), t);
+
 function Text({ n, style }) {
-  const t = n.t, r0 = t.runs[0];
+  const t = { ...n.t, runs: n.t.runs.map((r) => ({ ...r, t: subst(r.t) })) }, r0 = t.runs[0];
   const lh = r0.lh ? `${r0.lh}px` : "normal";
   const wrap = t.auto === "WIDTH_AND_HEIGHT" ? "pre" : "pre-line";
   const valign = t.valign === "CENTER" ? "center" : t.valign === "BOTTOM" ? "flex-end" : "flex-start";
