@@ -42,7 +42,7 @@ import fr08 from "../claude/figma/frames/r1_08_5-2948.png";
 import fr09 from "../claude/figma/frames/r1_09_5-3055.png";
 import fr10 from "../claude/figma/frames/r1_10_5-3162.png";
 
-export const BUILD = 3;   // піднімати на кожну публікацію
+export const BUILD = 4;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
@@ -379,7 +379,8 @@ export default function Seciro() {
         </div>
       </div>
 
-      <div className="phone-slot" style={{ width: slotW }}>
+      {/* Figma — зліва (order −1), прототип — посередині, поруч із панеллю кнопок */}
+      <div className="phone-slot" style={{ width: slotW, order: -1 }}>
         <div className="cap"><b>Figma</b><span>{frame ? `frame ${frameNode}` : "no frame yet"}</span></div>
         <div className="phone-shell">
           <div className="phone-clip" style={{ width: 375 * scale, height: 812 * scale, background: C.bg }}>
