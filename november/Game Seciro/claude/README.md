@@ -153,3 +153,4 @@ VpnService Play, HIBP від $4.39/міс, Safe Browsing не комерційн
   `xapp, billing, vpn, testacc, filter, qrcheck, extras, design`.
 - Немає у Figma (25.11): замкнені модулі, QR safe/warning/не-посилання/без камери, «оновіть апку», «збій оплати», «пристрій вийшов», «немає інтернету», екрани Alerts і Get help. «Hide Cookie Prompts» на Android неможливий (DNS не ховає банери).
 - Кіт дизайнера (25.11): https://claude.ai/artifact/PCBWKfSi31ZxWoQc3hFeHL — що домалювати (+ дозволи Android, іконка й матеріали Google Play), відповіді в db `answers`. У кіті менеджера тепер лише 7 питань.
+- З 25.11 кіти менеджера й дизайнера лише для читання (без полів відповіді): відповіді приходять у чат VELDAN.
