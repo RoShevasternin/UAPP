@@ -83,4 +83,5 @@ metadata:
   задача — Android; головні питання: API iOS, облік підписок, WireGuard на сервері, Web Protection (Chrome без розширень).
 - Документація сервера (25.11): прочитана; підсумок і блокери — `claude/README.md` § «Документація сервера Seciro».
   Текст API не комітити (репо публічне). Тестових даних немає, лише продакшн. Кіт для VELDAN:
-  https://claude.ai/artifact/EEF6zF7nZwhr2Vk9cTxsR3. Кіт менеджера оновлено 25.11 (v3): 8 нових питань, id у db `answers`: xapp, billing, vpn, testacc, filter, qrcheck, extras, design (старі id не діють).
+  https://claude.ai/artifact/EEF6zF7nZwhr2Vk9cTxsR3. Кіт менеджера оновлено 25.11 (v4): 8 питань текстом зі скрінами Figma, без кнопок так/ні — лише поле відповіді (`note`), id у db `answers`: xapp, billing, vpn, testacc, filter, qrcheck, extras, design (старі id не діють).
+- Play Console і підписки Google Play налаштовуємо МИ (акаунт дадуть) — менеджеру про це не писати; від них лише RevenueCat-проєкт Seciro (додати Android-апку, SDK-ключ). Тестова пошта для Premium: vlad_android_dev@uapp.ai (Gmail — vladlibgdx@gmail.com). Ціни з Figma: тиждень $8.99 (3 дні за $0.99), місяць $29.99, рік $69.99.
