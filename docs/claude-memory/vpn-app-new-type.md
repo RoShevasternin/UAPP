@@ -81,3 +81,6 @@ metadata:
   Оцінка реалізовності на Android — у `claude/README.md` (Web Protection = DNS-фільтр у нашому VpnService, не Safari).
 - Кіт для менеджера (24.11): https://claude.ai/artifact/Hj3FPMn8KawTvA1gCBkAUa (УКР/РУС/ENG): прототип, «робимо самі», 9 питань з відповідями в db (`answers`) — на «перевір відповіді» читати ArtifactData list answers. Апка вже є на iOS,
   задача — Android; головні питання: API iOS, облік підписок, WireGuard на сервері, Web Protection (Chrome без розширень).
+- Документація сервера (25.11): прочитана; підсумок і блокери — `claude/README.md` § «Документація сервера Seciro».
+  Текст API не комітити (репо публічне). Тестових даних немає, лише продакшн. Кіт для VELDAN:
+  https://claude.ai/artifact/EEF6zF7nZwhr2Vk9cTxsR3. Старий кіт менеджера частково застарів (API є, Breach Check на сервері).
