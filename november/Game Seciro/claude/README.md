@@ -149,5 +149,5 @@ VpnService Play, HIBP від $4.39/міс, Safe Browsing не комерційн
   (у Chrome — «Безпечний DNS», потрібна адреса) і для вердикту QR (safe/warning/unsafe).
 - Модулі без підписки: Protection Review, Password Generator; решта замкнені (у Figma стану замка немає).
 - Кіт для VELDAN: https://claude.ai/artifact/EEF6zF7nZwhr2Vk9cTxsR3 (що це, статус модулів, тестові дані).
-- Кіт менеджера оновлено (v4, 25.11): 8 питань після документації (текст + скріни, відповідь у полі `note`) — id відповідей у db `answers`:
+- Кіт менеджера (v5, 25.11) — лише питання російською; раніше (v4): 8 питань після документації (текст + скріни, відповідь у полі `note`) — id відповідей у db `answers`:
   `xapp, billing, vpn, testacc, filter, qrcheck, extras, design`.
