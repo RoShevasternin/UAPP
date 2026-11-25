@@ -83,4 +83,4 @@ metadata:
   задача — Android; головні питання: API iOS, облік підписок, WireGuard на сервері, Web Protection (Chrome без розширень).
 - Документація сервера (25.11): прочитана; підсумок і блокери — `claude/README.md` § «Документація сервера Seciro».
   Текст API не комітити (репо публічне). Тестових даних немає, лише продакшн. Кіт для VELDAN:
-  https://claude.ai/artifact/EEF6zF7nZwhr2Vk9cTxsR3. Старий кіт менеджера частково застарів (API є, Breach Check на сервері).
+  https://claude.ai/artifact/EEF6zF7nZwhr2Vk9cTxsR3. Кіт менеджера оновлено 25.11 (v3): 8 нових питань, id у db `answers`: xapp, billing, vpn, testacc, filter, qrcheck, extras, design (старі id не діють).
