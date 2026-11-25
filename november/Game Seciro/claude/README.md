@@ -149,5 +149,6 @@ VpnService Play, HIBP від $4.39/міс, Safe Browsing не комерційн
   (у Chrome — «Безпечний DNS», потрібна адреса) і для вердикту QR (safe/warning/unsafe).
 - Модулі без підписки: Protection Review, Password Generator; решта замкнені (у Figma стану замка немає).
 - Кіт для VELDAN: https://claude.ai/artifact/EEF6zF7nZwhr2Vk9cTxsR3 (що це, статус модулів, тестові дані).
-- Кіт менеджера (v5, 25.11) — лише питання російською; раніше (v4): 8 питань після документації (текст + скріни, відповідь у полі `note`) — id відповідей у db `answers`:
+- Кіт менеджера (v6, 25.11) — 3 мови, 7 питань менеджеру + 6 пунктів для дизайнера (id у db: xapp, billing, vpn, testacc, filter, qrcheck, extras, d_lock, d_qr, d_status, d_alerts, d_web, d_android); раніше (v4): 8 питань після документації (текст + скріни, відповідь у полі `note`) — id відповідей у db `answers`:
   `xapp, billing, vpn, testacc, filter, qrcheck, extras, design`.
+- Немає у Figma (25.11): замкнені модулі, QR safe/warning/не-посилання/без камери, «оновіть апку», «збій оплати», «пристрій вийшов», «немає інтернету», екрани Alerts і Get help. «Hide Cookie Prompts» на Android неможливий (DNS не ховає банери).
