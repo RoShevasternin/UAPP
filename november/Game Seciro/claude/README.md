@@ -152,3 +152,4 @@ VpnService Play, HIBP від $4.39/міс, Safe Browsing не комерційн
 - Кіт менеджера (v6, 25.11) — 3 мови, 7 питань менеджеру + 6 пунктів для дизайнера (id у db: xapp, billing, vpn, testacc, filter, qrcheck, extras, d_lock, d_qr, d_status, d_alerts, d_web, d_android); раніше (v4): 8 питань після документації (текст + скріни, відповідь у полі `note`) — id відповідей у db `answers`:
   `xapp, billing, vpn, testacc, filter, qrcheck, extras, design`.
 - Немає у Figma (25.11): замкнені модулі, QR safe/warning/не-посилання/без камери, «оновіть апку», «збій оплати», «пристрій вийшов», «немає інтернету», екрани Alerts і Get help. «Hide Cookie Prompts» на Android неможливий (DNS не ховає банери).
+- Кіт дизайнера (25.11): https://claude.ai/artifact/PCBWKfSi31ZxWoQc3hFeHL — що домалювати (+ дозволи Android, іконка й матеріали Google Play), відповіді в db `answers`. У кіті менеджера тепер лише 7 питань.
