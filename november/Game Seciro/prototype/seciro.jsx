@@ -6,7 +6,7 @@
 // Знімки шарів — claude/figma/json/<node>.json, ілюстрації — claude/figma/art (SVG з Figma 1:1).
 // Позиції — абсолютні координати кадру, як у Figma, щоб звіряти «піксель у піксель».
 // ─────────────────────────────────────────────────────────────────────────────
-import { useEffect, useRef, useState } from "react";
+import { Component, useEffect, useRef, useState } from "react";
 import LAYERS from "./.tools/layers.gen.js";
 
 import logoSplash from "../claude/figma/art3x/5-2530_logo_5-2554.png";
@@ -1265,7 +1265,26 @@ function useScale() {
   return s;
 }
 
-export default function Seciro() {
+// Якщо щось у прототипі впаде — не порожня сторінка, а пояснення й «Почати знову» (скидає збережений екран)
+class Boundary extends Component {
+  constructor(p) { super(p); this.state = { err: null }; }
+  static getDerivedStateFromError(err) { return { err }; }
+  render() {
+    if (!this.state.err) return this.props.children;
+    return (
+      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 24, boxSizing: "border-box", fontFamily: "Inter, system-ui, sans-serif" }}>
+        <div style={{ maxWidth: 420, background: "var(--panel)", color: "var(--ink)", border: "1px solid var(--line)", borderRadius: 18, padding: 22, display: "grid", gap: 12 }}>
+          <b style={{ fontSize: 17 }}>Прототип натрапив на помилку</b>
+          <span style={{ fontSize: 13, color: "var(--muted)" }}>{String(this.state.err && this.state.err.message || this.state.err)}</span>
+          <button className="pbtn" onClick={() => { try { localStorage.removeItem("seciro.screen"); } catch (e) {} location.hash = ""; location.reload(); }}>Почати знову</button>
+        </div>
+      </div>
+    );
+  }
+}
+export default function Seciro() { return <Boundary><App /></Boundary>; }
+
+function App() {
   // Екран з посилання (#paywall) важливіший за збережений
   // Локальна перевірка (claude/tools/proto-diff.py): #paywall~monthly!raw — лише екран 375×812 без обгортки й анімацій
   const RAW = /!raw$/.test(location.hash);
@@ -1290,11 +1309,11 @@ export default function Seciro() {
   };
   const go = (id, how) => {
     const d = how || (ORDER.indexOf(id) >= ORDER.indexOf(screen) ? "fwd" : "back");
-    leave(screen, id, d); setDir(d);
+    leave(screen, id, d); setDir(d); setEx(null); setHl(null);
     setHist((h) => [...h, screen]);
     setScreen(id); store.set("seciro.screen", id);
   };
-  const back = () => { const prev = hist[hist.length - 1]; if (!prev) return; leave(screen, prev, "back"); setHist((h) => h.slice(0, -1)); setDir("back"); setScreen(prev); store.set("seciro.screen", prev); };
+  const back = () => { const prev = hist[hist.length - 1]; if (!prev) return; setEx(null); setHl(null); leave(screen, prev, "back"); setHist((h) => h.slice(0, -1)); setDir("back"); setScreen(prev); store.set("seciro.screen", prev); };
   const toast = (t) => { setMsg(t); clearTimeout(toast.t); toast.t = setTimeout(() => setMsg(null), 2600); };
 
   useEffect(() => {
@@ -1328,6 +1347,8 @@ export default function Seciro() {
   const notes = NOTES[screen] || [];
   const [ex, setEx] = useState(null);   // { note, i } — приклад зліва замість кадру Figma
   useEffect(() => { setHl(null); setEx(null); }, [screen]);
+  // приклад лише якщо така нотатка є на цьому екрані (стан міг лишитися з попереднього екрана)
+  const exItem = ex && notes[ex.note] ? examplesOf(notes[ex.note])[ex.i] || null : null;
   const slotW = 375 * scale + (window.innerWidth > 1000 ? 20 : 0);
 
   if (LIVE) return (
@@ -1405,13 +1426,13 @@ export default function Seciro() {
 
       {/* Figma — зліва (order −1), прототип — посередині, поруч із панеллю кнопок */}
       <div className="phone-slot" style={{ width: slotW, order: -1 }}>
-        {ex ? (
+        {exItem ? (
           <div className="cap ex-cap"><b style={{ color: KINDS[notes[ex.note].kind].color }}>Приклад · нотатка {ex.note + 1}</b>
             <button className="pbtn sm" onClick={() => setEx(null)}>← Figma</button></div>
         ) : <div className="cap"><b>Figma</b><span>{frame ? `frame ${frameNode}` : "no frame yet"}</span></div>}
         <div className="phone-shell">
           <div className="phone-clip" style={{ width: 375 * scale, height: 812 * scale, background: C.bg }}>
-            {ex ? (() => { const [src, cap] = examplesOf(notes[ex.note])[ex.i]; const wide = /fl_vpn/.test(cap) || cap.includes("перед першим");
+            {exItem ? (() => { const [src, cap] = exItem; const wide = /fl_vpn/.test(cap) || cap.includes("перед першим");
               return <div className="ex-view"><img key={src} src={src} alt={cap} className="enter-fade" style={wide ? { width: "100%", height: "auto", marginTop: "35%" } : { width: "100%", height: "100%" }} />
                 <div className="ex-label">{cap}<span>начерк — оформлення за дизайнером</span></div></div>; })()
             : frame
