@@ -1127,12 +1127,17 @@ function Web({ preset, onState, back, raw }) {
   const f = frameOf(baseId);
   const ov = {};
   const bk = findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")); ov[bk.id] = { onClick: back, className: "tap" };
-  // картка рівня: усі шість варіантів одна над одною, видно поточний — колір і шкала перетікають
+  // картка рівня: ОДИН фон, у якого плавно змінюється колір (зелений / жовтий / червоний), а вміст рівнів (шкала, іконка, тексти)
+  // перетікає поверх нього. Раніше перетікали цілі напівпрозорі картки — посередині фон блід і «мерехтів».
   const hero = findNode(f, (x) => x.name === "Hero");
+  const heroOf = (lv) => findNode(frameOf(WEB_LEVEL[lv]), (x) => x.name === "Hero");
+  const cur = heroOf(n), tint = (p) => { const v = parseInt(p.solid.slice(1), 16); return `rgba(${v >> 16},${(v >> 8) & 255},${v & 255},${p.a})`; };
   ov[hero.id] = (h, e, pos) => (
-    <div style={{ ...pos, pointerEvents: "none" }}>
-      {WEB_LEVEL.map((fid, lv) => { const hn = findNode(frameOf(fid), (x) => x.name === "Hero");
-        return <div key={fid} style={{ position: "absolute", inset: 0, opacity: lv === n ? 1 : 0, transform: lv === n || raw ? "none" : "scale(.985)", transition: raw ? "none" : "opacity .35s ease, transform .45s cubic-bezier(.2,.8,.2,1)" }}><FigNode n={hn} px={hn.ax} py={hn.ay} ov={WEB_BG} /></div>; })}
+    <div style={{ ...pos, borderRadius: cur.r, overflow: "hidden", pointerEvents: "none", background: tint(cur.fills[0]),
+      boxShadow: `inset 0 0 0 ${cur.sw}px ${tint(cur.strokes[0])}`, transition: raw ? "none" : "background-color .45s ease, box-shadow .45s ease" }}>
+      {WEB_LEVEL.map((fid, lv) => { const hn = heroOf(lv);
+        return <div key={fid} style={{ position: "absolute", inset: 0, opacity: lv === n ? 1 : 0, transition: raw ? "none" : "opacity .3s ease" }}>
+          {(hn.children || []).map((c) => <FigNode key={c.id} n={c} px={hn.ax} py={hn.ay} ov={WEB_BG} />)}</div>; })}
     </div>
   );
   // рядок: увімкнений і вимкнений варіанти з двох кадрів (іконка, тексти) перетікають; перемикач — живий, кулька їде

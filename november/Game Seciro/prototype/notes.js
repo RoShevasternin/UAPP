@@ -39,18 +39,18 @@ export const RANK = ["design", "ask", "android", "ok"];
 export const NEW_BUILD = 18;
 export const NEW = ["web-first", "web-intro", "web-on", "web-4", "web-3", "web-2", "web-1", "web-0"];
 
-const KB = { kind: "android", ex: EX.kb_android, box: [0, 486, 375, 326], text: "Клавіатура в макеті — iOS. На Android з'явиться системна клавіатура телефона (Gboard тощо); її не малюємо, вона буде своя." };
-const VPN_SRV = { kind: "android", text: "VPN на Android: протокол ще вирішують (найімовірніше IKEv2, тоді мінімум Android 11). Поки сервер на запити VPN від Android відповідає «немає доступу». Екрани — як у дизайні." };
-const FASTEST = (y) => ({ kind: "ask", box: [32, y, 311, 40], text: "«Fastest Connection»: у документації сервера є лише список локацій — хто обирає найшвидший сервер: сервер чи апка?" });
+const KB = { kind: "android", ex: EX.kb_android, box: [0, 486, 375, 326], text: "Тут намальована клавіатура iPhone. На Android буде звичайна клавіатура телефона — її малювати не треба." };
+const VPN_SRV = { kind: "android", text: "VPN для Android ще налаштовують на сервері. Екрани робимо як у дизайні, а підключення запрацює, коли сервер буде готовий." };
+const FASTEST = (y) => ({ kind: "ask", box: [32, y, 311, 40], text: "Питання менеджеру: «Fastest Connection» — найшвидший сервер вибирає сам сервер чи це має робити апка?" });
 const SPEED = { kind: "ok", box: [16, 488, 343, 72], text: "Швидкість Download / Upload рахує сама апка з трафіку телефона." };
-const WEB_VPN = { kind: "ask", ex: EX.web_vpn, text: "За документацією захист від шахрайських сайтів на Android працює всередині VPN і лише коли VPN увімкнений. На екрані цього не видно — як показати (підказка «увімкніть VPN»?) — уточнити." };
-const COOKIE = { kind: "design", ex: EX.web_4, box: [32, 449, 311, 40], text: "«Hide Cookie Prompts» на Android неможливий: банер cookie — частина сторінки, фільтр його не сховає. Прибрати рядок і перерахувати шкалу (4 фільтри)." };
-const WEB_SET = { kind: "ask", text: "Який набір фільтрів буде на Android, погоджують разом з екранами модуля (так у документації) — чекаємо від менеджера." };
-const LOCKED = { kind: "design", ex: [EX.lock_a, EX.lock_b], text: "Немає стану без підписки: VPN, Web Protection, Safe QR Scanner, Storage Cleaner, Breach Check мають бути замкнені (замок + що відбувається після натискання)." };
-const ALERTS = { kind: "ask", ex: [EX.al_list, EX.al_empty], box: [140, 728, 96, 48], text: "Вкладка Alerts: екрана немає ні в дизайні, ні в документації сервера. Чи потрібна і що там показувати?" };
-const HELP = { kind: "ask", ex: EX.help_sheet, text: "Картка «Need help? Replies in minutes · Get help» (внизу прокрутки): що вона відкриває — чат, пошту чи сторінку?" };
-const FACE = (y) => ({ kind: "design", ex: EX.and_review, box: [32, y, 311, 40], text: "Face ID — функція iPhone. На Android — відбиток пальця або розблокування обличчям: інший текст та іконка." });
-const IOSUPD = (y) => ({ kind: "design", ex: EX.and_review, box: [32, y, 311, 40], text: "«iOS security update» — для Android: оновлення системи Android." });
+const WEB_VPN = { kind: "ask", ex: EX.web_vpn, text: "На Android захист сайтів працює тільки коли увімкнений VPN. Питання менеджеру: показувати на цьому екрані підказку «Увімкніть VPN»? (див. приклад)" };
+const COOKIE = { kind: "design", ex: EX.web_4, box: [32, 449, 311, 40], text: "«Hide Cookie Prompts» на Android зробити неможливо. Дизайнеру: прибрати цей рядок (див. приклад з 4 фільтрами)." };
+const WEB_SET = { kind: "ask", text: "Питання менеджеру: які саме фільтри лишаються на Android? Цей список ще не затверджений." };
+const LOCKED = { kind: "design", ex: [EX.lock_a, EX.lock_b], text: "Дизайнеру: намалювати, як виглядає головна без підписки — 5 модулів із замком — і що буде після натискання. Див. приклади A і B." };
+const ALERTS = { kind: "ask", ex: [EX.al_list, EX.al_empty], box: [140, 728, 96, 48], text: "Питання менеджеру: вкладка Alerts потрібна? Що в ній показувати? Екрана для неї немає (див. приклади)." };
+const HELP = { kind: "ask", ex: EX.help_sheet, text: "Питання менеджеру: кнопка «Get help» (внизу головної) відкриває чат, пошту чи сайт?" };
+const FACE = (y) => ({ kind: "design", ex: EX.and_review, box: [32, y, 311, 40], text: "Face ID є тільки на iPhone. Дизайнеру: для Android — «Відбиток пальця» з іншою іконкою." });
+const IOSUPD = (y) => ({ kind: "design", ex: EX.and_review, box: [32, y, 311, 40], text: "Дизайнеру: замість «iOS update» — «Оновлення Android»." });
 
 export const NOTES = {
   splash: [{ kind: "ok", text: "Як у дизайні." }],
@@ -68,8 +68,8 @@ export const NOTES = {
     { kind: "design", box: [70, 120, 235, 380], text: "На ілюстрації телефон із «чубчиком» iPhone — краще нейтральний телефон." },
   ],
   paywall: [
-    { kind: "android", ex: EX.gp_sheet, box: [24, 697, 327, 52], text: "Покупка — через Google Play (RevenueCat). Ціни й «3 дні за $0.99» беремо з Google Play: підписка app.seciro.android.premium, плани weekly / monthly / yearly, пробна weekly-trial." },
-    { kind: "ask", text: "Прийом покупок Google Play на сервері ще в розробці; проєкт RevenueCat для Android і його ключ — від менеджера." },
+    { kind: "android", ex: EX.gp_sheet, box: [24, 697, 327, 52], text: "Оплата буде через Google Play: ціни й «3 дні за $0.99» підтягуються звідти. Вікно оплати малює сам Google Play (див. приклад)." },
+    { kind: "ask", text: "Питання менеджеру: коли сервер почне приймати покупки з Google Play і хто дасть нам ключ RevenueCat?" },
     { kind: "android", box: [300, 66, 64, 34], text: "Restore — відновлення покупок Google Play (RevenueCat)." },
   ],
   signin: [{ kind: "ok", text: "Вхід кодом з пошти — сервер це вже вміє." }],
@@ -95,10 +95,10 @@ export const NOTES = {
     { kind: "design", box: [32, 308, 311, 40], text: "«Protection is on for Safari» — на Android захист працює у VPN; підпис інший." },
     IOSUPD(357), FACE(503),
   ],
-  "result-issues": [IOSUPD(357), FACE(542), { kind: "ask", ex: EX.and_review, text: "Список перевірок для Android (замість iOS-пунктів) — погодити з дизайнером і менеджером." }],
+  "result-issues": [IOSUPD(357), FACE(542), { kind: "ask", ex: EX.and_review, text: "Питання менеджеру: який список перевірок буде на Android замість iPhone-пунктів? (див. приклад)" }],
   "sheet-safari": [
     { kind: "android", box: [16, 235, 343, 72], text: "Інструкцію Safari ми вже замінили на Chrome (рішення VELDAN)." },
-    { kind: "ask", ex: EX.web_vpn, text: "За документацією захист на Android працює всередині VPN, а не в браузері — тоді ця інструкція, мабуть, не потрібна взагалі." },
+    { kind: "ask", ex: EX.web_vpn, text: "На Android захист працює через VPN, а не в браузері. Питання менеджеру: цю інструкцію прибираємо?" },
   ],
   "sheet-update": [
     { kind: "design", ex: EX.upd_android, box: [84, 262, 259, 52], text: "Кроки iOS (Settings → General → Software Update) — потрібна інструкція для Android (Налаштування → Система → Оновлення системи)." },
