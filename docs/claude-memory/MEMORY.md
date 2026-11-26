@@ -34,3 +34,4 @@
 - [Спершу прототип](prototype-first.md) — нові апки: прототип на claude.ai → VELDAN клацає → Kotlin → десктоп → USB
 - [Seciro: що не вирішено](seciro-open-questions.md) — 12 пунктів на 26.11: VPN, Web Protection у VPN, Google Play/RevenueCat, ліміт пристроїв, QR, Alerts, пуші…; відповідь на «чого нам ще треба»
 - [Seciro: строго за дизайном](seciro-build-by-design.md) — навіть iOS-місця як у Figma; нічого від себе; що не працює на Android — у вкладку кіта зі скрінами й рамками
+- [Seciro: стиль прототипу](seciro-prototype-style.md) — екрани одразу живі (анімації в міру, утиліта не гра); нотатки з прикладами-начерками; панель без зайвого

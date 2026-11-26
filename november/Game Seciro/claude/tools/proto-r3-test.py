@@ -10,7 +10,7 @@ test = r'''<script>
 const log=[]; const done=()=>document.body.setAttribute('data-log', JSON.stringify(log));
 window.addEventListener('error', e=>{log.push('ERROR '+e.message); done();});
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-const now=()=>(document.querySelector('.note b')?.parentElement.textContent||'').replace('Now: ','').split(' · Figma')[0];
+const now=()=>(document.querySelector('.scr-list [aria-current="true"] .nm')?.textContent||'');
 const app=()=>document.querySelector('.app');
 const btn=(t,exact=true)=>[...app().querySelectorAll('[role=button]')].find(e=>exact? e.textContent.trim()===t : e.textContent.includes(t));
 const pbtn=t=>[...document.querySelectorAll('.pbtn')].find(e=>e.textContent.trim()===t);

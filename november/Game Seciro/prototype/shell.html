@@ -85,6 +85,11 @@ body { background: var(--page); color: var(--ink); font-family: var(--ui); }
 .notes .kind { display: block; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 1px; }
 .legend { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 11px; color: var(--muted); }
 .legend span { display: inline-flex; align-items: center; gap: 5px; }
+.ex-btns { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+.ex-cap { align-items: center; }
+.ex-view { position: absolute; inset: 0; background: #f2f3f6; }
+.ex-label { position: absolute; left: 10px; right: 10px; bottom: 12px; background: rgba(20,26,36,.86); color: #fff; border-radius: 12px; padding: 8px 12px; font: 600 13px/1.35 var(--ui); }
+.ex-label span { display: block; font-weight: 400; font-size: 11px; opacity: .75; }
 .mark { position: absolute; border: 2.5px solid; border-radius: 12px; box-sizing: border-box; transition: opacity .2s, background .2s; }
 .mark span { position: absolute; top: -10px; right: -10px; width: 20px; height: 20px; border-radius: 50%; color: #fff; font: 700 11px/20px var(--ui); text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.25); }
 .scr-list .nid { opacity: .6; font-variant-numeric: tabular-nums; font-size: 11px; }
@@ -123,6 +128,8 @@ input[type="range"] { accent-color: var(--accent); }
   -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: geometricPrecision; }
 .tap { cursor: pointer; transition: transform .12s ease, filter .12s ease; }
 .tap:active { transform: scale(.98); filter: brightness(.94); }
+.tap-soft { transition: background-color .15s ease; border-radius: 12px; }
+.tap-soft:active { background-color: rgba(11,98,218,.05); }
 .hscroll { overflow-x: auto; scrollbar-width: none; cursor: grab; }
 .hscroll::-webkit-scrollbar { display: none; }
 @keyframes spin { to { transform: rotate(360deg); } }

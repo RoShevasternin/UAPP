@@ -63,7 +63,7 @@ import r2f11 from "./.tools/frames/r2_11_5-4722.jpg";
 
 // Ряд 3 — рендерер з даних Figma
 import { FigFrame, FigNode, FigText, frameOf, findNode, PNG } from "./fig.jsx";
-import { NOTES, KINDS, NEW, NEW_BUILD, statusOf } from "./notes.js";
+import { NOTES, KINDS, NEW, NEW_BUILD, statusOf, examplesOf } from "./notes.js";
 import r3f01 from "./.tools/frames/r3_01_5-1686.jpg";
 import r3f02 from "./.tools/frames/r3_02_5-8170.jpg";
 import r3f03 from "./.tools/frames/r3_03_5-2114.jpg";
@@ -1099,6 +1099,16 @@ const WEB_PRESET = {
 };
 const webCount = (f) => f.filter(Boolean).length;
 const webId = (s) => s.intro ? "web-intro" : webCount(s.f) === 5 ? (s.first ? "web-first" : "web-on") : `web-${webCount(s.f)}`;
+// Перемикач (компонент Figma «Switch»: 48×28, кулька 24 з відступом 2; увімк. — #0b62da, вимк. — rgba(114,114,114,.15))
+function Switch({ on, x, y, raw }) {
+  const t = raw ? "none" : "background-color .25s ease";
+  return (
+    <div style={{ position: "absolute", left: x, top: y, width: 48, height: 28, borderRadius: 14, background: on ? "#0b62da" : "rgba(114,114,114,.15)", transition: t, pointerEvents: "none" }}>
+      <div style={{ position: "absolute", left: 2, top: 2, width: 24, height: 24, borderRadius: 12, background: "#fff",
+        transform: on ? "translateX(20px)" : "none", transition: raw ? "none" : "transform .28s cubic-bezier(.3,.9,.3,1.05)" }} />
+    </div>
+  );
+}
 // сірі доріжки шкали («bg», прозорість 0.15): PNG з Figma вже несе цю прозорість — вдруге не множимо
 const WEB_BG = { bg: (n, el, pos) => <FigNode n={{ ...n, op: undefined }} px={n.ax - pos.left} py={n.ay - pos.top} /> };
 const webRow = (frameId, name) => findNode(frameOf(frameId), (x) => x.name === "Label" && firstText(x) === name);
@@ -1120,27 +1130,37 @@ function Web({ preset, onState, back, raw }) {
   ov[hero.id] = (h, e, pos) => (
     <div style={{ ...pos, pointerEvents: "none" }}>
       {WEB_LEVEL.map((fid, lv) => { const hn = findNode(frameOf(fid), (x) => x.name === "Hero");
-        return <div key={fid} style={{ position: "absolute", inset: 0, opacity: lv === n ? 1 : 0, transition: raw ? "none" : "opacity .35s ease" }}><FigNode n={hn} px={hn.ax} py={hn.ay} ov={WEB_BG} /></div>; })}
+        return <div key={fid} style={{ position: "absolute", inset: 0, opacity: lv === n ? 1 : 0, transform: lv === n || raw ? "none" : "scale(.985)", transition: raw ? "none" : "opacity .35s ease, transform .45s cubic-bezier(.2,.8,.2,1)" }}><FigNode n={hn} px={hn.ax} py={hn.ay} ov={WEB_BG} /></div>; })}
     </div>
   );
-  // рядок: увімкнений і вимкнений варіанти з двох кадрів, перетікання за станом
+  // рядок: увімкнений і вимкнений варіанти з двох кадрів (іконка, тексти) перетікають; перемикач — живий, кулька їде
   const row = (target, name, on, onClick) => {
     const a = webRow("5:7412", name), b = webRow("5:6927", name);
+    const sw = findNode(a, (x) => x.name === "Switch"), noSw = { [sw.id]: false, [findNode(b, (x) => x.name === "Switch").id]: false };
     ov[target.id] = (r, e, pos) => (
-      <div onClick={raw ? undefined : onClick} role="switch" aria-checked={on} className={raw ? "" : "tap"} style={{ ...pos, cursor: "pointer" }}>
-        <div style={{ position: "absolute", inset: 0, opacity: on ? 1 : 0, transition: raw ? "none" : "opacity .22s ease" }}><FigNode n={a} px={a.ax} py={a.ay} /></div>
-        <div style={{ position: "absolute", inset: 0, opacity: on ? 0 : 1, transition: raw ? "none" : "opacity .22s ease" }}><FigNode n={b} px={b.ax} py={b.ay} /></div>
+      <div onClick={raw ? undefined : onClick} role="switch" aria-checked={on} className={raw ? "" : "tap-soft"} style={{ ...pos, cursor: "pointer" }}>
+        <div style={{ position: "absolute", inset: 0, opacity: on ? 1 : 0, transition: raw ? "none" : "opacity .25s ease" }}><FigNode n={a} px={a.ax} py={a.ay} ov={noSw} /></div>
+        <div style={{ position: "absolute", inset: 0, opacity: on ? 0 : 1, transition: raw ? "none" : "opacity .25s ease" }}><FigNode n={b} px={b.ax} py={b.ay} ov={noSw} /></div>
+        <Switch on={on} x={sw.ax - a.ax} y={sw.ay - a.ay} raw={raw} />
       </div>
     );
   };
   const master = webRow(baseId, "Protect Your Device");
-  row(master, "Protect Your Device", all, () => setS((o) => ({ ...o, first: false, f: o.f.map(() => (webCount(o.f) === 5 ? 0 : 1)) })));
+  // головний перемикач: фільтри вмикаються / вимикаються каскадом, один за одним
+  const cascade = () => { const to = webCount(sRef.current.f) === 5 ? 0 : 1;
+    setS((o) => ({ ...o, first: false }));
+    [0, 1, 2, 3, 4].forEach((i) => setTimeout(() => setS((o) => ({ ...o, f: o.f.map((v, j) => (j === i ? to : v)) })), raw ? 0 : 70 * i)); };
+  row(master, "Protect Your Device", all, cascade);
   WEB_FILTERS.forEach((name, i) => row(webRow(baseId, name), name, !!s.f[i], () => setS((o) => ({ ...o, first: false, f: o.f.map((v, j) => (j === i ? (v ? 0 : 1) : v)) }))));
+  // поява: картка рівня й два блоки знизу вгору з невеликою затримкою (лише при вході)
+  if (!raw) findNode(f, (x) => x.name === "Frame" && x.children && x.children.some((c) => c.name === "menu")).children.forEach((c, i) => {
+    if (c.name === "menu") ov[c.id] = { className: "rise", style: { animationDelay: `${0.08 + i * 0.07}s` } }; });
   const pop = findNode(f, (x) => x.name === "popup"); if (pop) ov[pop.id] = false;   // аркуш під екраном кадру — показуємо свій, з анімацією
   // знайомство (5:6791)
   const iFrame = frameOf("5:6791"), intro = findNode(iFrame, (x) => x.name === "popup"), iBlack = findNode(iFrame, (x) => x.name === "blackout");
   const close = () => setS((o) => ({ ...o, intro: false, first: false }));
   const iov = { [btnWith(intro, "Start Protection").id]: { onClick: () => setS((o) => ({ ...o, intro: false, first: false, f: [1, 1, 1, 1, 1] })), className: "tap" } };
+  const ill = findNode(intro, (x) => x.name === "img"); if (ill && !raw) iov[ill.id] = (n, el) => <div className="float-slow">{el}</div>;
   return (
     <>
       <FigFrame id={baseId} ov={ov} raw={raw} />
@@ -1294,13 +1314,13 @@ export default function Seciro() {
     if (top < ul.scrollTop + 8) ul.scrollTo({ top: top - 8, behavior: "smooth" });
     else if (bottom > ul.scrollTop + ul.clientHeight - 8) ul.scrollTo({ top: bottom - ul.clientHeight + 8, behavior: "smooth" });
   }, [screen]);
-  const [overlay, setOverlay] = useState(0);   // 0 — вимкнено, інакше прозорість кадру Figma поверх телефона
   // нотатки до екрана: рамки на телефоні (вмик./вимк.), підсвічена нотатка, фільтр «лише нові»
   const [marks, setMarks] = useState(store.get("seciro.marks") !== "0");
   const [hl, setHl] = useState(null);
   const [onlyNew, setOnlyNew] = useState(false);
   const notes = NOTES[screen] || [];
-  useEffect(() => setHl(null), [screen]);
+  const [ex, setEx] = useState(null);   // { note, i } — приклад зліва замість кадру Figma
+  useEffect(() => { setHl(null); setEx(null); }, [screen]);
   const slotW = 375 * scale + (window.innerWidth > 1000 ? 20 : 0);
 
   if (LIVE) return (
@@ -1372,19 +1392,22 @@ export default function Seciro() {
                   fontSize: 13, lineHeight: "18px" }} className="enter-fade">{msg}</Abs>
               )}
             </div>
-            {overlay > 0 && frame && (
-              <img src={frame} alt="" draggable={false} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: overlay, pointerEvents: "none", zIndex: 40 }} />
-            )}
           </div>
         </div>
       </div>
 
       {/* Figma — зліва (order −1), прототип — посередині, поруч із панеллю кнопок */}
       <div className="phone-slot" style={{ width: slotW, order: -1 }}>
-        <div className="cap"><b>Figma</b><span>{frame ? `frame ${frameNode}` : "no frame yet"}</span></div>
+        {ex ? (
+          <div className="cap ex-cap"><b style={{ color: KINDS[notes[ex.note].kind].color }}>Приклад · нотатка {ex.note + 1}</b>
+            <button className="pbtn sm" onClick={() => setEx(null)}>← Figma</button></div>
+        ) : <div className="cap"><b>Figma</b><span>{frame ? `frame ${frameNode}` : "no frame yet"}</span></div>}
         <div className="phone-shell">
           <div className="phone-clip" style={{ width: 375 * scale, height: 812 * scale, background: C.bg }}>
-            {frame
+            {ex ? (() => { const [src, cap] = examplesOf(notes[ex.note])[ex.i]; const wide = /fl_vpn/.test(cap) || cap.includes("перед першим");
+              return <div className="ex-view"><img key={src} src={src} alt={cap} className="enter-fade" style={wide ? { width: "100%", height: "auto", marginTop: "35%" } : { width: "100%", height: "100%" }} />
+                <div className="ex-label">{cap}<span>начерк — оформлення за дизайнером</span></div></div>; })()
+            : frame
               ? <img src={frame} alt={`Figma frame ${frameNode}`} draggable={false} style={{ display: "block", width: "100%", height: "100%" }} />
               : <div className="noframe">This screen comes from a later row of the Figma.</div>}
           </div>
@@ -1394,7 +1417,7 @@ export default function Seciro() {
       <aside className="panel" aria-label="Prototype screens">
         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
           <h1>Seciro · prototype</h1>
-          <p className="sub">Rows 1–5 of the Figma. Click inside the phone like in the app. Кольорова крапка біля екрана — статус, справа — нотатки.</p>
+          <p className="sub">Ряди 1–5 з Figma · build {BUILD}. Клацай у телефоні, як у застосунку. Крапка біля екрана — статус, нижче — нотатки.</p>
         </div>
         <div className="newbar">
           <span><b>Нове в build {NEW_BUILD}:</b> {NEW.length} екранів Web Protection</span>
@@ -1427,7 +1450,11 @@ export default function Seciro() {
             {notes.map((n, i) => (
               <li key={i} onMouseEnter={() => setHl(i)} onMouseLeave={() => setHl(null)} onClick={() => setHl(hl === i ? null : i)} className={hl === i ? "on" : ""}>
                 <span className="num" style={{ background: n.box ? KINDS[n.kind].color : "transparent", color: n.box ? "#fff" : KINDS[n.kind].color, borderColor: KINDS[n.kind].color }}>{n.box ? i + 1 : "•"}</span>
-                <div><span className="kind" style={{ color: KINDS[n.kind].color }}>{KINDS[n.kind].label}</span>{n.text}</div>
+                <div><span className="kind" style={{ color: KINDS[n.kind].color }}>{KINDS[n.kind].label}</span>{n.text}
+                  {examplesOf(n).length > 0 && <span className="ex-btns">{examplesOf(n).map(([src, cap], k) => (
+                    <button key={k} className="pbtn sm" aria-pressed={!!ex && ex.note === i && ex.i === k} onClick={(e) => { e.stopPropagation(); setEx(ex && ex.note === i && ex.i === k ? null : { note: i, i: k }); }}>
+                      Приклад{examplesOf(n).length > 1 ? ` ${"AB"[k]}` : ""} →</button>))}</span>}
+                </div>
               </li>
             ))}
           </ol>
@@ -1450,19 +1477,6 @@ export default function Seciro() {
           <div className="row">{[["ok", "Nothing"], ["issues", "2 issues"]].map(([v, t]) => (
             <button key={v} className="pbtn" aria-pressed={scen.scan === v} onClick={() => setScen((o) => ({ ...o, scan: v }))}>{t}</button>))}</div>
         </>)}
-        <div className="label">Compare</div>
-        <div className="row" role="radiogroup" aria-label="Figma overlay on the prototype">
-          {[[0, "Off"], [0.5, "Overlay 50%"], [1, "Figma only"]].map(([v, t]) => (
-            <button key={t} className="pbtn" aria-pressed={overlay === v} onClick={() => setOverlay(v)}>{t}</button>
-          ))}
-        </div>
-        <label className="note" htmlFor="ovl" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span>Overlay</span>
-          <input id="ovl" type="range" min="0" max="1" step="0.05" value={overlay} onChange={(e) => setOverlay(+e.target.value)} style={{ flex: 1, minWidth: 0 }} />
-          <span style={{ fontVariantNumeric: "tabular-nums", width: 34, textAlign: "right" }}>{Math.round(overlay * 100)}%</span>
-        </label>
-        <p className="note"><b>Now:</b> {cur.name} · Figma {frameNode}{screen === "paywall" ? ` · plan ${plan}` : ""}</p>
-        <p className="note">Overlay puts the Figma frame on top of the prototype: any shift shows as a double edge. The status bar differs on purpose (Figma has iOS, Android draws its own). ← → keys step through screens. Build {BUILD}.</p>
       </aside>
     </div>
   );

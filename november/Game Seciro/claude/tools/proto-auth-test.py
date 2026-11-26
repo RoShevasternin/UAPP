@@ -10,7 +10,7 @@ test = r'''<script>
 const log=[]; const done=()=>document.body.setAttribute('data-log', JSON.stringify(log));
 window.addEventListener('error', e=>{log.push('ERROR '+e.message); done();});
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-const now=()=>(document.querySelector('.note b')?.parentElement.textContent||'').replace('Now: ','').split(' · Figma')[0];
+const now=()=>(document.querySelector('.scr-list [aria-current="true"] .nm')?.textContent||'');
 const type=async s=>{ for(const ch of s){ window.dispatchEvent(new KeyboardEvent('keydown',{key:ch})); await sleep(30);} };
 const btn=t=>[...document.querySelectorAll('[role=button], .pbtn, .tap')].find(e=>e.textContent.trim()===t);
 const click=async (t,ms=900)=>{ const b=btn(t); if(!b){log.push('  !! no button «'+t+'»'); return;} b.click(); await sleep(ms); };
