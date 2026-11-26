@@ -46,13 +46,13 @@ body { background: var(--page); color: var(--ink); font-family: var(--ui); }
 .phone-clip { border-radius: 34px; overflow: hidden; position: relative; }
 
 .panel {
-  width: 260px; min-width: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 18px;
+  width: 300px; min-width: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 18px;
   padding: 18px; display: flex; flex-direction: column; gap: 14px;
   /* панель тримається на екрані, а скролиться лише список екранів */
-  position: sticky; top: 24px; max-height: calc(100vh - 48px); box-sizing: border-box;
+  position: sticky; top: 24px; max-height: calc(100vh - 48px); box-sizing: border-box; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin;
 }
 .panel > * { flex: none; }
-.panel .scr-list { flex: 1 1 auto; min-height: 120px; overflow-y: auto; overscroll-behavior: contain;
+.panel .scr-list { flex: 0 1 auto; min-height: 150px; max-height: 34vh; overflow-y: auto; overscroll-behavior: contain;
   margin-right: -10px; padding-right: 6px; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
 .panel .scr-list::-webkit-scrollbar { width: 6px; }
 .panel .scr-list::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
@@ -66,6 +66,27 @@ body { background: var(--page); color: var(--ink); font-family: var(--ui); }
 }
 .scr-list button:hover { background: var(--chip); }
 .scr-list button[aria-current="true"] { background: var(--accent); color: #fff; }
+.scr-list button { display: flex; align-items: center; gap: 7px; }
+.scr-list .nm { flex: 1 1 auto; min-width: 0; }
+.scr-list .dot, .legend .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; display: inline-block; }
+.scr-list button[aria-current="true"] .dot { box-shadow: 0 0 0 2px #fff; }
+.scr-list .new { font: 700 9px/1 var(--ui); font-style: normal; letter-spacing: .06em; color: #fff; background: #1f9d55; padding: 3px 5px; border-radius: 5px; flex: none; }
+.pbtn.sm { font-size: 11px; padding: 4px 8px; text-transform: none; letter-spacing: 0; }
+.newbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; line-height: 1.35; color: var(--muted);
+  background: var(--chip); border-radius: 12px; padding: 8px 10px; }
+.newbar b { color: var(--ink); }
+.notes { display: flex; flex-direction: column; gap: 8px; }
+.notes li { font-weight: 400; }
+.notes ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.notes li { display: flex; gap: 8px; align-items: flex-start; font-size: 12px; line-height: 1.42; padding: 6px 8px; border-radius: 10px; cursor: default; background: var(--chip); }
+.notes li.on { outline: 1.5px solid var(--accent); }
+.notes .num { flex: none; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid; display: inline-flex; align-items: center; justify-content: center;
+  font: 700 10px/1 var(--ui); box-sizing: border-box; margin-top: 1px; }
+.notes .kind { display: block; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 1px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 11px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 5px; }
+.mark { position: absolute; border: 2.5px solid; border-radius: 12px; box-sizing: border-box; transition: opacity .2s, background .2s; }
+.mark span { position: absolute; top: -10px; right: -10px; width: 20px; height: 20px; border-radius: 50%; color: #fff; font: 700 11px/20px var(--ui); text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.25); }
 .scr-list .nid { opacity: .6; font-variant-numeric: tabular-nums; font-size: 11px; }
 .row { display: flex; gap: 8px; flex-wrap: wrap; }
 .pbtn {

@@ -63,6 +63,7 @@ import r2f11 from "./.tools/frames/r2_11_5-4722.jpg";
 
 // Ряд 3 — рендерер з даних Figma
 import { FigFrame, FigNode, FigText, frameOf, findNode, PNG } from "./fig.jsx";
+import { NOTES, KINDS, NEW, NEW_BUILD, statusOf } from "./notes.js";
 import r3f01 from "./.tools/frames/r3_01_5-1686.jpg";
 import r3f02 from "./.tools/frames/r3_02_5-8170.jpg";
 import r3f03 from "./.tools/frames/r3_03_5-2114.jpg";
@@ -97,7 +98,7 @@ import logoChrome from "../claude/figma/logos/chrome_5-9492.png";
 import btnX1 from "../claude/figma/vpnbtn/x1.png";
 import btnX2 from "../claude/figma/vpnbtn/x2.png";
 
-export const BUILD = 18;   // піднімати на кожну публікацію
+export const BUILD = 19;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
@@ -1228,7 +1229,7 @@ function useScale() {
   // Два телефони (прототип + Figma) і панель: на широкому — в ряд, на вузькому — один під одним
   const calc = () => {
     const narrow = window.innerWidth <= 1000;
-    const w = narrow ? Math.min(window.innerWidth - 32, 420) : Math.min(375 * 1.15, (window.innerWidth - 260 - 2 * 28 - 40 - 2 * 20) / 2);
+    const w = narrow ? Math.min(window.innerWidth - 32, 420) : Math.min(375 * 1.15, (window.innerWidth - 300 - 2 * 28 - 40 - 2 * 20) / 2);
     const h = narrow ? Infinity : window.innerHeight - 48 - 20 - 30;
     return Math.min(w / 375, h / 812);
   };
@@ -1294,6 +1295,12 @@ export default function Seciro() {
     else if (bottom > ul.scrollTop + ul.clientHeight - 8) ul.scrollTo({ top: bottom - ul.clientHeight + 8, behavior: "smooth" });
   }, [screen]);
   const [overlay, setOverlay] = useState(0);   // 0 — вимкнено, інакше прозорість кадру Figma поверх телефона
+  // нотатки до екрана: рамки на телефоні (вмик./вимк.), підсвічена нотатка, фільтр «лише нові»
+  const [marks, setMarks] = useState(store.get("seciro.marks") !== "0");
+  const [hl, setHl] = useState(null);
+  const [onlyNew, setOnlyNew] = useState(false);
+  const notes = NOTES[screen] || [];
+  useEffect(() => setHl(null), [screen]);
   const slotW = 375 * scale + (window.innerWidth > 1000 ? 20 : 0);
 
   if (LIVE) return (
@@ -1350,6 +1357,16 @@ export default function Seciro() {
               </div>
               <StatusBar />
               <GestureBar />
+              {marks && notes.some((n) => n.box) && (
+                <div style={{ position: "absolute", inset: 0, zIndex: 35, pointerEvents: "none" }}>
+                  {notes.map((n, i) => n.box && (
+                    <div key={i} className="mark" style={{ position: "absolute", left: n.box[0] - 3, top: n.box[1] - 3, width: n.box[2] + 6, height: n.box[3] + 6,
+                      borderColor: KINDS[n.kind].color, background: hl === i ? KINDS[n.kind].color + "26" : "transparent", opacity: hl === null || hl === i ? 1 : 0.35 }}>
+                      <span style={{ background: KINDS[n.kind].color }}>{i + 1}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
               {msg && (
                 <Abs x={24} y={84} w={327} style={{ zIndex: 30, background: "rgba(20,26,36,.92)", color: "#fff", borderRadius: 14, padding: "12px 16px",
                   fontSize: 13, lineHeight: "18px" }} className="enter-fade">{msg}</Abs>
@@ -1377,14 +1394,21 @@ export default function Seciro() {
       <aside className="panel" aria-label="Prototype screens">
         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
           <h1>Seciro · prototype</h1>
-          <p className="sub">Rows 1–5 of the Figma. Click inside the phone like in the app.</p>
+          <p className="sub">Rows 1–5 of the Figma. Click inside the phone like in the app. Кольорова крапка біля екрана — статус, справа — нотатки.</p>
+        </div>
+        <div className="newbar">
+          <span><b>Нове в build {NEW_BUILD}:</b> {NEW.length} екранів Web Protection</span>
+          <button className="pbtn sm" aria-pressed={onlyNew} onClick={() => setOnlyNew((v) => !v)}>{onlyNew ? "Усі екрани" : "Лише нові"}</button>
         </div>
         <div className="label">Screens</div>
         <ul className="scr-list" ref={listRef}>
-          {SCREENS.map((s) => (
+          {SCREENS.filter((s) => !onlyNew || NEW.includes(s.id)).map((s) => (
             <li key={s.id}>
               <button aria-current={s.id === screen} onClick={() => go(s.id)}>
-                <span>{s.name}</span><span className="nid">{s.node}</span>
+                <i className="dot" style={{ background: KINDS[statusOf(s.id)].color }} title={KINDS[statusOf(s.id)].label} />
+                <span className="nm">{s.name}</span>
+                {NEW.includes(s.id) && <em className="new">NEW</em>}
+                <span className="nid">{s.node}</span>
               </button>
             </li>
           ))}
@@ -1392,6 +1416,22 @@ export default function Seciro() {
         <div className="row">
           <button className="pbtn" onClick={back} disabled={!hist.length}>← Back</button>
           <button className="pbtn" onClick={() => { setHist([]); setPlan("weekly"); go("splash", "fade"); }}>Restart</button>
+        </div>
+        <div className="notes">
+          <div className="label" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span>Нотатки до екрана</span>
+            <button className="pbtn sm" aria-pressed={marks} onClick={() => { setMarks((v) => { store.set("seciro.marks", v ? "0" : "1"); return !v; }); }}>Рамки {marks ? "увімк." : "вимк."}</button>
+          </div>
+          {notes.length === 0 && <p className="note">Нотаток ще немає.</p>}
+          <ol>
+            {notes.map((n, i) => (
+              <li key={i} onMouseEnter={() => setHl(i)} onMouseLeave={() => setHl(null)} onClick={() => setHl(hl === i ? null : i)} className={hl === i ? "on" : ""}>
+                <span className="num" style={{ background: n.box ? KINDS[n.kind].color : "transparent", color: n.box ? "#fff" : KINDS[n.kind].color, borderColor: KINDS[n.kind].color }}>{n.box ? i + 1 : "•"}</span>
+                <div><span className="kind" style={{ color: KINDS[n.kind].color }}>{KINDS[n.kind].label}</span>{n.text}</div>
+              </li>
+            ))}
+          </ol>
+          <div className="legend">{Object.entries(KINDS).map(([k, v]) => <span key={k}><i className="dot" style={{ background: v.color }} />{v.label}</span>)}</div>
         </div>
         {isAuth && (<>
           <div className="label">Server answers</div>
