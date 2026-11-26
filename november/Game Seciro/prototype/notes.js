@@ -20,6 +20,12 @@ import ex_upd_android from "./examples/upd_android.svg";
 import ex_onb_phone from "./examples/onb_phone.svg";
 import ex_perm_denied from "./examples/perm_denied.svg";
 import ex_fl_vpn from "./examples/fl_vpn.svg";
+import ex_qr_safe from "./examples/qr_safe.svg";
+import ex_qr_warn from "./examples/qr_warn.svg";
+import ex_qr_text from "./examples/qr_text.svg";
+import ex_qr_cam from "./examples/qr_cam.svg";
+import ex_qr_err from "./examples/qr_err.svg";
+import ex_fl_cam from "./examples/fl_cam.svg";
 // Приклад «як має виглядати» до нотатки: ex — [картинка, підпис]; показується зліва замість кадру Figma
 const EX = {
   lock_a: [ex_lock_a, "Варіант A: замок на модулі"], lock_b: [ex_lock_b, "Варіант B: вікно «Доступно в Premium»"],
@@ -27,6 +33,8 @@ const EX = {
   web_4: [ex_web_4, "4 фільтри замість 5"], web_vpn: [ex_web_vpn, "Підказка: захист працює з VPN"], and_review: [ex_and_review, "Перевірки для Android"],
   gp_sheet: [ex_gp_sheet, "Вікно оплати Google Play"], kb_android: [ex_kb_android, "Клавіатура Android"], notif_vpn: [ex_notif_vpn, "Сповіщення «VPN увімкнено»"],
   upd_android: [ex_upd_android, "Інструкція оновлення Android"], onb_phone: [ex_onb_phone, "Текст і телефон без «iPhone»"], fl_vpn: [ex_fl_vpn, "Вікно Android перед першим підключенням"],
+  qr_safe: [ex_qr_safe, "Безпечне посилання"], qr_warn: [ex_qr_warn, "Підозріле посилання"], qr_text: [ex_qr_text, "У коді не посилання (Wi-Fi, текст)"],
+  qr_cam: [ex_qr_cam, "Немає доступу до камери"], qr_err: [ex_qr_err, "Перевірка не вдалася"], fl_cam: [ex_fl_cam, "Вікно Android: дозвіл на камеру"],
 };
 export const KINDS = {
   ok: { label: "Так і буде", color: "#1f9d55" },
@@ -36,8 +44,9 @@ export const KINDS = {
 };
 export const RANK = ["design", "ask", "android", "ok"];
 
-export const NEW_BUILD = 18;
-export const NEW = ["web-first", "web-intro", "web-on", "web-4", "web-3", "web-2", "web-1", "web-0"];
+export const NEW_BUILD = 20;
+export const NEW = ["qr-first", "qr-intro", "qr-scan", "qr-check", "qr-blocked", "qr-copied"];
+export const NEW_LABEL = "6 екранів Safe QR Scanner";
 
 const KB = { kind: "android", ex: EX.kb_android, box: [0, 486, 375, 326], text: "Тут намальована клавіатура iPhone. На Android буде звичайна клавіатура телефона — її малювати не треба." };
 const VPN_SRV = { kind: "android", text: "VPN для Android ще налаштовують на сервері. Екрани робимо як у дизайні, а підключення запрацює, коли сервер буде готовий." };
@@ -46,6 +55,8 @@ const SPEED = { kind: "ok", box: [16, 488, 343, 72], text: "Швидкість D
 const WEB_VPN = { kind: "ask", ex: EX.web_vpn, text: "На Android захист сайтів працює тільки коли увімкнений VPN. Питання менеджеру: показувати на цьому екрані підказку «Увімкніть VPN»? (див. приклад)" };
 const COOKIE = { kind: "design", ex: EX.web_4, box: [32, 449, 311, 40], text: "«Hide Cookie Prompts» на Android зробити неможливо. Дизайнеру: прибрати цей рядок (див. приклад з 4 фільтрами)." };
 const WEB_SET = { kind: "ask", text: "Питання менеджеру: які саме фільтри лишаються на Android? Цей список ще не затверджений." };
+const QR_WHO = { kind: "ask", text: "Питання менеджеру: хто вирішує, що посилання небезпечне — сервер чи апка? У документації сервера такої перевірки немає." };
+const QR_MISSING = { kind: "design", ex: [EX.qr_safe, EX.qr_warn, EX.qr_text, EX.qr_cam, EX.qr_err], text: "Дизайнеру: немає екранів для безпечного посилання, підозрілого, коду без посилання (Wi-Fi, текст), «немає доступу до камери» і помилки перевірки. Див. приклади A–E." };
 const LOCKED = { kind: "design", ex: [EX.lock_a, EX.lock_b], text: "Дизайнеру: намалювати, як виглядає головна без підписки — 5 модулів із замком — і що буде після натискання. Див. приклади A і B." };
 const ALERTS = { kind: "ask", ex: [EX.al_list, EX.al_empty], box: [140, 728, 96, 48], text: "Питання менеджеру: вкладка Alerts потрібна? Що в ній показувати? Екрана для неї немає (див. приклади)." };
 const HELP = { kind: "ask", ex: EX.help_sheet, text: "Питання менеджеру: кнопка «Get help» (внизу головної) відкриває чат, пошту чи сайт?" };
@@ -126,6 +137,13 @@ export const NOTES = {
   "web-2": [WEB_VPN, COOKIE],
   "web-1": [WEB_VPN, COOKIE],
   "web-0": [WEB_VPN, COOKIE],
+  "qr-first": [{ kind: "ok", text: "Як у дизайні. Камера й розпізнавання QR — на самому телефоні." }],
+  "qr-intro": [{ kind: "android", ex: EX.fl_cam, box: [16, 719, 343, 56], text: "Після «Scan a QR Code» Android сам спитає дозвіл на камеру — це системне вікно, його не малюємо." }],
+  "qr-scan": [{ kind: "ok", text: "Як у дизайні. У прототипі: дотик до рамки — сканувати ще раз." },
+    { kind: "android", box: [189, 598, 138, 40], text: "«From gallery» на Android відкриває системний вибір фото." }, QR_WHO],
+  "qr-check": [QR_WHO],
+  "qr-blocked": [{ kind: "ok", text: "Як у дизайні: «Back to Safety», «Continue to Site», копіювання посилання." }, QR_MISSING, QR_WHO],
+  "qr-copied": [{ kind: "ok", text: "Як у дизайні." }],
 };
 // приклад(и) нотатки списком
 export const examplesOf = (n) => !n.ex ? [] : Array.isArray(n.ex[0]) ? n.ex : [n.ex];

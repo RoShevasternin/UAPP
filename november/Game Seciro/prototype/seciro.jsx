@@ -63,7 +63,7 @@ import r2f11 from "./.tools/frames/r2_11_5-4722.jpg";
 
 // Ряд 3 — рендерер з даних Figma
 import { FigFrame, FigNode, FigText, frameOf, findNode, PNG } from "./fig.jsx";
-import { NOTES, KINDS, NEW, NEW_BUILD, statusOf, examplesOf } from "./notes.js";
+import { NOTES, KINDS, NEW, NEW_BUILD, NEW_LABEL, statusOf, examplesOf } from "./notes.js";
 import r3f01 from "./.tools/frames/r3_01_5-1686.jpg";
 import r3f02 from "./.tools/frames/r3_02_5-8170.jpg";
 import r3f03 from "./.tools/frames/r3_03_5-2114.jpg";
@@ -87,6 +87,12 @@ import r5f05 from "./.tools/frames/r5_05_5-7121.jpg";
 import r5f06 from "./.tools/frames/r5_06_5-7218.jpg";
 import r5f07 from "./.tools/frames/r5_07_5-7315.jpg";
 import r5f08 from "./.tools/frames/r5_08_5-6927.jpg";
+import r6f01 from "./.tools/frames/r6_01_5-4054.jpg";
+import r6f02 from "./.tools/frames/r6_02_5-6417.jpg";
+import r6f03 from "./.tools/frames/r6_03_5-6490.jpg";
+import r6f04 from "./.tools/frames/r6_04_5-6569.jpg";
+import r6f05 from "./.tools/frames/r6_05_5-6619.jpg";
+import r6f06 from "./.tools/frames/r6_06_5-6705.jpg";
 import r4f09 from "./.tools/frames/r4_09_5-7597.jpg";
 import r4f10 from "./.tools/frames/r4_10_5-7781.jpg";
 import scanTrack from "../claude/figma/scan/track.png";
@@ -98,7 +104,7 @@ import logoChrome from "../claude/figma/logos/chrome_5-9492.png";
 import btnX1 from "../claude/figma/vpnbtn/x1.png";
 import btnX2 from "../claude/figma/vpnbtn/x2.png";
 
-export const BUILD = 19;   // піднімати на кожну публікацію
+export const BUILD = 20;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
@@ -820,7 +826,7 @@ function Dashboard({ issues, go, toast, raw }) {
   const [sheet, setSheet] = useState(null);
   const ov = {};
   const run = btnWith(f, "Run Protection Check"); ov[run.id] = { onClick: () => go("scan"), className: "tap" };
-  labelsIn(f).forEach((l, i) => { const t = firstText(l); ov[l.id] = { onClick: () => t === "VPN" ? go("vpn-first") : t === "Web Protection" ? go("web-first") : toast(`${t} — its own row of the Figma comes later`), className: raw ? "" : "tap rise", style: { animationDelay: `${0.12 + i * 0.05}s` } }; });
+  labelsIn(f).forEach((l, i) => { const t = firstText(l); ov[l.id] = { onClick: () => t === "VPN" ? go("vpn-first") : t === "Web Protection" ? go("web-first") : t === "Safe QR Scanner" ? go("qr-first") : toast(`${t} — its own row of the Figma comes later`), className: raw ? "" : "tap rise", style: { animationDelay: `${0.12 + i * 0.05}s` } }; });
   const help = btnWith(f, "Get help"); ov[help.id] = { onClick: () => toast("Opens support chat"), className: "tap" };
   const icon = findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")); ov[icon.id] = { onClick: () => toast("My Account — last row of the Figma"), className: "tap" };
   findNode(f, (x) => x.name === "Menubar").children.forEach((b) => {
@@ -1181,8 +1187,102 @@ function Web({ preset, onState, back, raw }) {
   );
 }
 
+// ── Ряд 6: Safe QR Scanner (6 кадрів) ──
+// 5:4054 перший вхід · 5:6417 знайомство · 5:6490 сканер · 5:6569 перевірка (спінер) · 5:6619 «Access blocked» · 5:6705 + «Copied!»
+// База — 5:6490 (сканер); аркуші й «Copied!» — з інших кадрів поверх, з анімацією. Перший скан іде сам; далі — дотик до рамки.
+const QR_IDS = ["qr-first", "qr-intro", "qr-scan", "qr-check", "qr-blocked", "qr-copied"];
+const QR_PRESET = {
+  "qr-first": { first: true, intro: false, phase: "idle", copied: false }, "qr-intro": { first: true, intro: true, phase: "idle", copied: false },
+  "qr-scan": { first: false, intro: false, phase: "scan", copied: false, focus: true }, "qr-check": { first: false, intro: false, phase: "check", copied: false },
+  "qr-blocked": { first: false, intro: false, phase: "blocked", copied: false }, "qr-copied": { first: false, intro: false, phase: "blocked", copied: true },
+};
+const qrId = (s) => s.intro ? "qr-intro" : s.phase === "check" ? "qr-check" : s.phase === "blocked" ? (s.copied ? "qr-copied" : "qr-blocked") : s.phase === "scan" ? "qr-scan" : "qr-first";
+
+// Аркуш знизу з іншого кадру: затемнення + аркуш виїжджає (як у VPN / Web Protection)
+function FigSheetOf({ open, black, node, ov, onClose, raw, z = 20 }) {
+  return (
+    <div style={{ position: "absolute", inset: 0, zIndex: z, pointerEvents: open ? "auto" : "none" }}>
+      <div onClick={onClose} style={{ position: "absolute", inset: 0, opacity: open ? 1 : 0, transition: raw ? "none" : "opacity .3s" }}>{black && <FigNode n={black} />}</div>
+      <div style={{ position: "absolute", inset: 0, transform: open ? "none" : `translateY(${812 - node.ay + 12}px)`, transition: raw ? "none" : "transform .5s cubic-bezier(.2,.9,.25,1)", pointerEvents: "none" }}>
+        <div style={{ pointerEvents: open ? "auto" : "none" }}><FigNode n={node} ov={ov} /></div>
+      </div>
+    </div>
+  );
+}
+
+function Qr({ preset, onState, back, toast, raw }) {
+  const [s, setS] = useState(() => ({ seg: 0, auto: true, ...QR_PRESET[preset] }));
+  const sRef = useRef(s); sRef.current = s;
+  const upd = (p) => setS((o) => ({ ...o, ...(typeof p === "function" ? p(o) : p) }));
+  useEffect(() => { if (qrId(sRef.current) !== preset) setS((o) => ({ ...o, ...QR_PRESET[preset] })); }, [preset]);
+  useEffect(() => { const id = qrId(s); if (id !== preset) onState(id); }, [s]);
+  // перший вхід: знайомство виїжджає саме
+  useEffect(() => { if (raw || preset !== "qr-first") return; const t = setTimeout(() => upd((o) => (o.first && !o.intro ? { intro: true } : {})), 650); return () => clearTimeout(t); }, []);
+  // сканування → «знайшли код» → перевірка → результат
+  useEffect(() => { if (raw) return;
+    if (s.phase === "scan" && s.auto) { const a = setTimeout(() => upd({ focus: true }), 800), t = setTimeout(() => upd((o) => (o.phase === "scan" ? { phase: "check" } : {})), 2100); return () => { clearTimeout(a); clearTimeout(t); }; }
+    if (s.phase === "check") { const t = setTimeout(() => upd((o) => (o.phase === "check" ? { phase: "blocked" } : {})), 1500); return () => clearTimeout(t); }
+  }, [s.phase, s.auto]);
+  useEffect(() => { if (raw || !s.copied) return; const t = setTimeout(() => upd({ copied: false }), 1700); return () => clearTimeout(t); }, [s.copied]);
+
+  const f = frameOf("5:6490");
+  const ov = {};
+  ov[findNode(f, (x) => x.name === "popup").id] = false;
+  ov[findNode(f, (x) => x.name === "Access blocked").id] = false;
+  ov[findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")).id] = { onClick: back, className: "tap" };
+  // вкладки Scan / From gallery: підсвітка активної переїжджає
+  const [b0, b1] = findNode(f, (x) => x.name === "Menubar").children;
+  const seg = (b, i) => (n, e, pos) => (
+    <>
+      {i === 0 && <div style={{ position: "absolute", left: pos.left + s.seg * (b1.ax - b0.ax), top: pos.top, width: n.w, height: n.h, borderRadius: 20,
+        background: "rgba(11,98,218,.15)", transition: raw ? "none" : "left .3s cubic-bezier(.3,.9,.3,1)" }} />}
+      <div onClick={raw ? undefined : () => { if (i === 1) { upd({ seg: 1, phase: "check", copied: false }); toast("On the phone: Android photo picker opens"); } else upd({ seg: 0, phase: "scan", auto: false, focus: true }); }}
+        className={raw ? "" : "tap"} style={{ ...pos, opacity: s.seg === i ? 1 : 0.4, transition: raw ? "none" : "opacity .25s ease", cursor: "pointer" }}>
+        <FigNode n={{ ...n, fills: undefined, op: undefined }} px={n.ax} py={n.ay} />
+      </div>
+    </>
+  );
+  ov[b0.id] = seg(b0, 0); ov[b1.id] = seg(b1, 1);
+  // рамка камери: спершу розмито (5:4054), камера фокусується на коді (5:6490); лінія сканування, поки шукаємо; дотик — сканувати ще раз
+  const cam = findNode(f, (x) => x.name === "scan here"), camBlur = findNode(frameOf("5:4054"), (x) => x.name === "scan here");
+  const sharp = s.phase !== "idle" && !(s.phase === "scan" && !s.focus);
+  ov[cam.id] = (n, e, pos) => (
+    <div onClick={raw ? undefined : () => upd({ phase: "scan", auto: true, focus: false, seg: 0 })} style={{ ...pos, cursor: "pointer" }}>
+      <div style={{ position: "absolute", left: -pos.left, top: -pos.top }}><FigNode n={camBlur} /></div>
+      <div style={{ position: "absolute", left: -pos.left, top: -pos.top, opacity: sharp ? 1 : 0, filter: raw || sharp ? "none" : "blur(6px)", transition: raw ? "none" : "opacity .7s ease, filter .7s ease" }}>{e}</div>
+      {!raw && s.phase === "scan" && <div className="qr-line" />}
+    </div>
+  );
+  // знайомство (5:6417)
+  const iF = frameOf("5:6417"), intro = findNode(iF, (x) => x.name === "popup"), iBlack = findNode(iF, (x) => x.name === "blackout");
+  const iov = { [btnWith(intro, "Scan a QR Code").id]: { onClick: () => upd({ intro: false, first: false, phase: "scan", auto: true, focus: false }), className: "tap" } };
+  const ill = findNode(intro, (x) => x.name === "img"); if (ill && !raw) iov[ill.id] = (n, el) => <div className="float-slow">{el}</div>;
+  // перевірка (5:6569): спінер обертається
+  const cF = frameOf("5:6569"), check = findNode(cF, (x) => x.name === "Access blocked"), cBlack = findNode(cF, (x) => x.name === "blackout");
+  const cov = {}; const ld = findNode(check, (x) => x.name === "loader"); if (ld && !raw) cov[ld.id] = (n, el) => <div className="spin-soft" style={{ position: "absolute", left: 0, top: 0, width: 0, height: 0 }}>{el}</div>;
+  // результат (5:6619): «Back to Safety», «Continue to Site», копіювання посилання
+  const rF = frameOf("5:6619"), res = findNode(rF, (x) => x.name === "Access blocked"), rBlack = findNode(rF, (x) => x.name === "blackout");
+  const rov = {};
+  rov[btnWith(res, "Back to Safety").id] = { onClick: () => upd({ phase: "scan", auto: false, copied: false, focus: true }), className: "tap" };
+  const cont = findNode(res, (x) => x.t && textOf(x) === "Continue to Site");
+  rov[cont.id] = { onClick: () => { upd({ phase: "scan", auto: false }); toast("Opens the site in the browser"); }, className: "tap" };
+  const cp = findNode(res, (x) => (x.comp || "").includes("content-copy")); rov[cp.id] = { onClick: () => upd({ copied: true }), className: "tap" };
+  const toastN = findNode(frameOf("5:6705"), (x) => x.name === "Copied!" && x.type === "FRAME");
+  return (
+    <>
+      <FigFrame id="5:6490" ov={ov} raw={raw} />
+      <FigSheetOf open={s.intro} black={iBlack} node={intro} ov={iov} onClose={() => upd({ intro: false, first: false })} raw={raw} />
+      <FigSheetOf open={s.phase === "check"} black={cBlack} node={check} ov={cov} raw={raw} />
+      <FigSheetOf open={s.phase === "blocked"} black={rBlack} node={res} ov={rov} onClose={() => upd({ phase: "scan", auto: false })} raw={raw} />
+      <div style={{ position: "absolute", inset: 0, zIndex: 30, pointerEvents: "none", transform: s.copied ? "none" : "translateY(-140px)", transition: raw ? "none" : "transform .45s cubic-bezier(.2,.9,.25,1)" }}>
+        <FigNode n={toastN} />
+      </div>
+    </>
+  );
+}
+
 // Група екрана: усередині групи компонент живий (пейджер, вхід, VPN…), між групами — перехід
-const groupOf = (id) => ONB_IDS.includes(id) ? "onboarding" : AUTH_IDS.includes(id) ? "auth" : /^(result-issues|sheet)/.test(id) ? "result-issues" : VPN_IDS.includes(id) ? "vpn" : WEB_IDS.includes(id) ? "web" : id;
+const groupOf = (id) => ONB_IDS.includes(id) ? "onboarding" : AUTH_IDS.includes(id) ? "auth" : /^(result-issues|sheet)/.test(id) ? "result-issues" : VPN_IDS.includes(id) ? "vpn" : WEB_IDS.includes(id) ? "web" : QR_IDS.includes(id) ? "qr" : id;
 // Застиглий знімок екрана для шару, що йде (стан — як у пресеті кадру Figma)
 function StaticScreen({ id, plan, scen }) {
   const nop = () => {};
@@ -1197,6 +1297,7 @@ function StaticScreen({ id, plan, scen }) {
       {/^(result|sheet)/.test(id) && <Result preset={id} onState={nop} go={nop} toast={nop} raw />}
       {VPN_IDS.includes(id) && <Vpn preset={id} onState={nop} back={nop} toast={nop} raw />}
       {WEB_IDS.includes(id) && <Web preset={id} onState={nop} back={nop} raw />}
+      {QR_IDS.includes(id) && <Qr preset={id} onState={nop} back={nop} toast={nop} raw />}
     </div>
   );
 }
@@ -1245,6 +1346,12 @@ const SCREENS = [
   { id: "web-2", name: "Web Protection · 2/5", node: "5:7218", frame: r5f06 },
   { id: "web-1", name: "Web Protection · 1/5", node: "5:7315", frame: r5f07 },
   { id: "web-0", name: "Web Protection · 0/5", node: "5:6927", frame: r5f08 },
+  { id: "qr-first", name: "QR Scanner · first open", node: "5:4054", frame: r6f01 },
+  { id: "qr-intro", name: "QR Scanner · intro", node: "5:6417", frame: r6f02 },
+  { id: "qr-scan", name: "QR Scanner · scanning", node: "5:6490", frame: r6f03 },
+  { id: "qr-check", name: "QR Scanner · validating", node: "5:6569", frame: r6f04 },
+  { id: "qr-blocked", name: "QR Scanner · access blocked", node: "5:6619", frame: r6f05 },
+  { id: "qr-copied", name: "QR Scanner · link copied", node: "5:6705", frame: r6f06 },
 ];
 const ORDER = SCREENS.map((s) => s.id);
 const store = {
@@ -1362,6 +1469,7 @@ function App() {
       {/^(result|sheet)/.test(screen) && <Result preset={screen} onState={() => {}} go={() => {}} toast={() => {}} />}
       {VPN_IDS.includes(screen) && <Vpn preset={screen} onState={() => {}} back={() => {}} toast={() => {}} />}
       {WEB_IDS.includes(screen) && <Web preset={screen} onState={() => {}} back={() => {}} />}
+      {QR_IDS.includes(screen) && <Qr preset={screen} onState={() => {}} back={() => {}} toast={() => {}} />}
       <GestureBar />
     </div>
   );
@@ -1376,6 +1484,7 @@ function App() {
       {/^(result|sheet)/.test(screen) && <Result preset={screen} onState={() => {}} go={() => {}} toast={() => {}} raw />}
       {VPN_IDS.includes(screen) && <Vpn preset={screen} onState={() => {}} back={() => {}} toast={() => {}} raw />}
       {WEB_IDS.includes(screen) && <Web preset={screen} onState={() => {}} back={() => {}} raw />}
+      {QR_IDS.includes(screen) && <Qr preset={screen} onState={() => {}} back={() => {}} toast={() => {}} raw />}
       <GestureBar />
     </div>
   );
@@ -1402,6 +1511,7 @@ function App() {
                 {/^(result|sheet)/.test(screen) && <Result preset={screen} onState={onAuth} go={go} toast={toast} />}
                 {VPN_IDS.includes(screen) && <Vpn preset={screen} onState={onAuth} back={back} toast={toast} />}
                 {WEB_IDS.includes(screen) && <Web preset={screen} onState={onAuth} back={back} />}
+                {QR_IDS.includes(screen) && <Qr preset={screen} onState={onAuth} back={back} toast={toast} />}
               </div>
               <StatusBar />
               <GestureBar />
@@ -1445,10 +1555,10 @@ function App() {
       <aside className="panel" aria-label="Prototype screens">
         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
           <h1>Seciro · prototype</h1>
-          <p className="sub">Ряди 1–5 з Figma · build {BUILD}. Клацай у телефоні, як у застосунку. Крапка біля екрана — статус, нижче — нотатки.</p>
+          <p className="sub">Ряди 1–6 з Figma · build {BUILD}. Клацай у телефоні, як у застосунку. Крапка біля екрана — статус, нижче — нотатки.</p>
         </div>
         <div className="newbar">
-          <span><b>Нове в build {NEW_BUILD}:</b> {NEW.length} екранів Web Protection</span>
+          <span><b>Нове в build {NEW_BUILD}:</b> {NEW_LABEL}</span>
           <button className="pbtn sm" aria-pressed={onlyNew} onClick={() => setOnlyNew((v) => !v)}>{onlyNew ? "Усі екрани" : "Лише нові"}</button>
         </div>
         <div className="label">Screens</div>
@@ -1481,7 +1591,7 @@ function App() {
                 <div><span className="kind" style={{ color: KINDS[n.kind].color }}>{KINDS[n.kind].label}</span>{n.text}
                   {examplesOf(n).length > 0 && <span className="ex-btns">{examplesOf(n).map(([src, cap], k) => (
                     <button key={k} className="pbtn sm" aria-pressed={!!ex && ex.note === i && ex.i === k} onClick={(e) => { e.stopPropagation(); setEx(ex && ex.note === i && ex.i === k ? null : { note: i, i: k }); }}>
-                      Приклад{examplesOf(n).length > 1 ? ` ${"AB"[k]}` : ""} →</button>))}</span>}
+                      Приклад{examplesOf(n).length > 1 ? ` ${"ABCDE"[k]}` : ""} →</button>))}</span>}
                 </div>
               </li>
             ))}
