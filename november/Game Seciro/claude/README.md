@@ -154,3 +154,22 @@ VpnService Play, HIBP від $4.39/міс, Safe Browsing не комерційн
 - Немає у Figma (25.11): замкнені модулі, QR safe/warning/не-посилання/без камери, «оновіть апку», «збій оплати», «пристрій вийшов», «немає інтернету», екрани Alerts і Get help. «Hide Cookie Prompts» на Android неможливий (DNS не ховає банери).
 - Кіт дизайнера (25.11): https://claude.ai/artifact/PCBWKfSi31ZxWoQc3hFeHL — що домалювати (+ дозволи Android, іконка й матеріали Google Play), відповіді в db `answers`. У кіті менеджера тепер лише 7 питань.
 - З 25.11 кіти менеджера й дизайнера лише для читання (без полів відповіді): відповіді приходять у чат VELDAN.
+
+## Документація для Android (оновлення 26.11)
+
+Розділ «Seciro for Android» у тих самих Docs (`/admin/docs?lang=uk#android-overview`; текст не комітимо). Головне:
+
+- Пакет **`app.seciro.android`** (Google Play: «Seciro: Phone Security & VPN») — замінити тимчасовий `com.seciro.app`.
+  `X-App: seciro_android` працює і обов'язковий у кожному запиті (без нього сервер апку не впізнає).
+- `X-Install-Id`, сесія й renewal-токен — поза бекапом Android (`noBackupFilesDir` / `dataExtractionRules`), шифровані ключем з Keystore.
+- Працює зараз: вхід кодом, renew, logout, знімок пристрою, події, перевірка доступу, Breach Check, кабінет (Custom Tabs),
+  видалення профілю, `requiredVersion`. Тестовий акаунт від Віталія (Slack 26.11) — відкриває Android-апку як `test`.
+- **Віталій:** доступ визначаємо лише за `entitled`, `state`, `denial`; поля `premium`, `product`, `oneOffs`, `plans[].store`
+  ще в розробці — не чіпати; задачу «Куплені разові покупки в акаунті» не починати.
+- В розробці: покупки Google Play (окремий акаунт RevenueCat; підписка `app.seciro.android.premium`, базові плани
+  `weekly`/`monthly`/`yearly`, пробна `weekly-trial` — id остаточні), ліміт пристроїв (поки Android місця не займає),
+  вхід після покупки на сайті (Play Install Referrer), видалення акаунта на сайті, **VPN** (протокол вирішують, найімовірніше
+  IKEv2 → мін. Android 11; поки `403 no_access`).
+- **Web Protection на Android = захист від шахрайських сайтів усередині VPN і лише коли VPN увімкнений** (не Chrome/Private DNS).
+  Подія `safari_ext` не шлеться; значення `shield_toggle.filter` погоджуються разом з екранами модуля.
+- Без відповіді поки: джерело вердикту QR, підтримка/Alerts/пуші.
