@@ -78,6 +78,14 @@ import r4f05 from "./.tools/frames/r4_05_5-7547.jpg";
 import r4f06 from "./.tools/frames/r4_06_5-7646.jpg";
 import r4f07 from "./.tools/frames/r4_07_5-7916.jpg";
 import r4f08 from "./.tools/frames/r4_08_5-8043.jpg";
+import r5f01 from "./.tools/frames/r5_01_5-3919.jpg";
+import r5f02 from "./.tools/frames/r5_02_5-6791.jpg";
+import r5f03 from "./.tools/frames/r5_03_5-7412.jpg";
+import r5f04 from "./.tools/frames/r5_04_5-7024.jpg";
+import r5f05 from "./.tools/frames/r5_05_5-7121.jpg";
+import r5f06 from "./.tools/frames/r5_06_5-7218.jpg";
+import r5f07 from "./.tools/frames/r5_07_5-7315.jpg";
+import r5f08 from "./.tools/frames/r5_08_5-6927.jpg";
 import r4f09 from "./.tools/frames/r4_09_5-7597.jpg";
 import r4f10 from "./.tools/frames/r4_10_5-7781.jpg";
 import scanTrack from "../claude/figma/scan/track.png";
@@ -89,7 +97,7 @@ import logoChrome from "../claude/figma/logos/chrome_5-9492.png";
 import btnX1 from "../claude/figma/vpnbtn/x1.png";
 import btnX2 from "../claude/figma/vpnbtn/x2.png";
 
-export const BUILD = 17;   // піднімати на кожну публікацію
+export const BUILD = 18;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
@@ -811,7 +819,7 @@ function Dashboard({ issues, go, toast, raw }) {
   const [sheet, setSheet] = useState(null);
   const ov = {};
   const run = btnWith(f, "Run Protection Check"); ov[run.id] = { onClick: () => go("scan"), className: "tap" };
-  labelsIn(f).forEach((l, i) => { const t = firstText(l); ov[l.id] = { onClick: () => t === "VPN" ? go("vpn-first") : toast(`${t} — its own row of the Figma comes later`), className: raw ? "" : "tap rise", style: { animationDelay: `${0.12 + i * 0.05}s` } }; });
+  labelsIn(f).forEach((l, i) => { const t = firstText(l); ov[l.id] = { onClick: () => t === "VPN" ? go("vpn-first") : t === "Web Protection" ? go("web-first") : toast(`${t} — its own row of the Figma comes later`), className: raw ? "" : "tap rise", style: { animationDelay: `${0.12 + i * 0.05}s` } }; });
   const help = btnWith(f, "Get help"); ov[help.id] = { onClick: () => toast("Opens support chat"), className: "tap" };
   const icon = findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")); ov[icon.id] = { onClick: () => toast("My Account — last row of the Figma"), className: "tap" };
   findNode(f, (x) => x.name === "Menubar").children.forEach((b) => {
@@ -1075,8 +1083,78 @@ function Vpn({ preset, onState, back, toast, raw }) {
   );
 }
 
+// ── Ряд 5: Web Protection (8 кадрів) ──
+// Кадри: 5:3919 перший вхід (5/5) · 5:6791 знайомство «Start Protection» · 5:7412 5/5 · 5:7024 4/5 · 5:7121 3/5 · 5:7218 2/5 · 5:7315 1/5 · 5:6927 0/5
+// Рівень = скільки з 5 фільтрів увімкнено. Базовий кадр — за рівнем (картка рівня й «Protect Your Device»), рядок кожного фільтра —
+// з кадру «усе ввімкнено» (5:7412) або «усе вимкнено» (5:6927) за його станом, з перетіканням. Головний перемикач: усе ввімк. ↔ усе вимк.
+const WEB_IDS = ["web-first", "web-intro", "web-on", "web-4", "web-3", "web-2", "web-1", "web-0"];
+const WEB_LEVEL = ["5:6927", "5:7315", "5:7218", "5:7121", "5:7024", "5:7412"];
+const WEB_FILTERS = ["General Ads", "Hide Cookie Prompts", "Stop Tracking", "Block Adult Content", "Block Gambling"];
+const WEB_PRESET = {
+  "web-first": { f: [1, 1, 1, 1, 1], first: true, intro: false }, "web-intro": { f: [1, 1, 1, 1, 1], first: true, intro: true },
+  "web-on": { f: [1, 1, 1, 1, 1], first: false, intro: false }, "web-4": { f: [1, 1, 1, 1, 0], first: false, intro: false },
+  "web-3": { f: [1, 1, 1, 0, 0], first: false, intro: false }, "web-2": { f: [1, 1, 0, 0, 0], first: false, intro: false },
+  "web-1": { f: [1, 0, 0, 0, 0], first: false, intro: false }, "web-0": { f: [0, 0, 0, 0, 0], first: false, intro: false },
+};
+const webCount = (f) => f.filter(Boolean).length;
+const webId = (s) => s.intro ? "web-intro" : webCount(s.f) === 5 ? (s.first ? "web-first" : "web-on") : `web-${webCount(s.f)}`;
+// сірі доріжки шкали («bg», прозорість 0.15): PNG з Figma вже несе цю прозорість — вдруге не множимо
+const WEB_BG = { bg: (n, el, pos) => <FigNode n={{ ...n, op: undefined }} px={n.ax - pos.left} py={n.ay - pos.top} /> };
+const webRow = (frameId, name) => findNode(frameOf(frameId), (x) => x.name === "Label" && firstText(x) === name);
+
+function Web({ preset, onState, back, raw }) {
+  const [s, setS] = useState(() => ({ ...WEB_PRESET[preset], f: [...WEB_PRESET[preset].f] }));
+  const sRef = useRef(s); sRef.current = s;
+  useEffect(() => { if (webId(sRef.current) !== preset) setS({ ...WEB_PRESET[preset], f: [...WEB_PRESET[preset].f] }); }, [preset]);
+  useEffect(() => { const id = webId(s); if (id !== preset) onState(id); }, [s]);
+  // перший вхід: знайомство виїжджає саме (як 5:3919 → 5:6791)
+  useEffect(() => { if (raw || preset !== "web-first") return; const t = setTimeout(() => setS((o) => (o.first && !o.intro ? { ...o, intro: true } : o)), 650); return () => clearTimeout(t); }, []);
+  const n = webCount(s.f), all = n === 5;
+  const baseId = s.first || s.intro ? "5:3919" : WEB_LEVEL[n];
+  const f = frameOf(baseId);
+  const ov = {};
+  const bk = findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")); ov[bk.id] = { onClick: back, className: "tap" };
+  // картка рівня: усі шість варіантів одна над одною, видно поточний — колір і шкала перетікають
+  const hero = findNode(f, (x) => x.name === "Hero");
+  ov[hero.id] = (h, e, pos) => (
+    <div style={{ ...pos, pointerEvents: "none" }}>
+      {WEB_LEVEL.map((fid, lv) => { const hn = findNode(frameOf(fid), (x) => x.name === "Hero");
+        return <div key={fid} style={{ position: "absolute", inset: 0, opacity: lv === n ? 1 : 0, transition: raw ? "none" : "opacity .35s ease" }}><FigNode n={hn} px={hn.ax} py={hn.ay} ov={WEB_BG} /></div>; })}
+    </div>
+  );
+  // рядок: увімкнений і вимкнений варіанти з двох кадрів, перетікання за станом
+  const row = (target, name, on, onClick) => {
+    const a = webRow("5:7412", name), b = webRow("5:6927", name);
+    ov[target.id] = (r, e, pos) => (
+      <div onClick={raw ? undefined : onClick} role="switch" aria-checked={on} className={raw ? "" : "tap"} style={{ ...pos, cursor: "pointer" }}>
+        <div style={{ position: "absolute", inset: 0, opacity: on ? 1 : 0, transition: raw ? "none" : "opacity .22s ease" }}><FigNode n={a} px={a.ax} py={a.ay} /></div>
+        <div style={{ position: "absolute", inset: 0, opacity: on ? 0 : 1, transition: raw ? "none" : "opacity .22s ease" }}><FigNode n={b} px={b.ax} py={b.ay} /></div>
+      </div>
+    );
+  };
+  const master = webRow(baseId, "Protect Your Device");
+  row(master, "Protect Your Device", all, () => setS((o) => ({ ...o, first: false, f: o.f.map(() => (webCount(o.f) === 5 ? 0 : 1)) })));
+  WEB_FILTERS.forEach((name, i) => row(webRow(baseId, name), name, !!s.f[i], () => setS((o) => ({ ...o, first: false, f: o.f.map((v, j) => (j === i ? (v ? 0 : 1) : v)) }))));
+  const pop = findNode(f, (x) => x.name === "popup"); if (pop) ov[pop.id] = false;   // аркуш під екраном кадру — показуємо свій, з анімацією
+  // знайомство (5:6791)
+  const iFrame = frameOf("5:6791"), intro = findNode(iFrame, (x) => x.name === "popup"), iBlack = findNode(iFrame, (x) => x.name === "blackout");
+  const close = () => setS((o) => ({ ...o, intro: false, first: false }));
+  const iov = { [btnWith(intro, "Start Protection").id]: { onClick: () => setS((o) => ({ ...o, intro: false, first: false, f: [1, 1, 1, 1, 1] })), className: "tap" } };
+  return (
+    <>
+      <FigFrame id={baseId} ov={ov} raw={raw} />
+      <div style={{ position: "absolute", inset: 0, zIndex: 20, pointerEvents: s.intro ? "auto" : "none" }}>
+        <div onClick={close} style={{ position: "absolute", inset: 0, opacity: s.intro ? 1 : 0, transition: raw ? "none" : "opacity .3s" }}><FigNode n={iBlack} /></div>
+        <div style={{ position: "absolute", inset: 0, transform: s.intro ? "none" : `translateY(${812 - intro.ay + 12}px)`, transition: raw ? "none" : "transform .5s cubic-bezier(.2,.9,.25,1)", pointerEvents: "none" }}>
+          <div style={{ pointerEvents: s.intro ? "auto" : "none" }}><FigNode n={intro} ov={iov} /></div>
+        </div>
+      </div>
+    </>
+  );
+}
+
 // Група екрана: усередині групи компонент живий (пейджер, вхід, VPN…), між групами — перехід
-const groupOf = (id) => ONB_IDS.includes(id) ? "onboarding" : AUTH_IDS.includes(id) ? "auth" : /^(result-issues|sheet)/.test(id) ? "result-issues" : VPN_IDS.includes(id) ? "vpn" : id;
+const groupOf = (id) => ONB_IDS.includes(id) ? "onboarding" : AUTH_IDS.includes(id) ? "auth" : /^(result-issues|sheet)/.test(id) ? "result-issues" : VPN_IDS.includes(id) ? "vpn" : WEB_IDS.includes(id) ? "web" : id;
 // Застиглий знімок екрана для шару, що йде (стан — як у пресеті кадру Figma)
 function StaticScreen({ id, plan, scen }) {
   const nop = () => {};
@@ -1090,6 +1168,7 @@ function StaticScreen({ id, plan, scen }) {
       {id === "scan" && <Scan go={nop} back={nop} result="ok" raw />}
       {/^(result|sheet)/.test(id) && <Result preset={id} onState={nop} go={nop} toast={nop} raw />}
       {VPN_IDS.includes(id) && <Vpn preset={id} onState={nop} back={nop} toast={nop} raw />}
+      {WEB_IDS.includes(id) && <Web preset={id} onState={nop} back={nop} raw />}
     </div>
   );
 }
@@ -1130,6 +1209,14 @@ const SCREENS = [
   { id: "vpn-loc-paris", name: "VPN · locations · Paris", node: "5:8043", frame: r4f08 },
   { id: "vpn-connecting-paris", name: "VPN · connecting Paris", node: "5:7597", frame: r4f09 },
   { id: "vpn-connected-paris", name: "VPN · connected Paris", node: "5:7781", frame: r4f10 },
+  { id: "web-first", name: "Web Protection · first open", node: "5:3919", frame: r5f01 },
+  { id: "web-intro", name: "Web Protection · intro", node: "5:6791", frame: r5f02 },
+  { id: "web-on", name: "Web Protection · 5/5", node: "5:7412", frame: r5f03 },
+  { id: "web-4", name: "Web Protection · 4/5", node: "5:7024", frame: r5f04 },
+  { id: "web-3", name: "Web Protection · 3/5", node: "5:7121", frame: r5f05 },
+  { id: "web-2", name: "Web Protection · 2/5", node: "5:7218", frame: r5f06 },
+  { id: "web-1", name: "Web Protection · 1/5", node: "5:7315", frame: r5f07 },
+  { id: "web-0", name: "Web Protection · 0/5", node: "5:6927", frame: r5f08 },
 ];
 const ORDER = SCREENS.map((s) => s.id);
 const store = {
@@ -1219,6 +1306,7 @@ export default function Seciro() {
       {screen === "scan" && <Scan go={() => {}} back={() => {}} result="ok" raw />}
       {/^(result|sheet)/.test(screen) && <Result preset={screen} onState={() => {}} go={() => {}} toast={() => {}} />}
       {VPN_IDS.includes(screen) && <Vpn preset={screen} onState={() => {}} back={() => {}} toast={() => {}} />}
+      {WEB_IDS.includes(screen) && <Web preset={screen} onState={() => {}} back={() => {}} />}
       <GestureBar />
     </div>
   );
@@ -1232,6 +1320,7 @@ export default function Seciro() {
       {screen === "scan" && <Scan go={() => {}} back={() => {}} result="ok" raw />}
       {/^(result|sheet)/.test(screen) && <Result preset={screen} onState={() => {}} go={() => {}} toast={() => {}} raw />}
       {VPN_IDS.includes(screen) && <Vpn preset={screen} onState={() => {}} back={() => {}} toast={() => {}} raw />}
+      {WEB_IDS.includes(screen) && <Web preset={screen} onState={() => {}} back={() => {}} raw />}
       <GestureBar />
     </div>
   );
@@ -1257,6 +1346,7 @@ export default function Seciro() {
                 {screen === "scan" && <Scan go={go} back={back} result={scen.scan} />}
                 {/^(result|sheet)/.test(screen) && <Result preset={screen} onState={onAuth} go={go} toast={toast} />}
                 {VPN_IDS.includes(screen) && <Vpn preset={screen} onState={onAuth} back={back} toast={toast} />}
+                {WEB_IDS.includes(screen) && <Web preset={screen} onState={onAuth} back={back} />}
               </div>
               <StatusBar />
               <GestureBar />
@@ -1287,7 +1377,7 @@ export default function Seciro() {
       <aside className="panel" aria-label="Prototype screens">
         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
           <h1>Seciro · prototype</h1>
-          <p className="sub">Rows 1–4 of the Figma. Click inside the phone like in the app.</p>
+          <p className="sub">Rows 1–5 of the Figma. Click inside the phone like in the app.</p>
         </div>
         <div className="label">Screens</div>
         <ul className="scr-list" ref={listRef}>

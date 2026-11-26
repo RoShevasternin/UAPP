@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Збирач кадрів Figma для рендерера прототипу Seciro (v7, 24.11.2026). БЕЗ Figma MCP.
+// Збирач кадрів Figma для рендерера прототипу Seciro (v8, 26.11.2026: + дуги ELLIPSE). БЕЗ Figma MCP.
 // Як запускати: вбудований браузер → вкладка файлу Figma (залогінений) → javascript_tool:
 //   1) вставити весь цей файл (визначає window.__tar / __save / __row7);
 //   2) await window.__row7(['5:xxxx', …], 'r5', 'r5')  → у ~/Downloads падає seciro_r5_v7.tar
@@ -86,6 +86,7 @@ window.__row7 = async (ids, dir, tag) => {
       if ('cornerRadius' in n) { const r = n.cornerRadius === figma.mixed ? [n.topLeftRadius, n.topRightRadius, n.bottomRightRadius, n.bottomLeftRadius] : n.cornerRadius; if (r) o.r = r; }
       if ('effects' in n && n.effects.length) { const fx = n.effects.map(eff).filter(Boolean); if (fx.length) o.fx = fx; }
       if ('clipsContent' in n && n.clipsContent) o.clip = true;
+      if (n.type === 'ELLIPSE' && n.arcData && Math.abs(n.arcData.endingAngle - n.arcData.startingAngle) < 6.28) { o.arc = [+n.arcData.startingAngle.toFixed(5), +n.arcData.endingAngle.toFixed(5)]; o.cap = n.strokeCap; }  // дуга (шкала): кути, як у Figma (v8)
       if (n.type === 'TEXT') {
         const segs = n.getStyledTextSegments(['fontName','fontSize','fills','textDecoration','textCase','letterSpacing','lineHeight']);
         o.t = {auto: n.textAutoResize, align: n.textAlignHorizontal, valign: n.textAlignVertical, trim: n.leadingTrim,

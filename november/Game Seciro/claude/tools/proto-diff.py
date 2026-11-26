@@ -24,6 +24,8 @@ SHOTS = {  # екран → кадр Figma
     "vpn-first": "r4_01_5-3826.png", "vpn-intro": "r4_02_5-3427.png", "vpn-off": "r4_03_5-3521.png", "vpn-loc": "r4_04_5-3695.png",
     "vpn-connecting": "r4_05_5-7547.png", "vpn-connected": "r4_06_5-7646.png", "vpn-loc-ny": "r4_07_5-7916.png",
     "vpn-loc-paris": "r4_08_5-8043.png", "vpn-connecting-paris": "r4_09_5-7597.png", "vpn-connected-paris": "r4_10_5-7781.png",
+    "web-first": "r5_01_5-3919.png", "web-intro": "r5_02_5-6791.png", "web-on": "r5_03_5-7412.png", "web-4": "r5_04_5-7024.png",
+    "web-3": "r5_05_5-7121.png", "web-2": "r5_06_5-7218.png", "web-1": "r5_07_5-7315.png", "web-0": "r5_08_5-6927.png",
 }
 
 LIVE = "--live" in sys.argv   # живий режим: справжні компоненти з обгортками; анімації/переходи вимкнені

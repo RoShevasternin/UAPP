@@ -124,6 +124,17 @@ export function FigNode({ n, px = 0, py = 0, ov = {}, raw }) {
       style={{ position: "absolute", left: n.rx - px, top: n.ry - py, width: n.rw, height: n.rh, opacity: n.op, pointerEvents: "none" }} />;
   } else if (n.t) {
     el = <Text n={n} style={{ ...pos, opacity: n.op }} />;
+  } else if (n.arc && n.strokes && n.strokes[0] && n.strokes[0].solid) {
+    // дуга (шкала рівня): кути Figma — від endingAngle до startingAngle за годинниковою (y донизу), рамка всередину
+    const sw = n.sw || 1, rr = n.w / 2 - sw / 2, cx = n.w / 2, cy = n.h / 2;
+    const [s0, e0] = n.arc, a0 = e0, a1 = s0 > e0 ? s0 : s0 + 2 * Math.PI;
+    const p = (a) => `${(cx + rr * Math.cos(a)).toFixed(3)} ${(cy + rr * Math.sin(a)).toFixed(3)}`;
+    el = (
+      <svg style={{ ...pos, overflow: "visible", opacity: n.op, pointerEvents: "none" }} viewBox={`0 0 ${n.w} ${n.h}`}>
+        <path d={`M ${p(a0)} A ${rr} ${rr} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${p(a1)}`} fill="none" stroke={rgba(n.strokes[0].solid, n.strokes[0].a)}
+          strokeWidth={sw} strokeLinecap={n.cap === "ROUND" ? "round" : "butt"} />
+      </svg>
+    );
   } else {
     const { back, layer } = blur(n);
     const r = Array.isArray(n.r) ? n.r.map((v) => `${v}px`).join(" ") : n.r ? `${n.r}px` : undefined;
