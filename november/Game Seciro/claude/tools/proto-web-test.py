@@ -24,7 +24,8 @@ const cardText=()=>{ const t=[...app().querySelectorAll('*')].filter(e=>e.childr
   await tap('Web Protection',1500); log.push('tap Web Protection row: '+now());
   log.push('intro shown: '+(byText('Start Protection')?'yes':'no'));
   await tap('Start Protection',900); log.push('Start Protection → '+now()+' switches '+st());
-  await tapAt(sw('Block Gambling'),600); log.push('Gambling off → '+now()+' '+st()+' | hero: '+(byText('Protection Limited')?'Limited':'?'));
+  const keep=byText('Stop Tracking'); keep.dataset.k='1';
+  await tapAt(sw('Block Gambling'),600); log.push('same DOM after toggle (no remount): '+(byText('Stop Tracking')&&byText('Stop Tracking').dataset.k==='1'?'yes':'NO')); log.push('Gambling off → '+now()+' '+st()+' | hero: '+(byText('Protection Limited')?'Limited':'?'));
   await tapAt(sw('Stop Tracking'),600); log.push('Tracking off → '+now()+' '+st());
   await tapAt(sw('Protect Your Device'),600); log.push('master → '+now()+' '+st());
   await tapAt(sw('Protect Your Device'),600); log.push('master again → '+now()+' '+st()+' | hero: '+(byText('Protection Off')?'Off':'?'));

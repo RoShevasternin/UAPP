@@ -1121,7 +1121,9 @@ function Web({ preset, onState, back, raw }) {
   // перший вхід: знайомство виїжджає саме (як 5:3919 → 5:6791)
   useEffect(() => { if (raw || preset !== "web-first") return; const t = setTimeout(() => setS((o) => (o.first && !o.intro ? { ...o, intro: true } : o)), 650); return () => clearTimeout(t); }, []);
   const n = webCount(s.f), all = n === 5;
-  const baseId = s.first || s.intro ? "5:3919" : WEB_LEVEL[n];
+  // один постійний кадр (у всіх рівнів однакова розкладка): інакше при кожному перемиканні екран монтується заново й «зникає».
+  // Картка рівня, перемикачі й іконки — за станом поверх нього.
+  const baseId = "5:7412";
   const f = frameOf(baseId);
   const ov = {};
   const bk = findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")); ov[bk.id] = { onClick: back, className: "tap" };
