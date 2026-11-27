@@ -240,6 +240,27 @@ def wireframes():
             txt(187.5, 430, T("нейтральный телефон, без «чёлки»", "нейтральний телефон, без «чубчика»", "a neutral phone, no notch")[l], 12, MUT),
             txt(187.5, 560, "Your phone,", 30, INK, 700), txt(187.5, 600, "Protected", 30, INK, 700),
             text(645, "Run a full security scan to keep your\nphone safe, private, and running at its best."), btn(720, "Continue")]))
+    # ── ряди 7–10 (27.11) ──
+    def bstatus(sym, t, x, b1, b2=None):
+        return lambda l: phone([nav("Breach Check"), icon(300, 56, sym), title(400, t[l]), text(434, x[l]), btn(640, b1[l])] + ([btn2(704, b2[l])] if b2 else []))
+    add("br_limit", T("Пример: лимит проверок", "Приклад: ліміт перевірок", "Example: check limit"),
+        bstatus("warn", T("Лимит на сегодня", "Ліміт на сьогодні", "Daily limit reached"), T("Можно проверить до 5 адресов в сутки.\nПопробуйте завтра.", "Можна перевірити до 5 адрес на добу.\nСпробуйте завтра.", "You can check up to 5 addresses a day.\nTry again tomorrow."), T("Понятно", "Зрозуміло", "Got it")))
+    add("br_error", T("Пример: проверка не удалась", "Приклад: перевірка не вдалася", "Example: check failed"),
+        bstatus("x", T("Не удалось проверить", "Не вдалося перевірити", "Couldn't check"), T("Это не значит, что утечек нет.\nПопробуйте ещё раз.", "Це не означає, що витоків немає.\nСпробуйте ще раз.", "This doesn't mean there are no leaks.\nPlease try again."), T("Повторить", "Повторити", "Try again")))
+    add("br_need", T("Пример: нужна подписка или вход", "Приклад: потрібна підписка або вхід", "Example: subscription or sign-in needed"),
+        bstatus("lock", T("Нужна подписка", "Потрібна підписка", "Subscription needed"), T("Проверка утечек входит в Premium", "Перевірка витоків входить у Premium", "Breach Check is part of Premium"), T("Смотреть планы", "Дивитися плани", "See plans"), T("Войти", "Увійти", "Sign in")))
+    add("acc_states", T("Пример: строка подписки по состоянию", "Приклад: рядок підписки за станом", "Example: plan line by state"),
+        lambda l: phone([txt(24, 92, "My Account", 20, INK, 700, "start"),
+            rows(130, [("Premium Plan", "$29.99 / month"), ("Next Billing", "Sep 12, 2026")]),
+            txt(24, 268, T("отменена, но оплачена:", "скасована, але оплачена:", "cancelled, still paid:")[l], 13, MUT, 500, "start"),
+            rows(280, [("Access until", "Sep 12, 2026")]),
+            txt(24, 368, T("платёж не прошёл:", "оплата не пройшла:", "payment failed:")[l], 13, MUT, 500, "start"),
+            f'<rect x="16" y="380" width="343" height="56" rx="16" fill="#fdecee"/>', txt(32, 413, T("Оплата не прошла — обновите карту", "Оплата не пройшла — оновіть картку", "Payment failed — update your card")[l], 14, "#d92635", 600, "start")]))
+    add("del_confirm", T("Пример: перед удалением аккаунта", "Приклад: перед видаленням акаунта", "Example: before deleting the account"),
+        lambda l: phone([dim(), sheet(420), icon(500, 36, "x"), title(580, T("Удалить аккаунт?", "Видалити акаунт?", "Delete your account?")[l]),
+            text(612, T("Подписка при этом НЕ отменяется.\nОтмените её в Google Play или в кабинете.", "Підписка при цьому НЕ скасовується.\nСкасуйте її в Google Play або в кабінеті.", "This does NOT cancel your subscription.\nCancel it in Google Play or your account.")[l]),
+            f'<rect x="24" y="672" width="327" height="52" rx="26" fill="#d92635"/>', txt(187.5, 704, T("Удалить", "Видалити", "Delete")[l], 16, "#fff", 600),
+            link(752, T("Отмена", "Скасувати", "Cancel")[l])]))
     return W
 
 if __name__ == "__main__":

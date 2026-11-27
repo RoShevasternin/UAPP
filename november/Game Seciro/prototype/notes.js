@@ -26,6 +26,13 @@ import ex_qr_text from "./examples/qr_text.svg";
 import ex_qr_cam from "./examples/qr_cam.svg";
 import ex_qr_err from "./examples/qr_err.svg";
 import ex_fl_cam from "./examples/fl_cam.svg";
+import ex_br_limit from "./examples/br_limit.svg";
+import ex_br_error from "./examples/br_error.svg";
+import ex_br_need from "./examples/br_need.svg";
+import ex_acc_states from "./examples/acc_states.svg";
+import ex_del_confirm from "./examples/del_confirm.svg";
+import ex_fl_photo from "./examples/fl_photo.svg";
+import ex_fl_notif from "./examples/fl_notif.svg";
 // Приклад «як має виглядати» до нотатки: ex — [картинка, підпис]; показується зліва замість кадру Figma
 const EX = {
   lock_a: [ex_lock_a, "Варіант A: замок на модулі"], lock_b: [ex_lock_b, "Варіант B: вікно «Доступно в Premium»"],
@@ -35,6 +42,9 @@ const EX = {
   upd_android: [ex_upd_android, "Інструкція оновлення Android"], onb_phone: [ex_onb_phone, "Текст і телефон без «iPhone»"], fl_vpn: [ex_fl_vpn, "Вікно Android перед першим підключенням"],
   qr_safe: [ex_qr_safe, "Безпечне посилання"], qr_warn: [ex_qr_warn, "Підозріле посилання"], qr_text: [ex_qr_text, "У коді не посилання (Wi-Fi, текст)"],
   qr_cam: [ex_qr_cam, "Немає доступу до камери"], qr_err: [ex_qr_err, "Перевірка не вдалася"], fl_cam: [ex_fl_cam, "Вікно Android: дозвіл на камеру"],
+  br_limit: [ex_br_limit, "Ліміт перевірок на сьогодні"], br_error: [ex_br_error, "Перевірка не вдалася"], br_need: [ex_br_need, "Потрібна підписка або вхід"],
+  acc_states: [ex_acc_states, "Рядок підписки в різних станах"], del_confirm: [ex_del_confirm, "Попередження перед видаленням акаунта"],
+  fl_photo: [ex_fl_photo, "Вікно Android: доступ до фото"], fl_notif: [ex_fl_notif, "Вікно Android: дозвіл на сповіщення"],
 };
 export const KINDS = {
   ok: { label: "Так і буде", color: "#1f9d55" },
@@ -44,9 +54,10 @@ export const KINDS = {
 };
 export const RANK = ["design", "ask", "android", "ok"];
 
-export const NEW_BUILD = 20;
-export const NEW = ["qr-first", "qr-intro", "qr-scan", "qr-check", "qr-blocked", "qr-copied"];
-export const NEW_LABEL = "6 екранів Safe QR Scanner";
+export const NEW_BUILD = 21;
+export const NEW = ["st-first", "st-intro", "st-scan", "st-ready", "st-shots", "st-clean", "st-done", "br-first", "br-intro", "br-idle", "br-typing", "br-filled", "br-check", "br-none", "br-found", "br-detail",
+  "pw-first", "pw-intro", "pw-on", "pw-copied", "settings", "account", "account-guest"];
+export const NEW_LABEL = "23 екрани: Storage Cleaner, Breach Check, Password Generator, Settings і My Account";
 
 const KB = { kind: "android", ex: EX.kb_android, box: [0, 486, 375, 326], text: "Тут намальована клавіатура iPhone. На Android буде звичайна клавіатура телефона — її малювати не треба." };
 const VPN_SRV = { kind: "android", text: "VPN для Android ще налаштовують на сервері. Екрани робимо як у дизайні, а підключення запрацює, коли сервер буде готовий." };
@@ -100,6 +111,7 @@ export const NOTES = {
   dashboard: [
     { kind: "android", box: [32, 429, 311, 40], text: "Було «in Safari» — у прототипі вже Chrome (рішення VELDAN). Дизайнеру внести в макет." },
     ALERTS, HELP, LOCKED,
+    { kind: "ask", ex: EX.fl_notif, text: "Питання менеджеру: чи будуть пуш-сповіщення? Якщо так, Android 13+ спершу питає дозвіл (див. приклад, де це вікно може з'являтися)." },
   ],
   scan: [{ kind: "ok", text: "Перевірка на самому телефоні — робимо самі." }],
   "result-ok": [
@@ -144,6 +156,49 @@ export const NOTES = {
   "qr-check": [QR_WHO],
   "qr-blocked": [{ kind: "ok", text: "Як у дизайні: «Back to Safety», «Continue to Site», копіювання посилання." }, QR_MISSING, QR_WHO],
   "qr-copied": [{ kind: "ok", text: "Як у дизайні." }],
+  // ── ряд 7: Storage Cleaner ──
+  "st-first": [{ kind: "ok", text: "Як у дизайні: при першому вході — знайомство «Scan Storage»." }],
+  "st-intro": [{ kind: "android", ex: EX.fl_photo, box: [16, 719, 343, 56], text: "Після «Scan Storage» Android сам спитає доступ до фото й відео — це системне вікно, його не малюємо." }],
+  "st-scan": [{ kind: "ok", text: "Сканування на самому телефоні, файли нікуди не вивантажуються — як у дизайні." }],
+  "st-ready": [{ kind: "ok", text: "Розміри й кількість файлів — з пам'яті телефона." },
+    { kind: "ask", box: [32, 272, 311, 56], text: "Питання менеджеру: «Clean up storage» видаляє все знайдене одразу чи спершу показує, що саме видалити?" }],
+  "st-shots": [{ kind: "design", box: [128, 70, 120, 28], text: "Дизайн є лише для Screenshots. Для Duplicate Photos, Similar Photos і Similar Videos у прототипі той самий екран з іншою назвою. Дизайнеру: чи потрібні їм свої екрани (наприклад, групи схожих фото)?" },
+    { kind: "android", box: [16, 719, 343, 56], text: "Перед видаленням Android сам покаже вікно «Дозволити видалити ці фото?» — це системне вікно." }],
+  "st-clean": [{ kind: "ok", text: "Як у дизайні." }],
+  "st-done": [{ kind: "ok", text: "Як у дизайні. «4.5 GB» і відсотки — справжні дані з телефона." }],
+  // ── ряд 8: Breach Check ──
+  "br-first": [{ kind: "ok", text: "Як у дизайні: при першому вході — знайомство «Check My Email»." }],
+  "br-intro": [{ kind: "ok", text: "Як у дизайні." }],
+  "br-idle": [{ kind: "android", box: [32, 439, 311, 40], text: "Якщо людина увійшла, поле одразу заповнене поштою акаунта — так у документації сервера." }],
+  "br-typing": [KB],
+  "br-filled": [KB, { kind: "ok", text: "Кнопка стає активною, коли пошта введена правильно." }],
+  "br-check": [{ kind: "ok", text: "Перевіряє сервер Seciro. До 5 різних адрес на добу." },
+    { kind: "design", ex: [EX.br_limit, EX.br_error, EX.br_need], text: "Дизайнеру: немає екранів «ліміт на сьогодні», «перевірка не вдалася» і «потрібна підписка або вхід» — сервер так відповідає. Див. приклади A–C." }],
+  "br-none": [{ kind: "ok", text: "Як у дизайні." }],
+  "br-found": [{ kind: "ok", text: "Список витоків приходить із сервера: назва, рік і які дані витекли." },
+    { kind: "ask", box: [32, 288, 40, 40], text: "Питання менеджеру: логотипи компаній (LinkedIn, Canva) — звідки брати для будь-якого витоку? Сервер дає лише назву й домен." }],
+  "br-detail": [{ kind: "ask", box: [156, 170, 191, 64], text: "«This breach exposed data from 700M accounts» — сервер не дає кількість акаунтів. Питання менеджеру: прибрати цей рядок?" },
+    { kind: "ask", box: [96, 346, 250, 36], text: "Питання менеджеру: що роблять кнопки «Change Password» і «Beware of Scam Calls» — відкривають сайт, підказку чи щось інше?" },
+    { kind: "ok", text: "Картки ризиків будуємо з того, які дані витекли (сервер дає список)." }],
+  // ── ряд 9: Password Generator ──
+  "pw-first": [{ kind: "ok", text: "Як у дизайні: при першому вході — знайомство «Generate a Password»." }],
+  "pw-intro": [{ kind: "ok", text: "Як у дизайні." }],
+  "pw-on": [{ kind: "ok", text: "Пароль створюється на телефоні й нікуди не відправляється." },
+    { kind: "ok", text: "Стани Strong / Medium / Weak — з дизайн-системи; залежать від довжини й перемикачів." },
+    { kind: "ask", box: [32, 256, 311, 40], text: "Питання менеджеру: яка мінімальна й максимальна довжина пароля? У дизайні не вказано, у прототипі 8–20." }],
+  "pw-copied": [{ kind: "android", text: "На Android 13+ система сама показує внизу «Скопійовано». Разом з «Copied!» з дизайну вийде дві підказки — одну, можливо, прибрати." }],
+  // ── ряд 10: Settings і My Account ──
+  "settings": [{ kind: "design", box: [32, 216, 311, 44], text: "Пункт Language: екрана вибору мови в дизайні немає. Дизайнеру: потрібен такий екран чи прибрати пункт?" },
+    { kind: "android", box: [32, 308, 311, 113], text: "Terms і Privacy відкриваються в браузері поверх апки (Custom Tabs)." },
+    { kind: "ask", box: [32, 454, 311, 40], text: "Питання менеджеру: Contact відкриває пошту, чат чи сайт?" },
+    { kind: "android", box: [32, 542, 311, 40], text: "Unsubscribe: підписку з Google Play скасовують на сторінці підписок Google Play, підписку з сайту — у кабінеті на сайті (так у документації)." },
+    { kind: "ask", ex: [EX.al_list, EX.al_empty], box: [140, 726, 96, 52], text: "Питання менеджеру: вкладка Alerts потрібна? Що в ній показувати? Екрана для неї немає (див. приклади)." }],
+  "account": [{ kind: "android", box: [32, 259, 311, 48], text: "Manage Subscription: підписка з Google Play → сторінка підписок Google Play; підписка з сайту → кабінет на сайті (одноразове посилання)." },
+    { kind: "design", ex: EX.acc_states, box: [32, 349, 311, 120], text: "Дизайнеру: рядок «Next Billing» має ще два стани — «Access until» (скасована, але оплачена) і «Payment failed — update your card». У дизайні їх немає." },
+    { kind: "android", box: [32, 512, 311, 48], text: "Restore Purchases — відновлення покупок Google Play." },
+    { kind: "design", ex: EX.del_confirm, box: [32, 675, 311, 48], text: "Дизайнеру: перед Delete Account треба попередити, що підписка не скасовується (так у документації). Екрана підтвердження немає." },
+    { kind: "ok", text: "Sign Out — повернення на екран входу з порожнім полем (так у документації). Ціна й дата — з відповіді сервера." }],
+  "account-guest": [{ kind: "ok", text: "Як у дизайні: Sign In і Restore Purchases." }],
 };
 // приклад(и) нотатки списком
 export const examplesOf = (n) => !n.ex ? [] : Array.isArray(n.ex[0]) ? n.ex : [n.ex];

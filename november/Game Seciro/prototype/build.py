@@ -89,7 +89,10 @@ def gen_frames():
         if not name.endswith(".png"): continue
         a, b = os.path.join(src, name), os.path.join(dst, name[:-4] + ".jpg")
         if os.path.exists(b) and os.path.getmtime(b) >= os.path.getmtime(a): continue
-        Image.open(a).convert("RGB").save(b, quality=84, optimize=True, progressive=True)
+        im = Image.open(a).convert("RGB")
+        # колонка порівняння ~430 css px: 640 px вистачає й на ретині; так сторінка тримається під 16 МБ (усі 75 кадрів)
+        if im.width > 640: im = im.resize((640, round(im.height * 640 / im.width)), Image.LANCZOS)
+        im.save(b, quality=80, optimize=True, progressive=True)
 
 
 def gen_fig():

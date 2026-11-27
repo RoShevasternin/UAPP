@@ -125,14 +125,20 @@ export function FigNode({ n, px = 0, py = 0, ov = {}, raw }) {
   } else if (n.t) {
     el = <Text n={n} style={{ ...pos, opacity: n.op }} />;
   } else if (n.arc && n.strokes && n.strokes[0] && n.strokes[0].solid) {
-    // дуга (шкала рівня): кути Figma — від endingAngle до startingAngle за годинниковою (y донизу), рамка всередину
+    // дуга (шкала): кути Figma — від endingAngle до startingAngle за годинниковою (y донизу), рамка всередину.
+    // Повернутий шар (rot): у JSON ax/ay — кут його обвідної рамки; центр = середина обвідної, поворот — навколо центру.
+    // m — лінійна частина relativeTransform Figma [a, b, c, d] (буває з віддзеркаленням, det −1) — точніша за rot.
+    // Поза режимом звірки дуга «домальовується» при появі (клас arc-draw; .raw вимикає анімації).
     const sw = n.sw || 1, rr = n.w / 2 - sw / 2, cx = n.w / 2, cy = n.h / 2;
     const [s0, e0] = n.arc, a0 = e0, a1 = s0 > e0 ? s0 : s0 + 2 * Math.PI;
     const p = (a) => `${(cx + rr * Math.cos(a)).toFixed(3)} ${(cy + rr * Math.sin(a)).toFixed(3)}`;
+    const t = Math.abs(((n.rot || 0) * Math.PI) / 180), bw = n.w * Math.abs(Math.cos(t)) + n.h * Math.abs(Math.sin(t)), bh = n.w * Math.abs(Math.sin(t)) + n.h * Math.abs(Math.cos(t));
+    const left = n.rot ? n.ax - px + bw / 2 - n.w / 2 : n.ax - px, top = n.rot ? n.ay - py + bh / 2 - n.h / 2 : n.ay - py;
     el = (
-      <svg style={{ ...pos, overflow: "visible", opacity: n.op, pointerEvents: "none" }} viewBox={`0 0 ${n.w} ${n.h}`}>
+      <svg style={{ position: "absolute", left, top, width: n.w, height: n.h, overflow: "visible", opacity: n.op, pointerEvents: "none",
+        transform: n.m ? `matrix(${n.m.join(",")},0,0)` : n.rot ? `rotate(${-n.rot}deg)` : undefined }} viewBox={`0 0 ${n.w} ${n.h}`}>
         <path d={`M ${p(a0)} A ${rr} ${rr} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${p(a1)}`} fill="none" stroke={rgba(n.strokes[0].solid, n.strokes[0].a)}
-          strokeWidth={sw} strokeLinecap={n.cap === "ROUND" ? "round" : "butt"} />
+          strokeWidth={sw} strokeLinecap={n.cap === "ROUND" ? "round" : "butt"} pathLength="1" className="arc-draw" />
       </svg>
     );
   } else {

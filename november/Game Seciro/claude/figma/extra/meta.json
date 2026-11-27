@@ -1,0 +1,91 @@
+{
+ "media_photo_off": {
+  "w": 167.5,
+  "h": 167.5,
+  "dx": -16,
+  "dy": -12,
+  "rw": 199.5,
+  "rh": 199.5
+ },
+ "media_video_off": {
+  "w": 167.5,
+  "h": 167.5,
+  "dx": -16,
+  "dy": -12,
+  "rw": 199.5,
+  "rh": 199.5
+ },
+ "media_photo_on": {
+  "w": 167.5,
+  "h": 167.5,
+  "dx": -16,
+  "dy": -12,
+  "rw": 199.5,
+  "rh": 199.5
+ },
+ "media_video_on": {
+  "w": 167.5,
+  "h": 167.5,
+  "dx": -16,
+  "dy": -12,
+  "rw": 199.5,
+  "rh": 199.5
+ },
+ "loaderVariants": [
+  "Property 1=2, Property 2=1",
+  "Property 1=2, Property 2=2",
+  "Property 1=2, Property 2=3",
+  "Property 1=2, Property 2=4",
+  "Property 1=2, Property 2=5",
+  "Property 1=2, Property 2=6",
+  "Property 1=2, Property 2=7",
+  "Property 1=2, Property 2=8",
+  "Property 1=2, Property 2=9",
+  "Property 1=2, Property 2=10",
+  "Property 1=2, Property 2=11",
+  "Property 1=2, Property 2=12",
+  "Property 1=1, Property 2=1",
+  "Property 1=1, Property 2=2",
+  "Property 1=1, Property 2=3",
+  "Property 1=1, Property 2=4"
+ ],
+ "loader_1_2_2_1": {
+  "w": 24,
+  "h": 24,
+  "dx": 0,
+  "dy": 0,
+  "rw": 24,
+  "rh": 24
+ },
+ "loader_1_2_2_12": {
+  "w": 24,
+  "h": 24,
+  "dx": 0,
+  "dy": 0,
+  "rw": 24,
+  "rh": 24
+ },
+ "loadingVariants": [
+  "Property 1=1",
+  "Property 1=2",
+  "Property 1=3",
+  "Property 1=4",
+  "Property 1=Variant5"
+ ],
+ "loading_last": {
+  "w": 192,
+  "h": 192,
+  "dx": 0,
+  "dy": 0,
+  "rw": 192,
+  "rh": 192
+ },
+ "loading_last_mask": {
+  "w": 184,
+  "h": 184,
+  "dx": -4,
+  "dy": -4,
+  "rw": 192,
+  "rh": 192
+ }
+}

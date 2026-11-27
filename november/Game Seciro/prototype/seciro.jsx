@@ -93,6 +93,36 @@ import r6f03 from "./.tools/frames/r6_03_5-6490.jpg";
 import r6f04 from "./.tools/frames/r6_04_5-6569.jpg";
 import r6f05 from "./.tools/frames/r6_05_5-6619.jpg";
 import r6f06 from "./.tools/frames/r6_06_5-6705.jpg";
+import r7f01 from "./.tools/frames/r7_01_5-4126.jpg";
+import r7f02 from "./.tools/frames/r7_02_5-6268.jpg";
+import r7f03 from "./.tools/frames/r7_03_5-8199.jpg";
+import r7f04 from "./.tools/frames/r7_04_5-6106.jpg";
+import r7f05 from "./.tools/frames/r7_05_5-6203.jpg";
+import r7f06 from "./.tools/frames/r7_06_5-8234.jpg";
+import r7f07 from "./.tools/frames/r7_07_5-8296.jpg";
+import r8f01 from "./.tools/frames/r8_01_5-4268.jpg";
+import r8f02 from "./.tools/frames/r8_02_5-5869.jpg";
+import r8f03 from "./.tools/frames/r8_03_5-5542.jpg";
+import r8f04 from "./.tools/frames/r8_04_5-5976.jpg";
+import r8f05 from "./.tools/frames/r8_05_5-6041.jpg";
+import r8f06 from "./.tools/frames/r8_06_5-8265.jpg";
+import r8f07 from "./.tools/frames/r8_07_5-5649.jpg";
+import r8f08 from "./.tools/frames/r8_08_5-5705.jpg";
+import r8f09 from "./.tools/frames/r8_09_5-5781.jpg";
+import r9f01 from "./.tools/frames/r9_01_5-5141.jpg";
+import r9f02 from "./.tools/frames/r9_02_5-5443.jpg";
+import r9f03 from "./.tools/frames/r9_03_5-5239.jpg";
+import r9f04 from "./.tools/frames/r9_04_5-5341.jpg";
+import r10f01 from "./.tools/frames/r10_01_5-2466.jpg";
+import r10f02 from "./.tools/frames/r10_02_5-2193.jpg";
+import r10f03 from "./.tools/frames/r10_03_5-2343.jpg";
+import ringFull from "../claude/figma/extra/loading_last_mask.png";
+import loaderRing from "../claude/figma/extra/loader_1_2_2_1.png";
+import loaderOk from "../claude/figma/extra/loader_1_2_2_12.png";
+import mediaPhotoOn from "../claude/figma/extra/media_photo_on.jpg";
+import mediaPhotoOff from "../claude/figma/extra/media_photo_off.jpg";
+import mediaVideoOn from "../claude/figma/extra/media_video_on.jpg";
+import mediaVideoOff from "../claude/figma/extra/media_video_off.jpg";
 import r4f09 from "./.tools/frames/r4_09_5-7597.jpg";
 import r4f10 from "./.tools/frames/r4_10_5-7781.jpg";
 import scanTrack from "../claude/figma/scan/track.png";
@@ -104,7 +134,7 @@ import logoChrome from "../claude/figma/logos/chrome_5-9492.png";
 import btnX1 from "../claude/figma/vpnbtn/x1.png";
 import btnX2 from "../claude/figma/vpnbtn/x2.png";
 
-export const BUILD = 20;   // піднімати на кожну публікацію
+export const BUILD = 21;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
@@ -821,21 +851,23 @@ function FigSheet({ kind, open, onClose, raw }) {
 }
 
 // Dashboard (5:1686 — усе гаразд, 5:3269 — є проблеми)
-function Dashboard({ issues, go, toast, raw }) {
+function Dashboard({ issues, go, toast, raw, account, onState = () => {}, scen = {} }) {
   const id = issues ? "5:3269" : "5:1686", f = frameOf(id);
   const [sheet, setSheet] = useState(null);
   const ov = {};
   const run = btnWith(f, "Run Protection Check"); ov[run.id] = { onClick: () => go("scan"), className: "tap" };
-  labelsIn(f).forEach((l, i) => { const t = firstText(l); ov[l.id] = { onClick: () => t === "VPN" ? go("vpn-first") : t === "Web Protection" ? go("web-first") : t === "Safe QR Scanner" ? go("qr-first") : toast(`${t} — its own row of the Figma comes later`), className: raw ? "" : "tap rise", style: { animationDelay: `${0.12 + i * 0.05}s` } }; });
+  labelsIn(f).forEach((l, i) => { const t = firstText(l); const to = { "VPN": "vpn-first", "Web Protection": "web-first", "Safe QR Scanner": "qr-first", "Storage Cleaner": "st-first", "Breach Check": "br-first", "Password Generator": "pw-first" }[t];
+    ov[l.id] = { onClick: () => to ? go(to) : toast(t), className: raw ? "" : "tap rise", style: { animationDelay: `${0.12 + i * 0.05}s` } }; });
   const help = btnWith(f, "Get help"); ov[help.id] = { onClick: () => toast("Opens support chat"), className: "tap" };
-  const icon = findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")); ov[icon.id] = { onClick: () => toast("My Account — last row of the Figma"), className: "tap" };
+  const icon = findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")); ov[icon.id] = { onClick: () => onState(scen.account === "guest" ? "account-guest" : "account"), className: "tap" };
   findNode(f, (x) => x.name === "Menubar").children.forEach((b) => {
-    const t = textOf(b); if (t !== "Home") ov[b.id] = { onClick: () => toast(`${t} — later in the Figma`), className: "tap" };
+    const t = textOf(b); if (t === "Settings") ov[b.id] = { onClick: () => go("settings", "fade"), className: "tap" };
+    else if (t === "Alerts") ov[b.id] = { onClick: () => toast("Alerts — no screen in Figma (question for the manager)"), className: "tap" };
   });
   if (issues) {
     ov["5:3385"] = false;   // аркуш, що в кадрі лежить під екраном, — показуємо свій, з анімацією
     ov["5:3289"] = { onClick: () => setSheet("safari"), className: "tap" };
-    ov["5:3297"] = { onClick: () => toast("Breach Check — its own row of the Figma comes later"), className: "tap" };
+    ov["5:3297"] = { onClick: () => go("br-found"), className: "tap" };
   }
   const hero = findNode(f, (x) => x.name === "shield");
   if (hero && !raw) ov[hero.id] = (n, el) => <div className="float-slow">{el}</div>;
@@ -843,6 +875,7 @@ function Dashboard({ issues, go, toast, raw }) {
     <>
       <FigFrame id={id} ov={ov} raw={raw} />
       {issues && <FigSheet kind="safari" open={sheet === "safari"} onClose={() => setSheet(null)} raw={raw} />}
+      {!issues && <AccountSheet open={!!account} guest={account === "guest"} onClose={() => onState("dashboard")} go={go} toast={toast} raw={raw} />}
     </>
   );
 }
@@ -1090,6 +1123,9 @@ function Vpn({ preset, onState, back, toast, raw }) {
   );
 }
 
+// знайомства модулів показуються лише раз за сесію (як «перший вхід» у справжній апці); Restart у панелі скидає
+const SEEN = new Set();
+
 // ── Ряд 5: Web Protection (8 кадрів) ──
 // Кадри: 5:3919 перший вхід (5/5) · 5:6791 знайомство «Start Protection» · 5:7412 5/5 · 5:7024 4/5 · 5:7121 3/5 · 5:7218 2/5 · 5:7315 1/5 · 5:6927 0/5
 // Рівень = скільки з 5 фільтрів увімкнено. Базовий кадр — за рівнем (картка рівня й «Protect Your Device»), рядок кожного фільтра —
@@ -1125,7 +1161,7 @@ function Web({ preset, onState, back, raw }) {
   useEffect(() => { if (webId(sRef.current) !== preset) setS({ ...WEB_PRESET[preset], f: [...WEB_PRESET[preset].f] }); }, [preset]);
   useEffect(() => { const id = webId(s); if (id !== preset) onState(id); }, [s]);
   // перший вхід: знайомство виїжджає саме (як 5:3919 → 5:6791)
-  useEffect(() => { if (raw || preset !== "web-first") return; const t = setTimeout(() => setS((o) => (o.first && !o.intro ? { ...o, intro: true } : o)), 650); return () => clearTimeout(t); }, []);
+  useEffect(() => { if (raw || preset !== "web-first" || SEEN.has("web")) return; const t = setTimeout(() => { SEEN.add("web"); setS((o) => (o.first && !o.intro ? { ...o, intro: true } : o)); }, 650); return () => clearTimeout(t); }, []);
   const n = webCount(s.f), all = n === 5;
   // один постійний кадр (у всіх рівнів однакова розкладка): інакше при кожному перемиканні екран монтується заново й «зникає».
   // Картка рівня, перемикачі й іконки — за станом поверх нього.
@@ -1217,7 +1253,7 @@ function Qr({ preset, onState, back, toast, raw }) {
   useEffect(() => { if (qrId(sRef.current) !== preset) setS((o) => ({ ...o, ...QR_PRESET[preset] })); }, [preset]);
   useEffect(() => { const id = qrId(s); if (id !== preset) onState(id); }, [s]);
   // перший вхід: знайомство виїжджає саме
-  useEffect(() => { if (raw || preset !== "qr-first") return; const t = setTimeout(() => upd((o) => (o.first && !o.intro ? { intro: true } : {})), 650); return () => clearTimeout(t); }, []);
+  useEffect(() => { if (raw || preset !== "qr-first" || SEEN.has("qr")) return; const t = setTimeout(() => { SEEN.add("qr"); upd((o) => (o.first && !o.intro ? { intro: true } : {})); }, 650); return () => clearTimeout(t); }, []);
   // сканування → «знайшли код» → перевірка → результат
   useEffect(() => { if (raw) return;
     if (s.phase === "scan" && s.auto) { const a = setTimeout(() => upd({ focus: true }), 800), t = setTimeout(() => upd((o) => (o.phase === "scan" ? { phase: "check" } : {})), 2100); return () => { clearTimeout(a); clearTimeout(t); }; }
@@ -1281,8 +1317,433 @@ function Qr({ preset, onState, back, toast, raw }) {
   );
 }
 
+// ── Спільне для рядів 7–10 ──
+const nodeText = (root, text) => findNode(root, (x) => x.t && textOf(x) === text);
+// аркуш-знайомство з кадру Figma (popup + blackout) — сам виїжджає при першому вході
+function useAutoIntro(key, first, raw, open) { useEffect(() => { if (raw || !first || SEEN.has(key)) return; const t = setTimeout(() => { SEEN.add(key); open(); }, 650); return () => clearTimeout(t); }, []); }
+// прогрес «хвилясте кільце» (компонент Figma «loading»): бліда доріжка + синє кільце, що заповнюється за годинниковою; відсотки рахують
+function WaveRing({ n, pos, p }) {
+  const shape = n.children.find((c) => c.name === "shape"), num = findNode(n, (x) => x.t && textOf(x) === "0%");
+  const deg = Math.max(0, Math.min(100, p)) * 3.6, m = `conic-gradient(#000 ${deg}deg, transparent ${deg}deg)`;
+  return (
+    <div style={{ ...pos, pointerEvents: "none" }}>
+      <img src={PNG[shape.png]} alt="" style={{ position: "absolute", left: shape.rx - n.ax, top: shape.ry - n.ay, width: shape.rw, height: shape.rh }} />
+      <img src={ringFull} alt="" style={{ position: "absolute", left: 0, top: 0, width: n.w, height: n.h, WebkitMaskImage: m, maskImage: m }} />
+      <FigText n={num} px={n.ax} py={n.ay} text={`${Math.round(p)}%`} />
+    </div>
+  );
+}
+// прогрес 0 → 100 за ms (раз на запуск фази); onDone — коли дійшов
+function useProgress(active, ms, raw, onDone) {
+  const [p, setP] = useState(0);
+  useEffect(() => {
+    if (!active || raw) { setP(0); return; }
+    let raf, t0 = performance.now();
+    const step = (now) => { const k = Math.min(1, (now - t0) / ms); setP(100 * (1 - Math.pow(1 - k, 1.6))); if (k < 1) raf = requestAnimationFrame(step); else setTimeout(onDone, 380); };
+    raf = requestAnimationFrame(step); return () => cancelAnimationFrame(raf);
+  }, [active]);
+  return p;
+}
+// число, що «набігає» від 0 при появі (лише поза режимом звірки)
+function useCountUp(to, raw, ms = 900) {
+  const [v, setV] = useState(raw ? to : 0);
+  useEffect(() => { if (raw) { setV(to); return; } let raf, t0 = performance.now();
+    const step = (now) => { const k = Math.min(1, (now - t0) / ms); setV(to * (1 - Math.pow(1 - k, 3))); if (k < 1) raf = requestAnimationFrame(step); };
+    raf = requestAnimationFrame(step); return () => cancelAnimationFrame(raf); }, [to]);
+  return v;
+}
+// поява блоків знизу з затримкою (картки, рядки)
+const riseIn = (ov, nodes, raw, base = 0.06, stepS = 0.06) => { if (raw) return; nodes.forEach((c, i) => { if (c && !ov[c.id]) ov[c.id] = { className: "rise", style: { animationDelay: `${base + i * stepS}s` } }; }); };
+
+// ── Ряд 7: Storage Cleaner (7 кадрів) ──
+// 5:4126 перший вхід · 5:6268 знайомство · 5:8199 сканування · 5:6106 результат сканування · 5:6203 скріншоти (вибір) · 5:8234 очищення · 5:8296 готово
+const ST_IDS = ["st-first", "st-intro", "st-scan", "st-ready", "st-shots", "st-clean", "st-done"];
+const ST_PRESET = {
+  "st-first": { phase: "idle", first: true, intro: false }, "st-intro": { phase: "idle", first: true, intro: true },
+  "st-scan": { phase: "scan" }, "st-ready": { phase: "ready" }, "st-shots": { phase: "shots", cat: "Screenshots" },
+  "st-clean": { phase: "clean" }, "st-done": { phase: "done" },
+};
+const ST_SEL = [1, 1, 0, 1, 1, 0, 0, 0];   // вибір у кадрі 5:6203 (в обох блоках однаковий)
+const stId = (s) => s.intro ? "st-intro" : s.phase === "idle" ? "st-first" : `st-${s.phase}`;
+const ST_CATS = ["Screenshots", "Duplicate Photos", "Similar Photos", "Similar Videos"];
+
+function Storage({ preset, onState, back, toast, raw }) {
+  const [s, setS] = useState(() => ({ phase: "idle", first: false, intro: false, cat: "Screenshots", sel: [...ST_SEL, ...ST_SEL], ...ST_PRESET[preset] }));
+  const sRef = useRef(s); sRef.current = s;
+  const upd = (p) => setS((o) => ({ ...o, ...(typeof p === "function" ? p(o) : p) }));
+  useEffect(() => { if (stId(sRef.current) !== preset) setS((o) => ({ ...o, intro: false, ...ST_PRESET[preset] })); }, [preset]);
+  useEffect(() => { const id = stId(s); if (id !== preset) onState(id); }, [s]);
+  useAutoIntro("st", preset === "st-first", raw, () => upd((o) => (o.phase === "idle" && !o.intro ? { intro: true } : {})));
+  const scanP = useProgress(s.phase === "scan", 3600, raw, () => upd((o) => (o.phase === "scan" ? { phase: "ready" } : {})));
+  const cleanP = useProgress(s.phase === "clean", 2600, raw, () => upd((o) => (o.phase === "clean" ? { phase: "done" } : {})));
+
+  // шкала зайнятої пам'яті: дуги домальовуються, відсотки набігають
+  const gaugeOv = (f, ov, pct) => {
+    const amt = findNode(f, (x) => x.t && /^\d+$/.test(textOf(x)) && x.w < 60);
+    if (amt) ov[amt.id] = (n, e, pos) => <GaugeNum n={n} pos={pos} to={pct} raw={raw} />;
+  };
+  let body;
+  if (s.phase === "idle" || s.phase === "ready") {
+    const fid = s.phase === "idle" ? "5:4126" : "5:6106", f = frameOf(fid), ov = {};
+    ov[findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")).id] = { onClick: back, className: "tap" };
+    const pop = findNode(f, (x) => x.name === "popup"); if (pop) ov[pop.id] = false;
+    ov[btnWith(f, "Clean up storage").id] = { onClick: () => upd({ phase: "clean" }), className: "tap" };
+    labelsIn(f).forEach((l, i) => { const t = firstText(l); ov[l.id] = { onClick: () => upd({ phase: "shots", cat: t }), className: raw ? "" : "tap rise", style: { animationDelay: `${0.14 + i * 0.05}s` } }; });
+    gaugeOv(f, ov, 87);
+    const iF = frameOf("5:6268"), intro = findNode(iF, (x) => x.name === "popup"), iBlack = findNode(iF, (x) => x.name === "blackout");
+    const iov = { [btnWith(intro, "Scan Storage").id]: { onClick: () => upd({ intro: false, first: false, phase: "scan" }), className: "tap" } };
+    const ill = findNode(intro, (x) => x.name === "img"); if (ill && !raw) iov[ill.id] = (n, el) => <div className="float-slow">{el}</div>;
+    body = (<>
+      <FigFrame id={fid} ov={ov} raw={raw} />
+      <FigSheetOf open={s.intro} black={iBlack} node={intro} ov={iov} onClose={() => upd({ intro: false, first: false })} raw={raw} />
+    </>);
+  } else if (s.phase === "scan") {
+    const f = frameOf("5:8199"), ov = {};
+    ov[findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")).id] = { onClick: () => upd({ phase: "idle" }), className: "tap" };
+    ov[findNode(f, (x) => x.name === "loading").id] = (n, e, pos) => <WaveRing n={n} pos={pos} p={scanP} />;
+    // список категорій: кожна по черзі «Scanning…» → «OK», решта «Waiting» (варіанти компонента «checklist 3»)
+    const list = findNode(f, (x) => x.name === "checklist 3");
+    const rows = list.children.filter((c) => c.type === "FRAME");
+    rows.forEach((r, i) => {
+      const st = raw ? (i === 0 ? "scan" : "wait") : scanP >= (i + 1) * 25 ? "ok" : scanP >= i * 25 ? "scan" : "wait";
+      const anyDone = !raw && scanP >= 25;
+      ov[r.id] = (n, e, pos) => <CheckRow n={n} pos={pos} st={st} dimName={st === "wait" && !anyDone} />;
+    });
+    body = <FigFrame id="5:8199" ov={ov} raw={raw} />;
+  } else if (s.phase === "shots") {
+    const f = frameOf("5:6203"), ov = {};
+    ov[findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")).id] = { onClick: () => upd({ phase: "ready" }), className: "tap" };
+    const video = s.cat === "Similar Videos";
+    // заголовок — назва категорії (дизайн є лише для Screenshots)
+    const ttl = findNode(f, (x) => x.name === "logo").children.find((c) => c.name === "label");
+    const ttlText = findNode(ttl, (x) => !!x.t);
+    if (s.cat !== "Screenshots") ov[ttlText.id] = (n, e, pos) => <FigText n={n} px={n.ax - pos.left} py={n.ay - pos.top} text={s.cat} />;
+    // сітка: кожен рядок — дві мініатюри; дотик — вибрати / зняти
+    let k = 0;
+    const blocks = findNode(f, (x) => x.name === "Frame" && x.children && x.children.some((c) => c.name === "block")).children.filter((b) => b.name === "block");
+    blocks.forEach((b) => {
+      b.children.filter((c) => c.name === "frame").forEach((fr) => {
+        const idx = [k, k + 1]; k += 2;
+        ov[fr.id] = (n, e, pos) => (
+          <div style={{ ...pos }}>
+            {idx.map((j, m) => <Media key={j} x={m ? 175.5 : 0} on={!!s.sel[j]} video={video} raw={raw} onTap={() => upd((o) => ({ sel: o.sel.map((v, q) => (q === j ? (v ? 0 : 1) : v)) }))} />)}
+          </div>
+        );
+      });
+      // «Deselect All» блоку
+      const da = nodeText(b, "Deselect All"); const from = blocks.indexOf(b) * 8;
+      const anyB = s.sel.slice(from, from + 8).some(Boolean);
+      if (da) ov[da.id] = (n, e, pos) => (
+        <div onClick={raw ? undefined : () => upd((o) => ({ sel: o.sel.map((v, q) => (q >= from && q < from + 8 ? (anyB ? 0 : 1) : v)) }))} className="tap" style={{ ...pos, cursor: "pointer" }}>
+          <div style={{ position: "absolute", left: -pos.left, top: -pos.top }}><FigText n={n} px={n.ax - pos.left} py={n.ay - pos.top} text={anyB ? "Deselect All" : "Select All"} /></div>
+        </div>);
+    });
+    const any = s.sel.some(Boolean);
+    const daTop = findNode(findNode(f, (x) => x.name === "logo"), (x) => x.t && textOf(x) === "Deselect All");
+    if (daTop) ov[daTop.id] = (n, e, pos) => (
+      <div onClick={raw ? undefined : () => upd((o) => ({ sel: o.sel.map(() => (any ? 0 : 1)) }))} className="tap" style={{ ...pos, cursor: "pointer" }}>
+        <div style={{ position: "absolute", left: -pos.left, top: -pos.top }}><FigText n={n} px={n.ax - pos.left} py={n.ay - pos.top} text={any ? "Deselect All" : "Select All"} /></div>
+      </div>);
+    const cb = btnWith(f, "Clean selected");
+    ov[cb.id] = { onClick: any ? () => upd({ phase: "clean" }) : undefined, className: any ? "tap" : "", style: { opacity: any ? 1 : 0.25, transition: "opacity .25s" } };
+    body = <FigFrame id="5:6203" ov={ov} raw={raw} />;
+  } else if (s.phase === "clean") {
+    const f = frameOf("5:8234"), ov = {};
+    ov[findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")).id] = { onClick: () => upd({ phase: "ready" }), className: "tap" };
+    ov[findNode(f, (x) => x.name === "loading").id] = (n, e, pos) => <WaveRing n={n} pos={pos} p={cleanP} />;
+    body = <FigFrame id="5:8234" ov={ov} raw={raw} />;
+  } else {
+    const f = frameOf("5:8296"), ov = {};
+    ov[findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")).id] = { onClick: () => upd({ phase: "ready" }), className: "tap" };
+    ov[btnWith(f, "Good").id] = { onClick: () => upd({ phase: "ready" }), className: "tap" };
+    const img = findNode(f, (x) => x.name === "img"); if (img && !raw) ov[img.id] = (n, el) => <div className="pop-in">{el}</div>;
+    gaugeOv(f, ov, 75);
+    riseIn(ov, [findNode(f, (x) => x.name === "Frame 1171276172"), findNode(f, (x) => x.name === "Frame" && x.h === 152)], raw, 0.15, 0.08);
+    body = <FigFrame id="5:8296" ov={ov} raw={raw} />;
+  }
+  return body;
+}
+// число в центрі шкали (87 / 75), що набігає
+function GaugeNum({ n, pos, to, raw }) { const v = useCountUp(to, raw); return <FigText n={n} px={n.ax - pos.left} py={n.ay - pos.top} text={String(Math.round(v))} />; }
+// рядок списку сканування: іконка (спінер / ✓ / годинник) + назва + статус кольором як у варіантах «checklist 3»
+function CheckRow({ n, pos, st, dimName }) {
+  const icon = n.children[0], name = n.children[1], stat = n.children[2];
+  const col = st === "ok" ? "rgba(57,172,96,1)" : st === "scan" ? "#0b62da" : "rgba(115,115,115,.15)";
+  const label = st === "ok" ? "OK" : st === "scan" ? "Scanning..." : "Waiting";
+  const nameNode = { ...name, t: { ...name.t, runs: name.t.runs.map((r) => ({ ...r, c: [{ solid: dimName ? "#737373" : "#000000", a: 1 }] })) } };
+  const statNode = { ...stat, t: { ...stat.t, runs: [{ ...stat.t.runs[0], t: label, c: undefined }] } };
+  return (
+    <div style={{ ...pos }}>
+      <div style={{ position: "absolute", left: icon.ax - n.ax, top: icon.ay - n.ay, width: 24, height: 24 }}>
+        {st === "scan" && <img src={loaderRing} alt="" className="spin-arc" style={{ width: 24, height: 24, display: "block" }} />}
+        {st === "ok" && <img src={loaderOk} alt="" className="pop-in-soft" style={{ width: 24, height: 24, display: "block" }} />}
+        {st === "wait" && <img src={PNG[icon.png]} alt="" style={{ width: 24, height: 24, display: "block" }} />}
+      </div>
+      <FigNode n={nameNode} px={n.ax} py={n.ay} />
+      <div style={{ color: col, transition: "color .3s" }}><FigNode n={statNode} px={n.ax} py={n.ay} /></div>
+    </div>
+  );
+}
+// мініатюра (компонент Figma «media»: фото / відео, вибрано / ні) — у рядку сітки, x від лівого краю рядка
+function Media({ x, on, video, onTap, raw }) {
+  const src = video ? [mediaVideoOff, mediaVideoOn] : [mediaPhotoOff, mediaPhotoOn];
+  return (
+    <div onClick={raw ? undefined : onTap} className={raw ? "" : "tap"} style={{ position: "absolute", left: x, top: 0, width: 167.5, height: 167.5, cursor: "pointer" }}>
+      <img src={src[0]} alt="" style={{ position: "absolute", left: -16, top: -12, width: 199.5, height: 199.5, maxWidth: "none" }} />
+      <img src={src[1]} alt="" style={{ position: "absolute", left: -16, top: -12, width: 199.5, height: 199.5, maxWidth: "none", opacity: on ? 1 : 0, transition: raw ? "none" : "opacity .2s ease" }} />
+    </div>
+  );
+}
+
+// ── Ряд 8: Breach Check (9 кадрів) ──
+// 5:4268 перший вхід · 5:5869 знайомство · 5:5542 поле · 5:5976 поле + клавіатура · 5:6041 пошта введена · 5:8265 перевірка · 5:5649 витоків немає
+// 5:5705 знайдено 2 · 5:5781 подробиці LinkedIn. Відповідь «сервера» — у панелі (Breach Check finds).
+const BR_IDS = ["br-first", "br-intro", "br-idle", "br-typing", "br-filled", "br-check", "br-none", "br-found", "br-detail"];
+const BR_PRESET = {
+  "br-first": { phase: "input", first: true, intro: false, focus: false, email: "" }, "br-intro": { phase: "input", first: true, intro: true, focus: false, email: "" },
+  "br-idle": { phase: "input", focus: false, email: "" }, "br-typing": { phase: "input", focus: true, email: "" },
+  "br-filled": { phase: "input", focus: true, email: "name@example.com" }, "br-check": { phase: "check", email: "name@example.com" },
+  "br-none": { phase: "none", email: "name@example.com" }, "br-found": { phase: "found", email: "name@example.com" }, "br-detail": { phase: "detail", email: "name@example.com" },
+};
+const brId = (s) => s.intro ? "br-intro" : s.phase !== "input" ? `br-${s.phase}` : s.focus ? (s.email ? "br-filled" : "br-typing") : s.first ? "br-first" : "br-idle";
+
+function Breach({ preset, onState, back, go, toast, scen, raw }) {
+  const [s, setS] = useState(() => ({ phase: "input", first: false, intro: false, focus: false, email: "", ...BR_PRESET[preset] }));
+  const sRef = useRef(s); sRef.current = s;
+  const scenRef = useRef(scen); scenRef.current = scen;
+  const upd = (p) => setS((o) => ({ ...o, ...(typeof p === "function" ? p(o) : p) }));
+  useEffect(() => { if (brId(sRef.current) !== preset) setS((o) => ({ ...o, intro: false, first: false, ...BR_PRESET[preset] })); }, [preset]);
+  useEffect(() => { const id = brId(s); if (id !== preset) onState(id); }, [s]);
+  useAutoIntro("br", preset === "br-first", raw, () => upd((o) => (o.phase === "input" && !o.intro ? { intro: true } : {})));
+  const p = useProgress(s.phase === "check", 2400, raw, () => upd((o) => (o.phase === "check" ? { phase: scenRef.current.breach === "none" ? "none" : "found" } : {})));
+  const ok = EMAIL_OK.test(s.email);
+  const submit = () => { if (EMAIL_OK.test(sRef.current.email)) upd({ phase: "check", focus: false }); };
+  const key = (c) => { const o = sRef.current; if (o.phase !== "input") return;
+    if (c === "del") upd({ email: o.email.slice(0, -1) }); else if (c === "return") submit();
+    else if (c === "123") upd({ email: o.email + (o.email.includes("@") ? "." : "@") });
+    else if (c.length === 1 && /[a-z0-9@._+-]/i.test(c)) upd({ email: o.email + c.toLowerCase() }); };
+  useEffect(() => { if (raw) return; const k = (e) => { const o = sRef.current; if (!o.focus || o.phase !== "input") return;
+    if (e.key === "Backspace") key("del"); else if (e.key === "Enter") key("return"); else if (e.key.length === 1) key(e.key); else return; e.preventDefault(); };
+    window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, []);
+
+  if (s.phase === "input") {
+    const f = frameOf("5:5542"), fF = frameOf("5:5976"), tF = frameOf("5:6041"), ov = {};
+    ov[findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")).id] = { onClick: back, className: "tap" };
+    ["popup", "Keyboards"].forEach((nm) => { const x = findNode(f, (y) => y.name === nm); if (x) ov[x.id] = false; });
+    // вміст при фокусі плавно їде вгору (5:5976 — на 151), ілюстрація ховається
+    const tb = findNode(f, (x) => x.name === "textblock"), shift = findNode(fF, (x) => x.name === "text").ay - findNode(f, (x) => x.name === "text" && x.ay > 200).ay;
+    const ill = tb.children.find((c) => c.name === "img");
+    ov[ill.id] = (n, el) => <div style={{ opacity: s.focus ? 0 : 1, transition: raw ? "none" : "opacity .3s ease" }}>{el}</div>;
+    ov[tb.id] = (n, el, pos) => (
+      <div style={{ ...pos, overflow: "hidden" }} onPointerDown={() => s.focus && upd({ focus: false })}>
+        <div style={{ position: "absolute", left: -pos.left, top: -pos.top, width: 375, height: 812, transform: s.focus ? `translateY(${shift}px)` : "none", transition: raw ? "none" : "transform .42s cubic-bezier(.2,.8,.2,1)" }}>{el}</div>
+      </div>
+    );
+    // поле: рамка «у фокусі» (5:5976) поверх звичайної; текст — введена пошта + курсор або підказка
+    const field = findNode(tb, (x) => x.name === "label" && x.h === 40), fieldFocus = findNode(fF, (x) => x.name === "label" && x.h === 40);
+    const typed = findNode(tF, (x) => x.t && textOf(x) === "name@example.com"), fieldT = findNode(tF, (x) => x.name === "label" && x.h === 40), ph = findNode(field, (x) => !!x.t);
+    ov[field.id] = (n, el, pos) => (
+      <div style={{ ...pos, cursor: "text" }} onPointerDown={(e) => { e.stopPropagation(); if (!raw) upd({ focus: true, intro: false }); }}>
+        <div style={{ position: "absolute", left: -pos.left, top: -pos.top }}>{el}</div>
+        <div style={{ position: "absolute", left: -pos.left, top: -pos.top, opacity: s.focus ? 1 : 0, transition: raw ? "none" : "opacity .2s" }}>
+          <FigNode n={{ ...fieldFocus, children: fieldFocus.children.filter((c) => !c.t && !(c.children || []).some((d) => d.t)) }} px={fieldFocus.ax - pos.left} py={fieldFocus.ay - pos.top} />
+        </div>
+        <div style={{ position: "absolute", left: typed.ax - fieldT.ax, top: typed.ay - fieldT.ay, height: 20, display: "flex", alignItems: "center", whiteSpace: "nowrap",
+          font: '400 14px/20px "Inter", sans-serif', color: s.email ? "#000" : "rgba(115,115,115,.5)" }}>
+          {s.email || (s.focus ? "" : null)}{s.focus && <Caret />}{!s.email && <span style={{ color: "rgba(115,115,115,.5)" }}>name@example.com</span>}
+        </div>
+      </div>
+    );
+    if (ph) ov[ph.id] = false;
+    // кнопка: неактивна, доки пошта не схожа на справжню; при фокусі піднімається над клавіатурою
+    const b = btnWith(f, "Check for Breaches"), bF = btnWith(fF, "Check for Breaches");
+    // у кадрі кнопка вже напівпрозора (op 0.25) — малюємо її без власної прозорості, а прозорість задаємо станом
+    ov[b.id] = (n, el, pos) => (
+      <div onClick={ok ? submit : undefined} role="button" className={ok ? "tap" : ""} style={{ ...pos, cursor: ok ? "pointer" : "default", opacity: ok ? 1 : 0.25,
+        transition: raw ? "none" : "opacity .25s" }}>
+        <div style={{ position: "absolute", left: -pos.left, top: -pos.top }}><FigNode n={{ ...n, op: undefined }} px={n.ax - pos.left} py={n.ay - pos.top} /></div>
+      </div>
+    );
+    // при фокусі кнопка піднімається над клавіатурою: рухаємо її рамку «btn» (вона обрізає вміст)
+    const bWrap = findNode(f, (x) => x.name === "btn" && x.type === "FRAME");
+    if (bWrap) ov[bWrap.id] = (n, el, pos) => <div style={{ position: "absolute", left: 0, top: 0, width: 0, height: 0, transform: s.focus ? `translateY(${bF.ay - b.ay}px)` : "none",
+      transition: raw ? "none" : "transform .42s cubic-bezier(.2,.8,.2,1)" }}>{el}</div>;
+    // мітка «Enter email» у фокусі синя (5:5976)
+    const lab = nodeText(tb, "Enter email"), labF = nodeText(fF, "Enter email");
+    if (lab && labF) ov[lab.id] = (n, el, pos) => <div style={{ position: "absolute", left: 0, top: 0, color: "inherit" }}>
+      <div style={{ opacity: s.focus ? 0 : 1, transition: raw ? "none" : "opacity .2s" }}>{el}</div>
+      <div style={{ position: "absolute", left: 0, top: 0, opacity: s.focus ? 1 : 0, transition: raw ? "none" : "opacity .2s" }}>
+        <FigNode n={{ ...n, t: { ...n.t, runs: n.t.runs.map((r) => ({ ...r, c: labF.t.runs[0].c })) } }} px={n.ax - pos.left} py={n.ay - pos.top} /></div>
+    </div>;
+    const iF = frameOf("5:5869"), intro = findNode(iF, (x) => x.name === "popup"), iBlack = findNode(iF, (x) => x.name === "blackout");
+    const iov = { [btnWith(intro, "Check My Email").id]: { onClick: () => { upd({ intro: false, first: false }); setTimeout(() => upd({ focus: true }), 380); }, className: "tap" } };
+    const iill = findNode(intro, (x) => x.name === "img"); if (iill && !raw) iov[iill.id] = (n, el) => <div className="float-slow">{el}</div>;
+    return (<>
+      <FigFrame id="5:5542" ov={ov} raw={raw} />
+      {!raw && <Keyboard kind="alpha" show={s.focus} onKey={key} />}
+      {raw && s.focus && <FigNode n={findNode(fF, (x) => x.name === "Keyboards")} />}
+      <FigSheetOf open={s.intro} black={iBlack} node={intro} ov={iov} onClose={() => upd({ intro: false, first: false })} raw={raw} />
+    </>);
+  }
+  if (s.phase === "check") {
+    const f = frameOf("5:8265"), ov = {};
+    ov[findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")).id] = { onClick: () => upd({ phase: "input" }), className: "tap" };
+    ov[findNode(f, (x) => x.name === "loading").id] = (n, e, pos) => <WaveRing n={n} pos={pos} p={p} />;
+    return <FigFrame id="5:8265" ov={ov} raw={raw} />;
+  }
+  const fid = { none: "5:5649", found: "5:5705", detail: "5:5781" }[s.phase], f = frameOf(fid), ov = {};
+  const bk = findNode(f, (x) => (x.comp || "").startsWith("Icon Btn"));
+  ov[bk.id] = { onClick: s.phase === "detail" ? () => upd({ phase: "found" }) : () => upd({ phase: "input", focus: false }), className: "tap" };
+  ov[btnWith(f, "Done").id] = { onClick: s.phase === "detail" ? () => upd({ phase: "found" }) : () => go("dashboard", "fade"), className: "tap" };
+  if (s.phase === "none") {
+    const t = findNode(f, (x) => x.t && /was not found/.test(textOf(x)));
+    if (t && s.email && s.email !== "name@example.com") ov[t.id] = (n, e, pos) => <FigNode n={{ ...n, t: { ...n.t, runs: n.t.runs.map((r) => ({ ...r, t: r.t.replace("name@example.com", s.email) })) } }} px={n.ax - pos.left} py={n.ay - pos.top} />;
+    const img = findNode(f, (x) => x.name === "img"); if (img && !raw) ov[img.id] = (n, el) => <div className="pop-in">{el}</div>;
+  }
+  if (s.phase === "found") {
+    const cards = findNode(f, (x) => x.name === "Frame" && x.children && x.children.some((c) => c.name === "menu")).children.filter((c) => c.name === "menu");
+    cards.forEach((c, i) => { ov[c.id] = { onClick: i === 0 ? () => upd({ phase: "detail" }) : () => toast("Canva: the same details screen, filled from the server"), className: raw ? "" : "tap rise", style: { animationDelay: `${0.12 + i * 0.08}s` } }; });
+    const hero = findNode(f, (x) => x.name === "Hero"); if (hero && !raw) ov[hero.id] = { className: "rise", style: { animationDelay: "0.04s" } };
+  }
+  if (s.phase === "detail") {
+    const cards = findNode(f, (x) => x.name === "Frame" && x.children && x.children.some((c) => c.name === "menu")).children.filter((c) => c.name === "menu");
+    cards.forEach((c, i) => { const t = firstText(c); ov[c.id] = { onClick: () => toast(`${t} — what the chip does is a question for the manager`), className: raw ? "" : "tap rise", style: { animationDelay: `${0.1 + i * 0.07}s` } }; });
+  }
+  return <FigFrame id={fid} ov={ov} raw={raw} />;
+}
+
+// ── Ряд 9: Password Generator (4 кадри) ──
+// 5:5141 перший вхід · 5:5443 знайомство · 5:5239 генератор · 5:5341 «Copied!». Стани Strong / Medium / Weak — варіанти компонента «password» (5:914 / 5:924 / 5:934).
+const PW_IDS = ["pw-first", "pw-intro", "pw-on", "pw-copied"];
+const PW_PRESET = { "pw-first": { first: true, intro: false, copied: false }, "pw-intro": { first: true, intro: true, copied: false }, "pw-on": { first: false, intro: false, copied: false }, "pw-copied": { first: false, intro: false, copied: true } };
+const pwId = (s) => s.intro ? "pw-intro" : s.copied ? "pw-copied" : s.first ? "pw-first" : "pw-on";
+const PW_MIN = 8, PW_MAX = 20;   // діапазон у дизайні не вказаний — за положенням повзунка (16 ≈ ⅔ доріжки)
+const pwMake = (len, num, sym, up) => {
+  const lo = "abcdefghijkmnopqrstuvwxyz", U = "ABCDEFGHJKLMNPQRSTUVWXYZ", N = "23456789", S = "!#$%&*?@";
+  const sets = [lo, ...(up ? [U] : []), ...(num ? [N] : []), ...(sym ? [S] : [])], all = sets.join("");
+  const r = (str) => str[Math.floor(Math.random() * str.length)];
+  const out = sets.map(r); while (out.length < len) out.push(r(all));
+  for (let i = out.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [out[i], out[j]] = [out[j], out[i]]; }
+  return out.join("");
+};
+const pwStrength = (len, num, sym, up) => { const kinds = 1 + num + sym + up; return len >= 14 && kinds >= 3 ? 0 : len >= 10 && kinds >= 2 ? 1 : 2; };   // 0 Strong · 1 Medium · 2 Weak
+
+function Password({ preset, onState, back, toast, raw }) {
+  const [s, setS] = useState(() => ({ first: false, intro: false, copied: false, len: 16, num: 1, sym: 1, up: 1, pwd: "kV9#mRt2$wLq7!Xz", ...PW_PRESET[preset] }));
+  const sRef = useRef(s); sRef.current = s;
+  const upd = (p) => setS((o) => ({ ...o, ...(typeof p === "function" ? p(o) : p) }));
+  useEffect(() => { if (pwId(sRef.current) !== preset) setS((o) => ({ ...o, ...PW_PRESET[preset] })); }, [preset]);
+  useEffect(() => { const id = pwId(s); if (id !== preset) onState(id); }, [s]);
+  useAutoIntro("pw", preset === "pw-first", raw, () => upd((o) => (!o.intro ? { intro: true } : {})));
+  useEffect(() => { if (raw || !s.copied) return; const t = setTimeout(() => upd({ copied: false }), 1700); return () => clearTimeout(t); }, [s.copied]);
+  // новий пароль: літери коротко «перебираються», потім стають на місце
+  const [disp, setDisp] = useState(s.pwd);
+  useEffect(() => { if (raw) { setDisp(s.pwd); return; } let k = 0; const all = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!#$%&*?@";
+    const t = setInterval(() => { k++; const fixed = Math.floor((k / 9) * s.pwd.length);
+      setDisp(s.pwd.split("").map((c, i) => (i < fixed ? c : all[Math.floor(Math.random() * all.length)])).join("")); if (k >= 9) { clearInterval(t); setDisp(s.pwd); } }, 34);
+    return () => clearInterval(t); }, [s.pwd]);
+  const regen = (p = {}) => upd((o) => { const n = { ...o, ...p }; return { ...p, pwd: pwMake(n.len, n.num, n.sym, n.up) }; });
+  const str = pwStrength(s.len, s.num, s.sym, s.up);
+
+  const f = frameOf("5:5239"), ov = {};
+  ov[findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")).id] = { onClick: back, className: "tap" };
+  ["popup", "Copied!"].forEach((nm) => { const x = findNode(f, (y) => y.name === nm && y.type === "FRAME"); if (x) ov[x.id] = false; });
+  // картка пароля: текст (живий) + шкала й статус — три варіанти з дизайн-системи перетікають
+  const card = findNode(f, (x) => (x.comp || "").startsWith("password"));
+  const txt = findNode(card, (x) => !!x.t), vars = ["5:914", "5:924", "5:934"].map((id) => frameOf(id));
+  ov[card.id] = (n, e, pos) => (
+    <div style={{ ...pos }}>
+      <FigNode n={{ ...n, children: [] }} px={n.ax - 0} py={n.ay - 0} ov={{}} />
+      <div style={{ position: "absolute", left: 0, top: 0 }}>
+        <FigText n={txt} px={n.ax} py={n.ay} text={disp} style={{ fontVariantLigatures: "none" }} />
+      </div>
+      {vars.map((v, i) => (
+        <div key={i} style={{ position: "absolute", inset: 0, opacity: i === str ? 1 : 0, transition: raw ? "none" : "opacity .3s ease" }}>
+          {v.children.filter((c) => !c.t).map((c) => <FigNode key={c.id} n={c} px={0} py={0} />)}
+        </div>
+      ))}
+    </div>
+  );
+  // довжина: живий повзунок (доріжка 311, кулька 16, заливка до центру кульки)
+  const lenT = findNode(f, (x) => x.t && /^Length/.test(textOf(x)));
+  ov[lenT.id] = (n, e, pos) => <FigText n={n} px={n.ax - pos.left} py={n.ay - pos.top} text={`Length · ${s.len}`} />;
+  const sl = findNode(f, (x) => x.name === "LENGTH");
+  ov[sl.id] = (n, e, pos) => <Slider pos={pos} v={s.len} min={PW_MIN} max={PW_MAX} raw={raw} onChange={(len) => { if (len !== sRef.current.len) regen({ len }); }} />;
+  // перемикачі цифр / символів / великих літер
+  const rowsP = labelsIn(f, "options card");
+  [["Numbers", "num"], ["Symbols", "sym"], ["Uppercase", "up"]].forEach(([name, k]) => {
+    const r = rowsP.find((l) => firstText(l).includes(name) || textOf(l).includes(name)); if (!r) return;
+    const sw = findNode(r, (x) => x.name === "Switch");
+    ov[r.id] = (n, el, pos) => (
+      <div onClick={raw ? undefined : () => regen({ [k]: sRef.current[k] ? 0 : 1 })} role="switch" aria-checked={!!s[k]} className={raw ? "" : "tap-soft"} style={{ ...pos, cursor: "pointer" }}>
+        <div style={{ position: "absolute", left: -pos.left, top: -pos.top }}><FigNode n={{ ...n, children: n.children.filter((c) => c.name !== "Switch") }} px={n.ax - pos.left} py={n.ay - pos.top} /></div>
+        <Switch on={!!s[k]} x={sw.ax - n.ax} y={sw.ay - n.ay} raw={raw} />
+      </div>
+    );
+  });
+  ov[btnWith(f, "Regenerate").id] = { onClick: () => regen(), className: "tap" };
+  ov[btnWith(f, "Copy Password").id] = { onClick: () => { try { navigator.clipboard && navigator.clipboard.writeText(sRef.current.pwd); } catch (err) {} upd({ copied: true, first: false }); }, className: "tap" };
+  const cop = findNode(frameOf("5:5341"), (x) => x.name === "Copied!" && x.type === "FRAME");
+  const iF = frameOf("5:5443"), intro = findNode(iF, (x) => x.name === "popup"), iBlack = findNode(iF, (x) => x.name === "blackout");
+  const iov = { [btnWith(intro, "Generate a Password").id]: { onClick: () => { upd({ intro: false, first: false }); setTimeout(() => regen(), 300); }, className: "tap" } };
+  const ill = findNode(intro, (x) => x.name === "img"); if (ill && !raw) iov[ill.id] = (n, el) => <div className="float-slow">{el}</div>;
+  return (<>
+    <FigFrame id="5:5239" ov={ov} raw={raw} />
+    <div style={{ position: "absolute", inset: 0, zIndex: 8, pointerEvents: "none", opacity: s.copied ? 1 : 0, transform: s.copied ? "none" : "translateY(8px) scale(.96)",
+      transition: raw ? "none" : "opacity .25s ease, transform .3s cubic-bezier(.2,.9,.25,1)" }}><FigNode n={cop} /></div>
+    <FigSheetOf open={s.intro} black={iBlack} node={intro} ov={iov} onClose={() => upd({ intro: false, first: false })} raw={raw} />
+  </>);
+}
+// повзунок (як у кадрі: доріжка rgba(115,115,115,.15) 4 px, заливка й кулька #0b62da, тінь кульки)
+function Slider({ pos, v, min, max, onChange, raw }) {
+  const ref = useRef(null), W = pos.width, k = (v - min) / (max - min), cx = 2 + k * (W - 4);
+  const set = (e) => { const r = ref.current.getBoundingClientRect(), sc = r.width / W; const x = (e.clientX - r.left) / sc; onChange(Math.round(min + Math.max(0, Math.min(1, (x - 2) / (W - 4))) * (max - min))); };
+  return (
+    <div ref={ref} style={{ ...pos, cursor: "pointer", touchAction: "none" }}
+      onPointerDown={(e) => { if (raw) return; e.currentTarget.setPointerCapture(e.pointerId); set(e); }} onPointerMove={(e) => { if (e.buttons) set(e); }}>
+      <div style={{ position: "absolute", left: 0, top: 6, width: W, height: 4, borderRadius: 2, background: "rgba(115,115,115,.15)" }} />
+      <div style={{ position: "absolute", left: 0, top: 6, width: cx + 2, height: 4, borderRadius: 2, background: "#0b62da" }} />
+      <div style={{ position: "absolute", left: cx - 8, top: 0, width: 16, height: 16, borderRadius: 8, background: "#0b62da", boxShadow: "0 2px 8px rgba(0,0,0,.2)" }} />
+    </div>
+  );
+}
+
+// ── Ряд 10: Settings і My Account (3 кадри) ──
+// 5:2466 Settings (вкладка) · 5:2193 My Account (увійшов) · 5:2343 My Account (без входу). My Account — аркуш поверх головної.
+const ACC_IDS = ["account", "account-guest"];
+function AccountSheet({ open, guest, onClose, go, toast, raw }) {
+  const F = frameOf(guest ? "5:2343" : "5:2193"), sheet = findNode(F, (x) => x.name === "My Account" && x.type === "FRAME" && x.ay > 50), black = findNode(F, (x) => x.name === "blackout");
+  const ov = {}, t = (txt) => nodeText(sheet, txt);
+  const row = (txt, fn) => { const n = t(txt); if (!n) return; const lab = findNode(sheet, (x) => (x.name === "Label" || x.name === "label") && x.children && findNode(x, (y) => y === n)); ov[(lab || n).id] = { onClick: fn, className: "tap" }; };
+  ov[t("Done").id] = { onClick: onClose, className: "tap" };
+  row("Manage Subscription", () => toast("Opens the account area in the browser (Google Play subscription → Google Play page)"));
+  row("Restore Purchases", () => toast("Restoring purchases from Google Play…"));
+  row("Sign Out", () => { onClose(); setTimeout(() => go("signin", "fade"), 350); });
+  row("Delete Account", () => toast("First a warning that deleting does not cancel the subscription — no such screen in Figma"));
+  row("Sign In", () => { onClose(); setTimeout(() => go("signin", "fade"), 350); });
+  return <FigSheetOf open={open} black={black} node={sheet} ov={ov} onClose={onClose} raw={raw} z={25} />;
+}
+
+function Settings({ go, toast, scen, raw }) {
+  const [acc, setAcc] = useState(false);
+  const f = frameOf("5:2466"), ov = {};
+  labelsIn(f).forEach((l, i) => {
+    const t = firstText(l);
+    const act = t === "My Account" ? () => setAcc(true) : t === "Language" ? () => toast("Language — no language screen in Figma")
+      : t === "Contact" ? () => toast("Contact — what it opens is a question for the manager") : t === "Unsubscribe" ? () => toast("Opens cancellation: Google Play subscriptions page or the account area")
+      : () => toast(`${t} — opens in the browser (Custom Tabs)`);
+    ov[l.id] = { onClick: act, className: raw ? "" : "tap rise", style: { animationDelay: `${0.06 + i * 0.04}s` } };
+  });
+  const mb = findNode(f, (x) => x.name === "Menubar");
+  mb.children.forEach((b) => { const t = textOf(b); if (t === "Home") ov[b.id] = { onClick: () => go("dashboard", "fade"), className: "tap" }; else if (t === "Alerts") ov[b.id] = { onClick: () => toast("Alerts — no screen in Figma (question for the manager)"), className: "tap" }; });
+  return (<>
+    <FigFrame id="5:2466" ov={ov} raw={raw} />
+    <AccountSheet open={acc} guest={scen.account === "guest"} onClose={() => setAcc(false)} go={go} toast={toast} raw={raw} />
+  </>);
+}
+
 // Група екрана: усередині групи компонент живий (пейджер, вхід, VPN…), між групами — перехід
-const groupOf = (id) => ONB_IDS.includes(id) ? "onboarding" : AUTH_IDS.includes(id) ? "auth" : /^(result-issues|sheet)/.test(id) ? "result-issues" : VPN_IDS.includes(id) ? "vpn" : WEB_IDS.includes(id) ? "web" : QR_IDS.includes(id) ? "qr" : id;
+const groupOf = (id) => ONB_IDS.includes(id) ? "onboarding" : AUTH_IDS.includes(id) ? "auth" : /^(result-issues|sheet)/.test(id) ? "result-issues" : VPN_IDS.includes(id) ? "vpn" : WEB_IDS.includes(id) ? "web" : QR_IDS.includes(id) ? "qr" : ST_IDS.includes(id) ? "st" : BR_IDS.includes(id) ? "br" : PW_IDS.includes(id) ? "pw" : ACC_IDS.includes(id) ? "dashboard" : id;
 // Застиглий знімок екрана для шару, що йде (стан — як у пресеті кадру Figma)
 function StaticScreen({ id, plan, scen }) {
   const nop = () => {};
@@ -1292,7 +1753,11 @@ function StaticScreen({ id, plan, scen }) {
       {ONB_IDS.includes(id) && <Onboarding index={ONB_IDS.indexOf(id)} onIndex={nop} go={nop} raw />}
       {id === "paywall" && <Paywall go={nop} toast={nop} plan={plan} setPlan={nop} />}
       {AUTH_IDS.includes(id) && <Auth preset={id} onState={nop} go={nop} back={nop} scen={scen} toast={nop} raw />}
-      {(id === "dashboard" || id === "dash-issues") && <Dashboard issues={id === "dash-issues"} go={nop} toast={nop} raw />}
+      {(id === "dashboard" || id === "dash-issues" || ACC_IDS.includes(id)) && <Dashboard issues={id === "dash-issues"} account={id === "account" ? "user" : id === "account-guest" ? "guest" : null} go={nop} toast={nop} raw />}
+      {ST_IDS.includes(id) && <Storage preset={id} onState={nop} back={nop} toast={nop} raw />}
+      {BR_IDS.includes(id) && <Breach preset={id} onState={nop} back={nop} go={nop} toast={nop} scen={{ breach: "found", account: "user" }} raw />}
+      {PW_IDS.includes(id) && <Password preset={id} onState={nop} back={nop} toast={nop} raw />}
+      {id === "settings" && <Settings go={nop} toast={nop} scen={{ breach: "found", account: "user" }} raw />}
       {id === "scan" && <Scan go={nop} back={nop} result="ok" raw />}
       {/^(result|sheet)/.test(id) && <Result preset={id} onState={nop} go={nop} toast={nop} raw />}
       {VPN_IDS.includes(id) && <Vpn preset={id} onState={nop} back={nop} toast={nop} raw />}
@@ -1352,8 +1817,37 @@ const SCREENS = [
   { id: "qr-check", name: "QR Scanner · validating", node: "5:6569", frame: r6f04 },
   { id: "qr-blocked", name: "QR Scanner · access blocked", node: "5:6619", frame: r6f05 },
   { id: "qr-copied", name: "QR Scanner · link copied", node: "5:6705", frame: r6f06 },
+  { id: "st-first", name: "Storage Cleaner · first open", node: "5:4126", frame: r7f01 },
+  { id: "st-intro", name: "Storage Cleaner · intro", node: "5:6268", frame: r7f02 },
+  { id: "st-scan", name: "Storage Cleaner · scanning", node: "5:8199", frame: r7f03 },
+  { id: "st-ready", name: "Storage Cleaner · results", node: "5:6106", frame: r7f04 },
+  { id: "st-shots", name: "Storage Cleaner · screenshots", node: "5:6203", frame: r7f05 },
+  { id: "st-clean", name: "Storage Cleaner · cleaning", node: "5:8234", frame: r7f06 },
+  { id: "st-done", name: "Storage Cleaner · complete", node: "5:8296", frame: r7f07 },
+  { id: "br-first", name: "Breach Check · first open", node: "5:4268", frame: r8f01 },
+  { id: "br-intro", name: "Breach Check · intro", node: "5:5869", frame: r8f02 },
+  { id: "br-idle", name: "Breach Check · email", node: "5:5542", frame: r8f03 },
+  { id: "br-typing", name: "Breach Check · typing", node: "5:5976", frame: r8f04 },
+  { id: "br-filled", name: "Breach Check · email ready", node: "5:6041", frame: r8f05 },
+  { id: "br-check", name: "Breach Check · checking", node: "5:8265", frame: r8f06 },
+  { id: "br-none", name: "Breach Check · no breaches", node: "5:5649", frame: r8f07 },
+  { id: "br-found", name: "Breach Check · 2 breaches", node: "5:5705", frame: r8f08 },
+  { id: "br-detail", name: "Breach Check · LinkedIn details", node: "5:5781", frame: r8f09 },
+  { id: "pw-first", name: "Password Generator · first open", node: "5:5141", frame: r9f01 },
+  { id: "pw-intro", name: "Password Generator · intro", node: "5:5443", frame: r9f02 },
+  { id: "pw-on", name: "Password Generator", node: "5:5239", frame: r9f03 },
+  { id: "pw-copied", name: "Password Generator · copied", node: "5:5341", frame: r9f04 },
+  { id: "settings", name: "Settings", node: "5:2466", frame: r10f01 },
+  { id: "account", name: "My Account · signed in", node: "5:2193", frame: r10f02 },
+  { id: "account-guest", name: "My Account · signed out", node: "5:2343", frame: r10f03 },
 ];
 const ORDER = SCREENS.map((s) => s.id);
+// Зведення нотаток за видом: кожен текст один раз + екрани, де він трапляється (у порядку екранів)
+const SUMMARY = (() => { const out = { ask: [], design: [], android: [] };
+  SCREENS.flatMap((sc) => (sc.id === "paywall" ? ["paywall"] : [sc.id])).concat(["onb1", "onb2", "onb3", "onb4", "onb5", "onb6"]).forEach((id) => (NOTES[id] || []).forEach((n) => {
+    const list = out[n.kind]; if (!list) return; let it = list.find((x) => x.text === n.text); if (!it) { it = { text: n.text, screens: [] }; list.push(it); }
+    if (!it.screens.includes(id)) it.screens.push(id); }));
+  return out; })();
 const store = {
   get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
   set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
@@ -1402,7 +1896,7 @@ function App() {
   useEffect(() => { const f = () => { const h = fromHash(); if (h) { setDir("fade"); setScreen(h); } }; window.addEventListener("hashchange", f); return () => window.removeEventListener("hashchange", f); }, []);
   const [dir, setDir] = useState("fade");
   // відповіді «сервера» для потоку входу (панель → Server answers)
-  const [scen, setScen] = useState({ email: "code", code: "active", scan: "ok" });
+  const [scen, setScen] = useState({ email: "code", code: "active", scan: "ok", breach: "found", account: "user" });
   const [plan, setPlan] = useState(((location.hash.match(/~(\w+)/) || [])[1]) || "weekly");
   const [msg, setMsg] = useState(null);
   const [hist, setHist] = useState([]);
@@ -1453,6 +1947,7 @@ function App() {
   const [onlyNew, setOnlyNew] = useState(false);
   const notes = NOTES[screen] || [];
   const [ex, setEx] = useState(null);   // { note, i } — приклад зліва замість кадру Figma
+  const [sum, setSum] = useState(null);   // зведення: "ask" | "design" | "android"
   useEffect(() => { setHl(null); setEx(null); }, [screen]);
   // приклад лише якщо така нотатка є на цьому екрані (стан міг лишитися з попереднього екрана)
   const exItem = ex && notes[ex.note] ? examplesOf(notes[ex.note])[ex.i] || null : null;
@@ -1464,7 +1959,11 @@ function App() {
       {onbIndex >= 0 && <Onboarding index={onbIndex} onIndex={() => {}} go={() => {}} />}
       {screen === "paywall" && <Paywall go={() => {}} toast={() => {}} plan={plan} setPlan={() => {}} />}
       {isAuth && <Auth preset={screen} onState={() => {}} go={() => {}} back={() => {}} scen={scen} toast={() => {}} />}
-      {(screen === "dashboard" || screen === "dash-issues") && <Dashboard issues={screen === "dash-issues"} go={() => {}} toast={() => {}} />}
+      {(screen === "dashboard" || screen === "dash-issues" || ACC_IDS.includes(screen)) && <Dashboard issues={screen === "dash-issues"} account={screen === "account" ? "user" : screen === "account-guest" ? "guest" : null} go={() => {}} toast={() => {}} />}
+      {ST_IDS.includes(screen) && <Storage preset={screen} onState={() => {}} back={() => {}} toast={() => {}} />}
+      {BR_IDS.includes(screen) && <Breach preset={screen} onState={() => {}} back={() => {}} go={() => {}} toast={() => {}} scen={scen} />}
+      {PW_IDS.includes(screen) && <Password preset={screen} onState={() => {}} back={() => {}} toast={() => {}} />}
+      {screen === "settings" && <Settings go={() => {}} toast={() => {}} scen={scen} />}
       {screen === "scan" && <Scan go={() => {}} back={() => {}} result="ok" raw />}
       {/^(result|sheet)/.test(screen) && <Result preset={screen} onState={() => {}} go={() => {}} toast={() => {}} />}
       {VPN_IDS.includes(screen) && <Vpn preset={screen} onState={() => {}} back={() => {}} toast={() => {}} />}
@@ -1479,7 +1978,11 @@ function App() {
       {onbIndex >= 0 && <Onboarding index={onbIndex} onIndex={() => {}} go={() => {}} raw at={+((location.hash.match(/@([\d.]+)/) || [])[1] ?? onbIndex)} />}
       {screen === "paywall" && <Paywall go={() => {}} toast={() => {}} plan={plan} setPlan={() => {}} />}
       {isAuth && <Auth preset={screen} onState={() => {}} go={() => {}} back={() => {}} scen={scen} toast={() => {}} raw />}
-      {(screen === "dashboard" || screen === "dash-issues") && <Dashboard issues={screen === "dash-issues"} go={() => {}} toast={() => {}} raw />}
+      {(screen === "dashboard" || screen === "dash-issues" || ACC_IDS.includes(screen)) && <Dashboard issues={screen === "dash-issues"} account={screen === "account" ? "user" : screen === "account-guest" ? "guest" : null} go={() => {}} toast={() => {}} raw />}
+      {ST_IDS.includes(screen) && <Storage preset={screen} onState={() => {}} back={() => {}} toast={() => {}} raw />}
+      {BR_IDS.includes(screen) && <Breach preset={screen} onState={() => {}} back={() => {}} go={() => {}} toast={() => {}} scen={scen} raw />}
+      {PW_IDS.includes(screen) && <Password preset={screen} onState={() => {}} back={() => {}} toast={() => {}} raw />}
+      {screen === "settings" && <Settings go={() => {}} toast={() => {}} scen={scen} raw />}
       {screen === "scan" && <Scan go={() => {}} back={() => {}} result="ok" raw />}
       {/^(result|sheet)/.test(screen) && <Result preset={screen} onState={() => {}} go={() => {}} toast={() => {}} raw />}
       {VPN_IDS.includes(screen) && <Vpn preset={screen} onState={() => {}} back={() => {}} toast={() => {}} raw />}
@@ -1506,7 +2009,11 @@ function App() {
                 {onbIndex >= 0 && <Onboarding index={onbIndex} onIndex={onIndex} go={go} />}
                 {screen === "paywall" && <Paywall go={go} toast={toast} plan={plan} setPlan={setPlan} />}
                 {isAuth && <Auth preset={screen} onState={onAuth} go={go} back={back} scen={scen} toast={toast} />}
-                {(screen === "dashboard" || screen === "dash-issues") && <Dashboard issues={screen === "dash-issues"} go={go} toast={toast} />}
+                {(screen === "dashboard" || screen === "dash-issues" || ACC_IDS.includes(screen)) && <Dashboard issues={screen === "dash-issues"} account={screen === "account" ? "user" : screen === "account-guest" ? "guest" : null} go={go} toast={toast} onState={onAuth} scen={scen} />}
+                {ST_IDS.includes(screen) && <Storage preset={screen} onState={onAuth} back={back} toast={toast} />}
+                {BR_IDS.includes(screen) && <Breach preset={screen} onState={onAuth} back={back} go={go} toast={toast} scen={scen} />}
+                {PW_IDS.includes(screen) && <Password preset={screen} onState={onAuth} back={back} toast={toast} />}
+                {screen === "settings" && <Settings go={go} toast={toast} scen={scen} />}
                 {screen === "scan" && <Scan go={go} back={back} result={scen.scan} />}
                 {/^(result|sheet)/.test(screen) && <Result preset={screen} onState={onAuth} go={go} toast={toast} />}
                 {VPN_IDS.includes(screen) && <Vpn preset={screen} onState={onAuth} back={back} toast={toast} />}
@@ -1552,14 +2059,40 @@ function App() {
         </div>
       </div>
 
+      {sum && (
+        <div className="sum-overlay" onClick={() => setSum(null)}>
+          <div className="sum-card" onClick={(e) => e.stopPropagation()}>
+            <div className="sum-head">
+              <b style={{ color: KINDS[sum].color }}>{sum === "ask" ? "Питання менеджеру" : sum === "design" ? "Що виправити або домалювати дизайнеру" : "Що на Android працює інакше"}</b>
+              <button className="pbtn sm" onClick={() => setSum(null)}>Закрити</button>
+            </div>
+            <p className="note">Кожен пункт — один раз; під ним екрани, де він трапляється (натисни, щоб перейти й подивитися рамку та приклад).</p>
+            <ol className="sum-list">
+              {SUMMARY[sum].map((it, i) => (
+                <li key={i}><span className="num" style={{ background: KINDS[sum].color }}>{i + 1}</span>
+                  <div><div>{it.text}</div>
+                    <div className="sum-scr">{it.screens.map((id) => { const sc = SCREENS.find((x) => x.id === id); return sc && (
+                      <button key={id} className="pbtn sm" onClick={() => { setSum(null); go(id); }}>{sc.name}</button>); })}</div>
+                  </div></li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      )}
       <aside className="panel" aria-label="Prototype screens">
         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
           <h1>Seciro · prototype</h1>
-          <p className="sub">Ряди 1–6 з Figma · build {BUILD}. Клацай у телефоні, як у застосунку. Крапка біля екрана — статус, нижче — нотатки.</p>
+          <p className="sub">Усі ряди 1–10 з Figma · build {BUILD}. Клацай у телефоні, як у застосунку. Крапка біля екрана — статус, нижче — нотатки.</p>
         </div>
         <div className="newbar">
           <span><b>Нове в build {NEW_BUILD}:</b> {NEW_LABEL}</span>
           <button className="pbtn sm" aria-pressed={onlyNew} onClick={() => setOnlyNew((v) => !v)}>{onlyNew ? "Усі екрани" : "Лише нові"}</button>
+        </div>
+        <div className="sumbar">
+          <span>Зведення</span>
+          {["ask", "design", "android"].map((k) => (
+            <button key={k} className="pbtn sm" onClick={() => setSum(k)} style={{ borderColor: KINDS[k].color }}>
+              <i className="dot" style={{ background: KINDS[k].color }} />{k === "ask" ? "Менеджеру" : k === "design" ? "Дизайнеру" : "Android"} · {SUMMARY[k].length}</button>))}
         </div>
         <div className="label">Screens</div>
         <ul className="scr-list" ref={listRef}>
@@ -1576,7 +2109,7 @@ function App() {
         </ul>
         <div className="row">
           <button className="pbtn" onClick={back} disabled={!hist.length}>← Back</button>
-          <button className="pbtn" onClick={() => { setHist([]); setPlan("weekly"); go("splash", "fade"); }}>Restart</button>
+          <button className="pbtn" onClick={() => { SEEN.clear(); setHist([]); setPlan("weekly"); go("splash", "fade"); }}>Restart</button>
         </div>
         <div className="notes">
           <div className="label" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -1609,6 +2142,16 @@ function App() {
               <button key={v} className="pbtn" aria-pressed={scen.code === v} onClick={() => setScen((o) => ({ ...o, code: v }))}>{t}</button>))}</div>
             <span>Type with the on-screen keys or your keyboard. On the letter keyboard “123” adds @, then dots.</span>
           </div>
+        </>)}
+        {BR_IDS.includes(screen) && (<>
+          <div className="label">Breach Check finds</div>
+          <div className="row">{[["none", "Nothing"], ["found", "2 breaches"]].map(([v, t]) => (
+            <button key={v} className="pbtn" aria-pressed={scen.breach === v} onClick={() => setScen((o) => ({ ...o, breach: v }))}>{t}</button>))}</div>
+        </>)}
+        {(screen === "dashboard" || screen === "settings" || ACC_IDS.includes(screen)) && (<>
+          <div className="label">Account</div>
+          <div className="row">{[["user", "Signed in"], ["guest", "Signed out"]].map(([v, t]) => (
+            <button key={v} className="pbtn" aria-pressed={scen.account === v} onClick={() => setScen((o) => ({ ...o, account: v }))}>{t}</button>))}</div>
         </>)}
         {(screen === "dashboard" || screen === "dash-issues" || screen === "scan") && (<>
           <div className="label">Scan finds</div>

@@ -96,6 +96,19 @@ body { background: var(--page); color: var(--ink); font-family: var(--ui); }
 @keyframes qrLine { from { transform: translateY(0); } to { transform: translateY(246px); } }
 .spin-soft > * { animation: spinSoft .9s linear infinite; }
 @keyframes spinSoft { to { transform: rotate(360deg); } }
+.arc-draw { stroke-dasharray: 1 2; animation: arcDraw 1s cubic-bezier(.3,.8,.3,1) .1s both; }
+@keyframes arcDraw { from { stroke-dashoffset: 1.02; } to { stroke-dashoffset: 0; } }
+.sumbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.sumbar .pbtn { text-transform: none; letter-spacing: 0; display: inline-flex; align-items: center; gap: 5px; }
+.sum-overlay { position: fixed; inset: 0; z-index: 100; background: rgba(8, 12, 20, .58); display: flex; align-items: flex-start; justify-content: center;
+  padding: 40px max(16px, env(safe-area-inset-right, 0px)) 40px max(16px, env(safe-area-inset-left, 0px)); overflow-y: auto; box-sizing: border-box; }
+.sum-card { width: min(760px, 100%); background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 18px; padding: 20px 22px; box-sizing: border-box;
+  display: flex; flex-direction: column; gap: 10px; box-shadow: 0 30px 80px rgba(0,0,0,.35); }
+.sum-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 17px; }
+.sum-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.sum-list li { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.45; background: var(--chip); border-radius: 12px; padding: 10px 12px; }
+.sum-list .num { flex: none; width: 22px; height: 22px; border-radius: 50%; color: #fff; font: 700 11px/22px var(--ui); text-align: center; }
+.sum-scr { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
 .mark { position: absolute; border: 2.5px solid; border-radius: 12px; box-sizing: border-box; transition: opacity .2s, background .2s; }
 .mark span { position: absolute; top: -10px; right: -10px; width: 20px; height: 20px; border-radius: 50%; color: #fff; font: 700 11px/20px var(--ui); text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.25); }
 .scr-list .nid { opacity: .6; font-variant-numeric: tabular-nums; font-size: 11px; }
