@@ -99,3 +99,8 @@ metadata:
   (billing, vpn, testacc, web, qrcheck, extras, review, storage, breach, password). Дизайнер (PCBW…, v10): 12 пунктів, Web Protection — через VPN
   (не Chrome / Private DNS), + категорії Storage, помилки Breach Check, стани My Account, Language. Джерела кітів — scratchpad (`build_kits.py`,
   `mgr_q2.json`, `des_new.json`, `page.src.html`); у репо не кладемо (внутрішні деталі API). Якщо scratchpad зник — читати живі версії Artifact read.
+- 27.11 (третя редакція, за відгуком VELDAN): кіт Віталія v16 — «питання Влада до Віталія», 10 карток (billing, vpn, fastest, testacc, web,
+  qrcheck, extras, review, breach, password; storage знято) з «Навіщо / Що знаємо / Варіанти / Що потрібно», рамками на кадрах Figma й начерками;
+  кіт дизайнера v11 — «завдання від Влада», рамки «про що пункт», Protection Review = ті самі 4 пункти дизайну. Прототип build 22 (v24):
+  сітка «▦ Усі екрани · 73» (75 кадрів Figma = 73 екрани: пейвол — один екран з трьома тарифами). Джерела кітів — scratchpad
+  (`mgr_q3.py`, `des3.py`, `caps2.json`, `anno2.py`, `build_kits.py`, `page.src.html`); у репо не кладемо.
