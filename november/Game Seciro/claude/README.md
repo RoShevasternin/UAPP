@@ -111,8 +111,9 @@ VpnService Play, HIBP від $4.39/міс, Safe Browsing не комерційн
 - Storage Cleaner — так: MediaStore (READ_MEDIA_IMAGES / VIDEO), видалення через системне підтвердження `createDeleteRequest`.
 - Breach Check — так, через API витоків (напр. Have I Been Pwned — платний ключ) і краще через наш сервер.
 - Password Generator — так, локально (SecureRandom).
-- Перевірки «Protection review» — Android-відповідники: блокування екрана (`KeyguardManager.isDeviceSecure`), біометрія
-  (`BiometricManager`), рівень патча (`Build.VERSION.SECURITY_PATCH`), Play Protect, режим розробника / USB-налагодження.
+- Перевірки «Protection review» — ті самі 4 пункти, що в дизайні, з Android-змістом (питання до Віталія, 27.11): Web Protection = VPN
+  увімкнено, Software Update = рівень патча (`Build.VERSION.SECURITY_PATCH`), Passcode = блокування екрана (`KeyguardManager.isDeviceSecure`),
+  Face ID = відбиток / обличчя (`BiometricManager`). Своїх пунктів (Play Protect, режим розробника) не додаємо — нічого від себе.
 - Вхід за поштою з кодом і перевірка підписки — потрібен бекенд (серверна команда); оплата — Google Play Billing.
 
 ## Дизайн → код (як в Orbit Dash)
@@ -218,3 +219,12 @@ VpnService Play, HIBP від $4.39/міс, Safe Browsing не комерційн
 - **Зведення в панелі**: «Менеджеру / Дизайнеру / Android» — усі нотатки без повторів з переходом на екрани (для розмови з менеджером).
 - Звірка всіх 75 екранів ≤ 1 % (крім навмисних: Safari → Chrome 3.4 %, сітка скріншотів 1.6 % через стиснуті мініатюри).
   Автотести: `proto-rows7-10-test.py` (+ усі попередні). Кадри порівняння в сторінці — 640 px (сторінка 11 МБ із 16).
+
+## Сітка «Усі екрани» і третя редакція кітів (build 22, 27.11)
+
+- Кнопка **«▦ Усі екрани · 73»** у панелі — сітка всіх екранів за 10 рядами з мініатюрами, статусом нотаток і NEW; клік відкриває екран.
+  75 кадрів Figma = 73 екрани (пейвол — один екран з трьома тарифами). «Clean up storage» — як у Figma: відкриває вибір файлів.
+- Нотатки «Віталію» в прототипі узгоджено з картками кіта (варіанти A/B/C, приклади `br_logo`, `pw_range`, нові `and_review` — 4 пункти дизайну).
+- Кіти: Віталію — https://claude.ai/artifact/Hj3FPMn8KawTvA1gCBkAUa (10 карток: хто кого питає, навіщо, варіанти, рамки на Figma, начерки),
+  дизайнеру — https://claude.ai/artifact/PCBWKfSi31ZxWoQc3hFeHL (завдання від Влада). Джерела кітів — лише в scratchpad (деталі API, репо публічне).
+- Автотест `proto-rows7-10-test.py` тепер перевіряє й «Clean up storage» та сітку (73 клітинки, 10 рядів, перехід на екран).

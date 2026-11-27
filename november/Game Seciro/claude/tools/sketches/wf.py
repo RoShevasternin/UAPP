@@ -157,7 +157,8 @@ def wireframes():
             rows(290, [(x, "") for x in [T("1  Откройте Настройки", "1  Відкрийте Налаштування", "1  Open Settings")[l], T("2  Сеть и интернет", "2  Мережа й інтернет", "2  Network & internet")[l], T("3  Частный DNS", "3  Приватний DNS", "3  Private DNS")[l], T("4  Вставьте адрес Seciro", "4  Вставте адресу Seciro", "4  Paste the Seciro address")[l], T("5  Сохранить — готово", "5  Зберегти — готово", "5  Save — done")[l]]]),
             btn(600, T("Скопировать адрес", "Скопіювати адресу", "Copy the address")[l]), link(690, T("Понятно", "Зрозуміло", "Got it")[l])]))
     add("and_review", T("Проверки для Android", "Перевірки для Android", "Android checks"),
-        lambda l: phone([nav("Protection Review"), rows(120, [(x, "ok") for x in [T("Блокировка экрана", "Блокування екрана", "Screen lock")[l], T("Обновление системы", "Оновлення системи", "System update")[l], "Google Play Protect", T("Неизвестные источники", "Невідомі джерела", "Unknown sources")[l], T("Режим разработчика", "Режим розробника", "Developer mode")[l]]])]))
+        # 27.11: ті самі 4 пункти, що в дизайні (Web Protection, Software Update, Passcode, Face ID), лише з Android-змістом — нічого від себе
+        lambda l: phone([nav("Protection Review"), rows(120, [(x, "ok") for x in [T("Web Protection (через VPN)", "Web Protection (через VPN)", "Web Protection (via VPN)")[l], T("Обновление Android", "Оновлення Android", "Android update")[l], T("Блокировка экрана", "Блокування екрана", "Screen lock")[l], T("Отпечаток пальца", "Відбиток пальця", "Fingerprint")[l]]])]))
     add("perm_pre", T("Перед системным окном", "Перед системним вікном", "Before the system dialog"),
         lambda l: phone([icon(300, 56, "photo"), title(400, T("Доступ к фото", "Доступ до фото", "Photo access")[l]), text(434, T("Найдём дубликаты и освободим место.\nФото не покидают телефон.", "Знайдемо дублікати й звільнимо місце.\nФото не залишають телефон.", "We'll find duplicates and free up space.\nPhotos never leave your phone.")[l]), btn(640, T("Продолжить", "Продовжити", "Continue")[l]), link(730, T("Не сейчас", "Не зараз", "Not now")[l])]))
     add("perm_limited", T("Доступ только к части фото", "Доступ лише до частини фото", "Access to some photos only"),
@@ -261,6 +262,53 @@ def wireframes():
             text(612, T("Подписка при этом НЕ отменяется.\nОтмените её в Google Play или в кабинете.", "Підписка при цьому НЕ скасовується.\nСкасуйте її в Google Play або в кабінеті.", "This does NOT cancel your subscription.\nCancel it in Google Play or your account.")[l]),
             f'<rect x="24" y="672" width="327" height="52" rx="26" fill="#d92635"/>', txt(187.5, 704, T("Удалить", "Видалити", "Delete")[l], 16, "#fff", 600),
             link(752, T("Отмена", "Скасувати", "Cancel")[l])]))
+    # ── для кіту дизайнера (27.11) ──
+    def dupes(l):
+        g = [nav("Duplicate Photos"), txt(24, 140, T("2 группы · 5 фото", "2 групи · 5 фото", "2 groups · 5 photos")[l], 14, MUT, 500, "start")]
+        for gi, (y, n) in enumerate([(160, 3), (420, 2)]):
+            g.append(f'<rect x="16" y="{y}" width="343" height="240" rx="18" fill="{CARD}"/>')
+            for i in range(n):
+                x = 28 + i * 108
+                g.append(f'<rect x="{x}" y="{y+14}" width="100" height="150" rx="10" fill="{DIM}"/>')
+                if i == 0: g.append(f'<rect x="{x+6}" y="{y+20}" width="52" height="20" rx="10" fill="#1f9d55"/>' + txt(x + 32, y + 34, T("Лучшее", "Найкраще", "Best")[l], 11, "#fff", 700))
+                else: g.append(f'<circle cx="{x+86}" cy="{y+30}" r="10" fill="{ACC}"/><path d="M{x+81} {y+30} l4 4 l7 -8" stroke="#fff" stroke-width="2.4" fill="none"/>')
+            g.append(txt(28, y + 196, T("Оставить лучшее, удалить остальные", "Лишити найкраще, видалити решту", "Keep the best, delete the rest")[l], 13, INK, 600, "start"))
+        g.append(btn(700, T("Удалить 3 фото", "Видалити 3 фото", "Delete 3 photos")[l]))
+        return phone(g)
+    add("st_dupes", T("Пример: дубликаты группами", "Приклад: дублікати групами", "Example: duplicates in groups"), dupes)
+    add("lang_pick", T("Пример: выбор языка", "Приклад: вибір мови", "Example: language picker"),
+        # мови не вигадуємо: English (як у Figma) + сірі рядки-заглушки
+        lambda l: phone([nav("Language"), rows(120, [("English", "ok"), ("", ""), ("", "")])]
+            + [f'<rect x="74" y="{120 + i * 56 + 22}" width="{150 - i * 34}" height="12" rx="6" fill="{DIM}"/>' for i in (1, 2)]
+            + [text(330, T("Какие языки — решает менеджер.\nИли убрать пункт, если язык один", "Які мови — вирішує менеджер.\nАбо прибрати пункт, якщо мова одна", "Which languages is the manager's call.\nOr remove the item if there's one language")[l])]))
+    # ── приклади для питань Віталію (27.11) ──
+    def brl(l):
+        g = [nav("Breach Check"), txt(24, 140, T("Найдено в 2 утечках", "Знайдено у 2 витоках", "Found in 2 breaches")[l], 15, INK, 600, "start")]
+        for i, (name, dom, yr) in enumerate([("Example Shop", "example-shop.com", "2023"), ("Sample Forum", "sample-forum.net", "2021")]):
+            y = 160 + i * 150
+            g.append(f'<rect x="16" y="{y}" width="343" height="134" rx="18" fill="{CARD}"/>')
+            g.append(f'<circle cx="52" cy="{y+40}" r="20" fill="{ACC}"/>' + txt(52, y + 47, name[0], 18, "#fff", 700))
+            g.append(txt(84, y + 36, name, 16, INK, 600, "start") + txt(84, y + 56, f"{dom} · {yr}", 13, MUT, 400, "start"))
+            g.append(f'<rect x="32" y="{y+80}" width="96" height="26" rx="13" fill="{BG}" stroke="{LINE}"/>' + txt(80, y + 98, "Email", 12, INK, 500))
+            g.append(f'<rect x="136" y="{y+80}" width="110" height="26" rx="13" fill="{BG}" stroke="{LINE}"/>' + txt(191, y + 98, T("Пароли", "Паролі", "Passwords")[l], 12, INK, 500))
+        g.append(text(500, T("Вместо логотипа — первая буква названия", "Замість логотипа — перша літера назви", "The name's first letter instead of a logo")[l]))
+        return phone(g)
+    add("br_logo", T("Пример: вместо логотипа — первая буква", "Приклад: замість логотипа — перша літера", "Example: first letter instead of a logo"), brl)
+    def pwr(l):
+        g = [nav("Password Generator"), f'<rect x="16" y="120" width="343" height="72" rx="16" fill="{CARD}"/>', txt(187.5, 164, "k7#Qm2!vR9pL4xZ8", 20, INK, 600)]
+        y = 222
+        for name, lo, hi in [("A", 8, 20), ("B", 8, 32), ("C", 12, 64)]:
+            g.append(f'<rect x="16" y="{y}" width="343" height="124" rx="16" fill="{CARD}"/>')
+            g.append(txt(32, y + 32, f"{T('Вариант', 'Варіант', 'Option')[l]} {name}: {lo}–{hi}", 15, INK, 600, "start"))
+            g.append(txt(343, y + 32, T("длина 16", "довжина 16", "length 16")[l], 13, MUT, 500, "end"))
+            x0, x1 = 48, 327
+            kx = x0 + (16 - lo) / (hi - lo) * (x1 - x0)
+            g.append(f'<rect x="{x0}" y="{y+64}" width="{x1-x0}" height="6" rx="3" fill="{DIM}"/><rect x="{x0}" y="{y+64}" width="{kx-x0:.0f}" height="6" rx="3" fill="{ACC}"/>')
+            g.append(f'<circle cx="{kx:.0f}" cy="{y+67}" r="12" fill="#fff" stroke="{LINE}" stroke-width="2"/>')
+            g.append(txt(x0, y + 104, str(lo), 13, MUT, 600) + txt(x1, y + 104, str(hi), 13, MUT, 600))
+            y += 140
+        return phone(g)
+    add("pw_range", T("Пример: границы ползунка — варианты A, B, C", "Приклад: межі повзунка — варіанти A, B, C", "Example: slider limits — options A, B, C"), pwr)
     return W
 
 if __name__ == "__main__":

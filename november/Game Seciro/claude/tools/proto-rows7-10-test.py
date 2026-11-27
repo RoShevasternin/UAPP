@@ -69,6 +69,14 @@ const cardText=()=>{ const t=[...app().querySelectorAll('*')].filter(e=>e.childr
   const sb=[...document.querySelectorAll('.sumbar button')]; log.push('summary buttons: '+sb.map(b=>b.textContent).join(' | '));
   sb[0].click(); await sleep(400); const items=document.querySelectorAll('.sum-list li').length; log.push('manager list items: '+items);
   const chip=document.querySelector('.sum-scr button'); const nm=chip&&chip.textContent; chip&&chip.click(); await sleep(900); log.push('chip «'+nm+'» → '+now()+' | overlay closed: '+!document.querySelector('.sum-overlay'));
+  // Clean up storage — як у Figma: відкриває вибір файлів (Screenshots)
+  await nav('Storage Cleaner · results',1000); await tap('Clean up storage',900); log.push('Clean up storage → '+now());
+  // Сітка «Усі екрани»: кількість, перехід на вибраний екран
+  const ab=document.querySelector('.allbtn'); log.push('all-screens button: '+(ab?ab.textContent:'—'));
+  if(ab){ ab.click(); await sleep(500); }
+  const cells=[...document.querySelectorAll('.gcell')]; log.push('grid cells: '+cells.length+' | rows: '+document.querySelectorAll('.grid-card h3, .grid-card .grow, .grid-card section').length);
+  const pick=cells.find(c=>/Password Generator/.test(c.textContent)); const pn=pick&&pick.textContent; if(pick){ pick.click(); await sleep(900); }
+  log.push('grid «'+pn+'» → '+now()+' | grid closed: '+!document.querySelector('.grid-card'));
   } catch(e) { log.push('EXC '+e.message); } done(); })();
 </script>'''
 with tempfile.TemporaryDirectory() as t:

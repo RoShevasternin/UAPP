@@ -134,7 +134,7 @@ import logoChrome from "../claude/figma/logos/chrome_5-9492.png";
 import btnX1 from "../claude/figma/vpnbtn/x1.png";
 import btnX2 from "../claude/figma/vpnbtn/x2.png";
 
-export const BUILD = 21;   // піднімати на кожну публікацію
+export const BUILD = 22;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
@@ -1387,7 +1387,7 @@ function Storage({ preset, onState, back, toast, raw }) {
     const fid = s.phase === "idle" ? "5:4126" : "5:6106", f = frameOf(fid), ov = {};
     ov[findNode(f, (x) => (x.comp || "").startsWith("Icon Btn")).id] = { onClick: back, className: "tap" };
     const pop = findNode(f, (x) => x.name === "popup"); if (pop) ov[pop.id] = false;
-    ov[btnWith(f, "Clean up storage").id] = { onClick: () => upd({ phase: "clean" }), className: "tap" };
+    ov[btnWith(f, "Clean up storage").id] = { onClick: () => upd({ phase: "shots", cat: "Screenshots" }), className: "tap" };   // як у Figma: далі вибір → «Clean selected»
     labelsIn(f).forEach((l, i) => { const t = firstText(l); ov[l.id] = { onClick: () => upd({ phase: "shots", cat: t }), className: raw ? "" : "tap rise", style: { animationDelay: `${0.14 + i * 0.05}s` } }; });
     gaugeOv(f, ov, 87);
     const iF = frameOf("5:6268"), intro = findNode(iF, (x) => x.name === "popup"), iBlack = findNode(iF, (x) => x.name === "blackout");
@@ -1842,6 +1842,15 @@ const SCREENS = [
   { id: "account-guest", name: "My Account · signed out", node: "5:2343", frame: r10f03 },
 ];
 const ORDER = SCREENS.map((s) => s.id);
+const FIGMA_FRAMES = 75;   // кадрів у секції «Seciro All-in-One» (пейвол — 3 кадри, у прототипі один екран)
+// ряди Figma (як читати макет: зліва направо, рядами вниз)
+const ROWS = [
+  { n: 1, name: "Онбординг і підписка" }, { n: 2, name: "Вхід за кодом і стан підписки" }, { n: 3, name: "Головна й перевірка захисту" },
+  { n: 4, name: "VPN" }, { n: 5, name: "Web Protection" }, { n: 6, name: "Safe QR Scanner" }, { n: 7, name: "Storage Cleaner" },
+  { n: 8, name: "Breach Check" }, { n: 9, name: "Password Generator" }, { n: 10, name: "Settings і My Account" },
+];
+const rowOf = (id) => id === "splash" || /^onb/.test(id) || id === "paywall" ? 1 : AUTH_IDS.includes(id) ? 2 : /^(dashboard|scan|result|sheet|dash-issues)/.test(id) ? 3
+  : VPN_IDS.includes(id) ? 4 : WEB_IDS.includes(id) ? 5 : QR_IDS.includes(id) ? 6 : ST_IDS.includes(id) ? 7 : BR_IDS.includes(id) ? 8 : PW_IDS.includes(id) ? 9 : 10;
 // Зведення нотаток за видом: кожен текст один раз + екрани, де він трапляється (у порядку екранів)
 const SUMMARY = (() => { const out = { ask: [], design: [], android: [] };
   SCREENS.flatMap((sc) => (sc.id === "paywall" ? ["paywall"] : [sc.id])).concat(["onb1", "onb2", "onb3", "onb4", "onb5", "onb6"]).forEach((id) => (NOTES[id] || []).forEach((n) => {
@@ -1948,6 +1957,7 @@ function App() {
   const notes = NOTES[screen] || [];
   const [ex, setEx] = useState(null);   // { note, i } — приклад зліва замість кадру Figma
   const [sum, setSum] = useState(null);   // зведення: "ask" | "design" | "android"
+  const [grid, setGrid] = useState(false);   // схема всіх екранів
   useEffect(() => { setHl(null); setEx(null); }, [screen]);
   // приклад лише якщо така нотатка є на цьому екрані (стан міг лишитися з попереднього екрана)
   const exItem = ex && notes[ex.note] ? examplesOf(notes[ex.note])[ex.i] || null : null;
@@ -2059,11 +2069,33 @@ function App() {
         </div>
       </div>
 
+      {grid && (
+        <div className="sum-overlay" onClick={() => setGrid(false)}>
+          <div className="sum-card grid-card" onClick={(e) => e.stopPropagation()}>
+            <div className="sum-head">
+              <b>Усі екрани прототипу · {SCREENS.length}</b>
+              <button className="pbtn sm" onClick={() => setGrid(false)}>Закрити</button>
+            </div>
+            <p className="note">{FIGMA_FRAMES} кадрів Figma = {SCREENS.length} екранів (пейвол — один екран з трьома тарифами). Натисни екран, щоб відкрити. Крапка — статус нотаток, NEW — додано в останній збірці.</p>
+            {ROWS.map((r) => { const items = SCREENS.filter((sc) => rowOf(sc.id) === r.n); return (
+              <section key={r.n} className="grid-row">
+                <div className="grid-h"><b>{r.n}</b> {r.name} <span>· {items.length}</span></div>
+                <div className="grid">
+                  {items.map((sc) => (
+                    <button key={sc.id} className={"gcell" + (sc.id === screen ? " cur" : "")} onClick={() => { setGrid(false); go(sc.id); }}>
+                      <img src={sc.frame} alt="" loading="lazy" />
+                      <span className="gname"><i className="dot" style={{ background: KINDS[statusOf(sc.id)].color }} />{sc.name}{NEW.includes(sc.id) && <em className="new">NEW</em>}</span>
+                    </button>))}
+                </div>
+              </section>); })}
+          </div>
+        </div>
+      )}
       {sum && (
         <div className="sum-overlay" onClick={() => setSum(null)}>
           <div className="sum-card" onClick={(e) => e.stopPropagation()}>
             <div className="sum-head">
-              <b style={{ color: KINDS[sum].color }}>{sum === "ask" ? "Питання менеджеру" : sum === "design" ? "Що виправити або домалювати дизайнеру" : "Що на Android працює інакше"}</b>
+              <b style={{ color: KINDS[sum].color }}>{sum === "ask" ? "Питання Влада (розробник) до Віталія (менеджер)" : sum === "design" ? "Завдання дизайнеру: що виправити або домалювати" : "Що на Android працює інакше (робить Влад)"}</b>
               <button className="pbtn sm" onClick={() => setSum(null)}>Закрити</button>
             </div>
             <p className="note">Кожен пункт — один раз; під ним екрани, де він трапляється (натисни, щоб перейти й подивитися рамку та приклад).</p>
@@ -2088,11 +2120,12 @@ function App() {
           <span><b>Нове в build {NEW_BUILD}:</b> {NEW_LABEL}</span>
           <button className="pbtn sm" aria-pressed={onlyNew} onClick={() => setOnlyNew((v) => !v)}>{onlyNew ? "Усі екрани" : "Лише нові"}</button>
         </div>
+        <button className="pbtn allbtn" onClick={() => setGrid(true)}>▦ Усі екрани · {SCREENS.length}<span>{FIGMA_FRAMES} кадрів Figma, 10 рядів</span></button>
         <div className="sumbar">
           <span>Зведення</span>
           {["ask", "design", "android"].map((k) => (
             <button key={k} className="pbtn sm" onClick={() => setSum(k)} style={{ borderColor: KINDS[k].color }}>
-              <i className="dot" style={{ background: KINDS[k].color }} />{k === "ask" ? "Менеджеру" : k === "design" ? "Дизайнеру" : "Android"} · {SUMMARY[k].length}</button>))}
+              <i className="dot" style={{ background: KINDS[k].color }} />{k === "ask" ? "Віталію" : k === "design" ? "Дизайнеру" : "Android"} · {SUMMARY[k].length}</button>))}
         </div>
         <div className="label">Screens</div>
         <ul className="scr-list" ref={listRef}>
