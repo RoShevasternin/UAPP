@@ -228,3 +228,22 @@ VpnService Play, HIBP від $4.39/міс, Safe Browsing не комерційн
 - Кіти: Віталію — https://claude.ai/artifact/Hj3FPMn8KawTvA1gCBkAUa (10 карток: хто кого питає, навіщо, варіанти, рамки на Figma, начерки),
   дизайнеру — https://claude.ai/artifact/PCBWKfSi31ZxWoQc3hFeHL (завдання від Влада). Джерела кітів — лише в scratchpad (деталі API, репо публічне).
 - Автотест `proto-rows7-10-test.py` тепер перевіряє й «Clean up storage» та сітку (73 клітинки, 10 рядів, перехід на екран).
+
+## Storage Cleaner на Android: як шукаємо дублікати (план, 27.11)
+
+Усе на телефоні, без сервера (у документації лише події `cleanup_scanned` / `cleanup_done`). Нативний шар Kotlin, екрани LibGDX отримують групи й прогрес.
+- Доступ: MediaStore; `READ_MEDIA_IMAGES` / `READ_MEDIA_VIDEO` (13+), `READ_EXTERNAL_STORAGE` (10–12); Android 14 — частковий доступ (плашка «Дозволити всі»).
+- Screenshots — фото з теки `Screenshots` (RELATIVE_PATH / bucket).
+- Duplicate Photos — групи за розміром файла → хеш вмісту лише для збігів (100 % копії).
+- Similar Photos — перцептивний хеш (pHash/dHash) з мініатюри (`loadThumbnail`), відстань Геммінга ≤ поріг; порівнюємо лише знімки,
+  близькі в часі (серії). «Найкраще» в групі — різкість (дисперсія Лапласіана), роздільність, новіше. Якщо мало — TFLite-ембединги.
+- Similar Videos — 3–4 кадри (`MediaMetadataRetriever.getFrameAtTime`) + хеші + тривалість.
+- Фон із прогресом (кільце «Scanning…»), кеш хешів у локальній БД за id + date_modified — повторний скан за секунди.
+- Видалення — `MediaStore.createDeleteRequest` (11+, системне вікно); Android 10 — по файлу (RecoverableSecurityException).
+- Пороги підбирати на девайсі на тестовій галереї (серії, скріни, копії з месенджерів).
+
+## Де зупинились (27.11, кінець сесії)
+
+- Прототип build 22 — усі 73 екрани готові. Кіти: Віталію (v16) і дизайнеру (v11) — тексти й копії сторінок у `~/Apps/Seciro-private/`
+  (поза git). Чекаємо: відповіді Віталія (10 карток), екрани дизайнера (12 пунктів), сервер (VPN Android, покупки Play).
+- Наступне: розмова VELDAN з Віталієм по прототипу → Kotlin (`Seciro/`: core / desktop / android) → десктоп → USB.

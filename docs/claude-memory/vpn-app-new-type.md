@@ -102,5 +102,4 @@ metadata:
 - 27.11 (третя редакція, за відгуком VELDAN): кіт Віталія v16 — «питання Влада до Віталія», 10 карток (billing, vpn, fastest, testacc, web,
   qrcheck, extras, review, breach, password; storage знято) з «Навіщо / Що знаємо / Варіанти / Що потрібно», рамками на кадрах Figma й начерками;
   кіт дизайнера v11 — «завдання від Влада», рамки «про що пункт», Protection Review = ті самі 4 пункти дизайну. Прототип build 22 (v24):
-  сітка «▦ Усі екрани · 73» (75 кадрів Figma = 73 екрани: пейвол — один екран з трьома тарифами). Джерела кітів — scratchpad
-  (`mgr_q3.py`, `des3.py`, `caps2.json`, `anno2.py`, `build_kits.py`, `page.src.html`); у репо не кладемо.
+  сітка «▦ Усі екрани · 73» (75 кадрів Figma = 73 екрани: пейвол — один екран з трьома тарифами). Scratchpad-вихідники зникли; тексти й копії кітів — `/Users/admin/Apps/Seciro-private/` (поза git), див. [[seciro-handoff]].
