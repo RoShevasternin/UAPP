@@ -232,9 +232,9 @@ def wireframes():
             txt(187.5, 260, T("Android держит это уведомление,", "Android тримає це сповіщення,", "Android keeps this notification")[l], 13, "#9aa3b5"),
             txt(187.5, 280, T("пока VPN включён", "поки VPN увімкнений", "while the VPN is on")[l], 13, "#9aa3b5")]))
     add("upd_android", T("Пример: инструкция обновления Android", "Приклад: інструкція оновлення Android", "Example: Android update guide"),
-        lambda l: phone([dim(), sheet(150), txt(187.5, 210, "Seciro", 18, INK, 700), title(258, T("Обновление системы", "Оновлення системи", "System update")[l]),
-            rows(290, [(x, "") for x in [T("1  Откройте Настройки", "1  Відкрийте Налаштування", "1  Open Settings")[l], T("2  Система", "2  Система", "2  System")[l], T("3  Обновление системы", "3  Оновлення системи", "3  System update")[l], T("4  Проверить обновления", "4  Перевірити оновлення", "4  Check for update")[l]]]),
-            text(540, T("У Samsung и Xiaomi путь чуть другой", "У Samsung і Xiaomi шлях трохи інший", "Samsung and Xiaomi differ slightly")[l]), btn(640, "Got it")]))
+        lambda l: phone([dim(), sheet(150), txt(187.5, 210, "Seciro", 18, INK, 700), title(258, "Software Update"),
+            rows(290, [(x, "") for x in ["1  Open Settings, search “update”", "2  Tap Software update", "3  Download and install", "4  Tap Restart now"]]),
+            text(500, "Can't find it?\nSamsung: Settings → Software update\nXiaomi: Settings → About phone"), btn(640, "Open Settings"), btn2(704, "Got it")]))
     add("onb_phone", T("Пример: без «iPhone»", "Приклад: без «iPhone»", "Example: no “iPhone”"),
         lambda l: phone([f'<rect x="132" y="150" width="111" height="220" rx="18" fill="none" stroke="{INK}" stroke-width="4"/><rect x="176" y="160" width="23" height="5" rx="2.5" fill="{INK}"/>',
             f'<path d="M187.5 220 l30 12 v20 c0 20 -13 33 -30 40 c-17 -7 -30 -20 -30 -40 v-20 z" fill="{DIM}"/>',
