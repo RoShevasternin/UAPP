@@ -46,7 +46,7 @@ with tempfile.TemporaryDirectory() as t:
 m = re.search(r'data-log="([^"]*)"', res)
 if not m: sys.exit("no log (тест не встиг або впав)")
 data = json.loads(H.unescape(m.group(1)))
-if TEXTS: print(json.dumps(data, ensure_ascii=False)); sys.exit()
+if TEXTS or "--json" in sys.argv: print(json.dumps(data, ensure_ascii=False)); sys.exit()
 bad = 0
 for name, rec in data.items():
     if name.startswith("__"): print(name, rec); bad += 1; continue

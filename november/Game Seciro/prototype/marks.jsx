@@ -192,4 +192,4 @@ export function NoteBody({ n, onEx, exOn }) {
     </div>
   );
 }
-export const noteKey = (n) => n.t || n.text || "";
+export const noteKey = (n) => (n.t || "") + "|" + (n.now || n.text || "");
