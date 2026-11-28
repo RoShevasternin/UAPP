@@ -7,6 +7,7 @@
 // Позиції — абсолютні координати кадру, як у Figma, щоб звіряти «піксель у піксель».
 // ─────────────────────────────────────────────────────────────────────────────
 import { Component, useEffect, useRef, useState } from "react";
+import { Marks, NoteBody, noteKey } from "./marks.jsx";
 import LAYERS from "./.tools/layers.gen.js";
 
 import logoSplash from "../claude/figma/art3x/5-2530_logo_5-2554.png";
@@ -134,7 +135,7 @@ import logoChrome from "../claude/figma/logos/chrome_5-9492.png";
 import btnX1 from "../claude/figma/vpnbtn/x1.png";
 import btnX2 from "../claude/figma/vpnbtn/x2.png";
 
-export const BUILD = 26;   // піднімати на кожну публікацію
+export const BUILD = 27;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
@@ -732,7 +733,7 @@ function Auth({ preset, onState, go, back, scen, toast, raw }) {
             <Art src={imgCode} w={171} x={102} y={16} />
             <T x={16} y={167} w={343} size={20} lh={24} title>Check your email</T>
             <T x={16} y={203} w={343} size={14} lh={20} color={C.grey}>
-              {"If this email has a subscription, we’ve sent a code to "}<span style={{ color: C.blue }}>{s.email}.</span>{" It expires in 60 minutes."}
+              {"If\u00a0this email has a\u00a0subscription, we’ve sent a\u00a0code to\u00a0"}<span style={{ color: C.blue }}>{s.email}.</span>{" It\u00a0expires in\u00a060 minutes."}
             </T>
             <CodeCard code={s.code} focus={s.focus} error={s.error} shake={shake} onFocus={() => upd({ focus: true, ...(s.error ? { error: false, code: "" } : {}) })} />
           </>)}
@@ -1854,7 +1855,7 @@ const rowOf = (id) => id === "splash" || /^onb/.test(id) || id === "paywall" ? 1
 // Зведення нотаток за видом: кожен текст один раз + екрани, де він трапляється (у порядку екранів)
 const SUMMARY = (() => { const out = { ask: [], design: [], android: [] };
   SCREENS.flatMap((sc) => (sc.id === "paywall" ? ["paywall"] : [sc.id])).concat(["onb1", "onb2", "onb3", "onb4", "onb5", "onb6"]).forEach((id) => (NOTES[id] || []).forEach((n) => {
-    const list = out[n.kind]; if (!list) return; let it = list.find((x) => x.text === n.text); if (!it) { it = { text: n.text, screens: [] }; list.push(it); }
+    const list = out[n.kind]; if (!list) return; let it = list.find((x) => x.key === noteKey(n)); if (!it) { it = { key: noteKey(n), n, screens: [] }; list.push(it); }
     if (!it.screens.includes(id)) it.screens.push(id); }));
   return out; })();
 const store = {
@@ -1866,7 +1867,7 @@ function useScale() {
   // Два телефони (прототип + Figma) і панель: на широкому — в ряд, на вузькому — один під одним
   const calc = () => {
     const narrow = window.innerWidth <= 1000;
-    const w = narrow ? Math.min(window.innerWidth - 32, 420) : Math.min(375 * 1.15, (window.innerWidth - 300 - 2 * 28 - 40 - 2 * 20) / 2);
+    const w = narrow ? Math.min(window.innerWidth - 32, 420) : Math.min(375 * 1.15, (window.innerWidth - 400 - 2 * 28 - 40 - 2 * 20) / 2);
     const h = narrow ? Infinity : window.innerHeight - 48 - 20 - 30;
     return Math.min(w / 375, h / 812);
   };
@@ -1952,6 +1953,7 @@ function App() {
   }, [screen]);
   // нотатки до екрана: рамки на телефоні (вмик./вимк.), підсвічена нотатка, фільтр «лише нові»
   const [marks, setMarks] = useState(store.get("seciro.marks") !== "0");
+  const scrRef = useRef(null), appRef = useRef(null);
   const [hl, setHl] = useState(null);
   const [onlyNew, setOnlyNew] = useState(false);
   const notes = NOTES[screen] || [];
@@ -2008,13 +2010,13 @@ function App() {
         <div className="cap"><b>Prototype</b><span>click like in the app</span></div>
         <div className="phone-shell">
           <div className="phone-clip" style={{ width: 375 * scale, height: 812 * scale }}>
-            <div className="app" style={{ width: 375, height: 812, position: "absolute", left: 0, top: 0, transform: `scale(${scale})`, transformOrigin: "0 0", background: C.bg }}>
+            <div className="app" ref={appRef} style={{ width: 375, height: 812, position: "absolute", left: 0, top: 0, transform: `scale(${scale})`, transformOrigin: "0 0", background: C.bg }}>
               {leaving && (
                 <div key={"out-" + leaving.k} className={`scr-out-${leaving.dir}`} style={{ position: "absolute", inset: 0, background: C.bg, pointerEvents: "none", overflow: "hidden" }}>
                   <StaticScreen id={leaving.id} plan={plan} scen={scen} />
                 </div>
               )}
-              <div key={groupOf(screen)} className={`scr-in-${dir}${dir === "up" ? " enter-up" : ""}`} style={{ position: "absolute", inset: 0, background: C.bg, overflow: "hidden" }}>
+              <div key={groupOf(screen)} ref={scrRef} className={`scr-in-${dir}${dir === "up" ? " enter-up" : ""}`} style={{ position: "absolute", inset: 0, background: C.bg, overflow: "hidden" }}>
                 {screen === "splash" && <Splash go={go} />}
                 {onbIndex >= 0 && <Onboarding index={onbIndex} onIndex={onIndex} go={go} />}
                 {screen === "paywall" && <Paywall go={go} toast={toast} plan={plan} setPlan={setPlan} />}
@@ -2032,16 +2034,7 @@ function App() {
               </div>
               <StatusBar />
               <GestureBar />
-              {marks && notes.some((n) => n.box) && (
-                <div style={{ position: "absolute", inset: 0, zIndex: 35, pointerEvents: "none" }}>
-                  {notes.map((n, i) => n.box && (
-                    <div key={i} className="mark" style={{ position: "absolute", left: n.box[0] - 3, top: n.box[1] - 3, width: n.box[2] + 6, height: n.box[3] + 6,
-                      borderColor: KINDS[n.kind].color, background: hl === i ? KINDS[n.kind].color + "26" : "transparent", opacity: hl === null || hl === i ? 1 : 0.35 }}>
-                      <span style={{ background: KINDS[n.kind].color }}>{i + 1}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
+              {marks && notes.some((n) => n.box || n.at) && <Marks notes={notes} hl={hl} scale={scale} rootRef={scrRef} appRef={appRef} screen={screen} />}
               {msg && (
                 <Abs x={24} y={84} w={327} style={{ zIndex: 30, background: "rgba(20,26,36,.92)", color: "#fff", borderRadius: 14, padding: "12px 16px",
                   fontSize: 13, lineHeight: "18px" }} className="enter-fade">{msg}</Abs>
@@ -2098,11 +2091,11 @@ function App() {
               <b style={{ color: KINDS[sum].color }}>{sum === "ask" ? "Питання Влада (розробник) до Віталія (менеджер)" : sum === "design" ? "Завдання дизайнеру: що виправити або домалювати" : "Що на Android працює інакше (робить Влад)"}</b>
               <button className="pbtn sm" onClick={() => setSum(null)}>Закрити</button>
             </div>
-            <p className="note">Кожен пункт — один раз; під ним екрани, де він трапляється (натисни, щоб перейти й подивитися рамку та приклад).</p>
+            <p className="note">{sum === "ask" ? "Порядок денний для дзвінка: кожне питання — один раз. Зелений варіант — наша пропозиція; якщо згодні, достатньо сказати «так». Під питанням — екрани, де його видно (натисни, щоб перейти до рамки й прикладу)." : sum === "design" ? "Кожне завдання — один раз, з текстом для копіювання. Під ним — екрани, де його видно (натисни, щоб перейти до рамки й прикладу)." : "Кожен пункт — один раз; під ним екрани, де він трапляється (натисни, щоб перейти й подивитися рамку та приклад)."}</p>
             <ol className="sum-list">
               {SUMMARY[sum].map((it, i) => (
                 <li key={i}><span className="num" style={{ background: KINDS[sum].color }}>{i + 1}</span>
-                  <div><div style={{ whiteSpace: "pre-line" }}>{it.text}</div>
+                  <div><NoteBody n={it.n} />
                     <div className="sum-scr">{it.screens.map((id) => { const sc = SCREENS.find((x) => x.id === id); return sc && (
                       <button key={id} className="pbtn sm" onClick={() => { setSum(null); go(id); }}>{sc.name}</button>); })}</div>
                   </div></li>
@@ -2152,13 +2145,9 @@ function App() {
           {notes.length === 0 && <p className="note">Нотаток ще немає.</p>}
           <ol>
             {notes.map((n, i) => (
-              <li key={i} onMouseEnter={() => setHl(i)} onMouseLeave={() => setHl(null)} onClick={() => setHl(hl === i ? null : i)} className={hl === i ? "on" : ""}>
-                <span className="num" style={{ background: n.box ? KINDS[n.kind].color : "transparent", color: n.box ? "#fff" : KINDS[n.kind].color, borderColor: KINDS[n.kind].color }}>{n.box ? i + 1 : "•"}</span>
-                <div><span className="kind" style={{ color: KINDS[n.kind].color }}>{KINDS[n.kind].label}</span><span style={{ whiteSpace: "pre-line" }}>{n.text}</span>
-                  {examplesOf(n).length > 0 && <span className="ex-btns">{examplesOf(n).map(([src, cap], k) => (
-                    <button key={k} className="pbtn sm" aria-pressed={!!ex && ex.note === i && ex.i === k} onClick={(e) => { e.stopPropagation(); setEx(ex && ex.note === i && ex.i === k ? null : { note: i, i: k }); }}>
-                      Приклад{examplesOf(n).length > 1 ? ` ${"ABCDE"[k]}` : ""} →</button>))}</span>}
-                </div>
+              <li key={i} onClick={() => setHl(hl === i ? null : i)} className={hl === i ? "on" : ""}>
+                <span className="num" style={{ background: n.box || n.at ? KINDS[n.kind].color : "transparent", color: n.box || n.at ? "#fff" : KINDS[n.kind].color, borderColor: KINDS[n.kind].color }}>{i + 1}</span>
+                <NoteBody n={n} onEx={(k) => setEx(ex && ex.note === i && ex.i === k ? null : { note: i, i: k })} exOn={(k) => !!ex && ex.note === i && ex.i === k} />
               </li>
             ))}
           </ol>

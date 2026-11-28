@@ -46,7 +46,7 @@ body { background: var(--page); color: var(--ink); font-family: var(--ui); }
 .phone-clip { border-radius: 34px; overflow: hidden; position: relative; }
 
 .panel {
-  width: 300px; min-width: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 18px;
+  width: 400px; min-width: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 18px;
   padding: 18px; display: flex; flex-direction: column; gap: 14px;
   /* панель тримається на екрані, а скролиться лише список екранів */
   position: sticky; top: 24px; max-height: calc(100vh - 48px); box-sizing: border-box; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin;
@@ -78,11 +78,33 @@ body { background: var(--page); color: var(--ink); font-family: var(--ui); }
 .notes { display: flex; flex-direction: column; gap: 8px; }
 .notes li { font-weight: 400; }
 .notes ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
-.notes li { display: flex; gap: 8px; align-items: flex-start; font-size: 12px; line-height: 1.42; padding: 6px 8px; border-radius: 10px; cursor: default; background: var(--chip); }
+.notes li { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; line-height: 1.45; padding: 10px 11px; border-radius: 12px; cursor: pointer; background: var(--chip); }
+.notes li:hover { outline: 1px solid var(--line); }
 .notes li.on { outline: 1.5px solid var(--accent); }
-.notes .num { flex: none; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid; display: inline-flex; align-items: center; justify-content: center;
+.notes .num { flex: none; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid; display: inline-flex; align-items: center; justify-content: center;
   font: 700 10px/1 var(--ui); box-sizing: border-box; margin-top: 1px; }
 .notes .kind { display: block; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 1px; }
+/* картка нотатки: заголовок → у макеті → чому інакше → що зробити / варіанти → текст для копіювання */
+.nb { display: flex; flex-direction: column; gap: 6px; min-width: 0; flex: 1 1 auto; }
+.nb .kind { margin-bottom: 0; }
+.nb-t { font-size: 14px; line-height: 1.35; font-weight: 700; color: var(--ink); text-wrap: balance; }
+.nb-p { margin: 0; white-space: pre-line; color: var(--ink); }
+.nb-k { display: block; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 1px; }
+.nb-opts { display: flex; flex-direction: column; gap: 4px; }
+.nb-opt { display: grid; grid-template-columns: 22px 1fr; gap: 2px 8px; align-items: start; padding: 6px 8px; border-radius: 9px; border: 1px solid var(--line); }
+.nb-opt b { font-size: 13px; color: var(--muted); }
+.nb-opt.rec { border-color: #1f9d55; background: rgba(31,157,85,.10); }
+.nb-opt.rec b { color: #1f9d55; }
+.nb-opt em { grid-column: 2; justify-self: start; font: 700 10px/1 var(--ui); font-style: normal; letter-spacing: .06em; text-transform: uppercase; color: #fff; background: #1f9d55; padding: 3px 6px; border-radius: 5px; }
+.nb-copy { display: flex; flex-direction: column; gap: 8px; padding-top: 2px; }
+.cp-item { display: flex; flex-direction: column; gap: 3px; }
+.cp-head { display: flex; justify-content: space-between; align-items: center; gap: 6px; min-height: 0; }
+.cp-lab { font-size: 11px; color: var(--muted); }
+.cp-line { display: grid; grid-template-columns: 1fr auto; gap: 6px; align-items: center; }
+.cp-txt { font: 500 12.5px/1.4 var(--ui); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; white-space: pre-wrap; word-break: break-word; cursor: text; user-select: text; }
+.cp-btn { font: 600 11px/1 var(--ui); border: 1px solid var(--accent); color: var(--accent); background: transparent; border-radius: 8px; padding: 7px 8px; cursor: pointer; min-width: 74px; }
+.cp-btn.sm { min-width: 30px; padding: 6px 7px; font-size: 13px; }
+.cp-btn:hover { background: var(--accent); color: #fff; }
 .legend { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 11px; color: var(--muted); }
 .legend span { display: inline-flex; align-items: center; gap: 5px; }
 .ex-btns { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
