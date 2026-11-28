@@ -5,6 +5,8 @@ metadata:
   type: project
 ---
 
+**28.11.2026:** прототип build 23 опубліковано з другого акаунта як НОВИЙ артефакт: https://claude.ai/artifact/WjU9yjLoHRUh3B3iTH5a1P (старий 9z6H… — build 22, інший акаунт). Build 23: Protection Review (result-ok / result-issues) — по нотатці на кожен рядок (Web Protection, оновлення, блокування екрана, Face ID → біометрія: апка бачить лише «біометрія є», не відбиток чи обличчя) + 3 ясні питання Віталію з A/B/C; sheet-safari — «що точно / що ні» + питання про спосіб захисту сайтів (A VPN — радимо / B Chrome Secure DNS / C Android Private DNS). Нотатки тепер з переносами рядків (\n). VELDAN просить: питання й завдання — простіше, з прикладами, і окремо «як буде на Android». Кіти (картки 5, 8, пункт 10 дизайнеру) ще кажуть «відбиток пальця» — не синхронізовано.
+
 **Стан на 27.11.2026 (кінець сесії, ліміт):**
 - Прототип build 22 (усі 73 екрани = 75 кадрів Figma, сітка «Усі екрани»): https://claude.ai/artifact/9z6HEgMhdhdYMEeTSKiwwZ — код у репо `november/Game Seciro/prototype/`, збірка `python3 prototype/build.py`, тести `claude/tools/proto-*-test.py`.
 - Кіт Віталію v16: https://claude.ai/artifact/Hj3FPMn8KawTvA1gCBkAUa · кіт дизайнеру v11: https://claude.ai/artifact/PCBWKfSi31ZxWoQc3hFeHL.

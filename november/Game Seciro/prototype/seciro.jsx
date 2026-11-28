@@ -134,7 +134,7 @@ import logoChrome from "../claude/figma/logos/chrome_5-9492.png";
 import btnX1 from "../claude/figma/vpnbtn/x1.png";
 import btnX2 from "../claude/figma/vpnbtn/x2.png";
 
-export const BUILD = 22;   // піднімати на кожну публікацію
+export const BUILD = 23;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
@@ -2102,7 +2102,7 @@ function App() {
             <ol className="sum-list">
               {SUMMARY[sum].map((it, i) => (
                 <li key={i}><span className="num" style={{ background: KINDS[sum].color }}>{i + 1}</span>
-                  <div><div>{it.text}</div>
+                  <div><div style={{ whiteSpace: "pre-line" }}>{it.text}</div>
                     <div className="sum-scr">{it.screens.map((id) => { const sc = SCREENS.find((x) => x.id === id); return sc && (
                       <button key={id} className="pbtn sm" onClick={() => { setSum(null); go(id); }}>{sc.name}</button>); })}</div>
                   </div></li>
@@ -2154,7 +2154,7 @@ function App() {
             {notes.map((n, i) => (
               <li key={i} onMouseEnter={() => setHl(i)} onMouseLeave={() => setHl(null)} onClick={() => setHl(hl === i ? null : i)} className={hl === i ? "on" : ""}>
                 <span className="num" style={{ background: n.box ? KINDS[n.kind].color : "transparent", color: n.box ? "#fff" : KINDS[n.kind].color, borderColor: KINDS[n.kind].color }}>{n.box ? i + 1 : "•"}</span>
-                <div><span className="kind" style={{ color: KINDS[n.kind].color }}>{KINDS[n.kind].label}</span>{n.text}
+                <div><span className="kind" style={{ color: KINDS[n.kind].color }}>{KINDS[n.kind].label}</span><span style={{ whiteSpace: "pre-line" }}>{n.text}</span>
                   {examplesOf(n).length > 0 && <span className="ex-btns">{examplesOf(n).map(([src, cap], k) => (
                     <button key={k} className="pbtn sm" aria-pressed={!!ex && ex.note === i && ex.i === k} onClick={(e) => { e.stopPropagation(); setEx(ex && ex.note === i && ex.i === k ? null : { note: i, i: k }); }}>
                       Приклад{examplesOf(n).length > 1 ? ` ${"ABCDE"[k]}` : ""} →</button>))}</span>}

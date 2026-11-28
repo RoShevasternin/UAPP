@@ -26,7 +26,7 @@ Breach Check, генератор паролів. Kotlin + LibGDX. Початок
 
 ## Прототип
 
-- Живий: https://claude.ai/artifact/9z6HEgMhdhdYMEeTSKiwwZ (акаунт overchenkolila). Оновлювати — публікація
+- Живий: https://claude.ai/artifact/WjU9yjLoHRUh3B3iTH5a1P (з build 23, 28.11; до build 22 — https://claude.ai/artifact/9z6HEgMhdhdYMEeTSKiwwZ, інший акаунт). Оновлювати — публікація
   того самого файлу `prototype/seciro.html`; `BUILD` у `seciro.jsx` +1 на кожну публікацію.
 - Збірка: `python3 prototype/build.py` (esbuild і React качає сам у `prototype/.tools/`, не в git).
 - Поруч із телефоном — кадр Figma того самого екрана (paywall — під обраний тариф), «Compare» накладає
