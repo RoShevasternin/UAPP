@@ -32,9 +32,9 @@
 - [UAPP: локально sparse-клон](uapp-sparse-local.md) — з 24.11.2026 на диску лише корінь, docs, november; старі теки повертати `git sparse-checkout add`
 - [Seciro (VPN-апка)](vpn-app-new-type.md) — november/Game Seciro, безпека все-в-одному, Kotlin+LibGDX; прототип на claude.ai (ряд 1); Figma через браузер + window.figma
 - [Спершу прототип](prototype-first.md) — нові апки: прототип на claude.ai → VELDAN клацає → Kotlin → десктоп → USB
-- [Seciro: що не вирішено](seciro-open-questions.md) — на 27.11: 10 карток кіта Віталія з варіантами A/B/C (оплата, VPN, Fastest, тести, Web Protection, QR, Get help/Alerts/пуші, перевірки, Breach Check, пароль); що знято
+- [Seciro: що не вирішено](seciro-open-questions.md) — 28.11 build 24: Android-питання вирішили ми (VPN-захист, 4 перевірки…); Віталію лишились продукт/сервер
 - [Seciro: строго за дизайном](seciro-build-by-design.md) — навіть iOS-місця як у Figma; нічого від себе; що не працює на Android — у вкладку кіта зі скрінами й рамками
 - [Seciro: стиль прототипу](seciro-prototype-style.md) — екрани одразу живі (анімації в міру, утиліта не гра); нотатки з прикладами-начерками; панель без зайвого
 - [Seciro: як писати кіти](seciro-kit-style.md) — хто кого питає (Влад → Віталій), навіщо, варіанти A/B/C, рамки на Figma, начерки; без «від вас»
-- [Seciro: де зупинились](seciro-handoff.md) — 28.11: прототип build 23 на новому URL (WjU9…), Protection Review і Safari-екран розписано; кіти ще про «відбиток»; чекаємо Віталія → Kotlin
+- [Seciro: де зупинились](seciro-handoff.md) — 28.11: прототип build 24 на новому URL (WjU9…), Protection Review і Safari-екран розписано; кіти ще про «відбиток»; чекаємо Віталія → Kotlin
 - [Seciro: Android вирішуємо ми](seciro-android-decisions-ours.md) — дизайнеру точний текст EN по рядках, Віталію лише продукт з A/B/C і прикладами

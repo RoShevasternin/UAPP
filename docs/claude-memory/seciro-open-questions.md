@@ -5,6 +5,8 @@ metadata:
   type: project
 ---
 
+**28.11.2026, build 24 — частину питань вирішили ми (правило [[seciro-android-decisions-ours]]):** захист сайтів — через VPN (інструкцію Safari прибираємо; Hide Cookie Prompts прибираємо, 4 фільтри); Protection Review — ті самі 4 перевірки (Web Protection · Android update · Screen lock · Biometric unlock), оновлення зелене до 4 місяців, телефон без біометрії — рядок ховаємо; замок → одразу пейвол; Copied! лише на Android ≤12; Language — системний вибір мови; логотип витоку — перша літера; Wi-Fi з QR — лише копіюємо пароль. Віталію лишились продукт / сервер: оплата (дія), Fastest, фільтри окремо на сервері, хто перевіряє QR, Alerts, Get help/Contact, пуші, логотип і «700M» з сервера, кнопки Breach, довжина пароля, мови.
+
 Seciro для Android: невирішене на **27.11.2026** (третя редакція кіта Віталія: https://claude.ai/artifact/Hj3FPMn8KawTvA1gCBkAUa).
 Коли питають «чого нам ще треба» — відповідати за цим списком і звірити з документацією в адмінці (розділ «Seciro for Android» міг змінитись).
 Пов'язане: [[vpn-app-new-type]], [[seciro-build-by-design]], [[seciro-kit-style]].

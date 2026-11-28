@@ -134,7 +134,7 @@ import logoChrome from "../claude/figma/logos/chrome_5-9492.png";
 import btnX1 from "../claude/figma/vpnbtn/x1.png";
 import btnX2 from "../claude/figma/vpnbtn/x2.png";
 
-export const BUILD = 23;   // піднімати на кожну публікацію
+export const BUILD = 24;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
