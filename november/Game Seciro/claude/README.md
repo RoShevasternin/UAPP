@@ -96,8 +96,7 @@ CSS-переходи й анімації (інакше елементи «зас
 + коментар зберігаються в db сторінки, колекція `answers/<id>`: api, subs, vpn, web, breach, qr, support, design, play).
 Менеджеру потрібен доступ Contributor або Editor. Прочитати відповіді: ArtifactData list `answers`. Джерела фактів:
 VpnService Play, HIBP від $4.39/міс, Safe Browsing не комерційний → Web Risk. Копію в репо — лише на прохання VELDAN.
-- Інструкція Safari → **Google Chrome** (рішення VELDAN 24.11): логотип з «Apps Logo Set» (5:9492), кроки «Use secure DNS»;
-  у текстах рендерера Safari → Chrome (`SUBST` у fig.jsx). Кроки залежать від того, чи буде наш DNS-сервер (питання в звіті).
+- ~~Інструкція Safari → Google Chrome (24.11)~~ — скасовано 28.11 (VELDAN: наша вигадка). `SUBST` у fig.jsx порожній, `chromeOv` не викликається; прототип показує Safari з Figma. На Android захист через VPN (документація) — інструкція не потрібна, див. нотатку sheet-safari.
 - «vpn btn» 5:8681: варіанти 2→5 — дуга обертається за годинниковою (прототип: `vpn-arc-spin`).
 
 ## Чи все це реалізовне на Android (оцінка 24.11)

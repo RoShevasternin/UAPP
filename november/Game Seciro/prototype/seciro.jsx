@@ -134,7 +134,7 @@ import logoChrome from "../claude/figma/logos/chrome_5-9492.png";
 import btnX1 from "../claude/figma/vpnbtn/x1.png";
 import btnX2 from "../claude/figma/vpnbtn/x2.png";
 
-export const BUILD = 25;   // піднімати на кожну публікацію
+export const BUILD = 26;   // піднімати на кожну публікацію
 
 // ── Палітра Figma ──
 const C = {
@@ -837,7 +837,7 @@ function chromeOv() {
 function FigSheet({ kind, open, onClose, raw }) {
   const f = frameOf(SHEETS[kind].frame), sheet = SHEETS[kind].sheet(f), black = findNode(f, (x) => x.name === "blackout");
   const ok = btnWith(sheet, "Got it");
-  const extra = kind === "safari" ? chromeOv() : {};
+  const extra = {};   // 28.11: інструкцію Chrome прибрано (наша вигадка) — показуємо Safari з Figma
   return (
     <div style={{ position: "absolute", inset: 0, zIndex: 20, pointerEvents: open ? "auto" : "none" }}>
       <div onClick={onClose} style={{ position: "absolute", inset: 0, opacity: open ? 1 : 0, transition: raw ? "none" : "opacity .3s ease" }}>

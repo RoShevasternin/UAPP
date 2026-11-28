@@ -78,7 +78,7 @@ const family = (f) => f.startsWith("SF Pro") ? '"Inter Tight", "Inter", sans-ser
 const CASE = { UPPER: "uppercase", LOWER: "lowercase", TITLE: "capitalize" };
 
 // Апка під Android: назви з iOS-макета, що вже мають Android-відповідник (рішення VELDAN 24.11: Safari → Google Chrome)
-const SUBST = [[/Safari/g, "Chrome"]];
+const SUBST = [];   // 28.11 VELDAN: Safari → Chrome прибрано — це була наша вигадка; прототип показує Figma як є
 const subst = (t) => SUBST.reduce((s, [a, b]) => s.replace(a, b), t);
 
 function Text({ n, style }) {

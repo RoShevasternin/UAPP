@@ -235,6 +235,13 @@ def wireframes():
         lambda l: phone([dim(), sheet(150), txt(187.5, 210, "Seciro", 18, INK, 700), title(258, "Software Update"),
             rows(290, [(x, "") for x in ["1  Open Settings, search “update”", "2  Tap Software update", "3  Download and install", "4  Tap Restart now"]]),
             text(500, "Can't find it?\nSamsung: Settings → Software update\nXiaomi: Settings → About phone"), btn(640, "Open Settings"), btn2(704, "Got it")]))
+    add("web_flow", T("Пример: Web Protection на Android", "Приклад: Web Protection на Android", "Example: Web Protection on Android"),
+        lambda l: phone([nav("Protection Review"),
+            rows(120, [("Web Protection", "Turn on VPN"), ("Software Update", "ok"), ("Screen lock", "ok"), ("Biometric unlock", "ok")]),
+            text(380, T("↓ нажали Web Protection — открылся VPN", "↓ натиснули Web Protection — відкрився VPN", "↓ tap Web Protection — the VPN screen opens")[l]),
+            f'<rect x="16" y="404" width="343" height="196" rx="16" fill="{CARD}"/>', title(448, "VPN"), text(478, "Not connected"),
+            btn(520, "Connect"),
+            text(650, T("После Connect сайты защищены\nво всех браузерах и приложениях", "Після Connect сайти захищені\nв усіх браузерах і апках", "After Connect, sites are protected\nin every browser and app")[l])]))
     add("onb_phone", T("Пример: без «iPhone»", "Приклад: без «iPhone»", "Example: no “iPhone”"),
         lambda l: phone([f'<rect x="132" y="150" width="111" height="220" rx="18" fill="none" stroke="{INK}" stroke-width="4"/><rect x="176" y="160" width="23" height="5" rx="2.5" fill="{INK}"/>',
             f'<path d="M187.5 220 l30 12 v20 c0 20 -13 33 -30 40 c-17 -7 -30 -20 -30 -40 v-20 z" fill="{DIM}"/>',
